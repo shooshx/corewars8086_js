@@ -2,22 +2,36 @@ package il.co.codeguru.corewars8086.gui.widgets;
 
 import java.util.HashMap;
 
-public class JButton extends JComponent
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
+
+public class JButton extends JComponent<InputElement>
 {
     public JButton(String id, String text) {
         super(id);
         registerBut(id,this);
-      /*  m_element.addEventListener("click", new EventListener<Event>() {
+        if (m_element == null)
+            return;
+        Event.sinkEvents(m_element, Event.ONCLICK);
+        Event.setEventListener(m_element, new EventListener() {
+    
             @Override
-            public void handleEvent(Event evt) {
-                if (m_listener == null)
-                    return;
-                m_listener.actionPerformed(new ActionEvent(JButton.this));
+            public void onBrowserEvent(Event event) {
+                if(Event.ONCLICK == event.getTypeInt()) {
+                    if (m_listener == null)
+                        return;
+                    m_listener.actionPerformed(new ActionEvent(JButton.this));
+                }
+    
             }
-        });*/
+        });
     
     }
     
+
+    // offline actuvation hack
     public void click() {
         if (m_listener == null)
             return;

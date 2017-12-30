@@ -13,9 +13,9 @@ public class CoreWarsEngine
         c.setVisible(true);
         c.pack();
         
-        JButton.press("runWarButton");
+       // JButton.press("runWarButton");
         
-        long x = 0x00010002f000e000L;
+       // long x = 0x00010002f000e000L;
         
         
     }

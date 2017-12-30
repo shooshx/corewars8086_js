@@ -289,7 +289,7 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 			
 		}
 		this.competition.removeCompetitionEventListener(this);
-		this.competition.getCurrentWar().resume();
+		//this.competition.getCurrentWar().resume();
 		
 		super.dispose();
 	}

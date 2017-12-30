@@ -32,11 +32,11 @@ import il.co.codeguru.corewars8086.jsadd.Format;
  * @author BS
  */
 public class WarFrame extends JFrame
-    implements MemoryEventListener,  CompetitionEventListener, MouseAddressRequest{
-	private static final long serialVersionUID = 1L;
+    implements MemoryEventListener,  CompetitionEventListener, MouseAddressRequest
+{
 
 	/** the canvas which show the core war memory area */
-    private Canvas warCanvas;
+    public Canvas warCanvas;
 
     /** the message area show misc. information about the current fight */
     private JTextArea messagesArea;
@@ -65,12 +65,15 @@ public class WarFrame extends JFrame
 
     private final Competition competition;
 
-	private MemoryFrame memory_frame;
+    private MemoryFrame memory_frame;
+    
+    private CompetitionWindow mainWnd;
 
-    public WarFrame(final Competition competition) {
+    public WarFrame(final Competition competition, final CompetitionWindow mainWnd) {
         super("CodeGuru Extreme - Session Viewer");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.competition = competition;
+        this.mainWnd = mainWnd;
         getContentPane().setLayout(new BorderLayout());
 
         // build widgets
@@ -85,7 +88,7 @@ public class WarFrame extends JFrame
             BorderFactory.createLineBorder(new Color(169,154,133),3), 
             BorderFactory.createEmptyBorder(10,10,20,10)));
         canvasPanel.setBackground(Color.BLACK);
-        warCanvas = new Canvas();
+        warCanvas = new Canvas("warCanvas");
         canvasPanel.add(warCanvas);
         warZone.add(canvasPanel, BorderLayout.CENTER);
 
@@ -94,7 +97,7 @@ public class WarFrame extends JFrame
 
         // build info zone (message area + buttons)
         JPanel infoZone = new JPanel(new BorderLayout());
-        messagesArea = new JTextArea(5, 60);
+        messagesArea = new JTextArea("messagesArea", 5, 60);
         messagesArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
         infoZone.add(new JScrollPane(messagesArea), BorderLayout.CENTER);
@@ -102,20 +105,20 @@ public class WarFrame extends JFrame
         JPanel buttonPanel = new JPanel();
 
         buttonPanel.add(new JLabel("Round:"));
-        roundNumber = new JTextField(4);
+        roundNumber = new JTextField("roundNumber", "", 4);
         roundNumber.setEditable(false);
         buttonPanel.add(roundNumber);
         buttonPanel.add(Box.createHorizontalStrut(20));
-        JButton closeButton = new JButton("closeButton", "Close"); 
+       /* JButton closeButton = new JButton("closeButton", "Close"); 
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
      //           dispose(); // TBD-SHY
             }
         });
-        buttonPanel.add(closeButton);
+        buttonPanel.add(closeButton);*/
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(new JLabel("Speed:"));
-        speedSlider = new JSlider(1,100,competition.getSpeed());
+        speedSlider = new JSlider("speedSlider", 1,100,competition.getSpeed());
         speedSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 WarFrame.this.competition.setSpeed((int) Math.pow(1.2, speedSlider.getValue()) ); //exponential speed slider		
@@ -133,7 +136,6 @@ public class WarFrame extends JFrame
 		btnCpuState = new JButton("btnCpuState", "View CPU");
 		btnCpuState.setEnabled(false);
 		btnCpuState.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				cpuframe = new CpuFrame(competition);
@@ -144,15 +146,16 @@ public class WarFrame extends JFrame
 
 		competition.addCompetitionEventListener(this);
 		
-		btnPause = new JButton("btnPause", "Pause");
+		btnPause = new JButton("btnPause", "XXPause");
 		btnPause.setEnabled(false);
 		btnPause.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (competition.getCurrentWar().isPaused()) {
-					competition.getCurrentWar().resume();
+                    competition.getCurrentWar().resume();
 					btnPause.setText("Pause");
-					btnSingleRound.setEnabled(false);
+                    mainWnd.requestFrame();
+                    btnSingleRound.setEnabled(false);
 				} else {
 					competition.getCurrentWar().pause();
 					btnPause.setText("Resume");
@@ -169,7 +172,8 @@ public class WarFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				competition.getCurrentWar().runSingleRound();
+                competition.getCurrentWar().runSingleRound();
+                mainWnd.requestFrame(); // request frame but still paused so it'll be just one frame
 			}
 		});
         
@@ -219,6 +223,9 @@ public class WarFrame extends JFrame
 
     /** @see MemoryEventListener#onMemoryWrite(RealModeAddress) */
     public void onMemoryWrite(RealModeAddress address) {
+        if (!mainWnd.isBattleShown())
+            return; // canvas not shown, no reason to update it
+
 		int ipInsideArena = address.getLinearAddress() - 0x1000 *0x10; // arena * paragraph
 		
         if ( address.getLinearAddress() >= War.ARENA_SEGMENT*0x10 && address.getLinearAddress() < 2*War.ARENA_SEGMENT*0x10 ) {
@@ -264,6 +271,9 @@ public class WarFrame extends JFrame
 
     /** @see CompetitionEventListener#onRound(int) */
     public void onRound(int round) {
+        if (!mainWnd.isBattleShown())
+            return;
+    
         nRoundNumber = round;
         if ((nRoundNumber % 1000) == 0) {
             roundNumber.setText(Integer.toString(nRoundNumber));
@@ -371,6 +381,9 @@ public class WarFrame extends JFrame
     
 	@Override
 	public void onEndRound() {
+        if (!mainWnd.isBattleShown())
+            return; // canvas not shown, no reason to update it
+        
 		this.warCanvas.deletePointers();
 		for (int i = 0; i < this.competition.getCurrentWar().getNumWarriors(); i++)
 			if (this.competition.getCurrentWar().getWarrior(i).isAlive()) {

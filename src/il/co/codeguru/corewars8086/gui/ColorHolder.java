@@ -39,5 +39,6 @@ public class ColorHolder {
 		} else {
 			return colors[pos];
 		}
-    }
+	}
+	
 }

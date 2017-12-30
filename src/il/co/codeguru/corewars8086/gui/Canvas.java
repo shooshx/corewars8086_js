@@ -1,5 +1,8 @@
 package il.co.codeguru.corewars8086.gui;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.dom.client.CanvasElement;
+
 //import il.co.codeguru.corewars8086.utils.EventMulticaster;
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
@@ -11,91 +14,88 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 //import javax.swing.JComponent;
 //import javax.swing.event.MouseInputListener;
 
-
 /**
  * @author BS
  */
-public class Canvas extends JComponent implements MouseInputListener {
-	private static final long serialVersionUID = 1L;
-	
-	public static final int BOARD_SIZE = 256;
-    public static final int DOT_SIZE = 3;
-    public static final byte EMPTY = -1;
+public class Canvas extends JComponent<CanvasElement> implements MouseInputListener {
 
-    private  byte[][] data;
-    
-    private boolean[][] pointer; 
-       
+	public static final int BOARD_SIZE = 256;
+	public static final int DOT_SIZE = 3;
+	public static final byte EMPTY = -1;
+
+	private Context2d ctx;
+	private byte[][] data;
+
+	private boolean[][] pointer;
+
 	private EventMulticasterMouse eventCaster;
 	private MouseAddressRequest eventHandler;
 
 	private int MouseX, MouseY;
 
-    public Canvas() {
+	public Canvas(String id) {
+		super(id);
 		eventCaster = new EventMulticasterMouse();
 		eventHandler = (MouseAddressRequest) eventCaster.getProxy();
 		this.addMouseMotionListener(this);
 		this.addMouseListener(this);
 		this.MouseX = 0;
 		this.MouseY = 0;
-        clear();
-    }
+		ctx = m_element.getContext2d();
 
-    public class Graphics {
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return getMinimumSize();
-    }
-
-    public void paintPixel(int number, byte color) {
-        paintPixel(number % BOARD_SIZE, number / BOARD_SIZE, color);
-    }
-
-    public void paintPixel(int x, int y, byte color) {
-   //     data[x][y] = color;
-   //     Graphics g = getGraphics();
-   //     if (g != null) {
-   //         g.setColor(ColorHolder.getInstance().getColor(color,false));
-   //         g.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
-   //     }
-    }
-
-    /** 
-     * Get the color of warrior <code>id</code>
-     */
-    public Color getColorForWarrior(int id) {
-        return ColorHolder.getInstance().getColor(id,false);
-    }
-    
-    
-	public void paintPointer(int x, int y, Color color) {
-	//	pointer[x][y] = true;
-	//	Graphics g = getGraphics();
-	//	if (g != null) {
-	//		g.setColor(color);
-	//		g.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
-	//	}
+		Dimension d = getMinimumSize();
+		m_element.setWidth(d.width);
+		m_element.setHeight(d.height);
+		clear();
 	}
-    
+
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		return getMinimumSize();
+	}
+
+	public void paintPixel(int number, byte color) {
+		paintPixel(number % BOARD_SIZE, number / BOARD_SIZE, color);
+	}
+
+	public void paintPixel(int x, int y, byte color) {
+		data[x][y] = color;
+
+		ctx.setFillStyle(ColorHolder.getInstance().getColor(color, false).toString());
+		ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+
+	}
+
+	/** 
+	 * Get the color of warrior <code>id</code>
+	 */
+	public Color getColorForWarrior(int id) {
+		return ColorHolder.getInstance().getColor(id, false);
+	}
+
+	public void paintPointer(int x, int y, Color color) {
+		pointer[x][y] = true;
+		ctx.setFillStyle(color.toString());
+		ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+	}
+
 	public void paintPointer(int x, int y, byte color) {
-		//this.paintPointer(x, y, ColorHolder.getInstance().getColor(color, true));
+		this.paintPointer(x, y, ColorHolder.getInstance().getColor(color, true));
 	}
 
 	public void paintPointer(int number, byte color) {
-		//this.paintPointer(number % BOARD_SIZE, number / BOARD_SIZE, color);
+		this.paintPointer(number % BOARD_SIZE, number / BOARD_SIZE, color);
 	}
 
-    /**
-     * Clears the entire canvas
-     */
-    public void clear() {
+	/**
+	 * Clears the entire canvas
+	 */
+	public void clear() {
 		data = new byte[BOARD_SIZE][BOARD_SIZE];
 		pointer = new boolean[BOARD_SIZE][BOARD_SIZE];
 		for (int i = 0; i < BOARD_SIZE; i++)
@@ -104,28 +104,29 @@ public class Canvas extends JComponent implements MouseInputListener {
 				pointer[i][j] = false;
 			}
 		repaint();
-    }
+	}
 
-    /**
-     * When we have to - repaint the entire canvas
-     */
-    //@Override
-    public void paint(Graphics g) {
-        //g.fillRect(0,0, BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
-        //
-        //for (int y = 0; y < BOARD_SIZE; y++) {
-        //    for (int x = 0; x < BOARD_SIZE; x++) {
-        //        int cellVal = data[x][y];
-        //        if (cellVal == EMPTY) {
-        //            continue;
-        //        }
-        //
-        //        g.setColor(ColorHolder.getInstance().getColor(cellVal,false));
-        //        g.fillRect(x*DOT_SIZE, y*DOT_SIZE, DOT_SIZE, DOT_SIZE);
-        //    }
-        //}
-    }
-    
+	/**
+	 * When we have to - repaint the entire canvas
+	 */
+	@Override
+	public void paint() {
+		ctx.setFillStyle(Color.BLACK);
+		ctx.fillRect(0, 0, BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
+
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				int cellVal = data[x][y];
+				if (cellVal == EMPTY) {
+					continue;
+				}
+
+				ctx.setFillStyle(ColorHolder.getInstance().getColor(cellVal, false).toString());
+				ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+			}
+		}
+	}
+
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
@@ -140,15 +141,15 @@ public class Canvas extends JComponent implements MouseInputListener {
 				MouseY = e.getY() / DOT_SIZE;
 
 				// draw new Mouse
-			//	g.setColor(Color.WHITE);
+				//	g.setColor(Color.WHITE);
 
-			//	g.fillRect(MouseX * DOT_SIZE, MouseY * DOT_SIZE, DOT_SIZE,
-			//			DOT_SIZE);
+				//	g.fillRect(MouseX * DOT_SIZE, MouseY * DOT_SIZE, DOT_SIZE,
+				//			DOT_SIZE);
 			}
 		}
 	}
-    
-	private void clearMousePointer(Graphics g) {
+
+	private void clearMousePointer() {
 		try {
 			//g.setColor(ColorHolder.getInstance()
 			//		.getColor(data[MouseX][MouseY],false));
@@ -158,12 +159,12 @@ public class Canvas extends JComponent implements MouseInputListener {
 		}
 		//g.fillRect(MouseX * DOT_SIZE, MouseY * DOT_SIZE, DOT_SIZE, DOT_SIZE);
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		eventHandler.addressAtMouseLocationRequested(this.MouseX + BOARD_SIZE* this.MouseY);
+		eventHandler.addressAtMouseLocationRequested(this.MouseX + BOARD_SIZE * this.MouseY);
 	}
-	
+
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		//this.clearMousePointer(this.getGraphics());
@@ -172,7 +173,7 @@ public class Canvas extends JComponent implements MouseInputListener {
 	public void addListener(MouseAddressRequest l) {
 		eventCaster.add(l);
 	}
-	
+
 	public void deletePointers() {
 		for (int i = 0; i < BOARD_SIZE; i++)
 			for (int j = 0; j < BOARD_SIZE; j++) {
@@ -186,25 +187,25 @@ public class Canvas extends JComponent implements MouseInputListener {
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

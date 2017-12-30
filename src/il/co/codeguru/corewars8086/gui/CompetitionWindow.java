@@ -1,6 +1,8 @@
 package il.co.codeguru.corewars8086.gui;
 
 import il.co.codeguru.corewars8086.war.*;
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.user.client.Window;
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
 //import java.awt.*;
@@ -33,7 +35,12 @@ public class CompetitionWindow extends JFrame
 	
 	private JTextField seed;
 
-	private JCheckBox startPausedCheckBox;
+    private JCheckBox startPausedCheckBox;
+    private boolean m_isBattleShown;
+
+    public boolean isBattleShown() {
+        return m_isBattleShown;
+    }
 
     public CompetitionWindow() throws IOException {
         super("CodeGuru Extreme - Competition Viewer");
@@ -57,15 +64,22 @@ public class CompetitionWindow extends JFrame
         warCounterDisplay = new JLabel("");
         buttonPanel.add(warCounterDisplay);
         buttonPanel.add(Box.createHorizontalStrut(30));
-        showBattleCheckBox = new JCheckBox("Show session on start");
+        showBattleCheckBox = new JCheckBox("showBattleCheckBox", "Show session on start");
+		showBattleCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+                m_isBattleShown = showBattleCheckBox.isSelected();
+                Console.log("isBattleShown= " + (m_isBattleShown?"true":"false") );
+            }
+		});        
         buttonPanel.add(showBattleCheckBox);
         
-        startPausedCheckBox = new JCheckBox("Start Paused");
+        startPausedCheckBox = new JCheckBox("startPausedCheckBox", "Start Paused");
 		startPausedCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(startPausedCheckBox.isSelected())
-					showBattleCheckBox.setSelected(true);
+				//if(startPausedCheckBox.isSelected())
+				//	showBattleCheckBox.setSelected(true);
 			}
 		});
 		buttonPanel.add(startPausedCheckBox);
@@ -113,6 +127,24 @@ public class CompetitionWindow extends JFrame
             public void windowDeactivated(WindowEvent e) {}
         });
     }
+
+    public AnimationScheduler.AnimationCallback animCallback = new AnimationScheduler.AnimationCallback() {
+        @Override
+        public void execute(double timestamp) {
+            try {
+                boolean needMore = competition.continueRun(isBattleShown());
+                if (needMore)
+                    AnimationScheduler.get().requestAnimationFrame(animCallback);
+			} catch (Exception e) {
+				Console.log("continueRun EXCEPTION " + e.toString());
+				e.printStackTrace();
+			}
+        }
+    };
+
+    public void requestFrame() {
+        AnimationScheduler.get().requestAnimationFrame(animCallback);
+    }
     
     /**
      * Starts a new war.
@@ -132,20 +164,17 @@ public class CompetitionWindow extends JFrame
                     " but " + warriorsPerGroup + " are needed)");
                 return false;
             }
-            //warThread = new Thread("CompetitionThread") {
-            //    @Override
-            //    public void run() {
-                    try {
-                        competition.runCompetition(battlesPerGroup, warriorsPerGroup, startPausedCheckBox.isSelected());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-            //    };
-            //};
-            if (!competitionRunning) {
-            //	warThread.start();
-            	return true;
+
+            try {
+                boolean needMore = competition.runCompetition(battlesPerGroup, warriorsPerGroup, startPausedCheckBox.isSelected(), isBattleShown());
+                if (needMore) {
+                    requestFrame();
+                }
+            } catch (Exception e) {
+                Console.log("runWar EXCEPTION " + e.toString());
+                e.printStackTrace(Console.stream());
             }
+
         } catch (NumberFormatException e2) {
             JOptionPane.showMessageDialog(this, "Error in configuration");
         }
@@ -174,13 +203,13 @@ public class CompetitionWindow extends JFrame
     private void showBattleFrameIfNeeded() {
     	if (showBattleCheckBox.isSelected() && battleFrame == null ) {
     		showBattleRoom();
-    		showBattleCheckBox.setSelected(false);
+    		//showBattleCheckBox.setSelected(false);
     	}
     }
     
     private void showBattleRoom() {
         competition.setSpeed(5);
-        battleFrame = new WarFrame(competition);
+        battleFrame = new WarFrame(competition, this);
         battleFrame.addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent e) {
             }

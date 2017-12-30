@@ -1,22 +1,44 @@
 package il.co.codeguru.corewars8086.gui.widgets;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 
-
-public class JComponent
+public class JComponent<T>
 {
-   // protected T m_element;
+    public T m_element;
 
     public JComponent(String id) {
-/*        final Window window = Window.current();
-        m_element = (T)window.getDocument().getElementById(id);
+        m_element = (T)Document.get().getElementById(id);
+
         if (m_element == null) {
-            System.out.println("did not find button " + id);
+            Console.log("did not find button " + id);
             return;
-        }*/
+        }
+        else {
+            Console.log("found element " + id);
+        }
     }
 
     public JComponent() {
     }
+
+    public void setOnChange() {
+        Event.sinkEvents((Element)m_element, Event.ONCHANGE);
+        Event.setEventListener((Element)m_element, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) { // this listener listens to all of the event
+                if(Event.ONCHANGE == event.getTypeInt()) {
+                    if (m_listener == null)
+                        return;
+                    m_listener.actionPerformed(new ActionEvent(JComponent.this));
+                }
+    
+            }
+        });
+    }
+
 
     protected ActionListener m_listener = null;
     public void addActionListener(ActionListener listener) {
@@ -24,7 +46,9 @@ public class JComponent
     }
     
     public void setEnabled(boolean v) {
-    
+        if (m_element == null)
+            return;
+        ((Element)m_element).setAttribute("disabled", v?"false":"true");
     }
     public void setVisible(boolean v) {
     }
@@ -33,10 +57,14 @@ public class JComponent
     }
     
     public void setText(String v) {
-
+        if (m_element == null)
+            return;
+        ((Element)m_element).setInnerText(v);
     }
     public String getText() {
-        return "";
+        if (m_element == null)
+            return "";
+        return ((Element)m_element).getInnerText();
     }
 
     public void setBorder(Object obj) {
@@ -51,7 +79,10 @@ public class JComponent
     }
 
     public void repaint() {
+        paint();
+    }
 
+    public void paint() {
     }
 
     public void setPreferredSize(Object obj) {

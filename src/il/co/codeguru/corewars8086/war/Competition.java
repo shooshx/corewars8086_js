@@ -34,6 +34,21 @@ public class Competition {
 
     private boolean abort;
 
+
+    private static class CompState {
+        public enum State {
+            NONE,
+            RUN_WAR,
+            RUN_ROUND
+        } 
+        public State state = State.NONE; 
+        public int warIndex = 0;
+        public boolean startPaused;
+        public boolean animateRound; // should we return after each round or after each war for a UI update
+        public int round;
+    }
+    private CompState compState;
+
     public Competition() throws IOException {
         warriorRepository = new WarriorRepository();
 
@@ -45,87 +60,157 @@ public class Competition {
         abort = false;
     }
 
-    public void runCompetition (int warsPerCombination, int warriorsPerGroup, boolean startPaused) throws Exception {
+    // return true if need to continue after
+    public boolean continueRun(boolean stillAnimateRound) throws Exception
+    {
+        if (compState.state == CompState.State.RUN_WAR) 
+        {
+            if (compState.warIndex < warsPerCombination) 
+            {
+                boolean needMore = startWar( warriorRepository.createGroupList(competitionIterator.next()) );
+                if (abort) {
+                    Console.log("Abort");
+                    return false;
+                }
+                if (needMore) {
+                    compState.state = CompState.State.RUN_ROUND;
+                }
+                return true;
+            }
+            else {
+                // done competition
+                competitionEventListener.onCompetitionEnd();
+                warriorRepository.saveScoresToFile(SCORE_FILENAME);
+                compState = null;
+                return false;
+            }
+        }
+        else if (compState.state == CompState.State.RUN_ROUND)
+        {
+            compState.animateRound = stillAnimateRound;
+            boolean needMore = false;
+            if (compState.animateRound) {
+                needMore = runRound();
+                if (!needMore && currentWar.isPaused()) { // did we return false due to being paused?
+                    return false;
+                }
+
+            }
+            else {
+                do {
+                    needMore = runRound();
+                } while (needMore);
+            }
+
+            if (!needMore) {
+                doneWar();
+                compState.state = CompState.State.RUN_WAR;
+                return true;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean runCompetition(int warsPerCombination, int warriorsPerGroup, boolean startPaused, boolean animateRound) throws Exception 
+    {
         this.warsPerCombination = warsPerCombination;
-        competitionIterator = new CompetitionIterator(
-            warriorRepository.getNumberOfGroups(), warriorsPerGroup);
+        competitionIterator = new CompetitionIterator(warriorRepository.getNumberOfGroups(), warriorsPerGroup);
 
         // run on every possible combination of warrior groups
         competitionEventListener.onCompetitionStart();
-        for (int i = 0; i < warsPerCombination; i++)
-        {
-			runWar(1, warriorRepository.createGroupList(competitionIterator.next()), startPaused);
-            if (abort) {
-				break;
-			}
-        }
-        competitionEventListener.onCompetitionEnd();
-        warriorRepository.saveScoresToFile(SCORE_FILENAME);
+        Console.log("runCompetition " + Integer.toString(warsPerCombination) + " wars");
+
+        compState = new CompState();
+        compState.warIndex = 0;
+        compState.state = CompState.State.RUN_WAR;
+        compState.startPaused = startPaused;
+        compState.animateRound = animateRound;
+        return true;
     }
 
     public int getTotalNumberOfWars() {
         return (int) competitionIterator.getNumberOfItems() * warsPerCombination;
     }
 
-    public void runWar(int numberOfRounds, WarriorGroup[] warriorGroups,boolean startPaused) throws Exception {
-        for(int war = 0; war < numberOfRounds; war++) {
-			currentWar = new War(memoryEventListener, competitionEventListener, startPaused);
-			currentWar.setSeed(this.seed + war);
-			competitionEventListener.onWarStart();
-			currentWar.loadWarriorGroups(warriorGroups);
+    // return true if need another round
+    public boolean runRound() 
+    {
+        competitionEventListener.onRound(compState.round);
 
-			// go go go!
-			int round = 0;
-			while (round < MAX_ROUND) {
-				competitionEventListener.onRound(round);
+        competitionEventListener.onEndRound();
 
-				competitionEventListener.onEndRound();
+        // apply speed limits
+    //    if (speed != MAXIMUM_SPEED) {
+            // note: if speed is 1 (meaning game is paused), this will
+            // always happen
+    //        if (compState.round % speed == 0) {
+                //Thread.sleep(DELAY_UNIT);
+    //        }
 
-				// apply speed limits
-				if (speed != MAXIMUM_SPEED) {
-					// note: if speed is 1 (meaning game is paused), this will
-					// always happen
-					if (round % speed == 0) {
-						//Thread.sleep(DELAY_UNIT);
-					}
+    //        if (speed == 1) { // paused
+    //            return true;
+    //        }
+    //    }
 
-					if (speed == 1) { // paused
-						continue;
-					}
-				}
+        //pause
+    //    while (currentWar.isPaused()) {
+            //Thread.sleep(DELAY_UNIT); TBD-SHY
+    //    }
+        if (currentWar.isPaused()) {
+            Console.log("pause");
+            return false;
+        }
 
-				//pause
-				while (currentWar.isPaused()) {
-                    //Thread.sleep(DELAY_UNIT);
-                }
+        //Single step run - stop next time
+        if (currentWar.isSingleRound())
+            currentWar.pause();
 
-				//Single step run - stop next time
-				if (currentWar.isSingleRound())
-					currentWar.pause();
+        if (currentWar.isOver()) {
+            //Console.log("isOver");
+            return false;
+        }
 
-				if (currentWar.isOver()) {
-					break;
-				}
+        currentWar.nextRound(compState.round);
 
-				currentWar.nextRound(round);
+        ++compState.round;
+        //if (compState.round % 100 == 0)
+        //    Console.log("round " + Integer.toString(compState.round));
+        return compState.round < MAX_ROUND;
+    }
 
-				++round;
-			}
-			competitionEventListener.onRound(round);
+    // return true if needs another round
+    public boolean startWar(WarriorGroup[] warriorGroups) throws Exception 
+    {
+        //Console.log("runWar");
+        currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
+        int war = 0;
+        currentWar.setSeed(this.seed + war);
+        competitionEventListener.onWarStart();
+        currentWar.loadWarriorGroups(warriorGroups);
+        compState.round = 0;
+        return true;
+    }
 
-			int numAlive = currentWar.getNumRemainingWarriors();
-			String names = currentWar.getRemainingWarriorNames();
+    public void doneWar() 
+    {
+        Console.log("doneWar rounds=" + Integer.toString(compState.round));
+        competitionEventListener.onRound(compState.round);
 
-			if (numAlive == 1) { // we have a single winner!
-				competitionEventListener.onWarEnd(CompetitionEventListener.SINGLE_WINNER, names);
-			} else if (round == MAX_ROUND) { // maximum round reached
-				competitionEventListener.onWarEnd(CompetitionEventListener.MAX_ROUND_REACHED, names);
-			} else { // user abort
-				competitionEventListener.onWarEnd(CompetitionEventListener.ABORTED, names);
-			}
-			currentWar.updateScores(warriorRepository);
-			currentWar = null;
-		}
+        int numAlive = currentWar.getNumRemainingWarriors();
+        String names = currentWar.getRemainingWarriorNames();
+
+        if (numAlive == 1) { // we have a single winner!
+            competitionEventListener.onWarEnd(CompetitionEventListener.SINGLE_WINNER, names);
+        } else if (compState.round == MAX_ROUND) { // maximum round reached
+            competitionEventListener.onWarEnd(CompetitionEventListener.MAX_ROUND_REACHED, names);
+        } else { // user abort
+            competitionEventListener.onWarEnd(CompetitionEventListener.ABORTED, names);
+        }
+        currentWar.updateScores(warriorRepository);
+        currentWar = null;
+        ++compState.warIndex;
+
     }
 
     public int getCurrentWarrior() {

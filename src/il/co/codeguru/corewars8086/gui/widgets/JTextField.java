@@ -1,14 +1,15 @@
 package il.co.codeguru.corewars8086.gui.widgets;
 
+import com.google.gwt.dom.client.InputElement;
 
-public class JTextField extends JComponent
+public class JTextField extends JComponent<InputElement>
 {
-	String m_text = null;
+	//String m_text = null;
     public JTextField(String id, String text, int columns) {
         super(id);
-        m_text = text;
-        //if (text != null)
-        //    m_element.setValue(text);
+        //m_text = text;
+        if (text != null)
+            m_element.setValue(text);
     }
     public JTextField(int columns) {
     }
@@ -22,12 +23,12 @@ public class JTextField extends JComponent
 
     @Override
     public void setText(String v) {
-        //m_element.setValue(v);
-    	m_text = v;
+        m_element.setValue(v);
+    	//m_text = v;
     }
     @Override
     public String getText() {
-        //return m_element.getValue();
-    	return m_text;
+        return m_element.getValue();
+    	//return m_text;
     }
 }

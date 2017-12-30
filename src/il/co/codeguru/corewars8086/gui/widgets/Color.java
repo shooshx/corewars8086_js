@@ -6,18 +6,96 @@ public class Color {
     public static String WHITE = "#ffffff";
 
     int m_r, m_g, m_b;
+    float m_a;
+
+    private static final double FACTOR = 0.7;
 
     public Color(int r, int g, int b) {
         m_r = r;
         m_g = g;
         m_b = b;
+        m_a = 1;
+    }
+    public Color(int r, int g, int b, int a) {
+        m_r = r;
+        m_g = g;
+        m_b = b;
+        m_a = a;
+    }    
+
+    public static Color HSBtoRGB(float hue, float saturation, float brightness) {
+        int r = 0, g = 0, b = 0;
+        if (saturation == 0) {
+            r = g = b = (int) (brightness * 255.0f + 0.5f);
+        } else {
+            float h = (hue - (float)Math.floor(hue)) * 6.0f;
+            float f = h - (float)java.lang.Math.floor(h);
+            float p = brightness * (1.0f - saturation);
+            float q = brightness * (1.0f - saturation * f);
+            float t = brightness * (1.0f - (saturation * (1.0f - f)));
+            switch ((int) h) {
+            case 0:
+                r = (int) (brightness * 255.0f + 0.5f);
+                g = (int) (t * 255.0f + 0.5f);
+                b = (int) (p * 255.0f + 0.5f);
+                break;
+            case 1:
+                r = (int) (q * 255.0f + 0.5f);
+                g = (int) (brightness * 255.0f + 0.5f);
+                b = (int) (p * 255.0f + 0.5f);
+                break;
+            case 2:
+                r = (int) (p * 255.0f + 0.5f);
+                g = (int) (brightness * 255.0f + 0.5f);
+                b = (int) (t * 255.0f + 0.5f);
+                break;
+            case 3:
+                r = (int) (p * 255.0f + 0.5f);
+                g = (int) (q * 255.0f + 0.5f);
+                b = (int) (brightness * 255.0f + 0.5f);
+                break;
+            case 4:
+                r = (int) (t * 255.0f + 0.5f);
+                g = (int) (p * 255.0f + 0.5f);
+                b = (int) (brightness * 255.0f + 0.5f);
+                break;
+            case 5:
+                r = (int) (brightness * 255.0f + 0.5f);
+                g = (int) (p * 255.0f + 0.5f);
+                b = (int) (q * 255.0f + 0.5f);
+                break;
+            }
+        }
+        return new Color(r, b, g);//0xff000000 | (r << 16) | (g << 8) | (b << 0);
     }
 
     public static Color getHSBColor(float h, float s, float b) {
-        return new Color(0,0,0);
+        return HSBtoRGB(h, s, b);
+    }
+
+    public int getRed() {
+        return m_r;
+    }
+    public int getGreen() {
+        return m_r;
+    }
+    public int getBlue() {
+        return m_r;
+    }
+    public int getAlpha() {
+        return m_r;
     }
 
     public Color darker() {
-        return this;
+        return new Color(Math.max((int)(getRed()  *FACTOR), 0),
+                         Math.max((int)(getGreen()*FACTOR), 0),
+                         Math.max((int)(getBlue() *FACTOR), 0),
+                         getAlpha());
+    }
+
+    public String toString() {
+        if (m_a == 1.0)
+            return "rgb(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + ")";
+        return "rgb(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + "," + Float.toString(m_a) + ")";
     }
 }

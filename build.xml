@@ -47,6 +47,11 @@
       <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
       <arg line="${gwt.args}"/>
       <arg value="com.codewars_js"/>
+      
+      <arg value="-style"/>
+      <arg value="PRETTY"/>
+      <!--<arg value="DETAILED"/>-->
+       
     </java>
   </target>
 

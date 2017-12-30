@@ -1,8 +1,11 @@
 package il.co.codeguru.corewars8086.gui.widgets;
 
-public class JTextArea extends JComponent
+import com.google.gwt.dom.client.Element;
+
+public class JTextArea extends JComponent<Element>
 {
-    public JTextArea(int w, int h) {
+    public JTextArea(String id, int w, int h) {
+        super(id);
     }
     public JTextArea() {
     }
