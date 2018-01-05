@@ -2,29 +2,29 @@ package il.co.codeguru.corewars8086.gui.widgets;
 
 import java.util.HashMap;
 
-import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Window;
+//import com.google.gwt.dom.client.InputElement;
+//import com.google.gwt.user.client.Event;
+//import com.google.gwt.user.client.EventListener;
+//import com.google.gwt.user.client.Window;
 
-public class JButton extends JComponent<InputElement>
+import elemental2.dom.Element;
+import elemental2.dom.Event;
+import elemental2.dom.EventListener;
+
+public class JButton extends JComponent<Element>
 {
     public JButton(String id, String text) {
         super(id);
         registerBut(id,this);
         if (m_element == null)
             return;
-        Event.sinkEvents(m_element, Event.ONCLICK);
-        Event.setEventListener(m_element, new EventListener() {
+        m_element.addEventListener("click", new EventListener() {
     
             @Override
-            public void onBrowserEvent(Event event) {
-                if(Event.ONCLICK == event.getTypeInt()) {
-                    if (m_listener == null)
-                        return;
-                    m_listener.actionPerformed(new ActionEvent(JButton.this));
-                }
-    
+            public void handleEvent(Event event) {
+                if (m_listener == null)
+                    return;
+                m_listener.actionPerformed(new ActionEvent(JButton.this));
             }
         });
     

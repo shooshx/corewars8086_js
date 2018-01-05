@@ -38,6 +38,8 @@ public class CompetitionWindow extends JFrame
     private JCheckBox startPausedCheckBox;
     private boolean m_isBattleShown;
 
+    private CodeEditor m_codeEditor;
+
     public boolean isBattleShown() {
         return m_isBattleShown;
     }
@@ -112,12 +114,16 @@ public class CompetitionWindow extends JFrame
         // ------------
         getContentPane().add(controlArea, BorderLayout.SOUTH);
 
-        addWindowListener(new WindowListener() {
+        showBattleRoom();
+
+        m_codeEditor = new CodeEditor();
+
+        /*addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent e) {}
             public void windowClosing(WindowEvent e) {
-                /*if (warThread!= null) {
+                if (warThread!= null) {
                     competition.setAbort();
-                }*/
+                }
             }
 
             public void windowClosed(WindowEvent e) {}
@@ -125,7 +131,7 @@ public class CompetitionWindow extends JFrame
             public void windowDeiconified(WindowEvent e) {}
             public void windowActivated(WindowEvent e) {}
             public void windowDeactivated(WindowEvent e) {}
-        });
+        });*/
     }
 
     public AnimationScheduler.AnimationCallback animCallback = new AnimationScheduler.AnimationCallback() {
@@ -201,16 +207,16 @@ public class CompetitionWindow extends JFrame
     }
 
     private void showBattleFrameIfNeeded() {
-    	if (showBattleCheckBox.isSelected() && battleFrame == null ) {
-    		showBattleRoom();
+    	//if (showBattleCheckBox.isSelected() && battleFrame == null ) {
+    		//showBattleRoom();
     		//showBattleCheckBox.setSelected(false);
-    	}
+    	//}
     }
     
     private void showBattleRoom() {
         competition.setSpeed(5);
         battleFrame = new WarFrame(competition, this);
-        battleFrame.addWindowListener(new WindowListener() {
+       /* battleFrame.addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent e) {
             }
 
@@ -234,7 +240,7 @@ public class CompetitionWindow extends JFrame
 
             public void windowDeactivated(WindowEvent e) {
             }
-        });
+        });*/
         
         competition.addMemoryEventLister(battleFrame);
         competition.addCompetitionEventListener(battleFrame);

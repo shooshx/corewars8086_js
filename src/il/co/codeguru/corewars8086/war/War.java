@@ -1,6 +1,7 @@
 package il.co.codeguru.corewars8086.war;
 
 import il.co.codeguru.corewars8086.cpu.CpuException;
+import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.MemoryException;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
@@ -362,6 +363,7 @@ public class War {
      */
     public void updateScores(WarriorRepository repository) {
         float score = (float)1.0 / m_numWarriorsAlive;
+        Console.log("updateScore " + Float.toString(score));
     	for (int i = 0; i < m_numWarriors; ++i) {
             Warrior warrior = m_warriors[i];
             if (warrior.isAlive()) {

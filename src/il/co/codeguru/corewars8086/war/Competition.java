@@ -91,10 +91,6 @@ public class Competition {
             boolean needMore = false;
             if (compState.animateRound) {
                 needMore = runRound();
-                if (!needMore && currentWar.isPaused()) { // did we return false due to being paused?
-                    return false;
-                }
-
             }
             else {
                 do {
@@ -102,12 +98,15 @@ public class Competition {
                 } while (needMore);
             }
 
+            if (!needMore && currentWar.isPaused()) { // did we return false due to being paused?
+                return false;
+            }
             if (!needMore) {
                 doneWar();
                 compState.state = CompState.State.RUN_WAR;
-                return true;
+                return true; 
             }
-            return true;
+            return needMore;
         }
         return false;
     }
@@ -167,7 +166,7 @@ public class Competition {
             currentWar.pause();
 
         if (currentWar.isOver()) {
-            //Console.log("isOver");
+            Console.log("isOver");
             return false;
         }
 
@@ -184,6 +183,7 @@ public class Competition {
     {
         //Console.log("runWar");
         currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
+        compState.startPaused = false; // start paused only applies to the first war
         int war = 0;
         currentWar.setSeed(this.seed + war);
         competitionEventListener.onWarStart();

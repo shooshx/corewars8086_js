@@ -1,16 +1,21 @@
 package il.co.codeguru.corewars8086.gui.widgets;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
+//import com.google.gwt.dom.client.Document;
+//import com.google.gwt.dom.client.Element;
+//import com.google.gwt.user.client.Event;
+//import com.google.gwt.user.client.EventListener;
+
+import elemental2.dom.DomGlobal;
+import elemental2.dom.Element;
+import elemental2.dom.Event;
+import elemental2.dom.EventListener;
 
 public class JComponent<T>
 {
     public T m_element;
 
     public JComponent(String id) {
-        m_element = (T)Document.get().getElementById(id);
+        m_element = (T)DomGlobal.document.getElementById(id);
 
         if (m_element == null) {
             Console.log("did not find button " + id);
@@ -25,15 +30,12 @@ public class JComponent<T>
     }
 
     public void setOnChange() {
-        Event.sinkEvents((Element)m_element, Event.ONCHANGE);
-        Event.setEventListener((Element)m_element, new EventListener() {
+        ((Element)m_element).addEventListener("change", new EventListener() {
             @Override
-            public void onBrowserEvent(Event event) { // this listener listens to all of the event
-                if(Event.ONCHANGE == event.getTypeInt()) {
-                    if (m_listener == null)
-                        return;
-                    m_listener.actionPerformed(new ActionEvent(JComponent.this));
-                }
+            public void handleEvent(Event event) { // this listener listens to all of the event
+                if (m_listener == null)
+                    return;
+                m_listener.actionPerformed(new ActionEvent(JComponent.this));
     
             }
         });
@@ -59,12 +61,12 @@ public class JComponent<T>
     public void setText(String v) {
         if (m_element == null)
             return;
-        ((Element)m_element).setInnerText(v);
+        ((Element)m_element).innerHTML = v;
     }
     public String getText() {
         if (m_element == null)
             return "";
-        return ((Element)m_element).getInnerText();
+        return ((Element)m_element).innerHTML;
     }
 
     public void setBorder(Object obj) {

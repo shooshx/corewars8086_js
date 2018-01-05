@@ -1,7 +1,10 @@
 package il.co.codeguru.corewars8086.gui;
 
-import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.dom.client.CanvasElement;
+//import com.google.gwt.canvas.dom.client.Context2d;
+//import com.google.gwt.dom.client.CanvasElement;
+import elemental2.dom.HTMLCanvasElement;
+import elemental2.dom.CanvasRenderingContext2D;
+import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
 
 //import il.co.codeguru.corewars8086.utils.EventMulticaster;
 
@@ -17,13 +20,13 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 /**
  * @author BS
  */
-public class Canvas extends JComponent<CanvasElement> implements MouseInputListener {
+public class Canvas extends JComponent<HTMLCanvasElement> implements MouseInputListener {
 
 	public static final int BOARD_SIZE = 256;
 	public static final int DOT_SIZE = 3;
 	public static final byte EMPTY = -1;
 
-	private Context2d ctx;
+	private CanvasRenderingContext2D ctx;
 	private byte[][] data;
 
 	private boolean[][] pointer;
@@ -41,11 +44,11 @@ public class Canvas extends JComponent<CanvasElement> implements MouseInputListe
 		this.addMouseListener(this);
 		this.MouseX = 0;
 		this.MouseY = 0;
-		ctx = m_element.getContext2d();
+		ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
 
 		Dimension d = getMinimumSize();
-		m_element.setWidth(d.width);
-		m_element.setHeight(d.height);
+		m_element.width = d.width;
+		m_element.height = d.height;
 		clear();
 	}
 
@@ -66,7 +69,7 @@ public class Canvas extends JComponent<CanvasElement> implements MouseInputListe
 	public void paintPixel(int x, int y, byte color) {
 		data[x][y] = color;
 
-		ctx.setFillStyle(ColorHolder.getInstance().getColor(color, false).toString());
+		ctx.fillStyle = FillStyleUnionType.of(ColorHolder.getInstance().getColor(color, false).toString());
 		ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
 
 	}
@@ -80,7 +83,7 @@ public class Canvas extends JComponent<CanvasElement> implements MouseInputListe
 
 	public void paintPointer(int x, int y, Color color) {
 		pointer[x][y] = true;
-		ctx.setFillStyle(color.toString());
+		ctx.fillStyle = FillStyleUnionType.of(color.toString());
 		ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
 	}
 
@@ -111,7 +114,7 @@ public class Canvas extends JComponent<CanvasElement> implements MouseInputListe
 	 */
 	@Override
 	public void paint() {
-		ctx.setFillStyle(Color.BLACK);
+		ctx.fillStyle = FillStyleUnionType.of(Color.BLACK);
 		ctx.fillRect(0, 0, BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
 
 		for (int y = 0; y < BOARD_SIZE; y++) {
@@ -121,7 +124,7 @@ public class Canvas extends JComponent<CanvasElement> implements MouseInputListe
 					continue;
 				}
 
-				ctx.setFillStyle(ColorHolder.getInstance().getColor(cellVal, false).toString());
+				ctx.fillStyle = FillStyleUnionType.of(ColorHolder.getInstance().getColor(cellVal, false).toString());
 				ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
 			}
 		}

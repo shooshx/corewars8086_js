@@ -1,0 +1,12 @@
+round label
+cpu window
+graph window
+speed
+
+asm compile, disasm
+check randomization similarity with real java
+zoom to bytes
+check "updateScore Infinity"
+recreate scene with start addresses
+
+GUI options for same code for both warriers

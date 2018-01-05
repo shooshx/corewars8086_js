@@ -40,10 +40,7 @@ public class ColumnGraph extends JComponent {
         return getMinimumSize();
     }
 
-    public static native void console(String text)
-/*-{
-    console.log(text);
-}-*/;    
+
     
     public void addToValue(int pos, int subIndex, float value) {
         values[pos][0]+= value;
@@ -58,10 +55,12 @@ public class ColumnGraph extends JComponent {
         }
         repaint();
 
-        console("scores " + Float.toString(values[0][0]) + "  " 
-                                     + Float.toString(values[1][0]) + "  "
-                                     + Float.toString(values[2][0]) + "  "
-                                     + Float.toString(values[3][0]) );
+        Console.log("add " + Integer.toString(pos) + " " + Integer.toString(subIndex) + " " + Float.toString(value) + 
+                    "  scores " + Float.toString(values[0][0]) + "  " 
+                                + Float.toString(values[1][0]) + "  "
+                                + Float.toString(values[2][0]) + "  "
+                                + Float.toString(values[3][0]));
+
     }
 
     /* (non-Javadoc)

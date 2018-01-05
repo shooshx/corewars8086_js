@@ -4,6 +4,8 @@ public class JLabel extends JComponent
 {
     public JLabel(String text) {
     }
+    public JLabel(String id, String text) {
+    }
 
     public JLabel() {
     }

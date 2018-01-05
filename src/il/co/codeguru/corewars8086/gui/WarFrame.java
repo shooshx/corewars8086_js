@@ -51,7 +51,7 @@ public class WarFrame extends JFrame
     private int nRoundNumber;
 
     /** A text field showing the current round number */
-    private JTextField roundNumber;
+    private JLabel roundNumber;
     
 	// Debugger
 	private JLabel addressFiled;
@@ -105,8 +105,8 @@ public class WarFrame extends JFrame
         JPanel buttonPanel = new JPanel();
 
         buttonPanel.add(new JLabel("Round:"));
-        roundNumber = new JTextField("roundNumber", "", 4);
-        roundNumber.setEditable(false);
+        roundNumber = new JLabel("roundNumber", "");
+       // roundNumber.setEditable(false);
         buttonPanel.add(roundNumber);
         buttonPanel.add(Box.createHorizontalStrut(20));
        /* JButton closeButton = new JButton("closeButton", "Close"); 

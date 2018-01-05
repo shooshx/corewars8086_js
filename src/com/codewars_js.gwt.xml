@@ -16,6 +16,9 @@
   <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+  <inherits name='elemental2.core.Core'/>
+  <inherits name='elemental2.dom.Dom'/>
+  <inherits name="jsinterop.base.Base" />
 
   <!-- Other module inherits                                      -->
   <inherits name='il.co.codeguru.corewars8086'/>

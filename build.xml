@@ -12,6 +12,11 @@
     <pathelement location="${gwt.sdk}/gwt-dev.jar"/>
     <pathelement location="${gwt.sdk}/validation-api-1.0.0.GA.jar"/>
     <pathelement location="${gwt.sdk}/validation-api-1.0.0.GA-sources.jar"/>
+    <pathelement location="elemental2-core-1.0.0-RC1.jar"/>
+    <pathelement location="elemental2-dom-1.0.0-RC1.jar"/>
+    <pathelement location="elemental2-promise-1.0.0-RC1.jar"/>
+    <pathelement location="jsinterop_base-1.0.0-RC1.jar"/>
+    
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
     <!-- Add any additional non-server libs (such as JUnit) here -->
   </path>
@@ -27,7 +32,7 @@
     <mkdir dir="war/WEB-INF/classes"/>
     <javac srcdir="src" includes="**" encoding="utf-8"
         destdir="war/WEB-INF/classes"
-        source="1.7" target="1.7" nowarn="true"
+        source="8" target="8" nowarn="true"
         debug="true" debuglevel="lines,vars,source">
       <classpath refid="project.class.path"/>
     </javac>
@@ -63,7 +68,7 @@
         <pathelement location="${gwt.sdk}/gwt-codeserver.jar"/>
       </classpath>
       <arg value="-startupUrl"/>
-      <arg value="codewars_js.html"/>
+      <arg value="page.html"/>
       <arg line="-war"/>
       <arg value="war"/>
       <!-- Additional arguments like -style PRETTY, -logLevel DEBUG or -nosuperDevMode -->
