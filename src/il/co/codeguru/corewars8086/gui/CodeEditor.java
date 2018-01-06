@@ -173,25 +173,46 @@ public class CodeEditor
         return opcodesText.toString();
     }
 
+    private String linesAsInput(String text)
+    {
+        StringBuilder opcodesText = new StringBuilder();
+        for(int i = 0; i < text.length(); ++i)
+        {
+            char c = text.charAt(i);
+            if (c == '\n')
+                opcodesText.append("<br>");
+        }
+        return opcodesText.toString();
+    }
+
+    private void parseStdout(String text)
+    {
+
+    }
+
     private static native String innerText(HTMLElement elem) /*-{
         return elem.innerText
     }-*/;
+    private static native void setInnerText(HTMLElement elem, String text)/*-{
+        elem.innerText = text
+    }-*/;
 
     public void asm_edit_changed() {
-        if (asm_edit.innerHTML.isEmpty()) {
+        String intext = innerText(asm_edit);
+        if (intext.isEmpty()) {
             asm_output.innerHTML = "";
             opcodes_edit.innerHTML = "";
             Console.log("~Empty input");
             return;
         }
-
-        int retcode = run_nasm("player1.asm", innerText(asm_edit), "player1.lst");
+        intext = intext.replace('\u00A0', ' '); // no-break-space
+        int retcode = run_nasm("player1.asm", intext, "player1.lst");
         String stdout = get_stdout();
-        asm_output.innerHTML = stdout; // could be just warnings
+        setInnerText(asm_output, stdout); // could be just warnings
 
         if (retcode != 0) { // error
             // TBD- compile just till the error line? or just the last good result?
-            opcodes_edit.innerHTML = "";
+            opcodes_edit.innerHTML = linesAsInput(intext); // don't want the opcodes edit to scroll unexpectedly so put there enough lines
             Console.log("~Assembler error");
             return;
         }
@@ -199,7 +220,7 @@ public class CodeEditor
         String output = read_file("player1.lst");
         if (output.isEmpty()) {
             m_currentListing.clear();
-            opcodes_edit.innerHTML = "";
+            opcodes_edit.innerHTML = linesAsInput(intext);;
             Console.log("~Empty output");
             return;
         }

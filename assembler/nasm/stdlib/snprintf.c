@@ -12,6 +12,10 @@
 
 #include "nasmlib.h"
 
+#ifndef EMSCRIPTEN
+#undef HAVE_SNPRINTF
+#endif
+
 #if !defined(HAVE_SNPRINTF) && !defined(HAVE__SNPRINTF)
 
 int snprintf(char *str, size_t size, const char *format, ...)

@@ -42,20 +42,83 @@
 #include "nasmlib.h"
 #include "error.h"
 
+//#define LEAK_DETECT
+
+struct AllocChunk {
+    struct AllocChunk *next, *prev;
+};
+
+#ifdef LEAK_DETECT
+#define LIST_OVERHEAD (3*sizeof(void*))
+
+struct AllocChunk g_firstDummy = { 0, 0 }, g_lastDummy = { 0, 0 };
+struct AllocChunk* g_allocStart = NULL;
+int g_allocated = 0, g_freed = 0;
+FILE* g_alloclog = NULL;
+
+void initAllocList() {
+    if (g_allocStart == NULL)
+        return;
+    g_firstDummy.next  = &g_lastDummy;
+    g_lastDummy.prev = &g_firstDummy;
+    g_allocStart = &g_firstDummy;
+    //g_alloclog = fopen("C:\\projects\\codewars_js\\eclipse\\codewars_js\\assembler\\_alloc_log.txt", "w");
+}
+void printLeak() {
+    printf("alloc %d freed %d = %d\n", g_allocated, g_freed, g_allocated - g_freed);
+}
+
+void listAdd(struct AllocChunk* p, int sz) {
+    p->next = g_allocStart->next;
+    p->prev = g_allocStart;
+    g_allocStart->next->prev = p;
+    g_allocStart->next = p;
+    g_allocStart = p;
+    ++g_allocated;
+    //fprintf(g_alloclog, "alloc =%X (%d) %d %d\n", p, sz, g_allocated, g_freed);
+    fflush(g_alloclog);
+}
+void listRemove(struct AllocChunk* p) {
+    //fprintf(g_alloclog, "free  =%X  %d %d\n", p, g_allocated, g_freed);
+    fflush(g_alloclog);
+    p->next->prev = p->prev;
+    p->prev->next = p->next;
+    if (g_allocStart == p)
+        g_allocStart = p->prev;
+    ++g_freed;
+}
+
+#else
+
+#define LIST_OVERHEAD (0)
+void listRemove(struct AllocChunk* p) {}
+void listAdd(struct AllocChunk* p, int sz) {}
+void initAllocList() {}
+void printLeak() {}
+
+#endif
+
+
 void *nasm_malloc(size_t size)
 {
-    void *p = malloc(size);
+    void *p = malloc(size + LIST_OVERHEAD);
     if (!p)
         nasm_fatal(ERR_NOFILE, "out of memory");
-    return p;
+
+    listAdd((struct AllocChunk*)p, size);
+
+    return ((char*)p) + LIST_OVERHEAD;
 }
 
 void *nasm_calloc(size_t size, size_t nelem)
 {
-    void *p = calloc(size, nelem);
+    size_t sz = size*nelem;
+    void *p = calloc(sz + LIST_OVERHEAD, 1);
     if (!p)
         nasm_fatal(ERR_NOFILE, "out of memory");
-    return p;
+    listAdd((struct AllocChunk*)p, sz);
+
+    return ((char*)p) + LIST_OVERHEAD;
 }
 
 void *nasm_zalloc(size_t size)
@@ -65,16 +128,23 @@ void *nasm_zalloc(size_t size)
 
 void *nasm_realloc(void *q, size_t size)
 {
-    void *p = q ? realloc(q, size) : malloc(size);
+    if (q) {
+        listRemove((struct AllocChunk*)q);
+    }
+    void *p = q ? realloc(q, size + LIST_OVERHEAD) : malloc(size + LIST_OVERHEAD);
     if (!p)
         nasm_fatal(ERR_NOFILE, "out of memory");
-    return p;
+    listAdd(p, size);
+    return ((char*)p) + LIST_OVERHEAD;
 }
 
 void nasm_free(void *q)
 {
-    if (q)
+    if (q) {
+        q = ((char*)q) - LIST_OVERHEAD;
+        listRemove(q);
         free(q);
+    }
 }
 
 char *nasm_strdup(const char *s)

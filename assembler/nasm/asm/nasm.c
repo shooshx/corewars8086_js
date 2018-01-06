@@ -1894,6 +1894,9 @@ void init_globals_stdscan();
 void init_globals_outbin();
 void init_globals_listing();
 
+void initAllocList();
+void printLeak();
+
 void init_globals() {
     init_globals_preproc();
     init_globals_eval();
@@ -1917,8 +1920,10 @@ int run_nasm(const char* inname, const char* outname)
 
     //nasm_main(2, args);
     init_globals();
-    return nasm_main(4, args);
-    //return 0;
+    initAllocList();
+    int ret = nasm_main(4, args);
+    printLeak();
+    return ret;
 }
 #else
 
@@ -1932,8 +1937,10 @@ int main(int argc, char **argv)
     }*/
 
     //nasm_main(2, args);
+    initAllocList();
     init_globals();
     nasm_main(4, args);
+    printLeak();
 
     const char* args2[] = { "nasm.exe", "aa.asm", "-l", "aa.lst", 0 };
 
