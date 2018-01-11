@@ -10,3 +10,7 @@ check "updateScore Infinity"
 recreate scene with start addresses
 
 GUI options for same code for both warriers
+
+
+editor caret
+- display: block adds lines

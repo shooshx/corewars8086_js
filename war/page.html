@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>CodeWars8086</title>
+    <script type="text/javascript" language="javascript" src="codewars_js/codewars_js.nocache.js"></script>
+    <script type="text/javascript" language="javascript" src="asm_js_main.js"></script>
+<script>
+
+var run_nasm = null
+
+function start_nasm() {
+    run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
+    Module['print'] = printConsole
+    Module['printErr'] = printConsole
+    
+    //assemble();
+
+
+}
+
+// Java code comes to get and clear this variable to get the stdout of the nasm run
+var g_outputText = null
+function printConsole(line) {
+    //console.log("*** " + line)
+    g_outputText += line + '\n'
+}
+
+
+// in case there is a long line, when returning to a new line, the text will be still scrolled to the left, fix that
+function fixhscroll() {
+    var s = window.getSelection()
+    //console.log("--" + s.rangeCount + "  " + ((s.rangeCount > 0) ? (s.getRangeAt(0).startContainer.id + ':' + s.getRangeAt(0).startOffset) : 'X'))
+
+    if (asm_edit.scrollLeft == 0)
+        return
+    sel = window.getSelection();
+    if (sel.rangeCount == 0)
+        return
+    range = sel.getRangeAt(0);
+    if (range.commonAncestorContainer.parentNode != asm_edit)
+        return
+    if (range.startOffset == 0 || range.startOffset == 1) {
+        console.log("fixed scroll")
+        asm_edit.scrollLeft = 0
+    }
+}
+
+
+</script>    
+<style>
+body {
+    margin: 0;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+     user-select: none;
+    background: #b2b2b2; 
+    font-family: Verdana;
+}
+
+.sc-btn {
+  display: inline-block;
+  /*position: absolute;*/
+
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+
+  border-radius: 0.4em;
+
+  box-shadow: inset rgba(0, 0, 0, 0.1) 0px -0.15em 0px, inset rgba(255, 255, 255, 0.2) 0px 0.15em 0px, rgba(0, 0, 0, 0.3) 0px 0.1em 0.3em;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden; 
+  
+  color: #222;
+  text-shadow: rgba(127, 127, 127, 0.4) 0 1px 0;
+  background-color: #ebebeb;
+  background-image: linear-gradient(to bottom, white, #ebebeb);   
+  
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  margin: 7px;
+  outline:none;  /* no focus outline */
+  font-size:110%;
+}
+
+.sc-btn:hover {
+  color: #222;
+  background-image: linear-gradient(to bottom, white, #d2d2d2);
+  background-color: #fdfdfd;   
+}
+
+.sc-btn:active {
+    box-shadow: rgba(255, 255, 255, 0.2) 0 0.1em 0, inset rgba(0, 0, 0, 0.3) 0px 0.25em 1em; 
+    color: #fff;
+    background-color: #dfdfdf;
+    background-image: linear-gradient(to bottom, #479ceb, #1067c1); 
+}
+.sc-btn:checked  {
+
+  background-color: #dfdfdf;
+  background-image: linear-gradient(to bottom, #479ceb, #1067c1); 
+}
+.sc-btn:disabled {
+   color: #ddd;
+}
+
+.sc-btn[disabled="true"] {
+    box-shadow: initial;
+}
+.sc-btn[disabled="true"] > .sc-span { /* comes after */
+    opacity: 0.3; /* for buttons with image*/
+}
+
+input[type="range"]:disabled {
+    opacity: 0.4;
+}
+
+input:disabled + .sc-btn,
+input:disabled + .sc-btn:hover,
+input:disabled + .sc-btn:active, 
+.sc-btn[disabled="true"] {
+  color:#ddd;
+  background-image: linear-gradient(to bottom, white, #ebebeb);
+  box-shadow: initial;
+}
+.sc-btn:disabled + span {
+  opacity:0.6
+}
+
+/* ---------------- asm ---------------------- */
+
+.codearea {
+    font-size: 16px;
+    font-family: courier;
+    outline: none; /* don't show focus border */
+    overflow: auto;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 9px 8px;
+    white-space: pre;  /* needed for multiple spaces */
+
+    -moz-user-select: text; /* user can select here, override body */
+    -khtml-user-select: auto;
+    -webkit-user-select: auto;
+    -ms-user-select: auto;
+     user-select: auto;
+
+}
+.codearea:disabled { 
+    background-color: rgb(255,255,255);
+    color: rgb(0, 0, 0);
+}
+
+#opcodes_edit {
+    width:200px;
+    height:500px;
+    overflow-y: hidden; /* remove scroll bar */
+}
+#asm_edit {
+    width:300px;
+    height:500px;
+    overflow-x: hidden;
+}
+.edit_error {
+    background-color: #ffc3c3;
+}
+.edit_warning {
+    background-color: #ffe66c;
+}
+#asm_output { 
+    width:600px;
+    height:100px;
+}
+
+.edit_text_error {
+    background-color: rgb(255,140,140);
+}
+
+</style>
+  </head>
+  <body onload="start_nasm()">
+
+    
+    <label id="runWarButton" class="sc-btn" >Run!</label>
+    <input id="battlesPerGroupField" type="text">
+    <input id="warriorsPerGroupField" type="text">
+    <input id="seed" type="text">
+    <br>
+    <input id="showBattleCheckBox", type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
+    <input id="startPausedCheckBox", type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
+    <br>
+    <!-- WarFrame -->
+    <canvas id="warCanvas"></canvas>
+    <div id="messagesArea"></div>
+    Round: <div id="roundNumber"></div>
+    <label id="btnPause" class="sc-btn">Pause</label>
+    <label id="btnSingleRound" class="sc-btn">Single Round</label>
+    Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
+    <br>
+    <div id="opcodes_edit" class="codearea" wrap="off"  onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop"></div>
+    <div id="asm_edit" class="codearea" wrap="off" contenteditable="true" spellcheck="false"
+         onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop" onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div><br>
+    <div id="asm_output" class="codearea" wrap="off" > </div>
+
+  </body>
+</html>
