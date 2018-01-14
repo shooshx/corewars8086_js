@@ -142,17 +142,18 @@ input:disabled + .sc-btn:active,
     display: inline-block;
     padding: 9px 8px;
     white-space: pre;  /* needed for multiple spaces */
-
-    -moz-user-select: text; /* user can select here, override body */
-    -khtml-user-select: auto;
-    -webkit-user-select: auto;
-    -ms-user-select: auto;
-     user-select: auto;
-
 }
-.codearea:disabled { 
+.codearea:disabled {
     background-color: rgb(255,255,255);
     color: rgb(0, 0, 0);
+}
+
+.allow_select {
+    -moz-user-select: text; /* user can select here, override body */
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+     user-select: text;
 }
 
 #opcodes_edit {
@@ -160,10 +161,28 @@ input:disabled + .sc-btn:active,
     height:500px;
     overflow-y: hidden; /* remove scroll bar */
 }
+#asm_linenums {
+    width: 30px;
+    height: 500px;
+    border: none;
+    padding: 9px 3px 9px 9px;
+    text-align: right;
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+    color: #888888;
+    overflow: hidden;
+}
 #asm_edit {
     width:300px;
     height:500px;
     overflow-x: hidden;
+    border:none;
+}
+#asm_edit_and_lines {
+    border: 1px solid #000000;
+    border-radius: 4px;
+    display: inline-block;
+    height: 518px; /* 500 + padding of 9 */
 }
 .edit_error {
     background-color: #ffc3c3;
@@ -201,9 +220,15 @@ input:disabled + .sc-btn:active,
     <label id="btnSingleRound" class="sc-btn">Single Round</label>
     Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
     <br>
-    <div id="opcodes_edit" class="codearea" wrap="off"  onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop"></div>
-    <div id="asm_edit" class="codearea" wrap="off" contenteditable="true" spellcheck="false"
-         onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop" onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div><br>
+    <div id="opcodes_edit" class="codearea allow_select" wrap="off"
+         onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
+    <div id="asm_edit_and_lines">
+      <div id="asm_linenums" class="codearea" wrap="off">1</div>
+      <div id="asm_edit" class="codearea allow_select" wrap="off" contenteditable="true" spellcheck="false"
+           onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop; asm_linenums.scrollTop = asm_edit.scrollTop;"
+           onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div>
+    </div>
+    <br>
     <div id="asm_output" class="codearea" wrap="off" > </div>
 
   </body>

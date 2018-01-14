@@ -11,7 +11,7 @@ import java.util.Vector;
 
 public class CodeEditor
 {
-    private HTMLElement asm_edit, asm_output, opcodes_edit;
+    private HTMLElement asm_edit, asm_output, opcodes_edit, asm_linenums;
 
     private static class LstLine {
         int lineNum = -1;
@@ -39,6 +39,7 @@ public class CodeEditor
         asm_edit = (HTMLElement)DomGlobal.document.getElementById("asm_edit");
         asm_output = (HTMLElement)DomGlobal.document.getElementById("asm_output");
         opcodes_edit = (HTMLElement)DomGlobal.document.getElementById("opcodes_edit");
+        asm_linenums = (HTMLElement)DomGlobal.document.getElementById("asm_linenums");
 
         asm_edit.addEventListener("input", (event) -> {
             asm_edit_changed();
@@ -68,11 +69,10 @@ public class CodeEditor
     }
 
     // runs a state machine that parses the .lst files
-    private String parseLst(String lsttext, String asmtext)
+    private boolean parseLst(String lsttext, StringBuilder opcodesText, StringBuilder lineNumText)
     {
         String[] lines = lsttext.split("\\n");
         m_currentListing.clear();
-        StringBuilder opcodesText = new StringBuilder();
 
         int lineIndex = 1; // does not increment in warning lines
         for(int i = 0; i < lines.length; ++i)
@@ -152,7 +152,7 @@ public class CodeEditor
                         break;
                     case PARSE_ERR:
                         Console.log("ERROR: parsing list file!\n" + lsttext);
-                        return null;
+                        return false;
                 } // switch
                 if (state == Field.WARNING)
                     break; // stop parsing line
@@ -161,19 +161,24 @@ public class CodeEditor
                 continue; // skip this line
             if (l.lineNum != lineIndex) {
                 Console.log("wrong line number " + Integer.toString(l.lineNum));
-                return null;
+                return false;
             }
+            lineNumText.append(lineIndex);
+            lineNumText.append("<br>");
+
             ++lineIndex;
+
             m_currentListing.add(l);
             opcodesText.append(l.opcode);
             opcodesText.append("<br>");
+
         }
 
         // if text doen't end with new line, delete the one added to opcodes
         //if (asmtext.charAt(asmtext.length() - 1) != '\n')
          //   opcodesText.deleteCharAt(opcodesText.length() - 1);
 
-        return opcodesText.toString();
+        return true;
     }
 
     private String linesAsInput(String text)
@@ -482,14 +487,17 @@ public class CodeEditor
             return;
         }
 
-        String opcodes = parseLst(output, asm_edit.innerHTML);
-        if (opcodes == null) {
+        StringBuilder opcodesText = new StringBuilder();
+        StringBuilder lineNumText = new StringBuilder();
+        boolean ok = parseLst(output, opcodesText, lineNumText);
+        if (!ok) {
             opcodes_edit.innerHTML = "[listing parsing error]";
             Console.log("listing parsing error");
             return;
         }
-        opcodes_edit.innerHTML = opcodes;
-        Console.log("~OK");
+        opcodes_edit.innerHTML = opcodesText.toString();
+        asm_linenums.innerHTML = lineNumText.toString();
+        //Console.log("~OK");
 
     }
 
