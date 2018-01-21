@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="nasmlib">
+      <UniqueIdentifier>{c05903b2-0ba7-4ccd-98cd-4251bc4d8856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stdlib">
+      <UniqueIdentifier>{63f2b7ef-641b-4493-becd-9c025eb965dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{092525d7-6359-473a-bec4-0d871253e555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="x86">
+      <UniqueIdentifier>{37739b28-ad9a-437f-8df0-85a5d09e66d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asm">
+      <UniqueIdentifier>{bdeaa4ad-f59b-4745-af20-df1c82bffa13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nasm">
+      <UniqueIdentifier>{73c25028-b3f6-432e-8cd1-aa282da084d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="macros">
+      <UniqueIdentifier>{b03fdcb0-01cc-4e7d-8bac-68bc22e73a51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{7aa6f98c-9fad-4dc7-8db5-4559a0c2b3a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="disasm">
+      <UniqueIdentifier>{d527939b-21bf-4ef6-9065-4a8e418f825a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\nasm\stdlib\strnlen.c">
+      <Filter>stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\stdlib\vsnprintf.c">
+      <Filter>stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\stdlib\snprintf.c">
+      <Filter>stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\stdlib\strlcpy.c">
+      <Filter>stdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\badenum.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\bsi.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\crc64.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\file.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\filename.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\hashtbl.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\ilog2.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\malloc.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\md5c.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\mmap.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\path.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\perfhash.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\raa.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\rbtree.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\readnum.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\realpath.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\saa.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\srcfile.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\string.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\strlist.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\ver.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\nasmlib\zerobuf.c">
+      <Filter>nasmlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\common\common.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\iflag.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\insnsa.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\insnsb.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\insnsd.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\insnsn.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\regdis.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\regflags.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\regs.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\regvals.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\x86\disp8.c">
+      <Filter>x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\error.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\eval.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\exprdump.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\exprlib.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\float.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\labels.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\listing.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\parser.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\pptok.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\pragma.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\preproc.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\preproc-nop.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\quote.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\rdstrnum.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\segalloc.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\stdscan.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\strfunc.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\tokhash.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\assemble.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\directbl.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\directiv.c">
+      <Filter>asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\asm\nasm.c">
+      <Filter>nasm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\macros\macros.c">
+      <Filter>macros</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outbin.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outcoff.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outdbg.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outelf.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outform.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outieee.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outlib.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outmacho.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outobj.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outrdf2.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\codeview.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\legacy.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\nulldbg.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\nullout.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outaout.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\output\outas86.c">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\disasm\disasm.c">
+      <Filter>disasm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nasm\disasm\sync.c">
+      <Filter>disasm</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
