@@ -33,6 +33,7 @@ public class CodeEditor
         PARSE_ERR
     };
     ArrayList<LstLine> m_currentListing = new ArrayList<LstLine>();
+    public PlayersPanel m_playersPanel = null;
 
 
     public CodeEditor() {
@@ -447,12 +448,18 @@ public class CodeEditor
        // int count = getSelectionRangeCount();
        // Console.log("rangeCount2=" + Integer.toString(count));
 
-
         String intext = innerText(asm_edit);
+        setText(intext);
+        m_playersPanel.updateText(intext);
+    }
+
+    public void setText(String intext)
+    {
         if (intext.isEmpty()) {
             asm_output.innerHTML = "";
             opcodes_edit.innerHTML = "";
-            Console.log("~Empty input");
+            asm_edit.innerHTML = "";
+            //Console.log("~Empty input");
             return;
         }
         intext = intext.replace('\u00A0', ' '); // no-break-space
@@ -500,5 +507,8 @@ public class CodeEditor
         //Console.log("~OK");
 
     }
+
+
+
 
 }

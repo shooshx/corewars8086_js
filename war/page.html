@@ -9,15 +9,163 @@
 
 var run_nasm = null
 
-function start_nasm() {
+function start()
+{
     run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
     Module['print'] = printConsole
     Module['printErr'] = printConsole
-    
-    //assemble();
+
+}
+
+// called when GWT finshed loading
+function gwtStart()
+{
+   // start with two players
+    addPlayersPanel()
+    addPlayersPanel()
+
+    sel_code_w1_pA.checked = true
+    triggerSrc('A', 1)
+}
+
+
+function addTextChild(elem, txt) {
+    var dummy = document.createElement("DIV")
+    dummy.innerHTML = txt
+    elem.appendChild(dummy.firstChild)
+}
+
+var g_nextLetter = 'A'
+var g_usedLetters = []
+var g_srcButtons = []  // ids of elements that are checkboxes that select a source file to be displayer
+
+function asciiAdd(letter, val) {
+    return String.fromCharCode(letter.charCodeAt(0) + val)
+}
+
+function arrayRemove(arr, value) {
+    var index = arr.indexOf(value);
+    if (index > -1) {
+        arr.splice(index, 1);
+    }
+}
+
+
+function addPlayersPanel() {
+    if (g_usedLetters.length >= 20)
+        return; // max players
+
+    var text = '<div id="pl_frame_pLETTER" class="toppic">\
+          <div class="famtitle">\
+            <input class="fam_check_box hidden mycheck" id="pLETTER_fcheck" type="checkbox" checked onchange="" >\
+            <label class="fam_check mycheck_label" for="pLETTER_fcheck"></label>\
+            <label class="fam_label" for="pLETTER_fcheck">Player LETTER</label>\
+            <img src="red_ex.png" class="pl_close_icon" onclick="triggerErasePlayer(pl_frame_pLETTER, \'LETTER\')">\
+            <br>\
+            <select id="wtype_pLETTER" class="sel_wtype" onchange="changedWType(\'LETTER\')">\
+              <option value="single" class="opt_single">Single Warrior</option>\
+              <option value="twoid">Two Identical Warriors</option>\
+              <option value="twodiff">Two Different Warriors</option>\
+            </select>\
+            <input id="sel_code_w1_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 1)" type="checkbox">\
+            <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >PlayerLETTER_1</label>\
+            <br>\
+            <input id="sel_code_w2_pLETTER" class="hidden sc-check" onchange="triggerSrc\'LETTER\', 2)" type="checkbox">\
+            <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">PlayerLETTER_2</label>\
+          </div>\
+        </div>'
+
+    addTextChild(players_contaier, text.replace(/LETTER/g, g_nextLetter))
+
+    g_srcButtons.push('sel_code_w1_p' + g_nextLetter)
+    g_srcButtons.push('sel_code_w2_p' + g_nextLetter)
+
+    changedWType(g_nextLetter)
+
+    j_addPlayer(g_nextLetter)
+
+    g_usedLetters.push(g_nextLetter)
+    g_nextLetter = asciiAdd(g_nextLetter, 1)
 
 
 }
+
+function changedWType(letter)
+{
+    var v = document.getElementById('wtype_p' + letter).value
+    var elem1 = document.getElementById('sel_code_lbl_w1_p' + letter)
+    var elem2 = document.getElementById('sel_code_lbl_w2_p' + letter)
+    var frame = document.getElementById('pl_frame_p' + letter)
+
+    if (v == 'single' || v == 'twoid') {
+        elem2.style.visibility = 'hidden'
+        elem2.style.opacity = 0.0
+        elem1.style.marginTop = '7px'
+        frame.style.height = '110px'
+    }
+    else if (v == 'twodiff') {
+        elem2.style.visibility = 'visible'
+        elem2.style.opacity = 1
+        elem1.style.marginTop = ''
+        frame.style.height = ''
+    }
+
+}
+
+
+function triggerSrc(letter, index)
+{
+    var except_id = 'sel_code_w' + index + '_p' + letter
+    for(var ni in g_srcButtons) {
+        var name = g_srcButtons[ni]
+        if (name == except_id)
+            continue
+        document.getElementById(name).checked = false
+    }
+
+    j_srcSelectionChanged(letter, index)
+}
+
+function triggerErasePlayer(elem, letter)
+{
+    //elem.parentNode.removeChild(elem);
+    elem.addEventListener('animationend', function() {
+        elem.parentNode.removeChild(elem);
+    })
+    elem.classList.add('removed_anim')
+
+    arrayRemove(g_usedLetters, letter);
+    arrayRemove(g_srcButtons, 'sel_code_w1_p' + letter)
+    arrayRemove(g_srcButtons, 'sel_code_w2_p' + letter)
+
+    j_removePlayer(letter)
+
+    if (g_usedLetters.length == 0) {
+        g_nextLetter = 'A'
+    }
+    else
+    {
+        // figure out what would be the next letter
+        var check = 'Z' // check from Z backwards
+        while(true) {
+            if (g_usedLetters.indexOf(check) > -1)
+                break;
+            check = asciiAdd(check, -1)
+        }
+        if (check != 'Z')
+            g_nextLetter = asciiAdd(check, 1)
+        else {  // all letters are used up, check for holes
+            check = 'A'
+            while(check != 'Z') {
+                if (g_usedLetters.indexOf(check) == -1)
+                    break;
+                check = asciiAdd(check, 1)
+            }
+            g_nextLetter = check // upper limit on number of players should avoid this causing a problem
+        }
+    }
+}
+
 
 // Java code comes to get and clear this variable to get the stdout of the nasm run
 var g_outputText = null
@@ -56,7 +204,7 @@ body {
     -webkit-user-select: none;
     -ms-user-select: none;
      user-select: none;
-    background: #b2b2b2; 
+    background: #ffffff;
     font-family: Verdana;
 }
 
@@ -64,7 +212,7 @@ body {
   display: inline-block;
   /*position: absolute;*/
 
-  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  /*font-family: "Helvetica Neue", "Helvetica", sans-serif;*/
 
   border-radius: 0.4em;
 
@@ -92,7 +240,7 @@ body {
   background-color: #fdfdfd;   
 }
 
-.sc-btn:active {
+.sc-btn:active, .sc-check:checked+.sc-btn {
     box-shadow: rgba(255, 255, 255, 0.2) 0 0.1em 0, inset rgba(0, 0, 0, 0.3) 0px 0.25em 1em; 
     color: #fff;
     background-color: #dfdfdf;
@@ -199,37 +347,192 @@ input:disabled + .sc-btn:active,
     background-color: rgb(255,140,140);
 }
 
+/*--------------- side panel -----------------*/
+
+#players_panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #d3ffd3;
+    width: 190px;
+    border-right: 1px solid #008800;
+    overflow: auto;
+}
+
+#action_panel {
+  position: absolute;
+  left: 200px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+}
+#action_rel {
+  position: relative;
+}
+
+#edit_panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 630px;
+  margin: 8px;
+}
+#memory_panel {
+  position: absolute;
+  left: 630px;
+  top: 0;
+
+}
+
+#players_rel {
+    position: relative;
+    width: 100%;
+    top: 20px;
+    /*bottom: 20px;*/
+}
+
+.hidden {
+    position: absolute;
+    z-index: -2;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from {opacity:0;}
+    to {opacity:1;}
+}
+@keyframes fadeOut {
+    from { opacity:1;  }
+    to {opacity:0; }
+}
+
+
+
+.toppic {
+    margin: 10px 11px 5px 10px;
+    background: #71e671;
+    font-family: Verdana;
+    padding: 4px;
+    border-radius: 5px;
+    height: 145px;
+    transition: height 0.1s ease-in-out;
+    animation: fadeIn 200ms;
+}
+.removed_anim {
+    animation: fadeOut 100ms;
+}
+
+.famtitle {
+    height: 26px;
+    line-height: 26px;
+}
+
+.mycheck + .mycheck_label {
+    background: url(check_none.png) no-repeat;
+    display: inline-block;
+}
+.mycheck:checked + .mycheck_label {
+    background-image: url(check_checked.png);
+}
+.mycheck:indeterminate + .mycheck_label {
+    background-image: url(check_int.png);
+}
+.fam_check {
+    width: 17px;
+    height: 17px;
+    margin: -4px 4px 0 2px;
+    vertical-align: middle;
+}
+.fam_label {
+    display: inline-block;
+    /*width: 160px;*/
+}
+.sel_wtype {
+    border-radius: 6px;
+    font-size: 14px;
+    height: 25px;
+    margin: 0 0 7px 3px;
+    width: calc(100% - 7px);
+}
+.opt_single {
+    background: url(check_none.png) no-repeat;
+}
+.src_sel_but {
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    margin: 3px 0 0 15px;
+    width: calc(100% - 20px);
+    transition: all 0.1s ease-in-out;
+}
+
+#addFamBtn {
+    width: 34px;
+    height: 34px;
+    margin: 4px 7px 7px 11px;;
+}
+#addFamBtnIn {
+    background: url(plus.png) center no-repeat;
+    display: inline-block;
+    width: 34px;
+    height: 33px;
+}
+.pl_close_icon {
+    float: right;
+    /*border: #aa0000 solid 1px;*/
+    border-radius: 6px;
+    padding: 4px;
+}
+.pl_close_icon:hover {
+    background-color: rgba(255,255,255,0.7);
+}
+
 </style>
   </head>
-  <body onload="start_nasm()">
+  <body onload="start()">
 
-    
-    <label id="runWarButton" class="sc-btn" >Run!</label>
-    <input id="battlesPerGroupField" type="text">
-    <input id="warriorsPerGroupField" type="text">
-    <input id="seed" type="text">
-    <br>
-    <input id="showBattleCheckBox", type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
-    <input id="startPausedCheckBox", type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
-    <br>
-    <!-- WarFrame -->
-    <canvas id="warCanvas"></canvas>
-    <div id="messagesArea"></div>
-    Round: <div id="roundNumber"></div>
-    <label id="btnPause" class="sc-btn">Pause</label>
-    <label id="btnSingleRound" class="sc-btn">Single Round</label>
-    Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
-    <br>
-    <div id="opcodes_edit" class="codearea allow_select" wrap="off"
-         onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
-    <div id="asm_edit_and_lines">
-      <div id="asm_linenums" class="codearea" wrap="off">1</div>
-      <div id="asm_edit" class="codearea allow_select" wrap="off" contenteditable="true" spellcheck="false"
-           onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop; asm_linenums.scrollTop = asm_edit.scrollTop;"
-           onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div>
+    <div id="action_panel"><div id="action_rel">
+      <div id="memory_panel">
+        <label id="runWarButton" class="sc-btn" >Run!</label>
+        <input id="battlesPerGroupField" type="text">
+        <input id="warriorsPerGroupField" type="text">
+        <input id="seed" type="text">
+        <br>
+        <input id="showBattleCheckBox", type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
+        <input id="startPausedCheckBox", type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
+        <br>
+        <!-- WarFrame -->
+        <canvas id="warCanvas"></canvas>
+        <div id="messagesArea"></div>
+        Round: <div id="roundNumber"></div>
+        <label id="btnPause" class="sc-btn">Pause</label>
+        <label id="btnSingleRound" class="sc-btn">Single Round</label>
+        Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
+      </div>
+
+      <div id="edit_panel">
+        <div id="opcodes_edit" class="codearea allow_select" wrap="off"
+             onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
+        <div id="asm_edit_and_lines">
+          <div id="asm_linenums" class="codearea" wrap="off">1</div>
+          <div id="asm_edit" class="codearea allow_select" wrap="off" contenteditable="true" spellcheck="false"
+               onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop; asm_linenums.scrollTop = asm_edit.scrollTop;"
+               onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div>
+        </div>
+        <br>
+        <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
+      </div>
+    </div></div>
+    <div id="players_panel">
+      <div id="players_rel">
+        <div id="players_contaier">
+
+        </div>
+        <label id="addFamBtn" class="sc-btn" onclick="addPlayersPanel()"><span id="addFamBtnIn"></span></label>
+      </div>
     </div>
-    <br>
-    <div id="asm_output" class="codearea" wrap="off" > </div>
 
   </body>
 </html>

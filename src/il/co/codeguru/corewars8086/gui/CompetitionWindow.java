@@ -8,6 +8,8 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 //import java.awt.*;
 //import java.awt.event.*;
 import java.io.IOException;
+
+import static il.co.codeguru.corewars8086.gui.CompetitionWindow.call_gwtStart;
 //import javax.swing.*;
 
 /**
@@ -39,6 +41,7 @@ public class CompetitionWindow extends JFrame
     private boolean m_isBattleShown;
 
     private CodeEditor m_codeEditor;
+    private PlayersPanel m_playersPanel;
 
     public boolean isBattleShown() {
         return m_isBattleShown;
@@ -117,6 +120,10 @@ public class CompetitionWindow extends JFrame
         showBattleRoom();
 
         m_codeEditor = new CodeEditor();
+        m_playersPanel = new PlayersPanel(m_codeEditor);
+        m_codeEditor.m_playersPanel = m_playersPanel;
+
+        call_gwtStart();
 
         /*addWindowListener(new WindowListener() {
             public void windowOpened(WindowEvent e) {}
@@ -133,6 +140,10 @@ public class CompetitionWindow extends JFrame
             public void windowDeactivated(WindowEvent e) {}
         });*/
     }
+
+    public static native void call_gwtStart() /*-{
+        $wnd.gwtStart();
+    }-*/;
 
     public AnimationScheduler.AnimationCallback animCallback = new AnimationScheduler.AnimationCallback() {
         @Override

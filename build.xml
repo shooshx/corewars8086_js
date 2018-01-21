@@ -54,8 +54,8 @@
       <arg value="com.codewars_js"/>
       
       <arg value="-style"/>
-      <arg value="PRETTY"/>
-      <!--<arg value="DETAILED"/>-->
+      <!--<arg value="PRETTY"/>-->
+      <arg value="DETAILED"/>
        
     </java>
   </target>
