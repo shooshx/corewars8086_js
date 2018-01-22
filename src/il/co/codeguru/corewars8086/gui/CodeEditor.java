@@ -12,6 +12,7 @@ import java.util.Vector;
 public class CodeEditor
 {
     private HTMLElement asm_edit, asm_output, opcodes_edit, asm_linenums;
+    private HTMLInputElement editor_title;
 
     private static class LstLine {
         int lineNum = -1;
@@ -41,11 +42,15 @@ public class CodeEditor
         asm_output = (HTMLElement)DomGlobal.document.getElementById("asm_output");
         opcodes_edit = (HTMLElement)DomGlobal.document.getElementById("opcodes_edit");
         asm_linenums = (HTMLElement)DomGlobal.document.getElementById("asm_linenums");
+        editor_title = (HTMLInputElement)DomGlobal.document.getElementById("editor_title");
 
         asm_edit.addEventListener("input", (event) -> {
             asm_edit_changed();
         });
 
+        editor_title.addEventListener("input", (event) -> {
+            m_playersPanel.updateTitle(editor_title.value);
+        });
     }
 
     private static native int run_nasm(String asmname, String text, String lstname)     /*-{
@@ -70,7 +75,7 @@ public class CodeEditor
     }
 
     // runs a state machine that parses the .lst files
-    private boolean parseLst(String lsttext, StringBuilder opcodesText, StringBuilder lineNumText)
+    private boolean parseLst(String lsttext, StringBuilder opcodesText)
     {
         String[] lines = lsttext.split("\\n");
         m_currentListing.clear();
@@ -164,8 +169,6 @@ public class CodeEditor
                 Console.log("wrong line number " + Integer.toString(l.lineNum));
                 return false;
             }
-            lineNumText.append(lineIndex);
-            lineNumText.append("<br>");
 
             ++lineIndex;
 
@@ -196,10 +199,9 @@ public class CodeEditor
 
 
     // returns the input asm text, with added formatting for error and warning lines
-    private String parseStdout(String stdoutText, String asmText)
+    private void parseStdout(String stdoutText, String asmText, StringBuilder asmColored, StringBuilder stdoutShorten)
     {
         String[] lines = stdoutText.split("\\n");
-        StringBuilder asmColored = new StringBuilder();
         // warning come before errors so we can't assume the line numbers are ascending
         // so we need to save all the line nums, sort and then go over from start to end of the text
 
@@ -209,8 +211,9 @@ public class CodeEditor
                 ++countAllNL;
         }
 
-        // have a potential ErrLine for every line in the asm text. this war there's no need to sort
+        // have a potential char for every line in the asm text. this way there's no need to sort
         // and there is only one entry per line, error trumps warning
+        // used for determining the color of a line
         char[] errLines = new char[countAllNL]; // for every line in the asmText, 0,'e' or 'w'
 
         for(int i = 0; i < lines.length; ++i)
@@ -218,6 +221,7 @@ public class CodeEditor
             String line = lines[i];
             int firstColon = -1;
             int lineNum = -1;
+            char lineType = 0;
             // find first and second columns chars
             for(int j = 0 ; j < line.length(); ++j) {
                 if (line.charAt(j) == ':') {
@@ -226,11 +230,11 @@ public class CodeEditor
                     else {
                         lineNum = Integer.parseInt(line.substring(firstColon + 1, j));
                         lineNum -= 1; // read numbers are 1 based
-                        if (j + 2 < line.length()) {
+                        if (j + 2 < line.length()) { // sanity check on the line length
                             assert lineNum < countAllNL : "unexpected lineNum";
-                            char ec = line.charAt(j + 2); // +2 for a space and then the first letter of 'error' or 'warning'
-                            if (!(ec == 'w' && errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
-                                errLines[lineNum] = ec;
+                            lineType = line.charAt(j + 2); // +2 for a space and then the first letter of 'error' or 'warning'
+                            if (!(lineType == 'w' && errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
+                                errLines[lineNum] = lineType;
                         }
                         break;
                     }
@@ -238,8 +242,15 @@ public class CodeEditor
             }
             if (lineNum == -1) {
                 Console.log("Failed parsing error stdout");
-                return asmText;
+                asmColored.append(asmText);
+                return;
             }
+
+            stdoutShorten.append("<div class='stdout_line_" + lineType + "' ondblclick='asm_cursorToLine(" + Integer.toString(i) +")'>");
+            stdoutShorten.append(line.substring(firstColon + 1));
+            stdoutShorten.append("</div>");
+            //if (i < lines.length - 1)
+            //    stdoutShorten.append('\n');
         }
 
 
@@ -261,9 +272,11 @@ public class CodeEditor
 
             asmColored.append(asmText.substring(searchStart, asmIndex));
             if (ec == 'e')
-                asmColored.append("<span class='edit_error'>");
+                asmColored.append("<span class='edit_error' id='mark_line_");
             else
-                asmColored.append("<span class='edit_warning'>");
+                asmColored.append("<span class='edit_warning' id='mark_line_");
+            asmColored.append(lineNum);
+            asmColored.append("'>");
 
             searchStart = asmIndex;
             while (asmIndex < asmText.length() && asmText.charAt(asmIndex) != '\n')
@@ -274,10 +287,8 @@ public class CodeEditor
 
         }
         asmColored.append(asmText.substring(asmIndex)); // add all remaining ending texr
-        String s = asmColored.toString();
-        s = s.replace("\n", "<br>");
 
-        return s;
+
     }
 
     private static native int getSelectionRangeCount() /*-{
@@ -435,6 +446,19 @@ public class CodeEditor
         }
     }
 
+    private void makeLineNums(String intext, StringBuilder lineNumText)
+    {
+        int lineCount = 1;
+        for (int i = 0; i < intext.length(); ++i) {
+            if (intext.charAt(i) == '\n') {
+                lineNumText.append(lineCount);
+                lineNumText.append("<br>");
+                ++lineCount;
+            }
+        }
+    }
+
+
 
     private static native String innerText(HTMLElement elem) /*-{
         return elem.innerText
@@ -470,11 +494,26 @@ public class CodeEditor
         int caretPos = caretPositionInText();
         if (!stdout.isEmpty())
         {   // add coloring to the text
-            asm_edit.innerHTML = parseStdout(stdout, intext);
+            StringBuilder asmColored = new StringBuilder();
+            StringBuilder stdoutShorten = new StringBuilder(); // removes the file name from the start of the lines
+            parseStdout(stdout, intext, asmColored, stdoutShorten);
+
+            String s = asmColored.toString();
+            s = s.replace("\n", "<br>");
+            asm_edit.innerHTML = s;
+
+            asm_output.innerHTML = stdoutShorten.toString();
         }
         else {
             setInnerText(asm_edit, intext); // clear all line marking
+            setInnerText(asm_output, "");
         }
+
+        StringBuilder lineNumText = new StringBuilder();
+        makeLineNums(intext, lineNumText);
+        asm_linenums.innerHTML = lineNumText.toString();
+
+
         if (caretPos != -1)
             setCaretTextPos(caretPos);
 
@@ -495,19 +534,21 @@ public class CodeEditor
         }
 
         StringBuilder opcodesText = new StringBuilder();
-        StringBuilder lineNumText = new StringBuilder();
-        boolean ok = parseLst(output, opcodesText, lineNumText);
+        boolean ok = parseLst(output, opcodesText);
         if (!ok) {
             opcodes_edit.innerHTML = "[listing parsing error]";
             Console.log("listing parsing error");
             return;
         }
         opcodes_edit.innerHTML = opcodesText.toString();
-        asm_linenums.innerHTML = lineNumText.toString();
         //Console.log("~OK");
 
     }
 
+
+    public void setTitle(String s) {
+        editor_title.value = s;
+    }
 
 
 

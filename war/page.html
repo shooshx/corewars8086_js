@@ -70,21 +70,22 @@ function addPlayersPanel() {
             <input id="sel_code_w1_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 1)" type="checkbox">\
             <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >PlayerLETTER_1</label>\
             <br>\
-            <input id="sel_code_w2_pLETTER" class="hidden sc-check" onchange="triggerSrc\'LETTER\', 2)" type="checkbox">\
+            <input id="sel_code_w2_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 2)" type="checkbox">\
             <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">PlayerLETTER_2</label>\
           </div>\
         </div>'
 
     addTextChild(players_contaier, text.replace(/LETTER/g, g_nextLetter))
 
-    g_srcButtons.push('sel_code_w1_p' + g_nextLetter)
-    g_srcButtons.push('sel_code_w2_p' + g_nextLetter)
+    var letter = g_nextLetter
+    g_srcButtons.push('sel_code_w1_p' + letter)
+    g_srcButtons.push('sel_code_w2_p' + letter)
 
-    changedWType(g_nextLetter)
+    changedWType(letter)
 
-    j_addPlayer(g_nextLetter)
+    j_addPlayer(letter, "Player" + letter + "_1", "Player" + letter + "_2")
 
-    g_usedLetters.push(g_nextLetter)
+    g_usedLetters.push(letter)
     g_nextLetter = asciiAdd(g_nextLetter, 1)
 
 
@@ -192,6 +193,24 @@ function fixhscroll() {
         console.log("fixed scroll")
         asm_edit.scrollLeft = 0
     }
+}
+
+// copy of a function in CodeEditor.java
+function setCaret(node, offset)
+{
+    var range = document.createRange();
+    range.setStart(node, offset);
+    range.collapse(true);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
+
+// called when a warning or error line in the editor is double clicked
+function asm_cursorToLine(num) {
+    var lineElem = document.getElementById("mark_line_" + num)
+    setCaret(lineElem, 0)
+    // lineElem.scrollIntoView() not doing something good
 }
 
 
@@ -319,6 +338,9 @@ input:disabled + .sc-btn:active,
     border-right: 1px solid #cccccc;
     color: #888888;
     overflow: hidden;
+    border-radius: 0;
+
+    margin: 0 0 1px 0; /* without this the editor is off by 1 pixel in chrome. no idea */
 }
 #asm_edit {
     width:300px;
@@ -333,18 +355,39 @@ input:disabled + .sc-btn:active,
     height: 518px; /* 500 + padding of 9 */
 }
 .edit_error {
-    background-color: #ffc3c3;
+    background-color: #ffd7d7;
 }
 .edit_warning {
-    background-color: #ffe66c;
+    background-color: #fff8ab;
 }
 #asm_output { 
     width:600px;
     height:100px;
+    white-space: normal;
+    padding: 9px 0 9px 0;
 }
 
 .edit_text_error {
     background-color: rgb(255,140,140);
+}
+
+.stdout_line_w:nth-child(even) {
+    background: #ffeb8b;
+}
+.stdout_line_w:nth-child(odd) {
+    background: #ffffaf;
+}
+
+.stdout_line_e:nth-child(even) {
+    background: #ffcece;
+}
+.stdout_line_e:nth-child(odd) {
+    background: #ffbcb4;
+}
+
+
+.stdout_line_e, .stdout_line_w {
+    padding: 0 0 0 8px;
 }
 
 /*--------------- side panel -----------------*/
@@ -489,6 +532,18 @@ input:disabled + .sc-btn:active,
     background-color: rgba(255,255,255,0.7);
 }
 
+#editor_title {
+    height: 30px;
+    width: 300px;
+    margin: 6px 0 20px 0;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 0 0 0 10px;
+    border: 1px solid #000000;
+}
+#editor_boxes {
+}
+
 </style>
   </head>
   <body onload="start()">
@@ -513,16 +568,19 @@ input:disabled + .sc-btn:active,
       </div>
 
       <div id="edit_panel">
-        <div id="opcodes_edit" class="codearea allow_select" wrap="off"
-             onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
-        <div id="asm_edit_and_lines">
-          <div id="asm_linenums" class="codearea" wrap="off">1</div>
-          <div id="asm_edit" class="codearea allow_select" wrap="off" contenteditable="true" spellcheck="false"
-               onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop; asm_linenums.scrollTop = asm_edit.scrollTop;"
-               onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div>
+        <input type="text" id="editor_title"><br>
+        <div id="editor_boxes">
+            <div id="opcodes_edit" class="codearea allow_select" wrap="off"
+                 onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
+            <div id="asm_edit_and_lines">
+              <div id="asm_linenums" class="codearea" wrap="off">1</div>
+              <div id="asm_edit" class="codearea allow_select" wrap="off" contenteditable="true" spellcheck="false"
+                   onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop; asm_linenums.scrollTop = asm_edit.scrollTop;"
+                   onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div>
+            </div>
+            <br>
+            <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
         </div>
-        <br>
-        <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
       </div>
     </div></div>
     <div id="players_panel">

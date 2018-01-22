@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/check_checked.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/check_int.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/check_none.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/plus.png" />
-      <change beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change beforePath="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" afterPath="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
       <change beforePath="$PROJECT_DIR$/war/page.html" afterPath="$PROJECT_DIR$/war/page.html" />
     </list>
     <ignored path="$PROJECT_DIR$/war/WEB-INF/classes/" />
@@ -26,13 +20,14 @@
       <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
-              <caret line="460" column="36" lean-forward="false" selection-start-line="460" selection-start-column="36" selection-end-line="460" selection-end-column="36" />
+            <state relative-caret-position="683">
+              <caret line="550" column="0" lean-forward="false" selection-start-line="550" selection-start-column="0" selection-end-line="550" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#800#809#0" expanded="true" />
-                <element signature="e#1878#1879#0" expanded="true" />
-                <element signature="e#1921#1922#0" expanded="true" />
+                <element signature="e#843#852#0" expanded="true" />
+                <element signature="e#2145#2146#0" expanded="true" />
+                <element signature="e#2188#2189#0" expanded="true" />
+                <element signature="e#20599#20600#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -54,11 +49,11 @@
       <file leaf-file-name="PlayersPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="28" column="50" lean-forward="false" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
+            <state relative-caret-position="720">
+              <caret line="122" column="0" lean-forward="false" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#792#804#0" expanded="true" />
+                <element signature="e#1192#1204#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -123,8 +118,8 @@
       <file leaf-file-name="page.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/war/page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="554">
-              <caret line="423" column="25" lean-forward="false" selection-start-line="423" selection-start-column="25" selection-end-line="423" selection-end-column="25" />
+            <state relative-caret-position="190">
+              <caret line="72" column="89" lean-forward="false" selection-start-line="72" selection-start-column="89" selection-end-line="72" selection-end-column="89" />
               <folding />
             </state>
           </provider>
@@ -144,16 +139,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>com.google.gwt.dom</find>
-      <find>roundNumber</find>
-      <find>opcodes_edit</find>
-      <find>setInnerText</find>
-      <find>innerTex</find>
-      <find>$wnd</find>
-      <find>fixhscroll</find>
-      <find>&quot;--</find>
-      <find>start_nasm</find>
-      <find>1 bas</find>
       <find>based</find>
       <find>asmtext</find>
       <find>clean</find>
@@ -164,12 +149,26 @@
       <find>toppic</find>
       <find>src_sel_but</find>
       <find>opacity</find>
-      <find>triggerSrc</find>
       <find>SET-PIC</find>
       <find>###</find>
-      <find>parseLst</find>
       <find>hidden</find>
       <find>triggerErasePlayer</find>
+      <find>asmColored</find>
+      <find>parseStdout</find>
+      <find>class</find>
+      <find>stdoutShorten</find>
+      <find>asm_line</find>
+      <find>parseLst</find>
+      <find>caret</find>
+      <find>range</find>
+      <find>addPlayer</find>
+      <find>triggerSrc</find>
+      <find>src_</find>
+      <find>j_add</find>
+      <find>setCa</find>
+      <find>editor_title</find>
+      <find>nic</find>
+      <find>setTitle</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -196,15 +195,15 @@
         <option value="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" />
         <option value="$PROJECT_DIR$/build.xml" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
         <option value="$PROJECT_DIR$/war/page.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="305" />
-    <option name="y" value="-6" />
+    <option name="x" value="221" />
+    <option name="y" value="2" />
     <option name="width" value="1702" />
     <option name="height" value="1042" />
   </component>
@@ -452,7 +451,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="305" y="-6" width="1702" height="1042" extended-state="0" />
+    <frame x="221" y="2" width="1702" height="1042" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -530,9 +529,10 @@
           <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#800#809#0" expanded="true" />
-            <element signature="e#1878#1879#0" expanded="true" />
-            <element signature="e#1921#1922#0" expanded="true" />
+            <element signature="e#843#852#0" expanded="true" />
+            <element signature="e#2145#2146#0" expanded="true" />
+            <element signature="e#2188#2189#0" expanded="true" />
+            <element signature="e#20599#20600#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -840,30 +840,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/codewars_js.gwt.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="69" lean-forward="false" selection-start-line="14" selection-start-column="69" selection-end-line="14" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="697">
           <caret line="57" column="29" lean-forward="false" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="50" lean-forward="false" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#792#804#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -878,23 +859,43 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/codewars_js.gwt.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="69" lean-forward="false" selection-start-line="14" selection-start-column="69" selection-end-line="14" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="460" column="36" lean-forward="false" selection-start-line="460" selection-start-column="36" selection-end-line="460" selection-end-column="36" />
+        <state relative-caret-position="683">
+          <caret line="550" column="0" lean-forward="false" selection-start-line="550" selection-start-column="0" selection-end-line="550" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#800#809#0" expanded="true" />
-            <element signature="e#1878#1879#0" expanded="true" />
-            <element signature="e#1921#1922#0" expanded="true" />
+            <element signature="e#843#852#0" expanded="true" />
+            <element signature="e#2145#2146#0" expanded="true" />
+            <element signature="e#2188#2189#0" expanded="true" />
+            <element signature="e#20599#20600#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="122" column="0" lean-forward="false" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1192#1204#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/war/page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="554">
-          <caret line="423" column="25" lean-forward="false" selection-start-line="423" selection-start-column="25" selection-end-line="423" selection-end-column="25" />
+        <state relative-caret-position="190">
+          <caret line="72" column="89" lean-forward="false" selection-start-line="72" selection-start-column="89" selection-end-line="72" selection-end-column="89" />
           <folding />
         </state>
       </provider>
