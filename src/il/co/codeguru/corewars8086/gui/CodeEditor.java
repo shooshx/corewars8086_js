@@ -95,7 +95,7 @@ public class CodeEditor
         String[] lines = lsttext.split("\\n");
         m_currentListing.clear();
 
-        int lineIndex = 1; // does not increment in warning lines
+        int lineIndex = 1; // does not increment in warning lines that appear in the listing file
         for(int i = 0; i < lines.length; ++i)
         {
             String line = lines[i];
@@ -157,7 +157,7 @@ public class CodeEditor
                             l.opcode = line.substring(opcodeStart, j);
                             state = Field.SPACE_BEFORE_CODE;
                         }
-                        else if (!isHexDigit(c) && c != '[' && c != ']')
+                        else if (!isHexDigit(c) && c != '[' && c != ']' && c != '(' && c != ')')
                             state = Field.PARSE_ERR;
                         break;
                     case SPACE_BEFORE_CODE:
@@ -471,6 +471,12 @@ public class CodeEditor
                 ++lineCount;
             }
         }
+        // the case of a pasted text in a new editor that doesn't end with a new line
+        // need to have a number for this line as well
+        if (intext.charAt(intext.length() - 1) != '\n')  {
+            lineNumText.append(lineCount);
+            lineNumText.append("<br>");
+        }
     }
 
 
@@ -501,15 +507,18 @@ public class CodeEditor
             asm_output.innerHTML = "";
             opcodes_edit.innerHTML = "";
             asm_edit.innerHTML = "";
+            asm_linenums.innerHTML = "1";
             if (playersPanel != null)
                 playersPanel.updateAsmResult(true, null);
             //Console.log("~Empty input");
             return;
         }
-        intext = intext.replace('\u00A0', ' '); // no-break-space
+        intext = intext.replace('\u00A0', ' '); // no-break-space coming from html
+        // assemble
         int retcode = run_nasm("player.asm", intext, "player.lst");
         String stdout = get_stdout();
-        setInnerText(asm_output, stdout); // could be just warnings
+        // output of assembler, could be just warnings
+        setInnerText(asm_output, stdout);
 
         int caretPos = caretPositionInText();
         if (!stdout.isEmpty())
