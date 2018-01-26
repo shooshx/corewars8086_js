@@ -7,7 +7,7 @@ import il.co.codeguru.corewars8086.gui.widgets.Console;
 
 import java.util.ArrayList;
 
-class PlayersPanel
+public class PlayersPanel
 {
     public enum EWarriorType {
         SINGLE,
@@ -19,12 +19,19 @@ class PlayersPanel
             player = p;
             index = idx;
         }
+        public String getName() {
+            return name;
+        }
+        public byte[] getBin() {
+            return bin;
+        }
 
         public PlayerInfo player; // reference back to the player this is in
         public int index; // 0 or 1 - there are two snippets per player
         public String name; // name of this code snippet (name on the button)
         public String asmText = "";
-        public byte[] bin = new byte[0];
+        public byte[] bin = null;  // can be null if last output was empty
+        public boolean lastCompileOk = true;
     }
 
     public static class PlayerInfo {
@@ -35,6 +42,11 @@ class PlayersPanel
             code[1] = new Code(this,1);
         }
 
+        public String getName() {
+            return title;
+        }
+
+        public boolean isEnabled = true; // the checkbox next to the player TBD
         public String label;  // 'A', 'B' etc, the string on the elements of the player
         public String title;  // 'Player A'
         public Code[] code = new Code[2];
@@ -105,7 +117,7 @@ class PlayersPanel
         if (p == null)
             return;
         m_inEditor = p.code[num - 1];
-        m_codeEditor.setText(m_inEditor.asmText);
+        m_codeEditor.setText(m_inEditor.asmText, null); // don't pass playerPanel since we don't want it to return update to us
         m_codeEditor.setTitle(m_inEditor.player.title);
     }
 
@@ -142,6 +154,26 @@ class PlayersPanel
         }
     }
 
+    public Code[] getFiles() {
+        int count = 0;
+        for(PlayerInfo p: m_players)
+            count += p.wtype == EWarriorType.SINGLE ? 1:2;
+
+        int i = 0;
+        Code[] c = new Code[count];
+        for(PlayerInfo p: m_players) {
+            c[i++] = p.code[0];
+            if (p.wtype != EWarriorType.SINGLE)
+                c[i++] = p.code[1];
+        }
+
+        return c;
+    }
+
+    public Code[] getZombies() {
+        return null;
+    }
+
 
     // from CodeEditor
     public void updateText(String text) {
@@ -160,7 +192,14 @@ class PlayersPanel
         ((HTMLElement)DomGlobal.document.getElementById("player_name_lbl_p" + pt)).innerHTML = v;
 
         reWriteButtonsLabels(m_inEditor.player);
+    }
 
+    public void updateAsmResult(boolean compileOk, byte[] binbuffer)
+    {
+        if (m_inEditor == null)
+            return;
+        m_inEditor.bin = binbuffer;
+        m_inEditor.lastCompileOk = compileOk;
     }
 
 }

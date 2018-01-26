@@ -1,8 +1,10 @@
 package il.co.codeguru.corewars8086.gui;
 
 
+import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
+import il.co.codeguru.corewars8086.war.WarriorRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +64,19 @@ public class CodeEditor
     private static native String read_file(String name) /*-{
         return $wnd.FS.readFile(name, { encoding: 'utf8' })
     }-*/;
+
+    private static native Uint8ArrayNative read_file_bin(String name) /*-{
+        return $wnd.FS.readFile(name, { encoding: 'binary' })
+    }-*/;
+
+    private static byte[] read_file_bin_arr(String name) {
+        Uint8ArrayNative arr = read_file_bin(name);
+        byte[] buf = new byte[arr.length()];
+        for(int i = 0; i < arr.length(); ++i)
+            buf[i] = (byte)arr.get(i);
+        return buf;
+    }
+
     private static native String get_stdout() /*-{
         return $wnd.g_outputText
     }-*/;
@@ -467,27 +482,32 @@ public class CodeEditor
         elem.innerText = text
     }-*/;
 
+
     public void asm_edit_changed()
     {
        // int count = getSelectionRangeCount();
        // Console.log("rangeCount2=" + Integer.toString(count));
 
         String intext = innerText(asm_edit);
-        setText(intext);
+        setText(intext, m_playersPanel);
+
         m_playersPanel.updateText(intext);
+
     }
 
-    public void setText(String intext)
+    public void setText(String intext, PlayersPanel playersPanel)
     {
         if (intext.isEmpty()) {
             asm_output.innerHTML = "";
             opcodes_edit.innerHTML = "";
             asm_edit.innerHTML = "";
+            if (playersPanel != null)
+                playersPanel.updateAsmResult(true, null);
             //Console.log("~Empty input");
             return;
         }
         intext = intext.replace('\u00A0', ' '); // no-break-space
-        int retcode = run_nasm("player1.asm", intext, "player1.lst");
+        int retcode = run_nasm("player.asm", intext, "player.lst");
         String stdout = get_stdout();
         setInnerText(asm_output, stdout); // could be just warnings
 
@@ -521,15 +541,19 @@ public class CodeEditor
         if (retcode != 0) { // error
             // TBD- compile just till the error line? or just the last good result?
             opcodes_edit.innerHTML = linesAsInput(intext); // don't want the opcodes edit to scroll unexpectedly so put there enough lines
-            Console.log("~Assembler error");
+            Console.error("~Assembler error");
+            if (playersPanel != null)
+                playersPanel.updateAsmResult(false, null);
             return;
         }
 
-        String output = read_file("player1.lst");
+        String output = read_file("player.lst");
         if (output.isEmpty()) {
             m_currentListing.clear();
             opcodes_edit.innerHTML = linesAsInput(intext);;
             Console.log("~Empty output");
+            if (playersPanel != null)
+                playersPanel.updateAsmResult(true, null);
             return;
         }
 
@@ -537,11 +561,23 @@ public class CodeEditor
         boolean ok = parseLst(output, opcodesText);
         if (!ok) {
             opcodes_edit.innerHTML = "[listing parsing error]";
-            Console.log("listing parsing error");
+            Console.error("listing parsing error"); // should not happen
+            m_playersPanel.updateAsmResult(false, null);
             return;
         }
         opcodes_edit.innerHTML = opcodesText.toString();
         //Console.log("~OK");
+
+        byte[] buf = read_file_bin_arr("player"); // TBD check max size
+        if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
+            Console.error("Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes");
+            if (playersPanel != null)
+                playersPanel.updateAsmResult(false, buf);
+            return;
+        }
+
+        if (playersPanel != null)
+            playersPanel.updateAsmResult(true, buf);
 
     }
 

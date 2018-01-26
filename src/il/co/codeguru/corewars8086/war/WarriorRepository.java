@@ -6,20 +6,22 @@ import java.io.*;
 import java.util.*;
 
 //import javax.swing.JOptionPane;
+import il.co.codeguru.corewars8086.gui.PlayersPanel;
 import il.co.codeguru.corewars8086.gui.widgets.*;
+import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.jsadd.File;
 
 
 public class WarriorRepository {
 
     /** Maximum initial code size of a single warrior */	
-    private final static int MAX_WARRIOR_SIZE = 512;
+    public final static int MAX_WARRIOR_SIZE = 512;
     private static final String WARRIOR_DIRECTORY= "survivors";
     private static final String ZOMBIE_DIRECTORY= "zombies";
 
     private List<WarriorGroup> warriorGroups;
     private WarriorGroup zombieGroup;
-    private Map<String,Integer> warriorNameToGroup;
+    private Map<String,Integer> warriorNameToGroup;  // map name to group index in warriorGroups
 
     private EventMulticasterScore scoreEventsCaster;
     private ScoreEventListener scoreListener;
@@ -27,7 +29,7 @@ public class WarriorRepository {
     public WarriorRepository() throws IOException {
         warriorNameToGroup = new HashMap<String,Integer>();
         warriorGroups = new ArrayList<WarriorGroup>();
-        readWarriorFiles();
+        //readWarriorFiles();
 
         scoreEventsCaster = new EventMulticasterScore();
         scoreListener = (ScoreEventListener) scoreEventsCaster.getProxy();
@@ -57,6 +59,83 @@ public class WarriorRepository {
             names.add(group.getName());
         }
         return names.toArray(new String[0]);
+    }
+
+    private byte[] truncToSize(byte[] arr) {
+        if (arr.length > MAX_WARRIOR_SIZE)
+            return Arrays.copyOf(arr, MAX_WARRIOR_SIZE);
+        return arr;
+    }
+
+    public boolean readWarriorFilesFromUI(PlayersPanel.Code[] files, PlayersPanel.Code[] zombies)
+    {
+        warriorNameToGroup.clear();
+        warriorGroups.clear();
+
+        Console.log("Found " + Integer.toString(files.length) + " survivors");
+
+        Arrays.sort(files, new Comparator<PlayersPanel.Code>() {
+            public int compare(PlayersPanel.Code o1, PlayersPanel.Code o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }});
+
+
+        WarriorGroup currentGroup = null;
+        for(PlayersPanel.Code c: files)
+        {
+            if (!c.player.isEnabled)
+                continue;
+            String name = c.getName();
+            if (name.isEmpty()) {
+                Console.error("All players must have a name for starting a competition");
+                return false;
+            }
+            if (!c.lastCompileOk) {
+                Console.error("Player " + name + " has assembly errors, can't start competition");
+                return false;
+            }
+            byte[] bin = c.getBin();
+            if (bin == null) {
+                Console.error("Player " + name + " does not have any code, can't start competition");
+                return false;
+            }
+
+            WarriorData data = new WarriorData(name, truncToSize(bin));
+            if (c.player.wtype != PlayersPanel.EWarriorType.SINGLE)
+            {
+                if (name.endsWith("1")) {
+                    // start a new group!
+                    currentGroup = new WarriorGroup(name.substring(0, name.length()-1));
+                    currentGroup.addWarrior(data);
+                    warriorNameToGroup.put(name, warriorGroups.size());
+                }
+                else if (name.endsWith("2")) {
+                    currentGroup.addWarrior(data);
+                    warriorNameToGroup.put(name, warriorGroups.size());
+                    warriorGroups.add(currentGroup);
+                    currentGroup = null;
+                }
+                else {
+                    Console.error("Unexpected suffix for warrior name. expected 1 or 2: " + name);
+                }
+            } else {
+                currentGroup = new WarriorGroup(name);
+                currentGroup.addWarrior(data);
+                warriorNameToGroup.put(name, warriorGroups.size());
+                warriorGroups.add(currentGroup);
+                currentGroup = null;
+            }
+        }
+
+        if (warriorGroups.isEmpty()) {
+            Console.error("no players to start a competition with");
+            return false;
+        }
+
+        if (!readZombiesFromUI(zombies))
+            return false;
+
+        return true;
     }
 
     /**
@@ -131,6 +210,36 @@ public class WarriorRepository {
 				file.delete();
 		}*/
 	}
+
+	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles) {
+        zombieGroup = null;
+        if (zombieFiles == null || zombieFiles.length == 0)
+            return true;
+
+        zombieGroup = new WarriorGroup("ZoMbIeS");
+        for (PlayersPanel.Code c : zombieFiles) {
+            String name = c.getName();
+            if (name == null) {
+                Console.error("All zombies must have a name for starting a competition");
+                return false;
+            }
+
+            if (!c.lastCompileOk) {
+                Console.error("Zombie " + name + " has assembly errors, can't start competition");
+                return false;
+            }
+            byte[] bin = c.getBin();
+            if (bin == null) {
+                Console.error("Zombie " + name + " does not have any code, can't start competition");
+                return false;
+            }
+
+            WarriorData data = new WarriorData(name, truncToSize(bin));
+            zombieGroup.addWarrior(data);
+        }
+        return true;
+    }
+
 
 	private void readZombies() throws IOException {
         File zombieDirectory = new File(ZOMBIE_DIRECTORY);

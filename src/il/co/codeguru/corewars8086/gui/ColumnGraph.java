@@ -13,7 +13,7 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 public class ColumnGraph extends JComponent {
 	private static final long serialVersionUID = 1L;
 	
-	private float[][] values;
+	private float[][] values; // 0 is the total, 1 is of warrior 1, 2 is of warrior 2
     private String[] names;
     private float maxValue;
     private double reduceFactor;
@@ -22,6 +22,10 @@ public class ColumnGraph extends JComponent {
 
     public ColumnGraph(String[] names) {
         super();
+        clear(names);
+    }
+
+    void clear(String[] names) {
         this.names = new String[names.length];
         // the first element holds the sum of all the other values
         values = new float[names.length][3];
@@ -55,11 +59,13 @@ public class ColumnGraph extends JComponent {
         }
         repaint();
 
-        Console.log("add " + Integer.toString(pos) + " " + Integer.toString(subIndex) + " " + Float.toString(value) + 
-                    "  scores " + Float.toString(values[0][0]) + "  " 
-                                + Float.toString(values[1][0]) + "  "
-                                + Float.toString(values[2][0]) + "  "
-                                + Float.toString(values[3][0]));
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < values.length; ++i) {
+            sb.append(values[0][0]);
+            sb.append("  ");
+        }
+        Console.log("Score add " + Integer.toString(pos) + " " + Integer.toString(subIndex) + " " + Float.toString(value) +
+                    "  totals= " + sb.toString());
 
     }
 

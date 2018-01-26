@@ -33,6 +33,7 @@ public class Competition {
     private long seed = 0;
 
     private boolean abort;
+    public boolean globalPause = false;
 
 
     private static class CompState {
@@ -63,6 +64,8 @@ public class Competition {
     // return true if need to continue after
     public boolean continueRun(boolean stillAnimateRound) throws Exception
     {
+        if (globalPause)
+            return false;
         if (compState.state == CompState.State.RUN_WAR) 
         {
             if (compState.warIndex < warsPerCombination) 

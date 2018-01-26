@@ -151,7 +151,21 @@ public class WarFrame extends JFrame
 		btnPause.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (competition.getCurrentWar().isPaused()) {
+                if (competition.globalPause) { // do resume
+                    competition.globalPause = false;
+                    btnPause.setText("Pause");
+                    mainWnd.requestFrame();
+                    btnSingleRound.setEnabled(false);
+                }
+                else { // do pause
+                    competition.globalPause = true;
+                    btnPause.setText("Resume");
+                    if (competition.getCurrentWar() != null)
+                        btnSingleRound.setEnabled(true);
+                }
+
+
+/*				if (competition.getCurrentWar().isPaused()) {
                     competition.getCurrentWar().resume();
 					btnPause.setText("Pause");
                     mainWnd.requestFrame();
@@ -161,6 +175,7 @@ public class WarFrame extends JFrame
 					btnPause.setText("Resume");
 					btnSingleRound.setEnabled(true);
 				}
+*/
 
 			}
 

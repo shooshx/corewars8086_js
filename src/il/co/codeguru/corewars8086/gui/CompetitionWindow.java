@@ -27,7 +27,7 @@ public class CompetitionWindow extends JFrame
     private JLabel warCounterDisplay;
     private JCheckBox showBattleCheckBox;
     private JTextField battlesPerGroupField;
-    private JTextField warriorsPerGroupField;
+    //private JTextField warriorsPerGroupField;
     private WarFrame battleFrame;
 
     private int warCounter;
@@ -102,8 +102,8 @@ public class CompetitionWindow extends JFrame
             competition.getWarriorRepository().getNumberOfGroups());
 		
         //warriorsPerGroupField = new JTextField(String.format("%d", numberOfGropus), 3); SHY-CHANGED
-        warriorsPerGroupField = new JTextField("warriorsPerGroupField", Integer.toString(numberOfGropus), 3);
-		controlPanel.add(warriorsPerGroupField);
+        //warriorsPerGroupField = new JTextField("warriorsPerGroupField", Integer.toString(numberOfGropus), 3);
+		//controlPanel.add(warriorsPerGroupField);
 		controlPanel.add(new JLabel("Sessions per groups combination:"));
 		battlesPerGroupField = new JTextField("battlesPerGroupField", "100", 4);
 		controlPanel.add(battlesPerGroupField);
@@ -168,33 +168,53 @@ public class CompetitionWindow extends JFrame
      * @return whether or not a new war was started.
      */
     public boolean runWar() {
+        int battlesPerGroup = 0;
         try {
         	competition.setSeed(seed.getText().hashCode());
-            final int battlesPerGroup = Integer.parseInt(
-                battlesPerGroupField.getText().trim());
-            final int warriorsPerGroup = Integer.parseInt(
-                warriorsPerGroupField.getText().trim());
-            if (competition.getWarriorRepository().getNumberOfGroups() < warriorsPerGroup) {
+            battlesPerGroup = Integer.parseInt(battlesPerGroupField.getText().trim());
+          /*  final int warriorsPerGroup = Integer.parseInt(
+                warriorsPerGroupField.getText().trim());*/
+        } catch (NumberFormatException e2) {
+            JOptionPane.showMessageDialog(this, "Error in configuration");
+        }
+        /*    if (competition.getWarriorRepository().getNumberOfGroups() < warriorsPerGroup) {
                 JOptionPane.showMessageDialog(this,
                     "Not enough survivors (got " +
                     competition.getWarriorRepository().getNumberOfGroups() +
                     " but " + warriorsPerGroup + " are needed)");
                 return false;
-            }
+            }*/
 
-            try {
-                boolean needMore = competition.runCompetition(battlesPerGroup, warriorsPerGroup, startPausedCheckBox.isSelected(), isBattleShown());
-                if (needMore) {
-                    requestFrame();
-                }
-            } catch (Exception e) {
-                Console.log("runWar EXCEPTION " + e.toString());
-                e.printStackTrace(Console.stream());
-            }
+        // having numItems and groupSize allows having 4 players and running competitions of just any 3 of them
+        // this is hardly useful in reality so I just set it to the same size
 
-        } catch (NumberFormatException e2) {
-            JOptionPane.showMessageDialog(this, "Error in configuration");
+        if (battlesPerGroup == 0) {
+            Console.error("battles per session needs to be more than 0");
+            return false;
         }
+
+        WarriorRepository repo = competition.getWarriorRepository();
+        if (!repo.readWarriorFilesFromUI( m_playersPanel.getFiles(), m_playersPanel.getZombies() ))
+            return false;
+        columnGraph.clear(repo.getGroupNames());
+
+        int numOfGroups = repo.getNumberOfGroups();
+        if (numOfGroups == 0) {
+            Console.error("can't run without any warriors"); // TBD-ERRMSG
+            return false;
+        }
+        try {
+            boolean needMore = competition.runCompetition(battlesPerGroup, numOfGroups, startPausedCheckBox.isSelected(), isBattleShown());
+            if (needMore) {
+                requestFrame();
+                return true;
+            }
+        } catch (Exception e) {
+            Console.log("runWar EXCEPTION " + e.toString());
+            e.printStackTrace(Console.stream());
+        }
+
+
         return false;
     }
 

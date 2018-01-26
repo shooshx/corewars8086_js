@@ -68,7 +68,7 @@ function addPlayersPanel() {
               <option value="TWO_DIFFERENT">Two Different Warriors</option>\
             </select>\
             <input id="sel_code_w1_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 1)" type="checkbox">\
-            <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER1</label>\
+            <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
             <br>\
             <input id="sel_code_w2_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 2)" type="checkbox">\
             <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
@@ -81,9 +81,8 @@ function addPlayersPanel() {
     g_srcButtons.push('sel_code_w1_p' + letter)
     g_srcButtons.push('sel_code_w2_p' + letter)
 
-    changedWType(letter)
-
     j_addPlayer(letter, "Player " + letter)
+    changedWType(letter)
 
     g_usedLetters.push(letter)
     g_nextLetter = asciiAdd(g_nextLetter, 1)
@@ -557,7 +556,7 @@ input:disabled + .sc-btn:active,
       <div id="memory_panel">
         <label id="runWarButton" class="sc-btn" >Run!</label>
         <input id="battlesPerGroupField" type="text">
-        <input id="warriorsPerGroupField" type="text">
+
         <input id="seed" type="text">
         <br>
         <input id="showBattleCheckBox", type="checkbox"><label for="showBattleCheckBox">Show session on start</label>

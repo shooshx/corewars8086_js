@@ -9,8 +9,12 @@ zoom to bytes
 check "updateScore Infinity"
 recreate scene with start addresses
 
-GUI options for same code for both warriers
 
+
+keep indentation
 
 editor caret
 - display: block adds lines
+
+- paste does not add last line number
+- Ctrl+Z not working after the second paste?

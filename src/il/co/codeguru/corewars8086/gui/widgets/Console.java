@@ -61,6 +61,11 @@ public class Console  {
         console.log(text);
     }-*/;
 
+    public static native void error(String text)
+    /*-{
+        console.error(text);
+    }-*/;
+
     public static PrintStream stream() {
         return new ConsolePrintStream();
     }
