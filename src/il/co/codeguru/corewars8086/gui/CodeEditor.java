@@ -339,6 +339,17 @@ public class CodeEditor
         entered = false;
     }
 
+    private String linesAsInput(String text)
+    {
+        StringBuilder opcodesText = new StringBuilder();
+        for(int i = 0; i < text.length(); ++i)
+        {
+            char c = text.charAt(i);
+            if (c == '\n')
+                opcodesText.append("<br>");
+        }
+        return opcodesText.toString();
+    }
 
 
     // inspired by https://github.com/kazzkiq/CodeFlask.js#usage which also writes all the dome in every key press
@@ -354,7 +365,10 @@ public class CodeEditor
             //Console.log("~Empty input");
             return;
         }
-        intext = intext.replace('\u00A0', ' '); // no-break-space coming from html
+        intext = intext.replace('\u00A0', ' ') // no-break-space coming from html
+                       .replace("&", "&amp;")  // other stuff coming from textarea we don't want to pass to html
+                       .replace("<", "&lt;")
+                       .replace(">", "&gt;");
         // assemble
         int retcode = run_nasm("player.asm", intext, "player.lst");
         String stdout = get_stdout();
@@ -369,14 +383,12 @@ public class CodeEditor
             parseStdout(stdout, intext, asmColored, stdoutShorten);
 
             String s = asmColored.toString();
-            //s = s.replace("\n", "<br>");
-
             asm_show.innerHTML = s;
 
             asm_output.innerHTML = stdoutShorten.toString();
         }
         else {
-            setInnerText(asm_show, intext); // clear all line marking
+            asm_show.innerHTML = intext; // clear all line marking
             setInnerText(asm_output, "");
         }
 
@@ -391,7 +403,7 @@ public class CodeEditor
 
         if (retcode != 0) { // error
             // TBD- compile just till the error line? or just the last good result?
-            //opcodes_edit.innerHTML = linesAsInput(intext); // don't want the opcodes edit to scroll unexpectedly so put there enough lines
+            opcodes_edit.innerHTML = linesAsInput(intext); // this is needed because x-scroll hiding relies on the opcode pane to be full
             Console.error("~Assembler error");
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, null);
@@ -401,7 +413,7 @@ public class CodeEditor
         String output = read_file("player.lst");
         if (output.isEmpty()) {
             m_currentListing.clear();
-            //opcodes_edit.innerHTML = linesAsInput(intext);;
+            opcodes_edit.innerHTML = linesAsInput(intext);;
             Console.log("~Empty output");
             if (playersPanel != null)
                 playersPanel.updateAsmResult(true, null);

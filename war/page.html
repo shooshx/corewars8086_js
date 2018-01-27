@@ -15,8 +15,11 @@ function start()
     Module['print'] = printConsole
     Module['printErr'] = printConsole
 
-    asm_edit.onkeydown = fixhscroll
-    asm_edit.onkeyup = fixhscroll
+    asm_edit.addEventListener("keydown", fixhscroll)
+    asm_edit.addEventListener("keydown", fixTabKey) // want to capture the press since we want to prevent the default action
+    asm_edit.addEventListener("keyup", fixhscroll)
+    asm_edit.addEventListener("keyup", fixIndent)  // indent is on key up since we want it after the \n
+
 }
 
 // called when GWT finshed loading
@@ -229,7 +232,44 @@ function handleScroll() {
     asm_pre.style.top = "-" + roundedScroll + "px"
 
     asm_show.style.left = "-" + asm_edit.scrollLeft + "px"
+}
 
+function fixTabKey(e) {
+    if (e.keyCode === 9){
+        var selStartPos = asm_edit.selectionStart
+        var inputVal = asm_edit.value;
+        e.preventDefault();
+
+        asm_edit.value = inputVal.substring(0, selStartPos) + "    " + inputVal.substring(selStartPos, inputVal.length);
+        asm_edit.selectionStart = selStartPos + 4;
+        asm_edit.selectionEnd = selStartPos + 4;
+        asm_edit.dispatchEvent(new Event("input")) // trigger the java parsing
+    }
+}
+
+function fixIndent(e) {
+    if (e.keyCode === 13)
+    { // line indentation
+        var selStartPos = asm_edit.selectionStart
+        var inputVal = asm_edit.value;
+        var pos = selStartPos - 2 // skip the last added \n
+        var seenSpaces = 0;
+        while (pos >= 0) {
+            if (inputVal[pos] == ' ')
+                ++seenSpaces;
+            else if (inputVal[pos] == '\n')
+                break;
+            else
+                seenSpaces = 0;
+            --pos;
+        }
+        if (seenSpaces > 0) {
+            asm_edit.value = inputVal.substring(0, selStartPos) + " ".repeat(seenSpaces) + inputVal.substring(selStartPos, inputVal.length);
+            asm_edit.selectionStart = selStartPos + seenSpaces;
+            asm_edit.selectionEnd = selStartPos + seenSpaces;
+
+        }
+    }
 }
 
 
@@ -362,7 +402,7 @@ input:disabled + .sc-btn:active,
     color: #888888;
     overflow: hidden;
     border-radius: 0;
-    
+
     background: #eeeeee;
     border-right: 1px solid #cccccc;
 
@@ -462,7 +502,7 @@ input:disabled + .sc-btn:active,
     position: absolute;
     top: 0;
     left: 200px;
-    width: 40px;
+    width: 39px;
     height: 100%;
     background: #eeeeee;
     border-right: 1px solid #cccccc;
