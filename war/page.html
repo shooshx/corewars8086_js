@@ -355,15 +355,16 @@ input:disabled + .sc-btn:active,
     position: absolute;
     left: 200px;
 
-    width: 30px;
+    width: 40px;
     border: none;
     padding: 9px 3px 9px 9px;
     text-align: right;
-    background: #eeeeee;
-    border-right: 1px solid #cccccc;
     color: #888888;
     overflow: hidden;
     border-radius: 0;
+    
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
 
     margin: 0 0 1px 0; /* without this the editor is off by 1 pixel in chrome. no idea */
 }
@@ -379,9 +380,9 @@ input:disabled + .sc-btn:active,
 #asm_edit {
     position: absolute;
     top: 0;
-    left: 230px;
+    left: 240px;
     height: 100%;
-    width: calc(100% - 230px);
+    width: calc(100% - 240px);
     overflow-x: auto;
     border:none;
     background: transparent;
@@ -418,10 +419,10 @@ input:disabled + .sc-btn:active,
 
 #asm_show_rel {
     position: relative;
-    left: 230px;
+    left: 240px;
 
     display: inline-block;
-    /*width: calc(600px - 230px);*/
+    /*width: calc(600px - 240px);*/
     /*height: 500px;*/
     vertical-align: top;
    /* overflow: hidden;*/
@@ -457,6 +458,18 @@ input:disabled + .sc-btn:active,
     pointer-events: none;
     box-sizing: border-box;
 }
+#box_numbers {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    width: 40px;
+    height: 100%;
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+
+}
+
+
 
 .edit_error {
     background-color: #ffd7d7;
@@ -680,6 +693,7 @@ input:disabled + .sc-btn:active,
         <input type="text" id="editor_title"><br>
         <div id="editor_boxes">
           <div id="edit_area">
+              <div id="box_numbers"></div>
               <pre id="asm_pre" class="codearea"><div id="asm_show_rel"><code id="asm_show" class="codearea"></code></div><code id="opcodes_edit" class="codearea allow_select" wrap="off"></code><code id="asm_linenums" class="codearea" wrap="off">1</code></pre>
               <textarea id="asm_edit" class="codearea allow_select" wrap="off"
                    spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"

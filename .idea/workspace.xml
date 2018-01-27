@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
       <change beforePath="$PROJECT_DIR$/war/page.html" afterPath="$PROJECT_DIR$/war/page.html" />
     </list>
     <ignored path="$PROJECT_DIR$/war/WEB-INF/classes/" />
@@ -94,8 +93,8 @@
       <file leaf-file-name="page.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/war/page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="383" column="25" lean-forward="false" selection-start-line="383" selection-start-column="24" selection-end-line="383" selection-end-column="25" />
+            <state relative-caret-position="439">
+              <caret line="364" column="4" lean-forward="false" selection-start-line="364" selection-start-column="4" selection-end-line="364" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -120,7 +119,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>read_file</find>
       <find>readZombiesFromUI</find>
       <find>updateAsmResult</find>
       <find>can't run</find>
@@ -150,6 +148,7 @@
       <find>pointer</find>
       <find>border</find>
       <find>30</find>
+      <find>30px</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -980,8 +979,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/war/page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="383" column="25" lean-forward="false" selection-start-line="383" selection-start-column="24" selection-end-line="383" selection-end-column="25" />
+        <state relative-caret-position="439">
+          <caret line="364" column="4" lean-forward="false" selection-start-line="364" selection-start-column="4" selection-end-line="364" selection-end-column="4" />
           <folding />
         </state>
       </provider>
