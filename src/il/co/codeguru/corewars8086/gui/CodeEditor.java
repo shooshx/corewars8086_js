@@ -13,8 +13,9 @@ import java.util.Vector;
 
 public class CodeEditor
 {
-    private HTMLElement asm_edit, asm_output, opcodes_edit, asm_linenums;
+    private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show;
     private HTMLInputElement editor_title;
+    private HTMLTextAreaElement asm_edit;
 
     private static class LstLine {
         int lineNum = -1;
@@ -40,7 +41,8 @@ public class CodeEditor
 
 
     public CodeEditor() {
-        asm_edit = (HTMLElement)DomGlobal.document.getElementById("asm_edit");
+        asm_edit = (HTMLTextAreaElement)DomGlobal.document.getElementById("asm_edit");
+        asm_show = (HTMLElement)DomGlobal.document.getElementById("asm_show");
         asm_output = (HTMLElement)DomGlobal.document.getElementById("asm_output");
         opcodes_edit = (HTMLElement)DomGlobal.document.getElementById("opcodes_edit");
         asm_linenums = (HTMLElement)DomGlobal.document.getElementById("asm_linenums");
@@ -231,6 +233,7 @@ public class CodeEditor
         // used for determining the color of a line
         char[] errLines = new char[countAllNL]; // for every line in the asmText, 0,'e' or 'w'
 
+        // go over stdout, find out which lines need marking
         for(int i = 0; i < lines.length; ++i)
         {
             String line = lines[i];
@@ -303,163 +306,11 @@ public class CodeEditor
         }
         asmColored.append(asmText.substring(asmIndex)); // add all remaining ending texr
 
+        //if (asmColored.charAt(asmColored.length() - 1) == '\n')
+        //    asmColored.append("&nbsp;"); // html doesn't show last <br> without any chars after it
 
     }
 
-    private static native int getSelectionRangeCount() /*-{
-        return $wnd.getSelection().rangeCount
-    }-*/;
-
-    private static native Node getSelectionNode() /*-{
-        return $wnd.getSelection().getRangeAt(0).startContainer
-    }-*/;
-    private static native int getSelectionOffset() /*-{
-        return $wnd.getSelection().getRangeAt(0).startOffset
-    }-*/;
-
-    private static native int setCaret(Node node, int offset) /*-{
-        var range = $wnd.document.createRange();
-        range.setStart(node, offset);
-        range.collapse(true);
-        var sel = $wnd.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }-*/;
-
-
-    // find the index of the caret in the text
-    // go over the content and sum up the text
-    // yes, this is ugly.
-    private int caretPositionInText()
-    {
-        int count = getSelectionRangeCount();
-        if (count == 0) {
-            return -1;
-        }
-        Node selNode = getSelectionNode();
-        int selOffset = getSelectionOffset();
-        int atOffset = 0;
-
-        // if we're in the edit node, that means we're in a new empty line
-        // the number is the could of child element up to where we are
-        // enumerate these elements and find the text caret position
-        if (selNode == asm_edit)
-        {
-            for(int j = 0; j < selOffset; ++j) {
-                Node nj = asm_edit.childNodes.getAt(j);
-                if (nj instanceof Text)
-                    atOffset += ((Text)nj).length;
-                else if (nj instanceof HTMLBRElement)
-                    atOffset += 1;
-                else if (nj instanceof HTMLElement) { // if it's a span, need to count everything that's in there
-                    for(int k = 0; k < nj.childNodes.length; ++k) {
-                        Node nk = nj.childNodes.getAt(k);
-                        if (nk instanceof Text) {
-                            atOffset += ((Text)nk).length;
-                        }
-                        else if (nk instanceof HTMLBRElement) {
-                            atOffset += 1; // \n
-                        }
-                        else
-                            assert false : "unexpected element in a span5";
-                    }
-                }
-                else
-                    assert false : "than wtf is it";
-            }
-            return atOffset;
-        }
-
-        // otherwise, search were we are among the children of the edit box
-        for(int i = 0; i < asm_edit.childNodes.length; ++i)
-        {
-            Node n = asm_edit.childNodes.getAt(i);
-            if (n == selNode)
-            { // reached the node we are it, now check where we are inside it. if the node is not a text node, the could is counting elements
-              // we can't be inside a <br> so that's not an option here
-                if (n instanceof Text) {
-                    atOffset += selOffset;
-                }
-                else if (n instanceof HTMLElement) { // we're in a span, check how far
-                    for(int j = 0; j < selOffset; ++j) {
-                        Node nj = n.childNodes.getAt(j);
-                        if (nj instanceof Text)
-                            atOffset += ((Text)nj).length;
-                        else if (nj instanceof HTMLBRElement)
-                            atOffset += 1;
-                        else
-                            assert false : "unexpected element in a span1";
-                    }
-                }
-                else
-                    assert false : "unexpected element3";
-                return atOffset;
-            }
-            if (n instanceof Text) {
-                atOffset += ((Text)n).length;
-            }
-            else if (n instanceof HTMLBRElement) {
-                atOffset += 1; // \n
-            }
-            else if (n instanceof HTMLElement)
-            {   // we're in an element, just enumerate everything in it
-                // this is the easiest way to do this in this stupid language
-                // no need for deeper recursion since the text generation does not produce deeper elements
-                for(int ii = 0; ii < n.childNodes.length; ++ii) {
-                    Node nn = n.childNodes.getAt(ii);
-                    if (nn == selNode) {
-                        assert nn instanceof Text : "unexpected element in a span2";;  // a span cannot have any more internal stuff
-                        atOffset += selOffset;
-                        return atOffset;
-                    }
-                    if (nn instanceof Text) {
-                        atOffset += ((Text)nn).length;
-                    }
-                    else if (nn instanceof HTMLBRElement) {
-                        atOffset += 1; // \n
-                    }
-                }
-            }
-        }
-        return -1;
-    }
-
-    // same thing but in reverse
-    private void setCaretTextPos(int pos)
-    {
-        int atOffset = 0;
-        for(int i = 0; i < asm_edit.childNodes.length; ++i) {
-            Node n = asm_edit.childNodes.getAt(i);
-            if (n instanceof Text) {
-                int len = ((Text)n).length;
-                if (pos >= atOffset && pos <= atOffset + len) {
-                    setCaret(n, pos - atOffset);
-                    return;
-                }
-                atOffset += len;
-            }
-            else if (n instanceof HTMLBRElement) {
-                atOffset += 1; // \n
-                if (atOffset == pos) {
-                    setCaret(asm_edit, i + 1); // after element index inside the editor (+1 since it needs to count of elements)
-                    return;
-                }
-            }
-            else if (n instanceof HTMLElement) { // it's a color span
-                for(int ii = 0; ii < n.childNodes.length; ++ii)
-                {
-                    Node nn = n.childNodes.getAt(ii);
-                    assert nn instanceof Text : "unexpected element in span4"; // text generation only puts text in spans
-                    int len = ((Text)nn).length;
-                    if (pos >= atOffset && pos <= atOffset + len) {
-                        setCaret(nn, pos - atOffset);
-                        return;
-                    }
-                    atOffset += len;
-                }
-            }
-        }
-    }
 
     private void makeLineNums(String intext, StringBuilder lineNumText)
     {
@@ -488,25 +339,30 @@ public class CodeEditor
         elem.innerText = text
     }-*/;
 
+    private boolean entered = false;
 
     public void asm_edit_changed()
     {
-       // int count = getSelectionRangeCount();
-       // Console.log("rangeCount2=" + Integer.toString(count));
+        if (entered)
+            return;
+        entered = true;
 
-        String intext = innerText(asm_edit);
+        String intext = asm_edit.value;
         setText(intext, m_playersPanel);
-
         m_playersPanel.updateText(intext);
 
+        entered = false;
     }
 
+
+
+    // inspired by https://github.com/kazzkiq/CodeFlask.js#usage which also writes all the dome in every key press
     public void setText(String intext, PlayersPanel playersPanel)
     {
         if (intext.isEmpty()) {
             asm_output.innerHTML = "";
             opcodes_edit.innerHTML = "";
-            asm_edit.innerHTML = "";
+            asm_show.innerHTML = "";
             asm_linenums.innerHTML = "1";
             if (playersPanel != null)
                 playersPanel.updateAsmResult(true, null);
@@ -520,7 +376,7 @@ public class CodeEditor
         // output of assembler, could be just warnings
         setInnerText(asm_output, stdout);
 
-        int caretPos = caretPositionInText();
+       // int caretPos = caretPositionInText();
         if (!stdout.isEmpty())
         {   // add coloring to the text
             StringBuilder asmColored = new StringBuilder();
@@ -528,13 +384,14 @@ public class CodeEditor
             parseStdout(stdout, intext, asmColored, stdoutShorten);
 
             String s = asmColored.toString();
-            s = s.replace("\n", "<br>");
-            asm_edit.innerHTML = s;
+            //s = s.replace("\n", "<br>");
+
+            asm_show.innerHTML = s;
 
             asm_output.innerHTML = stdoutShorten.toString();
         }
         else {
-            setInnerText(asm_edit, intext); // clear all line marking
+            setInnerText(asm_show, intext); // clear all line marking
             setInnerText(asm_output, "");
         }
 
@@ -543,8 +400,8 @@ public class CodeEditor
         asm_linenums.innerHTML = lineNumText.toString();
 
 
-        if (caretPos != -1)
-            setCaretTextPos(caretPos);
+       // if (caretPos != -1)
+      //      setCaretTextPos(caretPos);
 
 
         if (retcode != 0) { // error

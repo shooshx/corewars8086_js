@@ -15,6 +15,8 @@ function start()
     Module['print'] = printConsole
     Module['printErr'] = printConsole
 
+    asm_edit.onkeydown = fixhscroll
+    asm_edit.onkeyup = fixhscroll
 }
 
 // called when GWT finshed loading
@@ -178,22 +180,23 @@ function printConsole(line) {
 
 
 // in case there is a long line, when returning to a new line, the text will be still scrolled to the left, fix that
-function fixhscroll() {
-    var s = window.getSelection()
-    //console.log("--" + s.rangeCount + "  " + ((s.rangeCount > 0) ? (s.getRangeAt(0).startContainer.id + ':' + s.getRangeAt(0).startOffset) : 'X'))
+function fixhscroll(e) {
+    if (e.target != asm_edit)
+        return;
 
-    if (asm_edit.scrollLeft == 0)
-        return
-    sel = window.getSelection();
-    if (sel.rangeCount == 0)
-        return
-    range = sel.getRangeAt(0);
-    if (range.commonAncestorContainer.parentNode != asm_edit)
-        return
-    if (range.startOffset == 0 || range.startOffset == 1) {
-        console.log("fixed scroll")
+    if (asm_edit.selectionStart == 0 || asm_edit.selectionStart == 1)
+    {
+        console.log("fixing scroll")
+        asm_edit.scrollLeft = 0
+        asm_edit.scrollTop = 0
+    }
+    else if (asm_edit.value[asm_edit.selectionStart-1] == '\n' || asm_edit.value[asm_edit.selectionStart-2] == '\n')
+    {
         asm_edit.scrollLeft = 0
     }
+
+
+
 }
 
 // copy of a function in CodeEditor.java
@@ -212,6 +215,20 @@ function asm_cursorToLine(num) {
     var lineElem = document.getElementById("mark_line_" + num)
     setCaret(lineElem, 0)
     // lineElem.scrollIntoView() not doing something good
+}
+
+
+function handleScroll() {
+    roundedScroll = Math.floor(asm_edit.scrollTop);
+
+    // Fixes issue of desync text on mouse wheel, fuck Firefox.
+    if(navigator.userAgent.toLowerCase().indexOf('firefox') < 0) {
+        asm_edit.scrollTop = roundedScroll;
+    }
+
+    asm_pre.style.top = "-" + roundedScroll + "px"
+    asm_pre.style.left = "-" + asm_edit.scrollLeft + "px"
+
 }
 
 
@@ -343,12 +360,47 @@ input:disabled + .sc-btn:active,
 
     margin: 0 0 1px 0; /* without this the editor is off by 1 pixel in chrome. no idea */
 }
-#asm_edit {
+#edit_area {
+    display: inline-block;
+    position:relative;
     width:300px;
-    height:500px;
+    height: 518px;
+    vertical-align: top; /* othewise the scroll bar hides the border */
+    overflow: hidden;
+}
+#asm_edit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     overflow-x: hidden;
     border:none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    margin: 0;
+    box-sizing: border-box;
+    /*opacity: 0.2;*/
+    color: transparent;
+    caret-color: black;
 }
+#asm_pre {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    border:none;
+    margin: 0;
+    box-sizing: border-box;
+}
+#asm_show {
+    display: block;
+    box-sizing: border-box;
+    font-family: courier;
+}
+
 #asm_edit_and_lines {
     border: 1px solid #000000;
     border-radius: 4px;
@@ -578,9 +630,14 @@ input:disabled + .sc-btn:active,
                  onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
             <div id="asm_edit_and_lines">
               <div id="asm_linenums" class="codearea" wrap="off">1</div>
-              <div id="asm_edit" class="codearea allow_select" wrap="off" contenteditable="true" spellcheck="false"
-                   onscroll="opcodes_edit.scrollTop = asm_edit.scrollTop; asm_linenums.scrollTop = asm_edit.scrollTop;"
-                   onkeydown="fixhscroll()" onkeyup="fixhscroll()"></div>
+              <div id="edit_area">
+                  <pre id="asm_pre" class="codearea"><code id="asm_show"></code></pre>
+                  <textarea id="asm_edit" class="codearea allow_select" wrap="off"
+                       spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
+                       onscroll="handleScroll()"
+
+                       ></textarea>
+              </div>
             </div>
             <br>
             <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
