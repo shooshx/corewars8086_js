@@ -202,18 +202,6 @@ public class CodeEditor
         return true;
     }
 
-    private String linesAsInput(String text)
-    {
-        StringBuilder opcodesText = new StringBuilder();
-        for(int i = 0; i < text.length(); ++i)
-        {
-            char c = text.charAt(i);
-            if (c == '\n')
-                opcodesText.append("<br>");
-        }
-        return opcodesText.toString();
-    }
-
 
     // returns the input asm text, with added formatting for error and warning lines
     private void parseStdout(String stdoutText, String asmText, StringBuilder asmColored, StringBuilder stdoutShorten)
@@ -318,16 +306,13 @@ public class CodeEditor
         for (int i = 0; i < intext.length(); ++i) {
             if (intext.charAt(i) == '\n') {
                 lineNumText.append(lineCount);
-                lineNumText.append("<br>");
+                lineNumText.append("\n");
                 ++lineCount;
             }
         }
-        // the case of a pasted text in a new editor that doesn't end with a new line
-        // need to have a number for this line as well
-        if (intext.charAt(intext.length() - 1) != '\n')  {
-            lineNumText.append(lineCount);
-            lineNumText.append("<br>");
-        }
+
+        lineNumText.append(lineCount);
+        lineNumText.append("\n");
     }
 
 
@@ -406,7 +391,7 @@ public class CodeEditor
 
         if (retcode != 0) { // error
             // TBD- compile just till the error line? or just the last good result?
-            opcodes_edit.innerHTML = linesAsInput(intext); // don't want the opcodes edit to scroll unexpectedly so put there enough lines
+            //opcodes_edit.innerHTML = linesAsInput(intext); // don't want the opcodes edit to scroll unexpectedly so put there enough lines
             Console.error("~Assembler error");
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, null);
@@ -416,7 +401,7 @@ public class CodeEditor
         String output = read_file("player.lst");
         if (output.isEmpty()) {
             m_currentListing.clear();
-            opcodes_edit.innerHTML = linesAsInput(intext);;
+            //opcodes_edit.innerHTML = linesAsInput(intext);;
             Console.log("~Empty output");
             if (playersPanel != null)
                 playersPanel.updateAsmResult(true, null);

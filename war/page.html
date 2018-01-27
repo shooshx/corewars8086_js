@@ -227,7 +227,8 @@ function handleScroll() {
     }
 
     asm_pre.style.top = "-" + roundedScroll + "px"
-    asm_pre.style.left = "-" + asm_edit.scrollLeft + "px"
+
+    asm_show.style.left = "-" + asm_edit.scrollLeft + "px"
 
 }
 
@@ -322,11 +323,12 @@ input:disabled + .sc-btn:active,
     font-family: courier;
     outline: none; /* don't show focus border */
     overflow: auto;
-    border: 1px solid #000000;
-    border-radius: 4px;
+    /*border: 1px solid #000000;*/
+    /*border-radius: 4px;*/
     display: inline-block;
     padding: 9px 8px;
     white-space: pre;  /* needed for multiple spaces */
+    box-sizing: border-box; /* size includes margins and border */
 }
 .codearea:disabled {
     background-color: rgb(255,255,255);
@@ -342,13 +344,18 @@ input:disabled + .sc-btn:active,
 }
 
 #opcodes_edit {
+    position: absolute;
+    left: 0;
+
     width:200px;
-    height:500px;
     overflow-y: hidden; /* remove scroll bar */
+    background: white;
 }
 #asm_linenums {
+    position: absolute;
+    left: 200px;
+
     width: 30px;
-    height: 500px;
     border: none;
     padding: 9px 3px 9px 9px;
     text-align: right;
@@ -363,7 +370,8 @@ input:disabled + .sc-btn:active,
 #edit_area {
     display: inline-block;
     position:relative;
-    width:300px;
+
+    width:600px;
     height: 518px;
     vertical-align: top; /* othewise the scroll bar hides the border */
     overflow: hidden;
@@ -371,10 +379,10 @@ input:disabled + .sc-btn:active,
 #asm_edit {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 230px;
     height: 100%;
-    width: 100%;
-    overflow-x: hidden;
+    width: calc(100% - 230px);
+    overflow-x: auto;
     border:none;
     background: transparent;
     outline: none;
@@ -390,15 +398,33 @@ input:disabled + .sc-btn:active,
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     overflow-x: hidden;
     border:none;
     margin: 0;
     box-sizing: border-box;
+    padding: 0;
+
 }
 #asm_show {
-    display: block;
+    position: absolute;
+    display: inline-block;
     box-sizing: border-box;
     font-family: courier;
+    vertical-align: top;
+    border: none;
+}
+
+#asm_show_rel {
+    position: relative;
+    left: 230px;
+
+    display: inline-block;
+    /*width: calc(600px - 230px);*/
+    /*height: 500px;*/
+    vertical-align: top;
+   /* overflow: hidden;*/
 }
 
 #asm_edit_and_lines {
@@ -407,6 +433,31 @@ input:disabled + .sc-btn:active,
     display: inline-block;
     height: 518px; /* 500 + padding of 9 */
 }
+
+
+#box_opcodes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 192px;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 6px;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+#box_edit {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    width: 400px;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 6px;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
 .edit_error {
     background-color: #ffd7d7;
 }
@@ -418,6 +469,8 @@ input:disabled + .sc-btn:active,
     height:100px;
     white-space: normal;
     padding: 9px 0 9px 0;
+    border: 1px solid #000000;
+    border-radius: 4px;
 }
 
 .edit_text_error {
@@ -626,22 +679,17 @@ input:disabled + .sc-btn:active,
       <div id="edit_panel">
         <input type="text" id="editor_title"><br>
         <div id="editor_boxes">
-            <div id="opcodes_edit" class="codearea allow_select" wrap="off"
-                 onscroll="asm_edit.scrollTop = opcodes_edit.scrollTop; asm_linenums.scrollTop = opcodes_edit.scrollTop;"></div>
-            <div id="asm_edit_and_lines">
-              <div id="asm_linenums" class="codearea" wrap="off">1</div>
-              <div id="edit_area">
-                  <pre id="asm_pre" class="codearea"><code id="asm_show"></code></pre>
-                  <textarea id="asm_edit" class="codearea allow_select" wrap="off"
-                       spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
-                       onscroll="handleScroll()"
-
-                       ></textarea>
-              </div>
-            </div>
-            <br>
-            <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
+          <div id="edit_area">
+              <pre id="asm_pre" class="codearea"><div id="asm_show_rel"><code id="asm_show" class="codearea"></code></div><code id="opcodes_edit" class="codearea allow_select" wrap="off"></code><code id="asm_linenums" class="codearea" wrap="off">1</code></pre>
+              <textarea id="asm_edit" class="codearea allow_select" wrap="off"
+                   spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
+                   onscroll="handleScroll()"></textarea>
+              <div id="box_opcodes"></div>
+              <div id="box_edit"></div>
+          </div>
         </div>
+        <br>
+        <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
       </div>
     </div></div>
     <div id="players_panel">
