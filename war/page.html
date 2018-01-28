@@ -202,22 +202,14 @@ function fixhscroll(e) {
 
 }
 
-// copy of a function in CodeEditor.java
-function setCaret(node, offset)
-{
-    var range = document.createRange();
-    range.setStart(node, offset);
-    range.collapse(true);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-}
+
 
 // called when a warning or error line in the editor is double clicked
-function asm_cursorToLine(num) {
-    var lineElem = document.getElementById("mark_line_" + num)
-    setCaret(lineElem, 0)
-    // lineElem.scrollIntoView() not doing something good
+function asm_cursorToLine(charOffset) {
+    asm_edit.selectionStart = charOffset
+    asm_edit.selectionEnd = charOffset
+    asm_edit.focus()
+
 }
 
 
@@ -388,7 +380,7 @@ input:disabled + .sc-btn:active,
     left: 0;
 
     width:200px;
-    overflow-y: hidden; /* remove scroll bar */
+    overflow: hidden; /* remove scroll bar */
     background: white;
 }
 #asm_linenums {

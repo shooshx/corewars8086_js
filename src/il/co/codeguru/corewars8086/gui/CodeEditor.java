@@ -182,8 +182,17 @@ public class CodeEditor
             } // for j in line chars
             if (state == Field.WARNING)
                 continue; // skip this line
-            if (l.lineNum != lineIndex) {
-                Console.log("wrong line number " + Integer.toString(l.lineNum));
+            if (l.lineNum > lineIndex)
+            {  // this can happen if there is a \ at the end of a line, extending it to the next line
+               // so the next line doesn't exist in the line count, we need to just skit it in the output
+                // this can happe for multiple consecutive lines
+                while (l.lineNum != lineIndex) {
+                    opcodesText.append("\n");
+                    ++lineIndex;
+                }
+            }
+            else if (l.lineNum != lineIndex) {
+                Console.log("wrong line number " + Integer.toString(l.lineNum) + " at " + Integer.toString(lineIndex));
                 return false;
             }
 
@@ -191,7 +200,7 @@ public class CodeEditor
 
             m_currentListing.add(l);
             opcodesText.append(l.opcode);
-            opcodesText.append("<br>");
+            opcodesText.append("\n");
 
         }
 
@@ -202,6 +211,11 @@ public class CodeEditor
         return true;
     }
 
+    // given a line number (starting 0), give the offset in the input text the line ends
+    // this is a member in order to avoid reallocating it every time
+    // this is used for knowing how many lines there are and placing double click cursor
+    private ArrayList<Integer> m_lineOffsets = new ArrayList<Integer>();
+
 
     // returns the input asm text, with added formatting for error and warning lines
     private void parseStdout(String stdoutText, String asmText, StringBuilder asmColored, StringBuilder stdoutShorten)
@@ -210,11 +224,12 @@ public class CodeEditor
         // warning come before errors so we can't assume the line numbers are ascending
         // so we need to save all the line nums, sort and then go over from start to end of the text
 
-        int countAllNL = 1; // +1 for the last line with no \n
+     /*   int countAllNL = 1; // +1 for the last line with no \n
         for (int i = 0; i < asmText.length(); ++i) {
             if (asmText.charAt(i) == '\n')
                 ++countAllNL;
-        }
+        }*/
+        int countAllNL = m_lineOffsets.size();
 
         // have a potential char for every line in the asm text. this way there's no need to sort
         // and there is only one entry per line, error trumps warning
@@ -226,7 +241,7 @@ public class CodeEditor
         {
             String line = lines[i];
             int firstColon = -1;
-            int lineNum = -1;
+            int lineNum = -1; // this would be zero based
             char lineType = 0;
             // find first and second columns chars
             for(int j = 0 ; j < line.length(); ++j) {
@@ -252,7 +267,8 @@ public class CodeEditor
                 return;
             }
 
-            stdoutShorten.append("<div class='stdout_line_" + lineType + "' ondblclick='asm_cursorToLine(" + Integer.toString(i) +")'>");
+            stdoutShorten.append("<div class='stdout_line_" + lineType + "' ondblclick='asm_cursorToLine(" +
+                                   Integer.toString(m_lineOffsets.get(lineNum)) +")'>");
             stdoutShorten.append(line.substring(firstColon + 1));
             stdoutShorten.append("</div>");
             //if (i < lines.length - 1)
@@ -302,14 +318,18 @@ public class CodeEditor
 
     private void makeLineNums(String intext, StringBuilder lineNumText)
     {
+        m_lineOffsets.clear();
+
         int lineCount = 1;
         for (int i = 0; i < intext.length(); ++i) {
             if (intext.charAt(i) == '\n') {
                 lineNumText.append(lineCount);
                 lineNumText.append("\n");
                 ++lineCount;
+                m_lineOffsets.add(i);
             }
         }
+        m_lineOffsets.add(intext.length());  // last line needs the cursor after the last character
 
         lineNumText.append(lineCount);
         lineNumText.append("\n");
@@ -372,10 +392,13 @@ public class CodeEditor
         // assemble
         int retcode = run_nasm("player.asm", intext, "player.lst");
         String stdout = get_stdout();
-        // output of assembler, could be just warnings
-        setInnerText(asm_output, stdout);
 
-       // int caretPos = caretPositionInText();
+
+        StringBuilder lineNumText = new StringBuilder();
+        makeLineNums(intext, lineNumText);
+        asm_linenums.innerHTML = lineNumText.toString();
+
+
         if (!stdout.isEmpty())
         {   // add coloring to the text
             StringBuilder asmColored = new StringBuilder();
@@ -391,14 +414,6 @@ public class CodeEditor
             asm_show.innerHTML = intext; // clear all line marking
             setInnerText(asm_output, "");
         }
-
-        StringBuilder lineNumText = new StringBuilder();
-        makeLineNums(intext, lineNumText);
-        asm_linenums.innerHTML = lineNumText.toString();
-
-
-       // if (caretPos != -1)
-      //      setCaretTextPos(caretPos);
 
 
         if (retcode != 0) { // error

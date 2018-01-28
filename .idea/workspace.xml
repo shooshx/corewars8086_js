@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/TEST.txt" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
       <change beforePath="$PROJECT_DIR$/war/page.html" afterPath="$PROJECT_DIR$/war/page.html" />
     </list>
@@ -77,15 +79,16 @@
       <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="405" column="137" lean-forward="false" selection-start-line="405" selection-start-column="137" selection-end-line="405" selection-end-column="137" />
+            <state relative-caret-position="365">
+              <caret line="331" column="99" lean-forward="false" selection-start-line="331" selection-start-column="99" selection-end-line="331" selection-end-column="99" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1002#1011#0" expanded="true" />
                 <element signature="e#2808#2809#0" expanded="true" />
                 <element signature="e#2851#2852#0" expanded="true" />
-                <element signature="e#16618#16619#0" expanded="true" />
-                <element signature="e#16656#16657#0" expanded="true" />
+                <element signature="e#8335#8344#0" expanded="true" />
+                <element signature="e#17546#17547#0" expanded="true" />
+                <element signature="e#17584#17585#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -94,8 +97,8 @@
       <file leaf-file-name="page.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/war/page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="254" column="30" lean-forward="false" selection-start-line="254" selection-start-column="30" selection-end-line="254" selection-end-column="30" />
+            <state relative-caret-position="-434">
+              <caret line="209" column="38" lean-forward="false" selection-start-line="209" selection-start-column="38" selection-end-line="209" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -120,7 +123,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>TWO_IDENTICA</find>
       <find>values</find>
       <find>RUN_WAR</find>
       <find>paused</find>
@@ -150,6 +152,7 @@
       <find>keydown</find>
       <find>amp</find>
       <find>fixIndent</find>
+      <find>asm_cursorToLine</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -188,10 +191,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="361" />
-    <option name="y" value="17" />
+    <option name="x" value="351" />
+    <option name="y" value="41" />
     <option name="width" value="1488" />
-    <option name="height" value="1010" />
+    <option name="height" value="1003" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -445,7 +448,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="361" y="17" width="1488" height="1010" extended-state="0" />
+    <frame x="351" y="41" width="1488" height="1003" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -461,7 +464,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19497283" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14142539" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14253648" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -965,23 +968,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/war/page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="254" column="30" lean-forward="false" selection-start-line="254" selection-start-column="30" selection-end-line="254" selection-end-column="30" />
+        <state relative-caret-position="-434">
+          <caret line="209" column="38" lean-forward="false" selection-start-line="209" selection-start-column="38" selection-end-line="209" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="405" column="137" lean-forward="false" selection-start-line="405" selection-start-column="137" selection-end-line="405" selection-end-column="137" />
+        <state relative-caret-position="365">
+          <caret line="331" column="99" lean-forward="false" selection-start-line="331" selection-start-column="99" selection-end-line="331" selection-end-column="99" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1002#1011#0" expanded="true" />
             <element signature="e#2808#2809#0" expanded="true" />
             <element signature="e#2851#2852#0" expanded="true" />
-            <element signature="e#16618#16619#0" expanded="true" />
-            <element signature="e#16656#16657#0" expanded="true" />
+            <element signature="e#8335#8344#0" expanded="true" />
+            <element signature="e#17546#17547#0" expanded="true" />
+            <element signature="e#17584#17585#0" expanded="true" />
           </folding>
         </state>
       </provider>
