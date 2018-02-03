@@ -18,6 +18,7 @@ public class PlayersPanel
         public Code(PlayerInfo p, int idx) {
             player = p;
             index = idx;
+            label = p.label + Integer.toString(idx);
         }
         public String getName() {
             return name;
@@ -25,10 +26,12 @@ public class PlayersPanel
         public byte[] getBin() {
             return bin;
         }
+        public String getLabel() { return label; }
 
         public PlayerInfo player; // reference back to the player this is in
         public int index; // 0 or 1 - there are two snippets per player
         public String name; // name of this code snippet (name on the button)
+        public String label; // the label of the player + the index of the warrior, for instance A0, A1
         public String asmText = "";
         public byte[] bin = null;  // can be null if last output was empty
         public boolean lastCompileOk = true;
@@ -45,20 +48,28 @@ public class PlayersPanel
         public String getName() {
             return title;
         }
+        public void setWType(EWarriorType v) {
+            wtype = v;
+            activeCodes = (v == EWarriorType.SINGLE) ? 1:2;
+        }
 
         public boolean isEnabled = true; // the checkbox next to the player TBD
         public String label;  // 'A', 'B' etc, the string on the elements of the player
         public String title;  // 'Player A'
         public Code[] code = new Code[2];
         public EWarriorType wtype = EWarriorType.SINGLE;
+        public int activeCodes = 1; // depends on wtype
     }
 
-    private CodeEditor m_codeEditor;
+    private CompetitionWindow m_mainWnd;
     private ArrayList<PlayerInfo> m_players = new ArrayList<PlayerInfo>();
     private Code m_inEditor = null; // point to the above ArrayList
+    private HTMLElement addPlayerBtn;
 
-    public PlayersPanel(CodeEditor editor) {
-        m_codeEditor = editor;
+    public PlayersPanel(CompetitionWindow mainWnd) {
+        m_mainWnd = mainWnd;
+
+        addPlayerBtn = (HTMLElement)DomGlobal.document.getElementById("addPlayerBtn");
 
         exportMethods();
         //Console.log( findPlayer("bla") == null ? "null":"not-null");
@@ -67,10 +78,11 @@ public class PlayersPanel
     // http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsJSNI.html
     public native void exportMethods() /*-{
         var that = this
-        $wnd.j_srcSelectionChanged = $entry(function(s,i) {that.@il.co.codeguru.corewars8086.gui.PlayersPanel::srcSelectionChanged(Ljava/lang/String;I)(s,i) });
+        $wnd.j_srcSelectionChanged = $entry(function(s,i) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::srcSelectionChanged(Ljava/lang/String;I)(s,i) });
         $wnd.j_addPlayer =    $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::addPlayer(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::removePlayer(Ljava/lang/String;)(s) });
         $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
+        $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
     }-*/;
 
     public PlayerInfo findPlayer(String label) {
@@ -80,6 +92,17 @@ public class PlayersPanel
                 return p;
         }
         return null;
+    }
+
+    public void j_demoDebugPlayers() {
+        m_inEditor = m_players.get(1).code[0];
+        m_inEditor.asmText = "start:\ninc ax\njmp start";
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+
+        m_inEditor = m_players.get(0).code[0];
+        m_inEditor.asmText = "start:\ninc cx\njmp start";
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+
     }
 
 
@@ -117,13 +140,13 @@ public class PlayersPanel
         if (p == null)
             return;
         m_inEditor = p.code[num - 1];
-        m_codeEditor.setText(m_inEditor.asmText, null); // don't pass playerPanel since we don't want it to return update to us
-        m_codeEditor.setTitle(m_inEditor.player.title);
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, null); // don't pass playerPanel since we don't want it to return update to us
+        m_mainWnd.battleFrame.cpuframe.setSelectedPlayer(m_inEditor.getLabel());
     }
 
     public void changedWType(String label, String v) {
         PlayerInfo p = findPlayer(label);
-        p.wtype = EWarriorType.valueOf(v);
+        p.setWType(EWarriorType.valueOf(v));
 
         reWriteButtonsLabels(p);
     }
@@ -147,7 +170,7 @@ public class PlayersPanel
         case TWO_DIFFERENT:
             String vu1 = vu + "1", vu2 = vu + "2";
             p.code[0].name = vu1;
-            p.code[1].name = vu1;
+            p.code[1].name = vu2;
             ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_p" + p.label)).innerHTML = vu1;
             ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w2_p" + p.label)).innerHTML = vu2;
             break;
@@ -157,7 +180,7 @@ public class PlayersPanel
     public Code[] getFiles() {
         int count = 0;
         for(PlayerInfo p: m_players)
-            count += p.wtype == EWarriorType.SINGLE ? 1:2;
+            count += p.activeCodes;
 
         int i = 0;
         Code[] c = new Code[count];
@@ -200,6 +223,49 @@ public class PlayersPanel
             return;
         m_inEditor.bin = binbuffer;
         m_inEditor.lastCompileOk = compileOk;
+    }
+
+    public boolean checkPlayersReady()
+    {
+        if (m_players.size() == 0) {
+            Console.error("No players added");
+            return false;
+        }
+
+        int countEnabled = 0;
+        for(int i = 0; i < m_players.size(); ++i) {
+            PlayerInfo p = m_players.get(i);
+            if (!p.isEnabled)
+                continue;
+            ++countEnabled;
+            for(int ci = 0; ci < p.activeCodes; ++ci) {
+                Code c = p.code[ci];
+                if (!c.lastCompileOk) {
+                    Console.error("Errors in code " + c.getName() + " of player " + p.getName());
+                    return false;
+                }
+                if (c.getBin() == null || c.getBin().length == 0) {
+                    Console.error("No code in " + c.getName() + " of player " + p.getName());
+                    return false;
+                }
+            }
+        }
+        if (countEnabled == 0) {
+            Console.error("No enabled players");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void setDebugMode(boolean v) {
+
+        if (v) {
+            addPlayerBtn.style.display = "none";
+        }
+        else {
+            addPlayerBtn.style.display = "";
+        }
     }
 
 }

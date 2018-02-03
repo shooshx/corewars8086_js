@@ -31,6 +31,8 @@ function gwtStart()
 
     sel_code_w1_pA.checked = true
     triggerSrc('A', 1)
+
+    j_demoDebugPlayers();
 }
 
 
@@ -264,6 +266,34 @@ function fixIndent(e) {
     }
 }
 
+function triggerDebug() {
+    if (debugCheckbox.checked) {
+        if (!j_startDebug()) {
+            console.error("cannot start debug")
+            debugCheckbox.checked = false;
+            return
+        }
+
+        debugBtnIn.style.backgroundImage = "url(red_stop.png)"
+        debugBtnIn2.innerText = "Stop"
+    }
+    else {
+        debugBtnIn.style.backgroundImage = "url(green_play.png)"
+        debugBtnIn2.innerText = "Debug"
+    }
+}
+
+function triggerRegBase(ishex) {
+    if (ishex) {
+        hexCheckbox.checked = true;
+        decCheckbox.checked = false;
+    }
+    else {
+        hexCheckbox.checked = false;
+        decCheckbox.checked = true;
+    }
+    j_setRegistersBase(ishex ? 16:10)
+}
 
 </script>    
 <style>
@@ -583,7 +613,7 @@ input:disabled + .sc-btn:active,
 #players_rel {
     position: relative;
     width: 100%;
-    top: 20px;
+    top: 50px;
     /*bottom: 20px;*/
 }
 
@@ -665,12 +695,12 @@ input:disabled + .sc-btn:active,
     transition: all 0.1s ease-in-out;
 }
 
-#addFamBtn {
+#addPlayerBtn {
     width: 34px;
     height: 34px;
     margin: 4px 7px 7px 11px;;
 }
-#addFamBtnIn {
+#addPlayerBtnIn {
     background: url(plus.png) center no-repeat;
     display: inline-block;
     width: 34px;
@@ -698,6 +728,114 @@ input:disabled + .sc-btn:active,
 #editor_boxes {
 }
 
+
+#debugBtn {
+    width: 120px;
+    text-align:left;
+}
+#debugBtnIn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: -8px;
+    margin: 0 0px 0 9px;
+}
+#debugBtnIn2 {
+    margin: 0 0 0 3px;
+}
+
+/* --------------------- cpuPanel --------------------- */
+
+#cpuPanel {
+    position: absolute;
+    left: 0;
+    top: 630px;
+}
+.reg_name {
+    display: inline-block;
+    text-align: right;
+    width: 37px;
+    font-family: courier;
+    font-weight: bold;
+}
+.reg_long_name {
+    width: 75px;
+}
+.reg_input {
+    width: 60px;
+    font-family: courier;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 2px solid #aaaaaa;
+    height: 17px;
+    margin: 2px 0 0 3px;
+    padding: 1px 0 1px 3px;
+    font-size: 16px;
+}
+#reg_flags_table {
+    border: 1px solid #000000;
+    /*border-collapse: collapse;*/
+    margin: 5px;
+    border-radius: 5px;
+}
+.flag_check {
+    width: 17px;
+    height: 17px;
+}
+
+#reg_flags_table td {
+    border-left: 1px solid #000;
+    width: 25px;
+    text-align: center;
+}
+#reg_flags_table td:first-child {
+    border-left: none;
+}
+#reg_flags_table .bytesep {
+    border-left: 2px solid #000000;
+}
+.flag_unsed {
+    background-color: #cccccc;
+}
+table tr:first-child td:first-child {
+    border-top-left-radius: 5px;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+}
+
+#hex_dec {
+    float: right;
+    width: 70px;
+    height: 90px;
+}
+#hexBtn, #decBtn {
+    width: 45px;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 0 5px 20px;
+    border: 1px solid #cccccc;
+}
+
+.base-btn:active, .sc-check:checked+.base-btn {
+    background-image: linear-gradient(to bottom, #479ceb, #1067c1);
+    /*color: #000;*/
+}
+
+.title-buttons {
+    vertical-align: -32px;
+    border: 1px solid;
+    width: 77px;
+    height: 33px;
+    line-height: 30px;
+    margin: 6px 0 20px 0;
+}
+#btnPause {
+
+}
+#btnSingleRound {
+}
+
 </style>
   </head>
   <body onload="start()">
@@ -708,21 +846,24 @@ input:disabled + .sc-btn:active,
         <input id="battlesPerGroupField" type="text">
 
         <input id="seed" type="text">
+        Step:<span id="stepnum">0</span>
         <br>
-        <input id="showBattleCheckBox", type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
-        <input id="startPausedCheckBox", type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
+        <input id="showBattleCheckBox" type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
+        <input id="startPausedCheckBox" type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
         <br>
         <!-- WarFrame -->
         <canvas id="warCanvas"></canvas>
         <div id="messagesArea"></div>
         Round: <div id="roundNumber"></div>
-        <label id="btnPause" class="sc-btn">Pause</label>
-        <label id="btnSingleRound" class="sc-btn">Single Round</label>
+
         Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
       </div>
 
       <div id="edit_panel">
-        <input type="text" id="editor_title"><br>
+        <input type="text" id="editor_title" spellcheck="false">
+          <label id="btnPause" class="sc-btn title-buttons">Pause</label>
+          <label id="btnSingleRound" class="sc-btn title-buttons">Step</label>
+          <br>
         <div id="editor_boxes">
           <div id="edit_area">
               <div id="box_numbers"></div>
@@ -737,13 +878,95 @@ input:disabled + .sc-btn:active,
         <br>
         <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
       </div>
+
+      <div id="cpuPanel" style="display:none;">
+        <div id="registers_block">
+          <div id="hex_dec">
+            <input id="hexCheckbox" class="sc-check hidden" onchange="triggerRegBase(true)" type="checkbox" checked="true">
+              <label id="hexBtn" class="sc-btn base-btn" for="hexCheckbox">Hex</label><br>
+            <input id="decCheckbox" class="sc-check hidden" onchange="triggerRegBase(false)" type="checkbox">
+              <label id="decBtn" class="sc-btn base-btn" for="decCheckbox">Dec</label>
+          </div>
+          <span class="reg_name">AX:</span><input type="text" id="reg_AX" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">BX:</span><input type="text" id="reg_BX" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">CX:</span><input type="text" id="reg_CX" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">DX:</span><input type="text" id="reg_DX" class="reg_input" maxlength="5" spellcheck="false"><br>
+          <span class="reg_name">SI:</span><input type="text" id="reg_SI" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">DI:</span><input type="text" id="reg_DI" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">BP:</span><input type="text" id="reg_BP" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">SP:</span><input type="text" id="reg_SP" class="reg_input" maxlength="5" spellcheck="false"><br>
+          <span class="reg_name">CS:</span><input type="text" id="reg_CS" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">DS:</span><input type="text" id="reg_DS" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">SS:</span><input type="text" id="reg_SS" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name">ES:</span><input type="text" id="reg_ES" class="reg_input" maxlength="5" spellcheck="false"><br>
+          <span class="reg_name">IP:</span><input type="text" id="reg_IP" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name reg_long_name">Energy:</span><input type="text" id="reg_Energy" class="reg_input" maxlength="5" spellcheck="false">
+          <span class="reg_name reg_long_name">Flags:</span><input type="text" id="reg_Flags" class="reg_input" maxlength="5" spellcheck="false"><br>
+          <table id="reg_flags_table" cellspacing="0">
+              <tr><td class="flag_unsed" title="Reserved"></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td title="Overflow Flag">OF</td><td title="Direction Flag">DF</td><td title="Interrupt Enable Flag">IF</td>
+                  <td title="Trap Flag">TF</td><td class="bytesep" title="Sign Flag">SF</td><td title="Zero Flag">ZF</td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td title="Adjust Flag">AF</td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td title="Parity Flag">PF</td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td title="Carry Flag">CF</td></tr>
+              <tr>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="OF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="OF_fcheck" title="Overflow Flag"></label></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="DF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="DF_fcheck" title="Direction Flag"></label></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="IF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="IF_fcheck" title="Interrupt Enable Flag"></label></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="TF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="TF_fcheck" title="Trap Flag"></label></td>
+                  <td class="bytesep">
+                      <input class="flag_check_box hidden mycheck" id="SF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="SF_fcheck" title="Sign Flag"></label></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="ZF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="ZF_fcheck" title="Zero Flag"></label></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="AF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="AF_fcheck" title="Adjust Flag"></label></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="PF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="PF_fcheck" title="Parity Flag"></label></td>
+                  <td class="flag_unsed" title="Reserved"></td>
+                  <td>
+                      <input class="flag_check_box hidden mycheck" id="CF_fcheck" type="checkbox">
+                      <label class="flag_check mycheck_label" for="CF_fcheck" title="Carry Flag"></label></td>
+              </tr>
+          </table>
+        </div>
+      </div>
+
     </div></div>
     <div id="players_panel">
       <div id="players_rel">
+        <input id="debugCheckbox" class="hidden" onchange="triggerDebug()" type="checkbox">
+        <label id="debugBtn" class="sc-btn" for="debugCheckbox">
+          <span id="debugBtnIn" class="sc-span" style="visibility: visible; background-image: url(&quot;green_play.png&quot;);"></span>
+          <span id="debugBtnIn2">Debug</span>
+        </label>
         <div id="players_contaier">
 
         </div>
-        <label id="addFamBtn" class="sc-btn" onclick="addPlayersPanel()"><span id="addFamBtnIn"></span></label>
+        <label id="addPlayerBtn" class="sc-btn" onclick="addPlayersPanel()"><span id="addPlayerBtnIn"></span></label>
       </div>
     </div>
 

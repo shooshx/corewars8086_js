@@ -36,7 +36,7 @@ public class Competition {
     public boolean globalPause = false;
 
 
-    private static class CompState {
+    public static class CompState {
         public enum State {
             NONE,
             RUN_WAR,
@@ -48,7 +48,7 @@ public class Competition {
         public boolean animateRound; // should we return after each round or after each war for a UI update
         public int round;
     }
-    private CompState compState;
+    public CompState compState;
 
     public Competition() throws IOException {
         warriorRepository = new WarriorRepository();
@@ -160,7 +160,7 @@ public class Competition {
             //Thread.sleep(DELAY_UNIT); TBD-SHY
     //    }
         if (currentWar.isPaused()) {
-            Console.log("pause");
+            Console.log("currentWar.isPaused");
             return false;
         }
 

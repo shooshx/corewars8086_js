@@ -1,5 +1,7 @@
 package il.co.codeguru.corewars8086.gui;
 
+import elemental2.dom.DomGlobal;
+import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.war.*;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.user.client.Window;
@@ -26,9 +28,10 @@ public class CompetitionWindow extends JFrame
     private JButton runWarButton;
     private JLabel warCounterDisplay;
     private JCheckBox showBattleCheckBox;
+    private boolean m_isBattleShown = false;
     private JTextField battlesPerGroupField;
     //private JTextField warriorsPerGroupField;
-    private WarFrame battleFrame;
+    public WarFrame battleFrame;
 
     private int warCounter;
     private int totalWars;
@@ -38,10 +41,11 @@ public class CompetitionWindow extends JFrame
 	private JTextField seed;
 
     private JCheckBox startPausedCheckBox;
-    private boolean m_isBattleShown;
+    private boolean m_isStartPaused = false;
 
-    private CodeEditor m_codeEditor;
-    private PlayersPanel m_playersPanel;
+    public CodeEditor m_codeEditor;
+    public PlayersPanel m_playersPanel;
+    private HTMLElement stepnum;
 
     public boolean isBattleShown() {
         return m_isBattleShown;
@@ -64,7 +68,7 @@ public class CompetitionWindow extends JFrame
         // -------------- Button Panel
         JPanel buttonPanel = new JPanel();
         runWarButton = new JButton("runWarButton", "<html><font color=red>Start!</font></html>");
-        runWarButton.addActionListener(this);
+        runWarButton.addActionListener(this); // triggers actionPerformed
         buttonPanel.add(runWarButton);
         warCounterDisplay = new JLabel("");
         buttonPanel.add(warCounterDisplay);
@@ -83,6 +87,7 @@ public class CompetitionWindow extends JFrame
 		startPausedCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+                m_isStartPaused = startPausedCheckBox.isSelected();
 				//if(startPausedCheckBox.isSelected())
 				//	showBattleCheckBox.setSelected(true);
 			}
@@ -120,8 +125,9 @@ public class CompetitionWindow extends JFrame
         showBattleRoom();
 
         m_codeEditor = new CodeEditor();
-        m_playersPanel = new PlayersPanel(m_codeEditor);
+        m_playersPanel = new PlayersPanel(this);
         m_codeEditor.m_playersPanel = m_playersPanel;
+        stepnum = (HTMLElement) DomGlobal.document.getElementById("stepnum");
 
         call_gwtStart();
 
@@ -145,11 +151,16 @@ public class CompetitionWindow extends JFrame
         $wnd.gwtStart();
     }-*/;
 
+    private void outRoundNum() {
+        stepnum.innerHTML = (competition.compState == null) ? "[null]":Integer.toString(competition.compState.round);
+    }
+
     public AnimationScheduler.AnimationCallback animCallback = new AnimationScheduler.AnimationCallback() {
         @Override
         public void execute(double timestamp) {
             try {
                 boolean needMore = competition.continueRun(isBattleShown());
+                outRoundNum();
                 if (needMore)
                     AnimationScheduler.get().requestAnimationFrame(animCallback);
 			} catch (Exception e) {
@@ -204,7 +215,8 @@ public class CompetitionWindow extends JFrame
             return false;
         }
         try {
-            boolean needMore = competition.runCompetition(battlesPerGroup, numOfGroups, startPausedCheckBox.isSelected(), isBattleShown());
+            boolean needMore = competition.runCompetition(battlesPerGroup, numOfGroups, m_isStartPaused, isBattleShown());
+            outRoundNum();
             if (needMore) {
                 requestFrame();
                 return true;
@@ -225,13 +237,32 @@ public class CompetitionWindow extends JFrame
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == runWarButton) {
         	showBattleFrameIfNeeded();
-            if (runWar()) {
-            	competitionRunning = true;
-				runWarButton.setEnabled(false);
-            }
+        	gui_runWar(null, null);
         }
     }
 
+
+    public void setDebugMode(boolean v) {
+        m_codeEditor.setDebugMode(v);
+        m_playersPanel.setDebugMode(v);
+
+        battleFrame.cpuframe.setVisible(v);
+    }
+
+    public boolean gui_runWar(Boolean isBattleShown, Boolean isStartPaused) {
+        if (isBattleShown != null)
+            m_isBattleShown = isBattleShown;
+        if (isStartPaused != null)
+            m_isStartPaused = isStartPaused;
+        if (runWar()) {
+            competitionRunning = true;
+            runWarButton.setEnabled(false);
+            setDebugMode(true);
+            stepnum.innerHTML = "0";
+            return true;
+        }
+        return false;
+    }
 
     public void onWarStart() {
     	showBattleFrameIfNeeded();

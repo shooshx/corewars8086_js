@@ -100,7 +100,7 @@ public class WarriorRepository {
                 return false;
             }
 
-            WarriorData data = new WarriorData(name, truncToSize(bin));
+            WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel());
             if (c.player.wtype != PlayersPanel.EWarriorType.SINGLE)
             {
                 if (name.endsWith("1")) {
@@ -142,7 +142,7 @@ public class WarriorRepository {
      * Reads all warrior data files from the warriors' directory.
      * @throws IOException 
      */
-    private void readWarriorFiles() throws IOException  {		
+/*    private void readWarriorFiles() throws IOException  {
         File warriorsDirectory = new File(WARRIOR_DIRECTORY);
         
         fixFiles(warriorsDirectory);
@@ -192,7 +192,7 @@ public class WarriorRepository {
     }
 
     private void fixFiles(File warriorsDirectory) {
-	/*	if (!warriorsDirectory.exists()) {
+		if (!warriorsDirectory.exists()) {
 			throw new RuntimeException("Missing directory " + warriorsDirectory.getAbsolutePath());
 		}
     	File[] files = warriorsDirectory.listFiles();
@@ -208,8 +208,9 @@ public class WarriorRepository {
     	for (File file : files) {
 			if(file.getName().contains("."))
 				file.delete();
-		}*/
+		}
 	}
+	*/
 
 	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles) {
         zombieGroup = null;
@@ -234,13 +235,13 @@ public class WarriorRepository {
                 return false;
             }
 
-            WarriorData data = new WarriorData(name, truncToSize(bin));
+            WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel());
             zombieGroup.addWarrior(data);
         }
         return true;
     }
 
-
+/*
 	private void readZombies() throws IOException {
         File zombieDirectory = new File(ZOMBIE_DIRECTORY);
         File[] zombieFiles = zombieDirectory.listFiles();
@@ -277,7 +278,7 @@ public class WarriorRepository {
         //}
 
         return new WarriorData(warriorName, warriorData);
-    }
+    }*/
 
     /**
      * @return the warrior groups corresponding to a given list of indices, and

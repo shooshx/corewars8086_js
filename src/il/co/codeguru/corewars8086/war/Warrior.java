@@ -30,13 +30,15 @@ public class Warrior {
      */
     public Warrior(
         String name,
+        String label,
         int codeSize,
         RealModeMemory core,
         RealModeAddress loadAddress,
         RealModeAddress initialStack,
         RealModeAddress groupSharedMemory,
-        short groupSharedMemorySize) {
-
+        short groupSharedMemorySize)
+    {
+        m_label = label;
         m_name = name;
         m_codeSize = codeSize;
         m_loadAddress = loadAddress;
@@ -103,6 +105,9 @@ public class Warrior {
      */
     public String getName() {
         return m_name;
+    }
+    public String getLabel() {
+        return m_label;
     }
 
     /**
@@ -188,7 +193,8 @@ public class Warrior {
     }
 
     /** Warrior's name */
-    private final String m_name;	
+    private final String m_name;
+    private final String m_label;
     /** Warrior's initial code size */	
     private final int m_codeSize;
     /** Warrior's initial load address */	

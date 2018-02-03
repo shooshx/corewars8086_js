@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="28.998741"
+   height="29.017143"
+   viewBox="0 0 28.998744 29.017143"
+   id="svg4265"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="green_play.svg"
+   inkscape:export-filename="C:\projects\codewars_js\eclipse\codewars_js\war\green_play.png"
+   inkscape:export-xdpi="93.048447"
+   inkscape:export-ydpi="93.048447">
+  <defs
+     id="defs4267" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="22.4"
+     inkscape:cx="10.348761"
+     inkscape:cy="15.478087"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="3"
+     fit-margin-left="3"
+     fit-margin-right="3"
+     fit-margin-bottom="3"
+     inkscape:window-width="1902"
+     inkscape:window-height="1010"
+     inkscape:window-x="1"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1"
+     units="px" />
+  <metadata
+     id="metadata4270">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(2.8736463,-1026.2045)">
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#00cb00;fill-opacity:1;stroke:#008809;stroke-width:29.82758713;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4273"
+       sodipodi:sides="3"
+       sodipodi:cx="181.42857"
+       sodipodi:cy="418.07648"
+       sodipodi:r1="194.33298"
+       sodipodi:r2="97.166489"
+       sodipodi:arg1="0"
+       sodipodi:arg2="1.0471976"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 375.76155,418.07648 -145.74974,84.14865 -145.749725,84.14864 0,-168.2973 0,-168.29729 145.749735,84.14865 z"
+       inkscape:transform-center-x="-3.4773265"
+       transform="matrix(0.07157458,0,0,0.06281629,-4.837221,1014.4511)"
+       inkscape:transform-center-y="4.8421683e-005"
+       inkscape:export-xdpi="103.52745"
+       inkscape:export-ydpi="103.52745" />
+  </g>
+</svg>

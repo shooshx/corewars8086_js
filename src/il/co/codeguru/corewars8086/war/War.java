@@ -227,6 +227,7 @@ public class War {
 
             m_warriors[m_numWarriors++] = new Warrior(
                 warriorName,
+                warrior.getLabel(),
                 warriorData.length,
                 m_core,
                 loadAddress,
@@ -330,6 +331,14 @@ public class War {
     /** @return the warrior with the given index */
     public Warrior getWarrior(int index) {
         return m_warriors[index];
+    }
+    public Warrior getWarriorByLabel(String label) {
+        for(Warrior w: m_warriors) {
+            if (w.getLabel().equals(label)) {
+                return w;
+            }
+        }
+        return null;
     }
 
     /** @return the numebr of warriors fighting in this match. */

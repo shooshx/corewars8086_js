@@ -1,5 +1,7 @@
 package il.co.codeguru.corewars8086.gui;
 
+import elemental2.dom.DomGlobal;
+import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 //import il.co.codeguru.corewars8086.utils.EventMulticaster;
@@ -55,8 +57,8 @@ public class WarFrame extends JFrame
     
 	// Debugger
 	private JLabel addressFiled;
-	private JButton btnCpuState;
-	private CpuFrame cpuframe;
+	//private JButton btnCpuState;
+	public CpuFrame cpuframe;
 	private JButton btnPause;
 	private JButton btnSingleRound;
     
@@ -69,8 +71,14 @@ public class WarFrame extends JFrame
     
     private CompetitionWindow mainWnd;
 
-    public WarFrame(final Competition competition, final CompetitionWindow mainWnd) {
+
+    public WarFrame(final Competition competition, final CompetitionWindow mainWnd)
+    {
         super("CodeGuru Extreme - Session Viewer");
+        exportMethods();
+
+
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.competition = competition;
         this.mainWnd = mainWnd;
@@ -133,16 +141,16 @@ public class WarFrame extends JFrame
 		addressFiled = new JLabel("Click on the arena to see the memory");
 		warCanvas.addListener(this);
 
-		btnCpuState = new JButton("btnCpuState", "View CPU");
-		btnCpuState.setEnabled(false);
-		btnCpuState.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+		//btnCpuState = new JButton("btnCpuState", "View CPU");
+		//btnCpuState.setEnabled(false);
+		//btnCpuState.addActionListener(new ActionListener() {
+		//	@Override
+		//	public void actionPerformed(ActionEvent arg0) {
 				cpuframe = new CpuFrame(competition);
-				WarFrame.this.competition.addCompetitionEventListener(cpuframe);
+				competition.addCompetitionEventListener(cpuframe);
 
-			}
-		});
+		//	}
+		//});
 
 		competition.addCompetitionEventListener(this);
 		
@@ -151,31 +159,34 @@ public class WarFrame extends JFrame
 		btnPause.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-                if (competition.globalPause) { // do resume
-                    competition.globalPause = false;
-                    btnPause.setText("Pause");
-                    mainWnd.requestFrame();
-                    btnSingleRound.setEnabled(false);
+			    if (competition.getCurrentWar() == null) // pauses between wars
+                {
+                    if (competition.globalPause) { // do resume
+                        competition.globalPause = false;
+                        btnPause.setText("Pause");
+                        mainWnd.requestFrame();
+                        btnSingleRound.setEnabled(false);
+                    }
+                    else { // do pause
+                        competition.globalPause = true;
+                        btnPause.setText("Resume");
+                        if (competition.getCurrentWar() != null)
+                            btnSingleRound.setEnabled(true);
+                    }
                 }
-                else { // do pause
-                    competition.globalPause = true;
-                    btnPause.setText("Resume");
-                    if (competition.getCurrentWar() != null)
+                else
+                {
+                    if (competition.getCurrentWar().isPaused()) {
+                        competition.getCurrentWar().resume();
+                        btnPause.setText("Pause");
+                        mainWnd.requestFrame();
+                        btnSingleRound.setEnabled(false);
+                    } else {
+                        competition.getCurrentWar().pause();
+                        btnPause.setText("Resume");
                         btnSingleRound.setEnabled(true);
+                    }
                 }
-
-
-/*				if (competition.getCurrentWar().isPaused()) {
-                    competition.getCurrentWar().resume();
-					btnPause.setText("Pause");
-                    mainWnd.requestFrame();
-                    btnSingleRound.setEnabled(false);
-				} else {
-					competition.getCurrentWar().pause();
-					btnPause.setText("Resume");
-					btnSingleRound.setEnabled(true);
-				}
-*/
 
 			}
 
@@ -192,7 +203,7 @@ public class WarFrame extends JFrame
 			}
 		});
         
-		buttonPanel.add(btnCpuState);
+		//buttonPanel.add(btnCpuState);
 		buttonPanel.add(btnPause);
 		buttonPanel.add(btnSingleRound);
 		buttonPanel.add(addressFiled);
@@ -219,6 +230,20 @@ public class WarFrame extends JFrame
         getContentPane().add(mainPanel, BorderLayout.CENTER);
         //getContentPane().add(new JLabel(new ImageIcon("images/title2.png")), BorderLayout.EAST);
         getContentPane().add(infoZone, BorderLayout.SOUTH);		
+    }
+
+    public native void exportMethods() /*-{
+        var that = this
+        $wnd.j_startDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.WarFrame::j_startDebug()() });
+    }-*/;
+
+    public boolean j_startDebug()
+    {
+        if (!mainWnd.m_playersPanel.checkPlayersReady())
+            return false;
+        if (!mainWnd.gui_runWar(true, true))
+            return false;
+        return true;
     }
 
     /** Add a message to the message zone */
@@ -250,7 +275,7 @@ public class WarFrame extends JFrame
         }
     }
 
-    /** @see CompetitionEventListener#onWarStart(int) */
+    /* @see CompetitionEventListener#onWarStart(int) */
     public void onWarStart() {
         addMessage("=== Session started ===");
         nameListModel.clear();
@@ -294,7 +319,7 @@ public class WarFrame extends JFrame
             roundNumber.setText(Integer.toString(nRoundNumber));
             roundNumber.repaint();
         }
-        btnCpuState.setEnabled(true); //in case we open the window during a match
+        //btnCpuState.setEnabled(true); //in case we open the window during a match
         btnPause.setEnabled(true);
     }	
 
@@ -304,7 +329,7 @@ public class WarFrame extends JFrame
         nameListModel.addElement(new WarriorInfo(warriorName));
     }
 
-    /** @see CompetitionEventListener#onWarriorDeath(String) */
+    /* @see CompetitionEventListener#onWarriorDeath(String) */
     public void onWarriorDeath(String warriorName, String reason) {
         addMessage(nRoundNumber, warriorName + " died due to " + reason + ".");
         Enumeration namesListElements = nameListModel.elements();
@@ -364,12 +389,12 @@ public class WarFrame extends JFrame
     }
 
     public void onCompetitionStart() {
-    	btnCpuState.setEnabled(true);
+    	//btnCpuState.setEnabled(true);
     	btnPause.setEnabled(true);
     }
 
     public void onCompetitionEnd() {
-    	btnCpuState.setEnabled(false);
+    	//btnCpuState.setEnabled(false);
     	btnPause.setEnabled(false);
     }	
 
@@ -427,7 +452,7 @@ public class WarFrame extends JFrame
 		this.competition.getCurrentWar().resume();
 
 		try {
-			this.cpuframe.dispose();
+			//this.cpuframe.dispose();
 		} catch (Exception e) {
 		}
 		// restoring maximum speed

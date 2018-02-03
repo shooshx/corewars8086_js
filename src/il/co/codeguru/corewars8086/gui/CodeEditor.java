@@ -371,6 +371,13 @@ public class CodeEditor
         return opcodesText.toString();
     }
 
+    // from PlayersPanel
+    public void playerSelectionChanged(PlayersPanel.Code incode, PlayersPanel callback)
+    {
+        asm_edit.value = incode.asmText;
+        editor_title.value = incode.player.title;
+        setText(incode.asmText, callback);
+    }
 
     // inspired by https://github.com/kazzkiq/CodeFlask.js#usage which also writes all the dome in every key press
     public void setText(String intext, PlayersPanel playersPanel)
@@ -464,6 +471,16 @@ public class CodeEditor
         editor_title.value = s;
     }
 
+    public void setDebugMode(boolean v) {
+        if (v) {
+            asm_output.style.display = "none";
+            asm_edit.style.display= "none"; // just the textarea
+        }
+        else {
+            asm_output.style.display = "";
+            asm_edit.style.display = "";
+        }
 
+    }
 
 }

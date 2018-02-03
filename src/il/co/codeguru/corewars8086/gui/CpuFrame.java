@@ -1,5 +1,8 @@
 package il.co.codeguru.corewars8086.gui;
 
+import elemental2.dom.DomGlobal;
+import elemental2.dom.HTMLElement;
+import il.co.codeguru.corewars8086.cpu.CpuState;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.utils.Disassembler;
 import il.co.codeguru.corewars8086.war.Competition;
@@ -20,47 +23,70 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 //import javax.swing.JTextArea;
 
 
-public class CpuFrame extends JFrame implements CompetitionEventListener {
+public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 	
 	private War currentWar;
+	private String m_currentPlayerLabel;
 	
 	private Competition competition;
+	private int m_base = 16;
 	
-	private JPanel menuPanel;
+	//private JPanel menuPanel;
 	
-	private JComboBox<String> dropMenu;
+	//private JComboBox<String> dropMenu;
 	
-	private JPanel regPanel,flagPanel;
+	//private JPanel regPanel,flagPanel;
 	
 	private RegisterField regAX,regBX,regCX,regDX,
 						regSI,regDI,regBP,regSP,
 						 regIP,regCS,regDS,regSS,
-						 regES,regE;
+						 regES,regE, regF;
 	
 	private FlagFields flagOF,flagDF,flagIF,flagTF,
 						flagSF,flagZF,flagAF,flagPF,
 						flagCF;
 
-	private JButton btnRefrash,btnSave;
+	//private JButton btnRefrash,btnSave;
 
-	private JTextArea instructionArea;
-					
-	
-	public CpuFrame(Competition c){
-		super("CPU state viewer - CodeGuru");
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setSize(550, 400);
+	//private JTextArea instructionArea;
+
+    private HTMLElement cpuPanel;
+
+    public void setVisible(boolean v) {
+        if (v)
+            cpuPanel.style.display = "";
+        else
+            cpuPanel.style.display = "none";
+    }
+
+	public void setSelectedPlayer(String playerLabel) {
+		m_currentPlayerLabel = playerLabel;
+		updateFileds();
+	}
+
+
+	public CpuFrame(Competition c)
+	{
+		exportMethods();
+
 		this.competition = c;
 		this.currentWar = c.getCurrentWar();
+
+        cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
+		//super("CPU state viewer - CodeGuru");
+		//this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//this.setSize(550, 400);
+		//this.competition = c;
+		//this.currentWar = c.getCurrentWar();
 		
-		GridLayout l = new GridLayout(0,2);
-		l.setVgap(5);
-		l.setHgap(5);
+		//GridLayout l = new GridLayout(0,2);
+		//l.setVgap(5);
+		//l.setHgap(5);
 		
 		//registerFileds
-		regPanel = new JPanel(l);
+		JPanel regPanel = new JPanel(null);
 		
-		this.setAlwaysOnTop(true);
+		//this.setAlwaysOnTop(true);
 		
 		regAX = new RegisterField("AX"); regPanel.add(regAX);
 		regBX = new RegisterField("BX"); regPanel.add(regBX);	
@@ -76,9 +102,10 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		regSS = new RegisterField("SS"); regPanel.add(regSS);
 		regES = new RegisterField("ES"); regPanel.add(regES);
 		regE = new RegisterField("Energy"); regPanel.add(regE);
+		regF = new RegisterField("Flags"); regPanel.add(regF);
 		
 		//Flags
-		flagPanel = new JPanel(l);
+		JPanel flagPanel = new JPanel(null);
 		
 		flagOF = new FlagFields("OF"); flagPanel.add(flagOF);
 		flagDF = new FlagFields("DF"); flagPanel.add(flagDF);
@@ -92,9 +119,9 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		
 		//menu panel
 		
-		menuPanel = new JPanel();
+		//menuPanel = new JPanel();
 		
-		dropMenu = new JComboBox<String>();
+/*		dropMenu = new JComboBox<String>(); // player selector (not used)
 		for( int i = 0 ; i < this.currentWar.getNumWarriors() ; i++ )
 			dropMenu.addItem(this.currentWar.getWarrior(i).getName());
 		
@@ -130,58 +157,89 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		instructionArea.setFont(new Font("Monospaced",Font.PLAIN,15));
 		instructionArea.setSize(50, 100);
 		instructionArea.setLineWrap(true);
-		instructionArea.setWrapStyleWord(true);
+		instructionArea.setWrapStyleWord(true);*/
 		
-		this.updateFileds();
+		//this.updateFileds();
 		
-		menuPanel.add(dropMenu);
-		menuPanel.add(btnRefrash);
-		menuPanel.add(btnSave);
+		//menuPanel.add(dropMenu);
+		//menuPanel.add(btnRefrash);
+		//menuPanel.add(btnSave);
 		
 		
 		
-		JPanel cpuPanel = new JPanel(new GridLayout(1, 3));
-		cpuPanel.add(menuPanel);
-		cpuPanel.add(flagPanel);
-		cpuPanel.add(regPanel);
+		//JPanel cpuPanel = new JPanel(new GridLayout(1, 3));
+		//cpuPanel.add(menuPanel);
+		//cpuPanel.add(flagPanel);
+		//cpuPanel.add(regPanel);
 		
-		this.add(cpuPanel);
-		this.add(instructionArea);
+		//this.add(cpuPanel);
+		//this.add(instructionArea);
 		
-		this.setLayout(new GridLayout(2,1,10,10));
-		this.setResizable(false);
-		this.setVisible(true);
+		//this.setLayout(new GridLayout(2,1,10,10));
+		//this.setResizable(false);
+		//this.setVisible(true);
 		
 				
 	}
+
+	public native void exportMethods() /*-{
+        var that = this
+        $wnd.j_setRegistersBase = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_setRegistersBase(I)(b) });
+	}-*/;
+
+	public void j_setRegistersBase(int base) {
+		m_base = base;
+		regAX.setBase(base);
+		regBX.setBase(base);
+		regCX.setBase(base);
+		regDX.setBase(base);
+		regSI.setBase(base);
+		regDI.setBase(base);
+		regBP.setBase(base);
+		regSP.setBase(base);
+		regIP.setBase(base);
+		regCS.setBase(base);
+		regDS.setBase(base);
+		regSS.setBase(base);
+		regES.setBase(base);
+		regE.setBase(base);
+		regF.setBase(base);
+		updateFileds();
+	}
 	
 	public void updateFileds(){
-		regAX.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getAX());
-		regBX.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getBX());
-		regCX.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getCX());
-		regDX.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getDX());
-		regSI.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getSI());
-		regDI.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getDI());
-		regBP.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getBP());
-		regSP.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getSP());
-		regIP.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getIP());
-		regCS.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getCS());
-		regDS.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getDS());
-		regSS.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getSS());
-		regES.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getES());
-		regE.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getEnergy());
+		if (currentWar == null)
+			return;
+		//CpuState state = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState();
+		CpuState state = currentWar.getWarriorByLabel(m_currentPlayerLabel).getCpuState();;
+
+		regAX.setValue( state.getAX());
+		regBX.setValue( state.getBX());
+		regCX.setValue( state.getCX());
+		regDX.setValue( state.getDX());
+		regSI.setValue( state.getSI());
+		regDI.setValue( state.getDI());
+		regBP.setValue( state.getBP());
+		regSP.setValue( state.getSP());
+		regIP.setValue( state.getIP());
+		regCS.setValue( state.getCS());
+		regDS.setValue( state.getDS());
+		regSS.setValue( state.getSS());
+		regES.setValue( state.getES());
+		regE.setValue( state.getEnergy());
+		regF.setValue( state.getFlags());
 		
-		flagOF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getOverflowFlag());
-		flagDF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getDirectionFlag() );
-		flagIF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getInterruptFlag() );
-		flagTF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getTrapFlag() );
-		flagSF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getSignFlag() );
-		flagZF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getZeroFlag() );
-		flagAF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getAuxFlag() );
-		flagPF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getParityFlag() );
-		flagCF.setValue( currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getCarryFlag() );
+		flagOF.setValue( state.getOverflowFlag());
+		flagDF.setValue( state.getDirectionFlag() );
+		flagIF.setValue( state.getInterruptFlag() );
+		flagTF.setValue( state.getTrapFlag() );
+		flagSF.setValue( state.getSignFlag() );
+		flagZF.setValue( state.getZeroFlag() );
+		flagAF.setValue( state.getAuxFlag() );
+		flagPF.setValue( state.getParityFlag() );
+		flagCF.setValue( state.getCarryFlag() );
 		
-		byte[] bytes = new byte[30];
+		/*byte[] bytes = new byte[30];
 		
 		for (short i = 0; i < 30; i++) {
 			short ip = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getIP();
@@ -195,10 +253,10 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		} catch (Exception e) {
 			instructionArea.setText(e.getMessage());
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
-	public void saveFileds(){
+/*	public void saveFileds(){ // sets the values from the GUI to the state
 		try {
 			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setAX(regAX.getValue());
 			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setBX(regBX.getValue());
@@ -227,18 +285,20 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setAuxFlag(this.flagAF.getValue());
 		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setParityFlag(this.flagPF.getValue());
 		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setCarryFlag(this.flagCF.getValue());
-	}
+	}*/
 
 	@Override
 	public void onWarStart() {
 		// TODO Auto-generated method stub
+		currentWar = competition.getCurrentWar();
 		
 	}
 
 	@Override
 	public void onWarEnd(int reason, String winners) {
 		// TODO Auto-generated method stub
-		this.dispose();
+		//this.dispose();
+		currentWar = null;
 	}
 
 	@Override
@@ -277,7 +337,7 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		this.updateFileds();
 	}
 
-	@Override
+	/*@Override
 	public void dispose() {
 		
 		//bug fix - event casted while window is being disposed FIXME find a better solution
@@ -291,7 +351,7 @@ public class CpuFrame extends JFrame implements CompetitionEventListener {
 		this.competition.removeCompetitionEventListener(this);
 		//this.competition.getCurrentWar().resume();
 		
-		super.dispose();
-	}
+		//super.dispose();
+	}*/
 	
 }

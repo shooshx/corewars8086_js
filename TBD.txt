@@ -1,20 +1,41 @@
-round label
+
 cpu window
 graph window
 speed
 
-asm compile, disasm
+asm disasm
 check randomization similarity with real java
+  https://github.com/tomer-schles/corewars8086-seed-bugfix/commits/master
 zoom to bytes
 check "updateScore Infinity"
-recreate scene with start addresses
+recreate scene with start addresses in URL?
 
 
 
-keep indentation
 
-editor caret
-- display: block adds lines
 
-- paste does not add last line number
-- Ctrl+Z not working after the second paste?
+https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
+
+
+
+- colors on players pane
+
+- breakpoints in code
+- data breakpoints
+- watch language
+- online live game?
+- enable/disable players with checkbox
+- code button should be red if code has errors
+- add zombies
+- run messages zone
+- show stack, show common area
+- errors with html pointers on page to where should be pressed
+
+- check changes:
+    https://forum.codeguru.co.il/wp/?topic=silenterrors-debugger
+    https://github.com/YoavKa/corewars8086/releases/tag/v5
+
+- cpu view can change values, show in red and is able to revert?
+
+- try two players with the same name
+- round counter
