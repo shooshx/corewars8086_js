@@ -63,7 +63,7 @@ public class War {
      * Fills the Arena with its initial data. 
      */
     public War(MemoryEventListener memoryListener, CompetitionEventListener warListener, boolean startPaused) {
-    	isPaused = startPaused;
+    	isPaused = startPaused; //startPaused; // startPause just causes control to  return after startWar, we don't want to pause the first round
         m_warListener = warListener;
         m_warriors = new Warrior[MAX_WARRIORS];
         m_numWarriors = 0;
@@ -225,7 +225,7 @@ public class War {
             RealModeAddress initialStack =
                 new RealModeAddress(stackMemory.getSegment(), STACK_SIZE);
 
-            m_warriors[m_numWarriors++] = new Warrior(
+            Warrior w = new Warrior(
                 warriorName,
                 warrior.getLabel(),
                 warriorData.length,
@@ -234,6 +234,7 @@ public class War {
                 initialStack,
                 groupSharedMemory,
                 GROUP_SHARED_MEMORY_SIZE);
+            m_warriors[m_numWarriors++] = w;
 
             // load warrior to arena
             for (int offset = 0; offset < warriorData.length; ++offset) {
@@ -244,7 +245,7 @@ public class War {
 			++m_currentWarrior;
 
             // notify listener
-            m_warListener.onWarriorBirth(warriorName);		
+            m_warListener.onWarriorBirth(w);
         }
     }
 
@@ -406,7 +407,7 @@ public class War {
     }
     
     public void runSingleRound(){
-    	this.resume();
+        isPaused = false;
     	isSingleRound = true;
     }
     

@@ -13,6 +13,7 @@ import elemental2.dom.EventListener;
 public class JComponent<T>
 {
     public T m_element;
+    public boolean m_enabled = true;
 
     public JComponent(String id) {
         m_element = (T)DomGlobal.document.getElementById(id);
@@ -50,6 +51,7 @@ public class JComponent<T>
     public void setEnabled(boolean v) {
         if (m_element == null)
             return;
+        m_enabled = v;
         ((Element)m_element).setAttribute("disabled", v?"false":"true");
     }
     public void setVisible(boolean v) {

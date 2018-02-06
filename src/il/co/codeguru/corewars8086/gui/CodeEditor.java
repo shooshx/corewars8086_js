@@ -475,10 +475,12 @@ public class CodeEditor
         if (v) {
             asm_output.style.display = "none";
             asm_edit.style.display= "none"; // just the textarea
+            editor_title.readOnly = true;
         }
         else {
             asm_output.style.display = "";
             asm_edit.style.display = "";
+            editor_title.readOnly = false;
         }
 
     }

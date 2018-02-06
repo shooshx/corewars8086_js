@@ -35,7 +35,7 @@ public class Competition {
     private boolean abort;
     public boolean globalPause = false;
 
-
+    // continue state between animation frames
     public static class CompState {
         public enum State {
             NONE,
@@ -66,19 +66,20 @@ public class Competition {
     {
         if (globalPause)
             return false;
-        if (compState.state == CompState.State.RUN_WAR) 
+        if (abort) {
+            Console.log("Abort");
+            return false;
+        }
+        if (compState.state == CompState.State.RUN_WAR)
         {
             if (compState.warIndex < warsPerCombination) 
             {
-                boolean needMore = startWar( warriorRepository.createGroupList(competitionIterator.next()) );
-                if (abort) {
-                    Console.log("Abort");
-                    return false;
-                }
-                if (needMore) {
-                    compState.state = CompState.State.RUN_ROUND;
-                }
-                return true;
+                startWar( warriorRepository.createGroupList(competitionIterator.next()) );
+                compState.state = CompState.State.RUN_ROUND;
+                competitionEventListener.onEndRound(); // it's like round -1, show the state at the start of the game
+                boolean wasStartPaused = compState.startPaused;
+                compState.startPaused = false; // start paused only applies to the first war
+                return !wasStartPaused;
             }
             else {
                 // done competition
@@ -91,25 +92,25 @@ public class Competition {
         else if (compState.state == CompState.State.RUN_ROUND)
         {
             compState.animateRound = stillAnimateRound;
-            boolean needMore = false;
+            int needMore = 1;
             if (compState.animateRound) {
                 needMore = runRound();
             }
             else {
                 do {
                     needMore = runRound();
-                } while (needMore);
+                } while (needMore == 1);
             }
 
-            if (!needMore && currentWar.isPaused()) { // did we return false due to being paused?
+            if (needMore == 0) { // we return false due to being paused
                 return false;
             }
-            if (!needMore) {
+            else if (needMore == -1) {
                 doneWar();
                 compState.state = CompState.State.RUN_WAR;
-                return true; 
+                return false;
             }
-            return needMore;
+            return true; // what's left is that it's equal to 1
         }
         return false;
     }
@@ -135,12 +136,12 @@ public class Competition {
         return (int) competitionIterator.getNumberOfItems() * warsPerCombination;
     }
 
-    // return true if need another round
-    public boolean runRound() 
+    // return 1 if need another round, 0 if paused, -1 if we're done
+    public int runRound()
     {
         competitionEventListener.onRound(compState.round);
 
-        competitionEventListener.onEndRound();
+     //moved   competitionEventListener.onEndRound();
 
         // apply speed limits
     //    if (speed != MAXIMUM_SPEED) {
@@ -159,40 +160,49 @@ public class Competition {
     //    while (currentWar.isPaused()) {
             //Thread.sleep(DELAY_UNIT); TBD-SHY
     //    }
-        if (currentWar.isPaused()) {
-            Console.log("currentWar.isPaused");
-            return false;
-        }
+        //if (currentWar.isPaused()) {
+        //    Console.log("currentWar.isPaused");
+        //    return 0;
+        //}
 
         //Single step run - stop next time
-        if (currentWar.isSingleRound())
-            currentWar.pause();
-
-        if (currentWar.isOver()) {
-            Console.log("isOver");
-            return false;
-        }
+        //if (currentWar.isSingleRound())
+        //   currentWar.pause();
 
         currentWar.nextRound(compState.round);
 
+        if (currentWar.isOver()) {
+            Console.log("isOver");
+            return -1;
+        }
+
         ++compState.round;
+
+        competitionEventListener.onEndRound();
+
         //if (compState.round % 100 == 0)
         //    Console.log("round " + Integer.toString(compState.round));
-        return compState.round < MAX_ROUND;
+        if (currentWar.isSingleRound()) {
+            currentWar.pause();
+        }
+        if (currentWar.isPaused()) {
+            return 0;
+        }
+        if (compState.round < MAX_ROUND)
+            return 1;
+        return -1;
     }
 
     // return true if needs another round
-    public boolean startWar(WarriorGroup[] warriorGroups) throws Exception 
+    public void startWar(WarriorGroup[] warriorGroups) throws Exception
     {
         //Console.log("runWar");
         currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
-        compState.startPaused = false; // start paused only applies to the first war
         int war = 0;
         currentWar.setSeed(this.seed + war);
         competitionEventListener.onWarStart();
         currentWar.loadWarriorGroups(warriorGroups);
         compState.round = 0;
-        return true;
     }
 
     public void doneWar() 

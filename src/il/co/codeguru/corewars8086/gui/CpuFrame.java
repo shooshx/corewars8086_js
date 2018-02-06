@@ -10,6 +10,7 @@ import il.co.codeguru.corewars8086.war.CompetitionEventListener;
 import il.co.codeguru.corewars8086.war.War;
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
+import il.co.codeguru.corewars8086.war.Warrior;
 //import java.awt.Font;
 //import java.awt.GridLayout;
 //import java.awt.event.ActionEvent;
@@ -308,7 +309,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 	}
 
 	@Override
-	public void onWarriorBirth(String warriorName) {
+	public void onWarriorBirth(Warrior w) {
 		// TODO Auto-generated method stub
 		
 	}

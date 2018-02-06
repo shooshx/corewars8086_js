@@ -22,7 +22,7 @@ public class JButton extends JComponent<Element>
     
             @Override
             public void handleEvent(Event event) {
-                if (m_listener == null)
+                if (m_listener == null || !m_enabled)
                     return;
                 m_listener.actionPerformed(new ActionEvent(JButton.this));
             }

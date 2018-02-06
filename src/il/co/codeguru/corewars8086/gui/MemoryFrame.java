@@ -18,6 +18,7 @@ import il.co.codeguru.corewars8086.jsadd.Format;
 //import javax.swing.JTextField;
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
+import il.co.codeguru.corewars8086.war.Warrior;
 
 public class MemoryFrame extends JFrame implements CompetitionEventListener {
 
@@ -128,7 +129,7 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 
 
 	@Override
-	public void onWarriorBirth(String warriorName) {
+	public void onWarriorBirth(Warrior w) {
 		// TODO Auto-generated method stub
 		
 	}

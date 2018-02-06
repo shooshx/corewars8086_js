@@ -11,7 +11,12 @@ check "updateScore Infinity"
 recreate scene with start addresses in URL?
 
 
-
+debugger
+   step showing the line
+   disasm jump into middle of command
+   disasm someone writing into my memory, show in red
+   "rep inc cx" - invalid command that throws an exception - detect this
+   warrior that copies itself and jumps to it
 
 
 https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js

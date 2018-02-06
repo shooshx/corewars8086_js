@@ -35,9 +35,9 @@ public interface CompetitionEventListener   {
 
     /**
      * Called when a new warrior enters the arena.
-     * @param warriorName  Warrior's name.
+     * @param w  Warrior's Warrior.
      */
-    void onWarriorBirth(String warriorName);
+    void onWarriorBirth(Warrior w);
 
     /**
      * Called when a warrior dies.

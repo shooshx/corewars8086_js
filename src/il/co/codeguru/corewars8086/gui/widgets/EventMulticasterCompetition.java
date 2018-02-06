@@ -1,6 +1,8 @@
 package il.co.codeguru.corewars8086.gui.widgets;
 
 import il.co.codeguru.corewars8086.war.CompetitionEventListener;
+import il.co.codeguru.corewars8086.war.Warrior;
+
 import java.util.*;
 
 /**
@@ -53,10 +55,10 @@ public class EventMulticasterCompetition extends EventMulticasterBase {
 		}
 
 		@Override
-		public void onWarriorBirth(String warriorName) {
+		public void onWarriorBirth(Warrior w) {
             isCasting = true;
 			for (Object mListener : mListenersArr) {
-                ((CompetitionEventListener)mListener).onWarriorBirth(warriorName);
+                ((CompetitionEventListener)mListener).onWarriorBirth(w);
 			}
             isCasting = false;
             addWaiting();				

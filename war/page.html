@@ -64,10 +64,10 @@ function addPlayersPanel() {
 
     var text = '<div id="pl_frame_pLETTER" class="toppic">\
           <div class="famtitle">\
-            <input class="fam_check_box hidden mycheck" id="pLETTER_fcheck" type="checkbox" checked onchange="" >\
-            <label class="fam_check mycheck_label" for="pLETTER_fcheck"></label>\
+            <input class="fam_check_box hidden mycheck" id="player_check_pLETTER" type="checkbox" checked onchange="" >\
+            <label class="fam_check mycheck_label" for="player_check_pLETTER"></label>\
             <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
-            <img src="red_ex.png" class="pl_close_icon" onclick="triggerErasePlayer(pl_frame_pLETTER, \'LETTER\')">\
+            <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
             <br>\
             <select id="wtype_pLETTER" class="sel_wtype" onchange="changedWType(\'LETTER\')">\
               <option value="SINGLE" class="opt_single">Single Warrior</option>\
@@ -135,8 +135,10 @@ function triggerSrc(letter, index)
     j_srcSelectionChanged(letter, index)
 }
 
-function triggerErasePlayer(elem, letter)
+function triggerErasePlayer(buttonElem, elem, letter)
 {
+    if (buttonElem.getAttribute("disabled") == "true")
+        return;
     //elem.parentNode.removeChild(elem);
     elem.addEventListener('animationend', function() {
         elem.parentNode.removeChild(elem);
@@ -276,10 +278,28 @@ function triggerDebug() {
 
         debugBtnIn.style.backgroundImage = "url(red_stop.png)"
         debugBtnIn2.innerText = "Stop"
+
+        for(var ui in g_usedLetters) {
+            var u = g_usedLetters[ui]
+            document.getElementById("player_erase_p" + u).setAttribute("disabled", true)
+            document.getElementById("player_check_p" + u).setAttribute("disabled", true)
+            document.getElementById("wtype_p" + u).setAttribute("disabled", true)
+
+        }
     }
     else {
+        j_stopDebug()
+
         debugBtnIn.style.backgroundImage = "url(green_play.png)"
         debugBtnIn2.innerText = "Debug"
+
+        for(var ui in g_usedLetters) {
+            var u = g_usedLetters[ui]
+            document.getElementById("player_erase_p" + u).removeAttribute("disabled")
+            document.getElementById("player_check_p" + u).removeAttribute("disabled")
+            document.getElementById("wtype_p" + u).removeAttribute("disabled")
+        }
+
     }
 }
 
@@ -663,6 +683,10 @@ input:disabled + .sc-btn:active,
 .mycheck:indeterminate + .mycheck_label {
     background-image: url(check_int.png);
 }
+.mycheck[disabled="true"] + .mycheck_label {
+    filter: brightness(90%);
+}
+
 .fam_check {
     width: 17px;
     height: 17px;
@@ -707,6 +731,11 @@ input:disabled + .sc-btn:active,
     height: 33px;
 }
 .pl_close_icon {
+    width: 15px;
+    height: 15px;
+    background-image: url('red_ex.png');
+    background-position: center;
+    background-repeat: no-repeat;
     float: right;
     /*border: #aa0000 solid 1px;*/
     border-radius: 6px;
@@ -714,6 +743,10 @@ input:disabled + .sc-btn:active,
 }
 .pl_close_icon:hover {
     background-color: rgba(255,255,255,0.7);
+}
+.pl_close_icon[disabled="true"] {
+    background-image: url('gray_ex.png');
+    background-color: transparent;
 }
 
 #editor_title {
@@ -836,6 +869,14 @@ table tr:last-child td:first-child {
 #btnSingleRound {
 }
 
+#messagesArea {
+    border: 1px solid #000000;
+    height: 140px;
+    display: inline-block;
+    width: 600px;
+    border-radius: 4px;
+}
+
 </style>
   </head>
   <body onload="start()">
@@ -853,7 +894,6 @@ table tr:last-child td:first-child {
         <br>
         <!-- WarFrame -->
         <canvas id="warCanvas"></canvas>
-        <div id="messagesArea"></div>
         Round: <div id="roundNumber"></div>
 
         Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
@@ -951,7 +991,8 @@ table tr:last-child td:first-child {
                       <input class="flag_check_box hidden mycheck" id="CF_fcheck" type="checkbox">
                       <label class="flag_check mycheck_label" for="CF_fcheck" title="Carry Flag"></label></td>
               </tr>
-          </table>
+          </table><br>
+          <div id="messagesArea" class="codearea allow_select" wrap="off" > </div>
         </div>
       </div>
 

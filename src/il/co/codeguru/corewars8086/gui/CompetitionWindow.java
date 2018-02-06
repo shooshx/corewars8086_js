@@ -129,6 +129,8 @@ public class CompetitionWindow extends JFrame
         m_codeEditor.m_playersPanel = m_playersPanel;
         stepnum = (HTMLElement) DomGlobal.document.getElementById("stepnum");
 
+        exportMethods();
+
         call_gwtStart();
 
         /*addWindowListener(new WindowListener() {
@@ -150,6 +152,31 @@ public class CompetitionWindow extends JFrame
     public static native void call_gwtStart() /*-{
         $wnd.gwtStart();
     }-*/;
+
+
+    public native void exportMethods() /*-{
+        var that = this
+        $wnd.j_startDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startDebug()() });
+        $wnd.j_stopDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopDebug()() });
+    }-*/;
+
+    public boolean j_startDebug()
+    {
+        if (!m_playersPanel.checkPlayersReady())
+            return false;
+        if (!gui_runWar(true, true))
+            return false;
+        return true;
+    }
+
+    public void j_stopDebug()
+    {
+        competition.doneWar();
+        setDebugMode(false);
+    }
+
+
+
 
     private void outRoundNum() {
         stepnum.innerHTML = (competition.compState == null) ? "[null]":Integer.toString(competition.compState.round);
@@ -345,7 +372,7 @@ public class CompetitionWindow extends JFrame
     public void onRound(int round) {
     }
 
-    public void onWarriorBirth(String warriorName) {
+    public void onWarriorBirth(Warrior w) {
     }
 
     public void onWarriorDeath(String warriorName, String reason) {

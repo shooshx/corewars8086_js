@@ -75,9 +75,6 @@ public class WarFrame extends JFrame
     public WarFrame(final Competition competition, final CompetitionWindow mainWnd)
     {
         super("CodeGuru Extreme - Session Viewer");
-        exportMethods();
-
-
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.competition = competition;
@@ -198,6 +195,10 @@ public class WarFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+			    if (competition.getCurrentWar() == null) {
+			        Console.log("no war");
+			        return;
+                }
                 competition.getCurrentWar().runSingleRound();
                 mainWnd.requestFrame(); // request frame but still paused so it'll be just one frame
 			}
@@ -232,28 +233,16 @@ public class WarFrame extends JFrame
         getContentPane().add(infoZone, BorderLayout.SOUTH);		
     }
 
-    public native void exportMethods() /*-{
-        var that = this
-        $wnd.j_startDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.WarFrame::j_startDebug()() });
-    }-*/;
-
-    public boolean j_startDebug()
-    {
-        if (!mainWnd.m_playersPanel.checkPlayersReady())
-            return false;
-        if (!mainWnd.gui_runWar(true, true))
-            return false;
-        return true;
-    }
 
     /** Add a message to the message zone */
     public void addMessage(String message) {
         messagesArea.append(message + "\n");
-        SwingUtilities.invokeLater(new Runnable() {
+        messagesArea.scrollToBottom();
+       /* SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 //messagesArea.setCaretPosition(messagesArea.getDocument().getLength());
             }
-        });
+        });*/
     }
 
     /** Add a message to the message zone (with round number) */
@@ -307,6 +296,9 @@ public class WarFrame extends JFrame
             default:
                 throw new RuntimeException();			
         }
+
+        btnSingleRound.setEnabled(false); // done debugging this session
+        btnPause.setEnabled(false);
     }	
 
     /** @see CompetitionEventListener#onRound(int) */
@@ -323,10 +315,10 @@ public class WarFrame extends JFrame
         btnPause.setEnabled(true);
     }	
 
-    /** @see CompetitionEventListener#onWarriorBirth(String) */
-    public void onWarriorBirth(String warriorName) {
-        addMessage(nRoundNumber, warriorName + " enters the arena.");
-        nameListModel.addElement(new WarriorInfo(warriorName));
+    /** @see CompetitionEventListener#onWarriorBirth(Warrior) */
+    public void onWarriorBirth(Warrior w) {
+        addMessage(nRoundNumber, w.getName() + " enters the arena at " + Format.hex(w.getLoadOffset() & 0xffff, 4));
+        nameListModel.addElement(new WarriorInfo(w.getName()));
     }
 
     /* @see CompetitionEventListener#onWarriorDeath(String) */

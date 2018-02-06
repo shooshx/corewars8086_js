@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="282" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/green_play.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/green_play.svg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/red_stop.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/red_stop.svg" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/TBD.txt" afterPath="$PROJECT_DIR$/TBD.txt" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/FlagFields.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/FlagFields.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/RegisterField.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/RegisterField.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterCompetition.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterCompetition.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorData.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorData.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorRepository.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorRepository.java" />
       <change beforePath="$PROJECT_DIR$/war/page.html" afterPath="$PROJECT_DIR$/war/page.html" />
     </list>
     <ignored path="$PROJECT_DIR$/war/WEB-INF/classes/" />
@@ -33,11 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CpuFrame.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java">
+      <file leaf-file-name="JButton.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="58" column="42" lean-forward="false" selection-start-line="58" selection-start-column="42" selection-end-line="58" selection-end-column="42" />
+            <state relative-caret-position="239">
+              <caret line="24" column="41" lean-forward="false" selection-start-line="24" selection-start-column="41" selection-end-line="24" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -46,24 +43,11 @@
       <file leaf-file-name="WarFrame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-69">
-              <caret line="161" column="66" lean-forward="false" selection-start-line="161" selection-start-column="66" selection-end-line="161" selection-end-column="66" />
+            <state relative-caret-position="722">
+              <caret line="300" column="35" lean-forward="false" selection-start-line="300" selection-start-column="35" selection-end-line="300" selection-end-column="35" />
               <folding>
-                <element signature="e#9236#9237#0" expanded="true" />
-                <element signature="e#9291#9292#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="page.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/war/page.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="848" column="30" lean-forward="false" selection-start-line="848" selection-start-column="23" selection-end-line="848" selection-end-column="30" />
-              <folding>
-                <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#label#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#8949#8950#0" expanded="true" />
+                <element signature="e#9004#9005#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -72,27 +56,24 @@
       <file leaf-file-name="CompetitionWindow.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="232" column="7" lean-forward="false" selection-start-line="232" selection-start-column="7" selection-end-line="232" selection-end-column="7" />
+            <state relative-caret-position="476">
+              <caret line="175" column="0" lean-forward="false" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
               <folding>
                 <element signature="e#1443#1444#0" expanded="true" />
                 <element signature="e#1481#1482#0" expanded="true" />
-                <element signature="e#9781#9782#0" expanded="true" />
-                <element signature="e#9819#9820#0" expanded="true" />
+                <element signature="e#10463#10464#0" expanded="true" />
+                <element signature="e#10501#10502#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Competition.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java">
+      <file leaf-file-name="JComponent.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="531">
-              <caret line="264" column="15" lean-forward="false" selection-start-line="264" selection-start-column="15" selection-end-line="264" selection-end-column="15" />
-              <folding>
-                <element signature="e#8426#8427#0" expanded="true" />
-                <element signature="e#8456#8457#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="272">
+              <caret line="53" column="17" lean-forward="false" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="17" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -100,40 +81,17 @@
       <file leaf-file-name="War.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="394" column="19" lean-forward="false" selection-start-line="394" selection-start-column="19" selection-end-line="394" selection-end-column="19" />
+            <state relative-caret-position="-4552">
+              <caret line="80" column="29" lean-forward="false" selection-start-line="80" selection-start-column="29" selection-end-line="80" selection-end-column="29" />
               <folding>
-                <element signature="e#13539#13540#0" expanded="true" />
-                <element signature="e#13567#13568#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FlagFields.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/FlagFields.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="22" column="79" lean-forward="true" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="79" />
-              <folding>
-                <element signature="e#839#840#0" expanded="true" />
-                <element signature="e#870#871#0" expanded="true" />
-                <element signature="e#900#901#0" expanded="true" />
-                <element signature="e#930#931#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RegisterField.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/RegisterField.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="38" column="19" lean-forward="false" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#919#920#0" expanded="true" />
-                <element signature="e#939#940#0" expanded="true" />
+                <element signature="e#5232#5233#0" expanded="true" />
+                <element signature="e#5279#5280#0" expanded="true" />
+                <element signature="e#13605#13606#0" expanded="true" />
+                <element signature="e#13633#13634#0" expanded="true" />
+                <element signature="e#13669#13670#0" expanded="true" />
+                <element signature="e#13697#13698#0" expanded="true" />
+                <element signature="e#13924#13925#0" expanded="true" />
+                <element signature="e#13962#13963#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -142,8 +100,8 @@
       <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7548">
-              <caret line="480" column="40" lean-forward="false" selection-start-line="480" selection-start-column="40" selection-end-line="480" selection-end-column="40" />
+            <state relative-caret-position="477">
+              <caret line="482" column="41" lean-forward="false" selection-start-line="482" selection-start-column="41" selection-end-line="482" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -152,10 +110,62 @@
       <file leaf-file-name="PlayersPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="71" column="86" lean-forward="true" selection-start-line="71" selection-start-column="23" selection-end-line="71" selection-end-column="86" />
+            <state relative-caret-position="395">
+              <caret line="263" column="12" lean-forward="false" selection-start-line="263" selection-start-column="12" selection-end-line="263" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CompetitionEventListener.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="page.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/war/page.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="64">
+              <caret line="272" column="25" lean-forward="false" selection-start-line="272" selection-start-column="13" selection-end-line="272" selection-end-column="25" />
               <folding>
-                <element signature="e#2109#2121#0" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#label#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Competition.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="608">
+              <caret line="220" column="45" lean-forward="false" selection-start-line="220" selection-start-column="37" selection-end-line="220" selection-end-column="45" />
+              <folding>
+                <element signature="e#7951#7952#0" expanded="true" />
+                <element signature="e#7998#7999#0" expanded="true" />
+                <element signature="e#8078#8079#0" expanded="true" />
+                <element signature="e#8125#8126#0" expanded="true" />
+                <element signature="e#8194#8195#0" expanded="true" />
+                <element signature="e#8236#8237#0" expanded="true" />
+                <element signature="e#8304#8305#0" expanded="true" />
+                <element signature="e#8346#8347#0" expanded="true" />
+                <element signature="e#8405#8406#0" expanded="true" />
+                <element signature="e#8445#8446#0" expanded="true" />
+                <element signature="e#8636#8637#0" expanded="true" />
+                <element signature="e#8670#8671#0" expanded="true" />
+                <element signature="e#8699#8700#0" expanded="true" />
+                <element signature="e#8727#8728#0" expanded="true" />
+                <element signature="e#8757#8758#0" expanded="true" />
+                <element signature="e#8790#8791#0" expanded="true" />
+                <element signature="e#8832#8833#0" expanded="true" />
+                <element signature="e#8862#8863#0" expanded="true" />
+                <element signature="e#8903#8904#0" expanded="true" />
+                <element signature="e#8932#8933#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -165,36 +175,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>btnCpuState</find>
-      <find>cli&quot;</find>
-      <find>editor_t</find>
-      <find>spellcheck=&quot;false&quot;</find>
-      <find>reg_name</find>
-      <find>onwa</find>
-      <find>radix</find>
-      <find>triggerRegBase</find>
-      <find>mode</find>
-      <find>debug</find>
-      <find>j_startDebug</find>
-      <find>addFam</find>
-      <find>textare</find>
-      <find>&quot;Resume</find>
-      <find>demode</find>
-      <find>setDe</find>
-      <find>j_demoDebugPlayers</find>
-      <find>single</find>
-      <find>addPlayerBtn</find>
-      <find>round</find>
-      <find>Run!</find>
-      <find>compsta</find>
-      <find>continue</find>
-      <find>requestFrame</find>
-      <find>btnPause</find>
-      <find>btn</find>
-      <find>globalPause</find>
-      <find>&quot;pause</find>
-      <find>globalPa</find>
+      <find>isOver</find>
+      <find>doneWar</find>
       <find>compState</find>
+      <find>stepnum</find>
+      <find>enters the a</find>
+      <find>onWarriorBirth</find>
+      <find>enters the</find>
+      <find>toHex</find>
+      <find>onEndRound</find>
+      <find>the arena at</find>
+      <find>abort</find>
+      <find>btn</find>
+      <find>btnSingleRound</find>
+      <find>message</find>
+      <find>runSingleRound</find>
+      <find>onRound</find>
+      <find>isS</find>
+      <find>pause</find>
+      <find>isPaused</find>
+      <find>g_usedLetters</find>
+      <find>arrayRemove</find>
+      <find>pl_close_icon</find>
+      <find>_fcheck</find>
+      <find>triggerErasePlayer</find>
+      <find>addPlayerBtn</find>
+      <find>j_startDebug</find>
+      <find>stepnu</find>
+      <find>mychec</find>
+      <find>onWarEnd</find>
+      <find>runRound</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -210,13 +220,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JOptionPane.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JCheckBox.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextField.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/Canvas.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JLabel.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java" />
         <option value="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" />
         <option value="$PROJECT_DIR$/build.xml" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionIterator.java" />
@@ -224,26 +231,32 @@
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/ColumnGraph.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorData.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorRepository.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/FlagFields.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/RegisterField.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterCompetition.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
         <option value="$PROJECT_DIR$/war/page.html" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="283" />
-    <option name="y" value="24" />
-    <option name="width" value="1632" />
-    <option name="height" value="1023" />
+    <option name="x" value="359" />
+    <option name="y" value="-4" />
+    <option name="width" value="1549" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -367,6 +380,14 @@
             <path>
               <item name="codewars_js" type="b2602c69:ProjectViewProjectNode" />
               <item name="codewars_js" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="codeguru" type="462c0819:PsiDirectoryNode" />
+              <item name="corewars8086" type="462c0819:PsiDirectoryNode" />
+              <item name="war" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="codewars_js" type="b2602c69:ProjectViewProjectNode" />
+              <item name="codewars_js" type="462c0819:PsiDirectoryNode" />
               <item name="war" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -379,7 +400,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/jsinterop_base-1.0.0-RC1.jar!/" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Java" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -497,7 +518,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="283" y="24" width="1632" height="1023" extended-state="0" />
+    <frame x="359" y="-4" width="1549" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -512,8 +533,8 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17759901" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29527992" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18721461" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23743315" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -537,48 +558,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/elemental2-dom-1.0.0-RC1.jar!/elemental2/dom/HTMLInputElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="7" column="45" lean-forward="false" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="28" column="11" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="28" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/war/test_asm.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="742">
-          <caret line="88" column="24" lean-forward="false" selection-start-line="88" selection-start-column="14" selection-end-line="88" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JLabel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="5" lean-forward="false" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/elemental2-dom-1.0.0-RC1.jar!/elemental2/dom/Text.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -645,14 +624,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="69" lean-forward="false" selection-start-line="14" selection-start-column="69" selection-end-line="14" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="701">
-          <caret line="48" column="9" lean-forward="false" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -855,14 +826,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="88" column="7" lean-forward="false" selection-start-line="88" selection-start-column="7" selection-end-line="88" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JPanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -875,14 +838,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1010">
           <caret line="212" column="6" lean-forward="false" selection-start-line="212" selection-start-column="6" selection-end-line="212" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterCompetition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="38" column="54" lean-forward="false" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
           <folding />
         </state>
       </provider>
@@ -927,8 +882,8 @@
         <state relative-caret-position="-2628">
           <caret line="545" column="50" lean-forward="false" selection-start-line="545" selection-start-column="45" selection-end-line="545" selection-end-column="50" />
           <folding>
-            <element signature="e#7967#7968#0" expanded="true" />
-            <element signature="e#8013#8014#0" expanded="true" />
+            <element signature="e#7967#7968#0" expanded="false" />
+            <element signature="e#8013#8014#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -938,9 +893,9 @@
         <state relative-caret-position="483">
           <caret line="38" column="19" lean-forward="false" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="19" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#919#920#0" expanded="true" />
-            <element signature="e#939#940#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#919#920#0" expanded="false" />
+            <element signature="e#939#940#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -950,44 +905,128 @@
         <state relative-caret-position="177">
           <caret line="22" column="79" lean-forward="true" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="79" />
           <folding>
-            <element signature="e#839#840#0" expanded="true" />
-            <element signature="e#870#871#0" expanded="true" />
-            <element signature="e#900#901#0" expanded="true" />
-            <element signature="e#930#931#0" expanded="true" />
+            <element signature="e#839#840#0" expanded="false" />
+            <element signature="e#870#871#0" expanded="false" />
+            <element signature="e#900#901#0" expanded="false" />
+            <element signature="e#930#931#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="e#327#328#0" expanded="false" />
+            <element signature="e#388#389#0" expanded="false" />
+            <element signature="e#466#467#0" expanded="false" />
+            <element signature="e#491#492#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="30" column="11" lean-forward="false" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="131" column="40" lean-forward="false" selection-start-line="131" selection-start-column="40" selection-end-line="131" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterCompetition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="60" column="70" lean-forward="false" selection-start-line="60" selection-start-column="70" selection-end-line="60" selection-end-column="70" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="58" column="42" lean-forward="false" selection-start-line="58" selection-start-column="42" selection-end-line="58" selection-end-column="42" />
+        <state relative-caret-position="210">
+          <caret line="337" column="13" lean-forward="false" selection-start-line="337" selection-start-column="13" selection-end-line="337" selection-end-column="13" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="53" column="17" lean-forward="false" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="24" column="41" lean-forward="false" selection-start-line="24" selection-start-column="41" selection-end-line="24" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4552">
+          <caret line="80" column="29" lean-forward="false" selection-start-line="80" selection-start-column="29" selection-end-line="80" selection-end-column="29" />
+          <folding>
+            <element signature="e#5232#5233#0" expanded="true" />
+            <element signature="e#5279#5280#0" expanded="true" />
+            <element signature="e#13605#13606#0" expanded="true" />
+            <element signature="e#13633#13634#0" expanded="true" />
+            <element signature="e#13669#13670#0" expanded="true" />
+            <element signature="e#13697#13698#0" expanded="true" />
+            <element signature="e#13924#13925#0" expanded="true" />
+            <element signature="e#13962#13963#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7548">
-          <caret line="480" column="40" lean-forward="false" selection-start-line="480" selection-start-column="40" selection-end-line="480" selection-end-column="40" />
+        <state relative-caret-position="477">
+          <caret line="482" column="41" lean-forward="false" selection-start-line="482" selection-start-column="41" selection-end-line="482" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/codewars_js/9CD2D2577200887DA0755A06B82CDFD0.cache.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="5176" column="21" lean-forward="false" selection-start-line="5176" selection-start-column="21" selection-end-line="5176" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="71" column="86" lean-forward="true" selection-start-line="71" selection-start-column="23" selection-end-line="71" selection-end-column="86" />
-          <folding>
-            <element signature="e#2109#2121#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="395">
+          <caret line="263" column="12" lean-forward="false" selection-start-line="263" selection-start-column="12" selection-end-line="263" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/war/page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="848" column="30" lean-forward="false" selection-start-line="848" selection-start-column="23" selection-end-line="848" selection-end-column="30" />
+        <state relative-caret-position="64">
+          <caret line="272" column="25" lean-forward="false" selection-start-line="272" selection-start-column="13" selection-end-line="272" selection-end-column="25" />
           <folding>
             <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#label#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -997,46 +1036,53 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="232" column="7" lean-forward="false" selection-start-line="232" selection-start-column="7" selection-end-line="232" selection-end-column="7" />
+        <state relative-caret-position="476">
+          <caret line="175" column="0" lean-forward="false" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
           <folding>
             <element signature="e#1443#1444#0" expanded="true" />
             <element signature="e#1481#1482#0" expanded="true" />
-            <element signature="e#9781#9782#0" expanded="true" />
-            <element signature="e#9819#9820#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="394" column="19" lean-forward="false" selection-start-line="394" selection-start-column="19" selection-end-line="394" selection-end-column="19" />
-          <folding>
-            <element signature="e#13539#13540#0" expanded="true" />
-            <element signature="e#13567#13568#0" expanded="true" />
+            <element signature="e#10463#10464#0" expanded="true" />
+            <element signature="e#10501#10502#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="264" column="15" lean-forward="false" selection-start-line="264" selection-start-column="15" selection-end-line="264" selection-end-column="15" />
+        <state relative-caret-position="608">
+          <caret line="220" column="45" lean-forward="false" selection-start-line="220" selection-start-column="37" selection-end-line="220" selection-end-column="45" />
           <folding>
-            <element signature="e#8426#8427#0" expanded="true" />
-            <element signature="e#8456#8457#0" expanded="true" />
+            <element signature="e#7951#7952#0" expanded="true" />
+            <element signature="e#7998#7999#0" expanded="true" />
+            <element signature="e#8078#8079#0" expanded="true" />
+            <element signature="e#8125#8126#0" expanded="true" />
+            <element signature="e#8194#8195#0" expanded="true" />
+            <element signature="e#8236#8237#0" expanded="true" />
+            <element signature="e#8304#8305#0" expanded="true" />
+            <element signature="e#8346#8347#0" expanded="true" />
+            <element signature="e#8405#8406#0" expanded="true" />
+            <element signature="e#8445#8446#0" expanded="true" />
+            <element signature="e#8636#8637#0" expanded="true" />
+            <element signature="e#8670#8671#0" expanded="true" />
+            <element signature="e#8699#8700#0" expanded="true" />
+            <element signature="e#8727#8728#0" expanded="true" />
+            <element signature="e#8757#8758#0" expanded="true" />
+            <element signature="e#8790#8791#0" expanded="true" />
+            <element signature="e#8832#8833#0" expanded="true" />
+            <element signature="e#8862#8863#0" expanded="true" />
+            <element signature="e#8903#8904#0" expanded="true" />
+            <element signature="e#8932#8933#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-69">
-          <caret line="161" column="66" lean-forward="false" selection-start-line="161" selection-start-column="66" selection-end-line="161" selection-end-column="66" />
+        <state relative-caret-position="722">
+          <caret line="300" column="35" lean-forward="false" selection-start-line="300" selection-start-column="35" selection-end-line="300" selection-end-column="35" />
           <folding>
-            <element signature="e#9236#9237#0" expanded="true" />
-            <element signature="e#9291#9292#0" expanded="true" />
+            <element signature="e#8949#8950#0" expanded="true" />
+            <element signature="e#9004#9005#0" expanded="true" />
           </folding>
         </state>
       </provider>
