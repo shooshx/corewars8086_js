@@ -8,6 +8,8 @@
 <script>
 
 var run_nasm = null
+var PART_SIZE = 500
+var LAST_PART_INDEX = Math.trunc(65535/PART_SIZE)
 
 function start()
 {
@@ -20,7 +22,126 @@ function start()
     asm_edit.addEventListener("keyup", fixhscroll)
     asm_edit.addEventListener("keyup", fixIndent)  // indent is on key up since we want it after the \n
 
+    populate_debug_area()
 }
+
+function populate_debug_area()
+{
+    console.log("start addr add")
+    var c = document.createDocumentFragment();
+    var currentPart = null
+    for(var i = 0; i <= 0xffff; ++i) {
+
+        if ((i % PART_SIZE) == 0) {
+            var parti = i / PART_SIZE
+            currentPart = document.createElement('div')
+            currentPart.classList = "dpart"
+            currentPart.id = "dpart" + parti
+            currentPart.style.display = ""
+            c.appendChild(currentPart)
+
+            var placeholder = document.createElement('div')
+            placeholder.classList = "dplace"
+            placeholder.id = "dplace" + parti
+            placeholder.style.display = "none"
+
+            if (i != 0) { // show the first one so it could give its height to the rest
+                currentPart.style.display = "none"
+                placeholder.style.display = ""
+            }
+            c.appendChild(placeholder)
+        }
+        var addr = i.toString(16).padStart(4, '0')
+        var e = document.createElement('div')
+        e.classList = 'dline'
+        e.id = 'd' + i
+        e.innerText = addr
+
+        currentPart.appendChild(e);
+    }
+    debug_text.appendChild(c)
+    console.log("done addr add")
+}
+
+function cssRuleBySelector(selText) {
+    var rules = document.styleSheets[0].rules
+    for(var i = 0; i < rules.length; ++i)
+        if (rules[i].selectorText == selText)
+            return rules[i]
+    return null
+}
+
+var dplace_css = null
+var single_part_height = 0
+function fix_debug_scroll_placeholders_size()
+{
+    if (dplace_css == null)
+        dplace_css = cssRuleBySelector('.dplace')
+    // part0 is the only one displayed at the start so it would give its height to the rest
+    single_part_height = dpart0.offsetHeight
+    if (single_part_height == 0)
+        throw "did not get placeholder height"
+    dplace_css.style.height = dpart0.offsetHeight + "px"
+}
+
+var last_shown_parts = [0] // 0 is the only one shown at the start
+
+function hidePart(i) {
+    document.getElementById('dpart' + i).style.display = 'none'
+    document.getElementById('dplace' + i).style.display = ''
+}
+function showPart(i) {
+    document.getElementById('dpart' + i).style.display = ''
+    document.getElementById('dplace' + i).style.display = 'none'
+}
+
+// need to maintain who's open and who's not
+// at all time, exactly two parts are open
+function debugAreaScroll()
+{
+    var atScroll = debug_text.scrollTop
+    var atpartf = atScroll / single_part_height
+    var atpart = Math.trunc(atpartf)
+    var where_in_part = atpartf % 1  // fraction part
+
+    for(var li = 0; li < last_shown_parts.length; ++li)
+        hidePart(last_shown_parts[li])
+    showPart(atpart)
+    last_shown_parts = [atpart]
+    second_part = (where_in_part > 0.5) ? (atpart + 1) : (atpart - 1)
+    if (second_part >= 0 && second_part <= LAST_PART_INDEX) {
+        showPart(second_part)
+        last_shown_parts.push(second_part)
+    }
+}
+
+function scrollToAddr(addr) {
+    if (addr < 0 || addr > 0xffff)
+        return
+    var e = document.getElementById("d" + addr)
+    if (!e)
+        return
+
+    e.parentElement.style.display = ""  // need to show it for it to have an offsetTop
+    debug_text.scrollTop = e.offsetTop - 30  // have some margin from the top
+}
+
+function triggerGoTo() {
+    var addr = parseInt(debug_goto.value, 16)
+    if (isNaN(addr))
+        return
+    scrollToAddr(addr)
+}
+function triggerGoToKey() {
+    if(event.key !== "Enter")
+        return;
+    event.preventDefault(); // No need to `return false;`.
+    triggerGoTo()
+}
+
+
+
+
 
 // called when GWT finshed loading
 function gwtStart()
@@ -268,8 +389,12 @@ function fixIndent(e) {
     }
 }
 
+var debug_area_shown = false
+var deferredEditorToAddress = -1 // set by code in CodeEditor.java
+
 function triggerDebug() {
-    if (debugCheckbox.checked) {
+    if (debugCheckbox.checked)
+    {
         if (!j_startDebug()) {
             console.error("cannot start debug")
             debugCheckbox.checked = false;
@@ -279,12 +404,23 @@ function triggerDebug() {
         debugBtnIn.style.backgroundImage = "url(red_stop.png)"
         debugBtnIn2.innerText = "Stop"
 
+        edit_area.style.display="none"
+        debug_area.style.display=""
+        if (!debug_area_shown) {
+            fix_debug_scroll_placeholders_size()
+            debug_area_shown = true; // need to do this fix only on the first time it's shown
+        }
+
+        if (deferredEditorToAddress != -1) {
+            scrollToAddr(deferredEditorToAddress)
+            deferredEditorToAddress = -1;
+        }
+
         for(var ui in g_usedLetters) {
             var u = g_usedLetters[ui]
             document.getElementById("player_erase_p" + u).setAttribute("disabled", true)
             document.getElementById("player_check_p" + u).setAttribute("disabled", true)
             document.getElementById("wtype_p" + u).setAttribute("disabled", true)
-
         }
     }
     else {
@@ -292,6 +428,10 @@ function triggerDebug() {
 
         debugBtnIn.style.backgroundImage = "url(green_play.png)"
         debugBtnIn2.innerText = "Debug"
+
+        edit_area.style.display=""
+        debug_area.style.display="none"
+
 
         for(var ui in g_usedLetters) {
             var u = g_usedLetters[ui]
@@ -314,6 +454,8 @@ function triggerRegBase(ishex) {
     }
     j_setRegistersBase(ishex ? 16:10)
 }
+
+
 
 </script>    
 <style>
@@ -459,6 +601,27 @@ input:disabled + .sc-btn:active,
     vertical-align: top; /* othewise the scroll bar hides the border */
     overflow: hidden;
 }
+
+#debug_area {
+
+}
+#debug_text {
+    display: inline-block;
+    position:relative;
+
+    width:600px;
+    height: 518px;
+    vertical-align: top; /* othewise the scroll bar hides the border */
+    border: 1px solid black;
+    overflow: auto;
+    font-size: 16px;
+    font-family: courier;
+    margin: 0;
+}
+.dplace { /* placeholdr for dlines */
+    height: 0;
+}
+
 #asm_edit {
     position: absolute;
     top: 0;
@@ -761,6 +924,28 @@ input:disabled + .sc-btn:active,
 #editor_boxes {
 }
 
+#debug_goto {
+    height: 18px;
+    width: 100px;
+    margin: 0 0 0 0;
+    font-size: 16px;
+    font-family: courier;
+    border-radius: 4px;
+    padding: 0 0 0 0;
+    border: 1px solid #000000;
+    padding: 2px;
+    margin: 0 0 6px 0;
+}
+#btnGoTo {
+    height: 22px;
+    line-height: 18px;
+    vertical-align: -8px;
+    border: 1px solid;
+    width: 60px;
+    line-height: 20px;
+    margin: 0;
+    font-size: 14px;
+}
 
 #debugBtn {
     width: 120px;
@@ -901,9 +1086,9 @@ table tr:last-child td:first-child {
 
       <div id="edit_panel">
         <input type="text" id="editor_title" spellcheck="false">
-          <label id="btnPause" class="sc-btn title-buttons">Pause</label>
-          <label id="btnSingleRound" class="sc-btn title-buttons">Step</label>
-          <br>
+        <label id="btnPause" class="sc-btn title-buttons">Pause</label>
+        <label id="btnSingleRound" class="sc-btn title-buttons">Step</label>
+        <br>
         <div id="editor_boxes">
           <div id="edit_area">
               <div id="box_numbers"></div>
@@ -913,6 +1098,11 @@ table tr:last-child td:first-child {
                    onscroll="handleScroll()"></textarea>
               <div id="box_opcodes"></div>
               <div id="box_edit"></div>
+          </div>
+          <div id="debug_area" style="display:none;">
+              <input type="text" id="debug_goto" spellcheck="false" onkeyup="triggerGoToKey()">
+              <label id="btnGoTo" class="sc-btn" onclick="triggerGoTo()">go to</label>
+              <pre id="debug_text" class="allow_select" onscroll="debugAreaScroll()"></pre>
           </div>
         </div>
         <br>

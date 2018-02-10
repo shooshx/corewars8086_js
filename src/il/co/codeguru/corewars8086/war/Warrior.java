@@ -115,7 +115,10 @@ public class Warrior {
      */
     public short getLoadOffset() {
         return m_loadAddress.getOffset();
-    }	
+    }
+    public int getLoadOffsetInt() {
+        return m_loadAddress.getLinearAddress() - War.ARENA_SEGMENT*0x10;
+    }
 
     /**
      * @return the warrior's initial code size.

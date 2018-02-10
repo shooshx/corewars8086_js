@@ -4,6 +4,10 @@ package il.co.codeguru.corewars8086.gui;
 import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
+import il.co.codeguru.corewars8086.jsadd.Format;
+import il.co.codeguru.corewars8086.war.Competition;
+import il.co.codeguru.corewars8086.war.War;
+import il.co.codeguru.corewars8086.war.Warrior;
 import il.co.codeguru.corewars8086.war.WarriorRepository;
 
 import java.util.ArrayList;
@@ -17,7 +21,7 @@ public class CodeEditor
     private HTMLInputElement editor_title;
     private HTMLTextAreaElement asm_edit;
 
-    private static class LstLine {
+    public static class LstLine {
         int lineNum = -1;
         int address = -1;
         String addressStr = "";
@@ -36,11 +40,21 @@ public class CodeEditor
         CODE,
         PARSE_ERR
     };
-    ArrayList<LstLine> m_currentListing = new ArrayList<LstLine>();
+
+
+    public static class DbgLine {
+        String text; // includes the command and any comment lines after it
+        byte[] binOpcode;
+    }
+    private DbgLine[] m_dbglines = new DbgLine[0x10000];
+
+    private ArrayList<LstLine> m_currentListing;
     public PlayersPanel m_playersPanel = null;
+    private Competition m_competition = null;
 
 
-    public CodeEditor() {
+    public CodeEditor(Competition competition) {
+        m_competition = competition;
         asm_edit = (HTMLTextAreaElement)DomGlobal.document.getElementById("asm_edit");
         asm_show = (HTMLElement)DomGlobal.document.getElementById("asm_show");
         asm_output = (HTMLElement)DomGlobal.document.getElementById("asm_output");
@@ -95,7 +109,7 @@ public class CodeEditor
     private boolean parseLst(String lsttext, StringBuilder opcodesText)
     {
         String[] lines = lsttext.split("\\n");
-        m_currentListing.clear();
+        m_currentListing = new ArrayList<LstLine>();
 
         int lineIndex = 1; // does not increment in warning lines that appear in the listing file
         for(int i = 0; i < lines.length; ++i)
@@ -105,7 +119,7 @@ public class CodeEditor
             LstLine l = new LstLine();
 
             int indexStart = 0, addressStart = 0, opcodeStart = 0;
-
+            int charsBeforeCode = 0; // number of characters after the space after address and before the code. used fo not missing indentation
             for(int j = 0; j < line.length(); ++j)
             {
                 char c = line.charAt(j);
@@ -128,8 +142,10 @@ public class CodeEditor
                             state = Field.PARSE_ERR;
                         break;
                     case SINGLE_SPACE_AFTER_INDEX:
-                        if (c == ' ')
+                        if (c == ' ') {
                             state = Field.SPACE_BEFORE_CODE;
+                            charsBeforeCode = -9; // account for not having an address
+                        }
                         else if (isHexDigit(c)) {
                             addressStart = j;
                             state = Field.ADDRESS;
@@ -158,18 +174,23 @@ public class CodeEditor
                         if (c == ' ') {
                             l.opcode = line.substring(opcodeStart, j);
                             state = Field.SPACE_BEFORE_CODE;
+                            ++charsBeforeCode;
                         }
                         else if (!isHexDigit(c) && c != '[' && c != ']' && c != '(' && c != ')')
                             state = Field.PARSE_ERR;
+                        else
+                            ++charsBeforeCode;
                         break;
                     case SPACE_BEFORE_CODE:
                         if (c == '*') {
                             state = Field.WARNING;
                         }
-                        else if (c != ' ') {
+                        else if (c != ' ' || charsBeforeCode == 23) {
                             state = Field.CODE;
                             l.code = line.substring(j);
                         }
+                        else
+                            ++charsBeforeCode;
                         break;
                     case CODE:
                         break;
@@ -388,7 +409,7 @@ public class CodeEditor
             asm_show.innerHTML = "";
             asm_linenums.innerHTML = "1";
             if (playersPanel != null)
-                playersPanel.updateAsmResult(true, null);
+                playersPanel.updateAsmResult(true, null, null);
             //Console.log("~Empty input");
             return;
         }
@@ -428,7 +449,7 @@ public class CodeEditor
             opcodes_edit.innerHTML = linesAsInput(intext); // this is needed because x-scroll hiding relies on the opcode pane to be full
             Console.error("~Assembler error");
             if (playersPanel != null)
-                playersPanel.updateAsmResult(false, null);
+                playersPanel.updateAsmResult(false, null, null);
             return;
         }
 
@@ -438,7 +459,7 @@ public class CodeEditor
             opcodes_edit.innerHTML = linesAsInput(intext);;
             Console.log("~Empty output");
             if (playersPanel != null)
-                playersPanel.updateAsmResult(true, null);
+                playersPanel.updateAsmResult(true, null, null);
             return;
         }
 
@@ -447,7 +468,7 @@ public class CodeEditor
         if (!ok) {
             opcodes_edit.innerHTML = "[listing parsing error]";
             Console.error("listing parsing error"); // should not happen
-            m_playersPanel.updateAsmResult(false, null);
+            m_playersPanel.updateAsmResult(false, null, null);
             return;
         }
         opcodes_edit.innerHTML = opcodesText.toString();
@@ -457,25 +478,114 @@ public class CodeEditor
         if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
             Console.error("Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes");
             if (playersPanel != null)
-                playersPanel.updateAsmResult(false, buf);
+                playersPanel.updateAsmResult(false, buf, null);
             return;
         }
 
         if (playersPanel != null)
-            playersPanel.updateAsmResult(true, buf);
+            playersPanel.updateAsmResult(true, buf, m_currentListing);
 
     }
 
+    private static native void scrollToAddr(int addr) /*-{
+        $wnd.deferredEditorToAddress = addr
+    }-*/;
 
     public void setTitle(String s) {
         editor_title.value = s;
     }
+
+    private static final int OPCODES_PAD = 18;
+
+    private void initDebugAreaLines()
+    {
+        War war = m_competition.getCurrentWar();
+        int inEditorAddr = -1;
+
+        for(int i = 0; i < war.getNumWarriors(); ++i)
+        {
+            Warrior w = war.getWarrior(i);
+            int loadOffset = w.getLoadOffsetInt();
+
+            PlayersPanel.Code code = m_playersPanel.findCode(w.getLabel());
+
+            if (code == m_playersPanel.getCodeInEditor())
+                inEditorAddr = loadOffset;
+
+            DbgLine last_dbgline = null;
+            HTMLElement last_dline = null;
+
+            if (code.lines.get(0).address == -1) { // comment or label on the first line, need to belong to the address before first
+                int befFirst = loadOffset - 1;
+                if (m_dbglines[befFirst] != null) {
+                    last_dbgline = m_dbglines[befFirst];
+                }
+                else {
+                    last_dbgline = new DbgLine();
+                    last_dbgline.text = "";
+                    m_dbglines[befFirst] = last_dbgline;
+                }
+                last_dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(befFirst));
+            }
+
+            for(LstLine lstline : code.lines)
+            {
+                if (lstline.address == -1) {
+                    assert last_dbgline != null: "Unexpected blank prev line";
+                    last_dbgline.text += "\n" + lstline.code;
+                    last_dline.innerHTML += "\n" + Format.padding(4+2+2+OPCODES_PAD,  ' ') + lstline.code;
+                }
+                else {
+                    int loadAddr = lstline.address + loadOffset;
+                    DbgLine dbgline = new DbgLine();
+                    String opcode = lstline.opcode;
+
+                    dbgline.text = opcode + "  " + Format.padding(OPCODES_PAD-opcode.length(),' ') + lstline.code;
+
+                    int opcodesNumsCount = 0;
+                    for(int j = 0; j < opcode.length(); ++j)
+                        if (isHexDigit(opcode.charAt(j))) // opcode can have things line [],() skipped
+                            ++opcodesNumsCount;
+                    // count how many bytes in the opcode
+                    int opcodesCount = opcodesNumsCount / 2;
+                    dbgline.binOpcode = new byte[opcodesCount];
+                    assert lstline.address + opcodesCount <= code.bin.length;
+                    // copy the binary of this line to dbgline for later comparison when stepping
+                    for(int j = 0; j < opcodesCount; ++j) {
+                        dbgline.binOpcode[j] = code.bin[lstline.address + j];
+                    }
+                    m_dbglines[loadAddr] = dbgline;
+
+                    HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(loadAddr));
+                    dline.innerHTML = Format.hex(loadAddr, 4) + "  " + dbgline.text;
+
+                    last_dbgline = dbgline;
+                    last_dline = dline;
+                }
+                // TBD not handled - first line of comment
+
+            }
+        }
+
+        if (inEditorAddr != -1)
+            scrollToAddr(inEditorAddr);
+
+    }
+
+    // scroll triggers request for update of range of addresses
+    //  for each line,
+
+    //    check if core content matches line content
+
+
 
     public void setDebugMode(boolean v) {
         if (v) {
             asm_output.style.display = "none";
             asm_edit.style.display= "none"; // just the textarea
             editor_title.readOnly = true;
+
+            initDebugAreaLines();
         }
         else {
             asm_output.style.display = "";

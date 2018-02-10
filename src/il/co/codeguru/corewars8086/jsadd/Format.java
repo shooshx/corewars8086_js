@@ -8,5 +8,14 @@ public class Format {
         return s;
     }
 
+    public static String padding(int repeat, char padChar)  {
+        char[] buf = new char[repeat];
+
+        for(int i = 0; i < buf.length; ++i) {
+            buf[i] = padChar;
+        }
+
+        return new String(buf);
+    }
 
 }

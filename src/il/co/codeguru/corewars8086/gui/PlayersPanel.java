@@ -18,7 +18,7 @@ public class PlayersPanel
         public Code(PlayerInfo p, int idx) {
             player = p;
             index = idx;
-            label = p.label + Integer.toString(idx);
+            label = p.label + Integer.toString(idx); // p.label is a single letter, index is 0 or 1
         }
         public String getName() {
             return name;
@@ -35,6 +35,7 @@ public class PlayersPanel
         public String asmText = "";
         public byte[] bin = null;  // can be null if last output was empty
         public boolean lastCompileOk = true;
+        public ArrayList<CodeEditor.LstLine> lines;
     }
 
     public static class PlayerInfo {
@@ -93,14 +94,29 @@ public class PlayersPanel
         }
         return null;
     }
+    public PlayerInfo findPlayer(char label) {
+        for(PlayerInfo p : m_players) {
+            if (p.label.charAt(0) == label)
+                return p;
+        }
+        return null;
+    }
+
+    public Code findCode(String label) {
+        PlayerInfo pi = findPlayer(label.charAt(0));
+        if (pi == null)
+            return null;
+        int ci = label.charAt(1) - '0';
+        return pi.code[ci];
+    }
 
     public void j_demoDebugPlayers() {
         m_inEditor = m_players.get(1).code[0];
-        m_inEditor.asmText = "start:\ninc ax\njmp start";
+        m_inEditor.asmText = "start:\ninc cx\njmp start";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
         m_inEditor = m_players.get(0).code[0];
-        m_inEditor.asmText = "start:\ninc cx\njmp start";
+        m_inEditor.asmText = "start:\ninc ax    ;hello\n          ;world\njmp start";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
     }
@@ -197,6 +213,9 @@ public class PlayersPanel
         return null;
     }
 
+    public Code getCodeInEditor() {
+        return m_inEditor;
+    }
 
     // from CodeEditor
     public void updateText(String text) {
@@ -217,12 +236,13 @@ public class PlayersPanel
         reWriteButtonsLabels(m_inEditor.player);
     }
 
-    public void updateAsmResult(boolean compileOk, byte[] binbuffer)
+    public void updateAsmResult(boolean compileOk, byte[] binbuffer, ArrayList<CodeEditor.LstLine> lines)
     {
         if (m_inEditor == null)
             return;
         m_inEditor.bin = binbuffer;
         m_inEditor.lastCompileOk = compileOk;
+        m_inEditor.lines = lines;
     }
 
     public boolean checkPlayersReady()

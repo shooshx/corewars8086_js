@@ -115,7 +115,7 @@ public class Competition {
         return false;
     }
 
-    public boolean runCompetition(int warsPerCombination, int warriorsPerGroup, boolean startPaused, boolean animateRound) throws Exception 
+    public void runCompetition(int warsPerCombination, int warriorsPerGroup, boolean startPaused, boolean animateRound) throws Exception
     {
         this.warsPerCombination = warsPerCombination;
         competitionIterator = new CompetitionIterator(warriorRepository.getNumberOfGroups(), warriorsPerGroup);
@@ -129,7 +129,6 @@ public class Competition {
         compState.state = CompState.State.RUN_WAR;
         compState.startPaused = startPaused;
         compState.animateRound = animateRound;
-        return true;
     }
 
     public int getTotalNumberOfWars() {

@@ -124,7 +124,7 @@ public class CompetitionWindow extends JFrame
 
         showBattleRoom();
 
-        m_codeEditor = new CodeEditor();
+        m_codeEditor = new CodeEditor(competition);
         m_playersPanel = new PlayersPanel(this);
         m_codeEditor.m_playersPanel = m_playersPanel;
         stepnum = (HTMLElement) DomGlobal.document.getElementById("stepnum");
@@ -186,16 +186,20 @@ public class CompetitionWindow extends JFrame
         @Override
         public void execute(double timestamp) {
             try {
-                boolean needMore = competition.continueRun(isBattleShown());
-                outRoundNum();
-                if (needMore)
-                    AnimationScheduler.get().requestAnimationFrame(animCallback);
+                callContinueRun();
 			} catch (Exception e) {
 				Console.log("continueRun EXCEPTION " + e.toString());
 				e.printStackTrace();
 			}
         }
     };
+
+    private void callContinueRun() throws Exception {
+        boolean needMore = competition.continueRun(isBattleShown());
+        outRoundNum();
+        if (needMore)
+            requestFrame();
+    }
 
     public void requestFrame() {
         AnimationScheduler.get().requestAnimationFrame(animCallback);
@@ -205,7 +209,8 @@ public class CompetitionWindow extends JFrame
      * Starts a new war.
      * @return whether or not a new war was started.
      */
-    public boolean runWar() {
+    public boolean runWar()
+    {
         int battlesPerGroup = 0;
         try {
         	competition.setSeed(seed.getText().hashCode());
@@ -241,14 +246,13 @@ public class CompetitionWindow extends JFrame
             Console.error("can't run without any warriors"); // TBD-ERRMSG
             return false;
         }
+
         try {
-            boolean needMore = competition.runCompetition(battlesPerGroup, numOfGroups, m_isStartPaused, isBattleShown());
-            outRoundNum();
-            if (needMore) {
-                requestFrame();
-                return true;
-            }
-        } catch (Exception e) {
+            competition.runCompetition(battlesPerGroup, numOfGroups, m_isStartPaused, isBattleShown());
+            callContinueRun(); // when runWar() returns we want the War object to be already constructured and ready
+            return true;
+        }
+        catch (Exception e) {
             Console.log("runWar EXCEPTION " + e.toString());
             e.printStackTrace(Console.stream());
         }

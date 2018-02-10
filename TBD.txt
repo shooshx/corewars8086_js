@@ -16,7 +16,7 @@ debugger
    disasm jump into middle of command
    disasm someone writing into my memory, show in red
    "rep inc cx" - invalid command that throws an exception - detect this
-   warrior that copies itself and jumps to it
+   warrior that coi
 
 
 https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
@@ -44,3 +44,7 @@ https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 
 - try two players with the same name
 - round counter
+
+- when not in debug mode don't update GUI
+- GUI zoom by browser
+- go to address when not a number - same as watch parsing
