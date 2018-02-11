@@ -7,6 +7,17 @@ public class Format {
             s = "0" + s;
         return s;
     }
+    public static String hex4(int num) {
+        String s = Integer.toHexString(num);
+        switch(s.length()) {
+            case 1: return "000" + s;
+            case 2: return "00" + s;
+            case 3: return "0" + s;
+            case 4: return s;
+        }
+        return s;
+    }
+
 
     public static String padding(int repeat, char padChar)  {
         char[] buf = new char[repeat];

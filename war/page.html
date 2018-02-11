@@ -6,10 +6,11 @@
     <script type="text/javascript" language="javascript" src="codewars_js/codewars_js.nocache.js"></script>
     <script type="text/javascript" language="javascript" src="asm_js_main.js"></script>
 <script>
+"use strict";
 
 var run_nasm = null
-var PART_SIZE = 500
-var LAST_PART_INDEX = Math.trunc(65535/PART_SIZE)
+var PAGE_SIZE = 500
+var LAST_PART_INDEX = Math.trunc(65535/PAGE_SIZE)
 
 function start()
 {
@@ -32,8 +33,8 @@ function populate_debug_area()
     var currentPart = null
     for(var i = 0; i <= 0xffff; ++i) {
 
-        if ((i % PART_SIZE) == 0) {
-            var parti = i / PART_SIZE
+        if ((i % PAGE_SIZE) == 0) {
+            var parti = i / PAGE_SIZE
             currentPart = document.createElement('div')
             currentPart.classList = "dpart"
             currentPart.id = "dpart" + parti
@@ -86,11 +87,11 @@ function fix_debug_scroll_placeholders_size()
 
 var last_shown_parts = [0] // 0 is the only one shown at the start
 
-function hidePart(i) {
+function hidePage(i) {
     document.getElementById('dpart' + i).style.display = 'none'
     document.getElementById('dplace' + i).style.display = ''
 }
-function showPart(i) {
+function showPage(i) {
     document.getElementById('dpart' + i).style.display = ''
     document.getElementById('dplace' + i).style.display = 'none'
 }
@@ -104,15 +105,31 @@ function debugAreaScroll()
     var atpart = Math.trunc(atpartf)
     var where_in_part = atpartf % 1  // fraction part
 
-    for(var li = 0; li < last_shown_parts.length; ++li)
-        hidePart(last_shown_parts[li])
-    showPart(atpart)
-    last_shown_parts = [atpart]
-    second_part = (where_in_part > 0.5) ? (atpart + 1) : (atpart - 1)
+    var new_shown_parts = [atpart]
+    var second_part = (where_in_part > 0.5) ? (atpart + 1) : (atpart - 1)
     if (second_part >= 0 && second_part <= LAST_PART_INDEX) {
-        showPart(second_part)
-        last_shown_parts.push(second_part)
+        if (second_part > atpart)
+            new_shown_parts.push(second_part)
+        else
+            new_shown_parts = [second_part, atpart] // maintain the first one be the smallest one for the above comparison
     }
+
+    // this will still work fine if the array has only 1 element, [1] in both will be undefined
+    if (new_shown_parts[0] == last_shown_parts[0] && new_shown_parts[1] == last_shown_parts[1])
+        return
+
+    for(var li = 0; li < last_shown_parts.length; ++li) {
+        hidePage(last_shown_parts[li])
+    }
+    for(var li = 0; li < new_shown_parts.length; ++li) {
+        var p = new_shown_parts[li]
+        showPage(p)
+        j_renderIfDirty(p)
+    }
+
+    last_shown_parts = new_shown_parts
+
+
 }
 
 function scrollToAddr(addr) {

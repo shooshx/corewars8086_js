@@ -46,12 +46,22 @@ public class CodeEditor
         String text; // includes the command and any comment lines after it
         byte[] binOpcode;
     }
-    private DbgLine[] m_dbglines = new DbgLine[0x10000];
+    private DbgLine[] m_dbglines;
+
+    public static class PageInfo {
+        boolean isDirty;
+        int startAddr;
+        int endAddr;
+    }
+    private PageInfo[] m_pages; // marks when a page of 500 addresses should be redrawn in the next required time
 
     private ArrayList<LstLine> m_currentListing;
     public PlayersPanel m_playersPanel = null;
     private Competition m_competition = null;
 
+    private static native int PAGE_SIZE() /*-{
+        return $wnd.PAGE_SIZE
+    }-*/;
 
     public CodeEditor(Competition competition) {
         m_competition = competition;
@@ -69,7 +79,25 @@ public class CodeEditor
         editor_title.addEventListener("input", (event) -> {
             m_playersPanel.updateTitle(editor_title.value);
         });
+
+        m_dbglines = new DbgLine[War.ARENA_SIZE];
+        int pageSize = PAGE_SIZE();
+        m_pages = new PageInfo[ (War.ARENA_SIZE / pageSize) + 1 ];
+        for(int i = 0; i < m_pages.length; ++i) {
+            PageInfo pi = new PageInfo();
+            m_pages[i] = pi;
+            pi.isDirty = true;
+            pi.startAddr = i * pageSize;
+            pi.endAddr = Math.min( (i + 1) * pageSize, War.ARENA_SIZE);
+        }
+
+        exportMethods();
     }
+
+    public native void exportMethods() /*-{
+        var that = this
+        $wnd.j_renderIfDirty = $entry(function(i) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_renderIfDirty(I)(i) });
+    }-*/;
 
     private static native int run_nasm(String asmname, String text, String lstname)     /*-{
         $wnd.FS.writeFile(asmname, text, { encoding:'utf8' })
@@ -491,6 +519,10 @@ public class CodeEditor
         $wnd.deferredEditorToAddress = addr
     }-*/;
 
+    private static native double getTime() /*-{
+        return Date.now()
+    }-*/;
+
     public void setTitle(String s) {
         editor_title.value = s;
     }
@@ -500,8 +532,23 @@ public class CodeEditor
     private void initDebugAreaLines()
     {
         War war = m_competition.getCurrentWar();
-        int inEditorAddr = -1;
 
+        //double _start = getTime();
+
+        DbgLine fillCmd = new DbgLine();
+        fillCmd.text = "CC  " + Format.padding(OPCODES_PAD-2,' ') + "int 3";;
+        fillCmd.binOpcode = new byte[1];
+        fillCmd.binOpcode[0] = War.ARENA_BYTE;
+
+        for(int addr = 0; addr < War.ARENA_SIZE; ++addr) {
+            m_dbglines[addr] = fillCmd;
+        }
+
+        //double _setup = getTime();
+        //Console.log("cc-setup " + Double.toString(_setup - _start));
+
+
+        int inEditorAddr = -1;
         for(int i = 0; i < war.getNumWarriors(); ++i)
         {
             Warrior w = war.getWarrior(i);
@@ -513,27 +560,33 @@ public class CodeEditor
                 inEditorAddr = loadOffset;
 
             DbgLine last_dbgline = null;
-            HTMLElement last_dline = null;
+            //HTMLElement last_dline = null;
 
             if (code.lines.get(0).address == -1) { // comment or label on the first line, need to belong to the address before first
                 int befFirst = loadOffset - 1;
                 if (m_dbglines[befFirst] != null) {
                     last_dbgline = m_dbglines[befFirst];
+                    if (last_dbgline.binOpcode[0] == War.ARENA_BYTE) { // it's the shared DbgLine from above, make a copy of it since we don't want to change it
+                        DbgLine copy = new DbgLine();
+                        copy.text = last_dbgline.text;
+                        copy.binOpcode = last_dbgline.binOpcode;
+                        last_dbgline = copy;
+                    }
                 }
                 else {
                     last_dbgline = new DbgLine();
                     last_dbgline.text = "";
                     m_dbglines[befFirst] = last_dbgline;
                 }
-                last_dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(befFirst));
+                //last_dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(befFirst));
             }
 
             for(LstLine lstline : code.lines)
             {
                 if (lstline.address == -1) {
                     assert last_dbgline != null: "Unexpected blank prev line";
-                    last_dbgline.text += "\n" + lstline.code;
-                    last_dline.innerHTML += "\n" + Format.padding(4+2+2+OPCODES_PAD,  ' ') + lstline.code;
+                    last_dbgline.text += "\n" + Format.padding(4+2+2+OPCODES_PAD,  ' ') + lstline.code;
+                    //last_dline.innerHTML += "\n" + Format.padding(4+2+2+OPCODES_PAD,  ' ') + lstline.code;
                 }
                 else {
                     int loadAddr = lstline.address + loadOffset;
@@ -556,20 +609,50 @@ public class CodeEditor
                     }
                     m_dbglines[loadAddr] = dbgline;
 
-                    HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(loadAddr));
-                    dline.innerHTML = Format.hex(loadAddr, 4) + "  " + dbgline.text;
+                    //HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(loadAddr));
+                    //dline.innerHTML = Format.hex(loadAddr, 4) + "  " + dbgline.text;
 
                     last_dbgline = dbgline;
-                    last_dline = dline;
+                    //last_dline = dline;
+
+
                 }
-                // TBD not handled - first line of comment
 
             }
         }
 
+        //double _done = getTime();
+        //Console.log("done " + Double.toString(_done - _setup));
+
         if (inEditorAddr != -1)
             scrollToAddr(inEditorAddr);
 
+    }
+
+    // from javascript scroll of debug area
+    public void j_renderIfDirty(int pagenum)
+    {
+        PageInfo page = m_pages[pagenum];
+        if (!page.isDirty)
+             return;
+        for(int addr = page.startAddr; addr < page.endAddr; ++addr)
+        {
+            DbgLine dbgline = m_dbglines[addr];
+            HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(addr));
+            if (dbgline == null) {
+                dline.style.display = "none";
+                continue;
+            }
+
+            dline.innerHTML = Format.hex4(addr) + "  " + dbgline.text;
+            dline.removeAttribute("style");
+
+            for(int j = 1; j < dbgline.binOpcode.length; ++j) {
+                HTMLElement adline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(addr + j));
+                adline.style.display = "none";
+                m_dbglines[addr + j] = null;
+            }
+        }
     }
 
     // scroll triggers request for update of range of addresses

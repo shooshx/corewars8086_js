@@ -1,5 +1,5 @@
 
-cpu window
+
 graph window
 speed
 
@@ -48,3 +48,5 @@ https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 - when not in debug mode don't update GUI
 - GUI zoom by browser
 - go to address when not a number - same as watch parsing
+- check long pages of comments at the start of .asm and in the middle, in either the player above or in me
+
