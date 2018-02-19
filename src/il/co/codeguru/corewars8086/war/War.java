@@ -334,7 +334,8 @@ public class War {
         return m_warriors[index];
     }
     public Warrior getWarriorByLabel(String label) {
-        for(Warrior w: m_warriors) {
+        for (int i = 0; i < m_numWarriors; ++i) {
+            Warrior w = m_warriors[i];
             if (w.getLabel().equals(label)) {
                 return w;
             }

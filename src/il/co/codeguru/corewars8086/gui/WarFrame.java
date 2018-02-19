@@ -2,6 +2,7 @@ package il.co.codeguru.corewars8086.gui;
 
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
+import il.co.codeguru.corewars8086.cpu.CpuState;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 //import il.co.codeguru.corewars8086.utils.EventMulticaster;
@@ -250,8 +251,7 @@ public class WarFrame extends JFrame
         addMessage("[" + round + "] "+ message);
     }	
 
-    /** @see MemoryEventListener#onMemoryWrite(RealModeAddress) */
-    public void onMemoryWrite(RealModeAddress address) {
+    public void onMemoryWrite(RealModeAddress address, byte value) {
         if (!mainWnd.isBattleShown())
             return; // canvas not shown, no reason to update it
 
@@ -417,10 +417,12 @@ public class WarFrame extends JFrame
             return; // canvas not shown, no reason to update it
         
 		this.warCanvas.deletePointers();
-		for (int i = 0; i < this.competition.getCurrentWar().getNumWarriors(); i++)
-			if (this.competition.getCurrentWar().getWarrior(i).isAlive()) {
-				short ip = this.competition.getCurrentWar().getWarrior(i).getCpuState().getIP();
-				short cs = this.competition.getCurrentWar().getWarrior(i).getCpuState().getCS();
+		War currentWar = this.competition.getCurrentWar();
+		for (int i = 0; i < currentWar.getNumWarriors(); i++)
+			if (currentWar.getWarrior(i).isAlive()) {
+		        CpuState state = currentWar.getWarrior(i).getCpuState();
+				short ip = state.getIP();
+				short cs = state.getCS();
 				
 				int ipInsideArena = new RealModeAddress(cs, ip).getLinearAddress() - 0x10000;
 				

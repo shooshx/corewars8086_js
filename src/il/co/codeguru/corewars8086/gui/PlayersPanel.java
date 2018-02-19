@@ -79,7 +79,7 @@ public class PlayersPanel
     // http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsJSNI.html
     public native void exportMethods() /*-{
         var that = this
-        $wnd.j_srcSelectionChanged = $entry(function(s,i) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::srcSelectionChanged(Ljava/lang/String;I)(s,i) });
+        $wnd.j_srcSelectionChanged = $entry(function(s,i) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_srcSelectionChanged(Ljava/lang/String;I)(s,i) });
         $wnd.j_addPlayer =    $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::addPlayer(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::removePlayer(Ljava/lang/String;)(s) });
         $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
@@ -116,7 +116,7 @@ public class PlayersPanel
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
         m_inEditor = m_players.get(0).code[0];
-        m_inEditor.asmText = "start:\ninc ax    ;hello\n          ;world\nadd WORD[bx],1234h\njmp start";
+        m_inEditor.asmText = "start:\ninc ax    ;hello\n          ;world\nadd WORD[bx],1234h\nmov ax,5678h\njmp start";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
     }
@@ -148,7 +148,7 @@ public class PlayersPanel
     }
 
     // from js
-    public void srcSelectionChanged(String label, int num) {
+    public void j_srcSelectionChanged(String label, int num) {
         //Console.log("~~~~" + label + Integer.toString(num));
 
         PlayerInfo p = findPlayer(label);

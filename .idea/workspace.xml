@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="436" />
-    <bookmark url="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" line="609" />
-    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="1104" />
+    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="463" />
+    <bookmark url="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" line="627" />
+    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="1146" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/TBD.txt" afterPath="$PROJECT_DIR$/TBD.txt" />
+      <change beforePath="$PROJECT_DIR$/TEST.txt" afterPath="$PROJECT_DIR$/TEST.txt" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterMemory.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterMemory.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/MemoryEventListener.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/MemoryEventListener.java" />
+      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java" />
       <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" />
       <change beforePath="$PROJECT_DIR$/war/page.html" afterPath="$PROJECT_DIR$/war/page.html" />
     </list>
@@ -25,36 +33,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="587" column="90" lean-forward="false" selection-start-line="587" selection-start-column="90" selection-end-line="587" selection-end-column="90" />
+            <state relative-caret-position="485">
+              <caret line="743" column="10" lean-forward="false" selection-start-line="743" selection-start-column="10" selection-end-line="743" selection-end-column="10" />
               <folding>
-                <element signature="e#4240#4241#0" expanded="true" />
-                <element signature="e#4283#4284#0" expanded="true" />
-                <element signature="e#19984#19985#0" expanded="true" />
-                <element signature="e#20022#20023#0" expanded="true" />
+                <element signature="e#7756#7757#0" expanded="true" />
+                <element signature="e#7799#7800#0" expanded="true" />
+                <element signature="e#23757#23758#0" expanded="true" />
+                <element signature="e#23795#23796#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Format.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java">
+      <file leaf-file-name="Competition.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="437">
+              <caret line="273" column="12" lean-forward="true" selection-start-line="273" selection-start-column="12" selection-end-line="273" selection-end-column="12" />
+              <folding>
+                <element signature="e#8807#8808#0" expanded="true" />
+                <element signature="e#8837#8838#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="page.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="page.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/war/page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="534">
-              <caret line="126" column="23" lean-forward="false" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="23" />
+            <state relative-caret-position="408">
+              <caret line="131" column="18" lean-forward="false" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -64,41 +75,47 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="RealModeAddress.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeAddress.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="66" column="15" lean-forward="false" selection-start-line="66" selection-start-column="15" selection-end-line="66" selection-end-column="15" />
+              <folding>
+                <element signature="e#1708#1709#0" expanded="true" />
+                <element signature="e#1740#1741#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="War.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="75" column="44" lean-forward="false" selection-start-line="75" selection-start-column="44" selection-end-line="75" selection-end-column="44" />
+            <state relative-caret-position="431">
+              <caret line="418" column="29" lean-forward="false" selection-start-line="418" selection-start-column="11" selection-end-line="418" selection-end-column="29" />
+              <folding>
+                <element signature="e#14061#14062#0" expanded="true" />
+                <element signature="e#14087#14088#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Format.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="206">
+              <caret line="15" column="25" lean-forward="false" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cpu.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/cpu/Cpu.java">
+      <file leaf-file-name="MemoryEventListener.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/MemoryEventListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="229">
-              <caret line="853" column="23" lean-forward="false" selection-start-line="853" selection-start-column="23" selection-end-line="853" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RealModeMemoryImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CompetitionWindow.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="250" column="24" lean-forward="false" selection-start-line="250" selection-start-column="24" selection-end-line="250" selection-end-column="24" />
+            <state relative-caret-position="238">
+              <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -107,33 +124,35 @@
       <file leaf-file-name="PlayersPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="82" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+            <state relative-caret-position="83">
+              <caret line="220" column="20" lean-forward="false" selection-start-line="220" selection-start-column="20" selection-end-line="220" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WarFrame.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="253" column="16" lean-forward="false" selection-start-line="253" selection-start-column="16" selection-end-line="253" selection-end-column="16" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#7735#7736#0" expanded="true" />
-                <element signature="e#7768#7769#0" expanded="true" />
+                <element signature="e#8998#8999#0" expanded="true" />
+                <element signature="e#9053#9054#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HTMLElement.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/elemental2-dom-1.0.0-RC1.jar!/elemental2/dom/HTMLElement.java">
+      <file leaf-file-name="RealModeMemoryImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="263">
-              <caret line="74" column="24" lean-forward="false" selection-start-line="74" selection-start-column="24" selection-end-line="74" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CSSStyleDeclaration.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/elemental2-dom-1.0.0-RC1.jar!/elemental2/dom/CSSStyleDeclaration.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-              <folding />
+            <state relative-caret-position="527">
+              <caret line="35" column="31" lean-forward="false" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
+              <folding>
+                <element signature="e#836#837#0" expanded="true" />
+                <element signature="e#874#875#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -142,36 +161,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ARENA</find>
-      <find>stepnu</find>
-      <find>hex(</find>
-      <find>user-se</find>
-      <find>editor_title</find>
-      <find>debug_goto</find>
-      <find>debug_wrapper</find>
+      <find>deferredEditorToAddress</find>
+      <find>.dbg</find>
+      <find>triggerSrc</find>
+      <find>j_startDebug</find>
+      <find>parseLs</find>
+      <find>debug_are</find>
+      <find>onstart</find>
+      <find>onWarStart</find>
+      <find>messagesArea</find>
+      <find>cpuPanel</find>
       <find>debug_area</find>
-      <find>btnGoTo</find>
-      <find>debug_te</find>
-      <find>0xffff</find>
-      <find>popula</find>
-      <find>triggerGoToKey</find>
-      <find>debug_area_shown</find>
-      <find>dbgli</find>
-      <find>fix_debug_scroll_placeholders_size</find>
-      <find>scrollToAddr</find>
-      <find>triggerDe</find>
-      <find>StringUtils</find>
-      <find>repeat</find>
-      <find>in</find>
-      <find>parseLst</find>
-      <find>m_currentListing</find>
-      <find>compState</find>
-      <find>0xcc</find>
-      <find>m_dbglines</find>
-      <find>new Date</find>
-      <find>PART_SIZE</find>
-      <find>m_inEditor</find>
+      <find>cpuframe</find>
+      <find>scrollToCodeInEditor</find>
+      <find>PAGE_SIZE</find>
+      <find>render</find>
+      <find>onMemoryWrite</find>
+      <find>onwarS</find>
+      <find>binOpcode</find>
+      <find>m_core</find>
+      <find>m_dirtyAddrs</find>
       <find>j_renderIfDirty</find>
+      <find>last_shown_parts</find>
+      <find>isDirty</find>
+      <find>triggerDebug</find>
+      <find>parsels</find>
+      <find>scrollTo</find>
+      <find>scrollToAddr</find>
+      <find>onscroll</find>
+      <find>defer</find>
+      <find>debugAreaScroll</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -200,30 +219,33 @@
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorRepository.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/FlagFields.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/RegisterField.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionEventListener.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterCompetition.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JButton.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java" />
-        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java" />
-        <option value="$PROJECT_DIR$/war/page.html" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterMemory.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/MemoryEventListener.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" />
+        <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
+        <option value="$PROJECT_DIR$/war/page.html" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="194" />
-    <option name="y" value="4" />
-    <option name="width" value="1656" />
-    <option name="height" value="1047" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1" />
+    <option name="y" value="1" />
+    <option name="width" value="1438" />
+    <option name="height" value="868" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -295,8 +317,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -361,8 +381,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -371,7 +393,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="page&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/war/page.html&#10;Format&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/jsadd/Format.java&#10;player&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java&#10;xml&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/build.xml&#10;consol&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/gui/widgets/Console.java&#10;Console&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/gui/widgets/Console.java&#10;build.xm&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/build.xml" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/war/page.html&#10;page&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/war/page.html&#10;Format&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/jsadd/Format.java&#10;player&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java&#10;xml&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/build.xml&#10;consol&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/gui/widgets/Console.java&#10;Console&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/src/il/co/codeguru/corewars8086/gui/widgets/Console.java&#10;build.xm&#9;FILE&#9;file://C:/projects/codewars_js/eclipse/codewars_js/build.xml" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -485,7 +507,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="194" y="4" width="1656" height="1047" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -496,12 +518,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17610063" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.175" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23743315" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14947917" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22327045" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -515,6 +537,16 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -525,33 +557,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/File.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="163" column="18" lean-forward="false" selection-start-line="163" selection-start-column="18" selection-end-line="163" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/CompetitionIterator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="37" column="16" lean-forward="false" selection-start-line="37" selection-start-column="16" selection-end-line="37" selection-end-column="16" />
-          <folding>
-            <element signature="e#908#909#0" expanded="false" />
-            <element signature="e#990#991#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_151/src.zip!/java/util/Arrays.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="1430" column="27" lean-forward="false" selection-start-line="1430" selection-start-column="27" selection-end-line="1430" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/Console.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="548">
@@ -564,17 +569,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding>
-            <marker date="1514238746612" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1514238746612" expanded="true" signature="234:591" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="657:1010" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1075:1436" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1500:1857" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1921:2282" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="2348:2705" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="2792:3133" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="3246:3253" ph="{}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -590,17 +584,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="12" column="19" lean-forward="false" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
-          <folding>
-            <marker date="1514238746612" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1514238746612" expanded="false" signature="157:355" ph="..." />
-            <marker date="1514238746612" expanded="true" signature="771:778" ph="{}" />
-            <marker date="1514238746612" expanded="false" signature="885:896" ph=" { " />
-            <marker date="1514238746612" expanded="false" signature="923:929" ph=" }" />
-            <marker date="1514238746612" expanded="true" signature="977:1065" ph="{...}" />
-            <marker date="1514238746612" expanded="false" signature="1148:1159" ph=" { " />
-            <marker date="1514238746612" expanded="false" signature="1185:1191" ph=" }" />
-            <marker date="1514238746612" expanded="true" signature="1238:1326" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -608,24 +591,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="230">
           <caret line="53" column="24" lean-forward="false" selection-start-line="53" selection-start-column="24" selection-end-line="53" selection-end-column="24" />
-          <folding>
-            <marker date="1514238746612" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1514238746612" expanded="false" signature="157:416" ph="..." />
-            <marker date="1514238746612" expanded="true" signature="868:953" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1086:1171" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1561:1653" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1800:1892" ph="{...}" />
-            <marker date="1514238746612" expanded="true" signature="1927:1934" ph="{}" />
-            <marker date="1514238746612" expanded="false" signature="2090:2101" ph=" { " />
-            <marker date="1514238746612" expanded="false" signature="2127:2133" ph=" }" />
-            <marker date="1514238746612" expanded="true" signature="2180:2268" ph="{...}" />
-            <marker date="1514238746612" expanded="false" signature="2304:2315" ph=" { " />
-            <marker date="1514238746612" expanded="false" signature="2343:2349" ph=" }" />
-            <marker date="1514238746612" expanded="true" signature="2398:2486" ph="{...}" />
-            <marker date="1514238746612" expanded="false" signature="2525:2536" ph=" { " />
-            <marker date="1514238746612" expanded="false" signature="2567:2573" ph=" }" />
-            <marker date="1514238746612" expanded="true" signature="2625:2898" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -642,19 +607,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MouseAddressRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="17" lean-forward="false" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/ActionListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="17" lean-forward="false" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -662,7 +618,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -678,7 +633,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -694,7 +648,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="11" lean-forward="false" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -710,10 +663,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
           <caret line="2454" column="16" lean-forward="false" selection-start-line="2454" selection-start-column="16" selection-end-line="2454" selection-end-column="16" />
-          <folding>
-            <element signature="e#101735#101736#0" expanded="false" />
-            <element signature="e#101781#101782#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -749,19 +698,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="e#327#328#0" expanded="false" />
-            <element signature="e#388#389#0" expanded="false" />
-            <element signature="e#466#467#0" expanded="false" />
-            <element signature="e#491#492#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -778,14 +714,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="337" column="13" lean-forward="false" selection-start-line="337" selection-start-column="13" selection-end-line="337" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JComponent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -798,7 +726,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
           <caret line="24" column="41" lean-forward="false" selection-start-line="24" selection-start-column="41" selection-end-line="24" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -810,33 +737,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/war/codewars_js/9CD2D2577200887DA0755A06B82CDFD0.cache.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="5176" column="21" lean-forward="false" selection-start-line="5176" selection-start-column="21" selection-end-line="5176" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/Canvas.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="93" column="24" lean-forward="true" selection-start-line="93" selection-start-column="24" selection-end-line="93" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeAddress.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="66" column="15" lean-forward="false" selection-start-line="66" selection-start-column="15" selection-end-line="66" selection-end-column="15" />
-          <folding>
-            <element signature="e#1708#1709#0" expanded="false" />
-            <element signature="e#1740#1741#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/war/codewars_js/9CD2D2577200887DA0755A06B82CDFD0.cache.js" />
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/utils/Unsigned.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -848,47 +749,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="259" column="109" lean-forward="false" selection-start-line="259" selection-start-column="109" selection-end-line="259" selection-end-column="109" />
-          <folding>
-            <element signature="e#8949#8950#0" expanded="false" />
-            <element signature="e#9004#9005#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="30" column="14" lean-forward="false" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3889#3890#0" expanded="false" />
-            <element signature="e#3937#3938#0" expanded="false" />
-            <element signature="e#3973#3974#0" expanded="false" />
-            <element signature="e#4053#4054#0" expanded="false" />
-            <element signature="e#4149#4150#0" expanded="false" />
-            <element signature="e#4182#4183#0" expanded="false" />
-            <element signature="e#4326#4327#0" expanded="false" />
-            <element signature="e#4368#4369#0" expanded="false" />
-            <element signature="e#4409#4410#0" expanded="false" />
-            <element signature="e#4449#4450#0" expanded="false" />
-            <element signature="e#6384#6385#0" expanded="false" />
-            <element signature="e#6411#6412#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/WarriorData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="178">
           <caret line="14" column="17" lean-forward="false" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-          <folding>
-            <element signature="e#517#518#0" expanded="false" />
-            <element signature="e#547#548#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -904,7 +768,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="7" column="7" lean-forward="false" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -920,258 +783,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
           <caret line="1491" column="0" lean-forward="false" selection-start-line="1491" selection-start-column="0" selection-end-line="1503" selection-end-column="5" />
-          <folding>
-            <marker date="1514223160000" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1514223160000" expanded="false" signature="147:246" ph="..." />
-            <marker date="1514223160000" expanded="true" signature="441:448" ph="{}" />
-            <marker date="1514223160000" expanded="false" signature="495:506" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="546:552" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="602:613" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="634:640" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="688:1026" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="1076:1087" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="1108:1114" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="1120:1138" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="1181:1192" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="1229:1235" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="1278:1289" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="1328:1334" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="1384:1462" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="1512:1523" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="1560:1566" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="1610:1621" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="1653:1659" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="1710:1891" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="1942:1953" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="2004:2010" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="2074:2253" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="2322:2968" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="3035:3635" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="3687:3698" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="3734:3740" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="3812:4149" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="4209:4220" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="4275:4281" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="4352:4433" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="4493:4504" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="4555:4561" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="4636:4713" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="4775:4861" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="4943:5515" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="5591:5818" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="5883:5954" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="6033:6114" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="6180:6270" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="6350:6450" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="6516:6653" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="6720:6876" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="6953:7072" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="7139:7577" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="7644:7756" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="7828:8308" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="8380:8477" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="8547:9041" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="9111:9422" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="9489:9824" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="9896:10007" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="10081:10590" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="10664:10778" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="10846:11423" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="11495:12030" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="12090:12399" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="12468:13110" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="13163:13372" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="13426:13647" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="13708:14037" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="14110:14437" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="14509:14781" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="14858:15078" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="15154:15475" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="15542:15553" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="15592:15598" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="15681:16104" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="16190:17216" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="17222:17240" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="17305:17316" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="17355:17361" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="17367:17385" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="17466:17524" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="17570:17581" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="17617:17623" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="17689:17700" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="17746:17752" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="17822:17889" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="17968:18036" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="18117:18195" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="18285:18364" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="18462:18539" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="18646:18724" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="18848:20860" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="20923:20934" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="20982:20988" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="21072:21133" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="21234:22564" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="22651:22717" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="22813:22880" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="22993:27443" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="27504:27515" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="27555:27561" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="27631:27642" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="27681:27687" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="27769:29032" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="29038:29056" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="29109:29120" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="29163:29169" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="29216:29227" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="29270:29276" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="29340:29426" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="29520:30262" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="30328:30414" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="30510:31353" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="31420:32196" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="32265:33113" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="33184:33274" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="33347:33437" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="33443:33461" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="33511:33522" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="33588:33594" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="33650:34169" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="34235:34424" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="34500:34700" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="34764:34969" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="35043:35259" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="35320:35414" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="35473:35879" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="35972:36039" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="36128:36196" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="36294:37375" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="37474:37554" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="37663:37820" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="37952:42162" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="42249:42330" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="42423:43404" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="43410:43428" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="43517:43699" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="43782:44572" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="44617:45188" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="45251:45463" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="45469:45487" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="45534:45545" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="45573:45579" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="45585:45603" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="45663:45913" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="45919:45937" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="45996:46200" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="46206:46224" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="46283:46394" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="46400:46418" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="46480:46593" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="46637:47111" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="47117:47135" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="47185:47600" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="47606:47624" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="47668:47679" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="47720:47726" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="47784:49451" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="49546:49877" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="49934:49945" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="49977:49983" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="50055:50397" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="50470:51433" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="51489:51500" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="51531:51537" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="51608:51949" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="52021:52985" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="53027:53038" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="53076:53082" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="53137:53148" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="53178:53184" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="53254:53664" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="53735:54223" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="54271:54282" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="54328:54334" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="54382:54393" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="54439:54445" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="54495:54698" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="54704:54722" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="54770:54781" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="54804:54810" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="54862:55065" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="55071:55089" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="55139:55150" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="55175:55181" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="55229:55967" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="55973:55991" ph="/**...*/" />
-            <marker date="1514223160000" expanded="false" signature="56047:56058" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="56091:56097" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="56158:56443" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="56491:56806" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="56859:57198" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="57253:57575" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="57635:57981" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="58038:58361" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="58411:58725" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="58780:59118" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="59171:59490" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="59542:59553" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="59583:59589" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="59660:59671" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="59709:59715" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="59787:59798" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="59837:59843" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="59890:59979" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="60055:60290" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="60296:60314" ph="/**...*/" />
-            <marker date="1514223160000" expanded="true" signature="60398:60688" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="60751:60762" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="60798:60804" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="60880:61820" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="61884:62138" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="62206:62592" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="62649:64368" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="64426:64827" ph="{...}" />
-            <marker date="1514223160000" expanded="true" signature="64894:66145" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="66210:66221" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="66259:66265" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="66340:66351" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="66388:66394" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="66481:66732" ph="{...}" />
-            <marker date="1514223160000" expanded="false" signature="66795:66806" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="66842:66848" ph=" }" />
-            <marker date="1514223160000" expanded="false" signature="66921:66932" ph=" { " />
-            <marker date="1514223160000" expanded="false" signature="66967:66973" ph=" }" />
-            <marker date="1514223160000" expanded="true" signature="67058:67459" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="117" column="24" lean-forward="true" selection-start-line="117" selection-start-column="24" selection-end-line="117" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="250" column="24" lean-forward="false" selection-start-line="250" selection-start-column="24" selection-end-line="250" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/cpu/Cpu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
+        <state relative-caret-position="14450">
           <caret line="853" column="23" lean-forward="false" selection-start-line="853" selection-start-column="23" selection-end-line="853" selection-end-column="23" />
           <folding />
         </state>
@@ -1181,21 +798,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
           <caret line="340" column="27" lean-forward="false" selection-start-line="340" selection-start-column="27" selection-end-line="340" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="75" column="44" lean-forward="false" selection-start-line="75" selection-start-column="44" selection-end-line="75" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/elemental2-dom-1.0.0-RC1.jar!/elemental2/dom/CSSStyleDeclaration.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="85">
           <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
           <folding />
         </state>
@@ -1203,53 +811,184 @@
     </entry>
     <entry file="jar://$PROJECT_DIR$/elemental2-dom-1.0.0-RC1.jar!/elemental2/dom/HTMLElement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
+        <state relative-caret-position="1105">
           <caret line="74" column="24" lean-forward="false" selection-start-line="74" selection-start-column="24" selection-end-line="74" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/war/page.html">
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MouseAddressRequest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="534">
-          <caret line="126" column="23" lean-forward="false" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="23" />
+        <state relative-caret-position="68">
+          <caret line="4" column="17" lean-forward="false" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/codewars_js/CE44E50985F4C94F4E5AE240DA7A68A7.cache.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="5314" column="7" lean-forward="false" selection-start-line="5314" selection-start-column="7" selection-end-line="5314" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Warrior.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="193" column="20" lean-forward="false" selection-start-line="193" selection-start-column="20" selection-end-line="193" selection-end-column="20" />
           <folding>
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#label#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#6384#6385#0" expanded="false" />
+            <element signature="e#6411#6412#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/JTextArea.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="82" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+        <state relative-caret-position="323">
+          <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#7735#7736#0" expanded="true" />
-            <element signature="e#7768#7769#0" expanded="true" />
+            <element signature="e#327#328#0" expanded="false" />
+            <element signature="e#388#389#0" expanded="false" />
+            <element signature="e#424#425#0" expanded="false" />
+            <element signature="e#509#510#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="53" column="23" lean-forward="false" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="300" column="5" lean-forward="false" selection-start-line="300" selection-start-column="5" selection-end-line="300" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/Canvas.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="64" column="20" lean-forward="false" selection-start-line="64" selection-start-column="20" selection-end-line="64" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/widgets/EventMulticasterMemory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="20" column="57" lean-forward="false" selection-start-line="20" selection-start-column="57" selection-end-line="20" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/MemoryEventListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="253" column="16" lean-forward="false" selection-start-line="253" selection-start-column="16" selection-end-line="253" selection-end-column="16" />
+          <folding>
+            <element signature="e#8998#8999#0" expanded="true" />
+            <element signature="e#9053#9054#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/Competition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="273" column="12" lean-forward="true" selection-start-line="273" selection-start-column="12" selection-end-line="273" selection-end-column="12" />
+          <folding>
+            <element signature="e#8807#8808#0" expanded="true" />
+            <element signature="e#8837#8838#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeAddress.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="66" column="15" lean-forward="false" selection-start-line="66" selection-start-column="15" selection-end-line="66" selection-end-column="15" />
+          <folding>
+            <element signature="e#1708#1709#0" expanded="true" />
+            <element signature="e#1740#1741#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/memory/RealModeMemoryImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="35" column="31" lean-forward="false" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
+          <folding>
+            <element signature="e#836#837#0" expanded="true" />
+            <element signature="e#874#875#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/war/War.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="431">
+          <caret line="418" column="29" lean-forward="false" selection-start-line="418" selection-start-column="11" selection-end-line="418" selection-end-column="29" />
+          <folding>
+            <element signature="e#14061#14062#0" expanded="true" />
+            <element signature="e#14087#14088#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
+        <state relative-caret-position="206">
+          <caret line="15" column="25" lean-forward="false" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/PlayersPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="220" column="20" lean-forward="false" selection-start-line="220" selection-start-column="20" selection-end-line="220" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="587" column="90" lean-forward="false" selection-start-line="587" selection-start-column="90" selection-end-line="587" selection-end-column="90" />
+        <state relative-caret-position="485">
+          <caret line="743" column="10" lean-forward="false" selection-start-line="743" selection-start-column="10" selection-end-line="743" selection-end-column="10" />
           <folding>
-            <element signature="e#4240#4241#0" expanded="true" />
-            <element signature="e#4283#4284#0" expanded="true" />
-            <element signature="e#19984#19985#0" expanded="true" />
-            <element signature="e#20022#20023#0" expanded="true" />
+            <element signature="e#7756#7757#0" expanded="true" />
+            <element signature="e#7799#7800#0" expanded="true" />
+            <element signature="e#23757#23758#0" expanded="true" />
+            <element signature="e#23795#23796#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="131" column="18" lean-forward="false" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#label#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -9,7 +9,7 @@
 "use strict";
 
 var run_nasm = null
-var PAGE_SIZE = 500
+var PAGE_SIZE = 512
 var LAST_PART_INDEX = Math.trunc(65535/PAGE_SIZE)
 
 function start()
@@ -23,8 +23,13 @@ function start()
     asm_edit.addEventListener("keyup", fixhscroll)
     asm_edit.addEventListener("keyup", fixIndent)  // indent is on key up since we want it after the \n
 
+    // asm_pre.addEventListener("mousewheel", asm_pre_mousewheel) not working
+
     populate_debug_area()
 }
+
+
+
 
 function populate_debug_area()
 {
@@ -85,20 +90,27 @@ function fix_debug_scroll_placeholders_size()
     dplace_css.style.height = dpart0.offsetHeight + "px"
 }
 
-var last_shown_parts = [0] // 0 is the only one shown at the start
+// 0 is the only one shown at the start
+// this array is always size 2
+var last_shown_parts = [0,-1]
 
 function hidePage(i) {
+    if (i == -1)
+        return
     document.getElementById('dpart' + i).style.display = 'none'
     document.getElementById('dplace' + i).style.display = ''
 }
 function showPage(i) {
+    if (i == -1)
+        return
     document.getElementById('dpart' + i).style.display = ''
     document.getElementById('dplace' + i).style.display = 'none'
 }
 
 // need to maintain who's open and who's not
 // at all time, exactly two parts are open
-function debugAreaScroll()
+// force does the scroll painting even if we're already there, need this when starting debug to update dirty pages
+function debugAreaScroll(force)
 {
     var atScroll = debug_text.scrollTop
     var atpartf = atScroll / single_part_height
@@ -113,22 +125,22 @@ function debugAreaScroll()
         else
             new_shown_parts = [second_part, atpart] // maintain the first one be the smallest one for the above comparison
     }
+    else
+        new_shown_parts.push(-1)
 
     // this will still work fine if the array has only 1 element, [1] in both will be undefined
-    if (new_shown_parts[0] == last_shown_parts[0] && new_shown_parts[1] == last_shown_parts[1])
+    if (!force && new_shown_parts[0] == last_shown_parts[0] && new_shown_parts[1] == last_shown_parts[1])
         return
 
-    for(var li = 0; li < last_shown_parts.length; ++li) {
-        hidePage(last_shown_parts[li])
-    }
-    for(var li = 0; li < new_shown_parts.length; ++li) {
-        var p = new_shown_parts[li]
-        showPage(p)
-        j_renderIfDirty(p)
-    }
+    hidePage(last_shown_parts[0])
+    hidePage(last_shown_parts[1])
+
+    showPage(new_shown_parts[0])
+    showPage(new_shown_parts[1])
+
+    j_setScrollAt(new_shown_parts[0], new_shown_parts[1]);
 
     last_shown_parts = new_shown_parts
-
 
 }
 
@@ -212,10 +224,10 @@ function addPlayersPanel() {
               <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
               <option value="TWO_DIFFERENT">Two Different Warriors</option>\
             </select>\
-            <input id="sel_code_w1_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 1)" type="checkbox">\
+            <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 1)" type="radio" name="src_select">\
             <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
             <br>\
-            <input id="sel_code_w2_pLETTER" class="hidden sc-check" onchange="triggerSrc(\'LETTER\', 2)" type="checkbox">\
+            <input id="sel_code_w2_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 2)" type="radio" name="src_select">\
             <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
           </div>\
         </div>'
@@ -354,9 +366,13 @@ function asm_cursorToLine(charOffset) {
 
 }
 
+/*function asm_pre_mousewheel(event) {
+    asm_edit.dispatchEvent(new event.constructor(event.type, event));
+}  not working */
 
-function handleScroll() {
-    roundedScroll = Math.floor(asm_edit.scrollTop);
+
+function handle_asm_edit_scroll() {
+    var roundedScroll = Math.floor(asm_edit.scrollTop);
 
     // Fixes issue of desync text on mouse wheel, fuck Firefox.
     if(navigator.userAgent.toLowerCase().indexOf('firefox') < 0) {
@@ -364,6 +380,7 @@ function handleScroll() {
     }
 
     asm_pre.style.top = "-" + roundedScroll + "px"
+    //asm_pre.scrollTop = asm_edit.scrollTop
 
     asm_show.style.left = "-" + asm_edit.scrollLeft + "px"
 }
@@ -409,7 +426,13 @@ function fixIndent(e) {
 var debug_area_shown = false
 var deferredEditorToAddress = -1 // set by code in CodeEditor.java
 
+var prevDebug = false;
 function triggerDebug() {
+    console.log("triggerDebug " + debugCheckbox.checked)
+    if (prevDebug == debugCheckbox.checked)
+        return;
+    prevDebug = debugCheckbox.checked
+
     if (debugCheckbox.checked)
     {
         if (!j_startDebug()) {
@@ -428,11 +451,15 @@ function triggerDebug() {
             debug_area_shown = true; // need to do this fix only on the first time it's shown
         }
 
-        if (deferredEditorToAddress != -1) {
-            scrollToAddr(deferredEditorToAddress)
-            deferredEditorToAddress = -1;
-        }
+        // we do this only here because it needs to be done after the current page is shown.
+        if (deferredEditorToAddress == -1)
+            throw "no deferred scroll set?"
 
+        scrollToAddr(deferredEditorToAddress)
+        deferredEditorToAddress = -1;
+        debugAreaScroll(true)  // force scroll render due to dirty pages
+
+        // disable editing the players
         for(var ui in g_usedLetters) {
             var u = g_usedLetters[ui]
             document.getElementById("player_erase_p" + u).setAttribute("disabled", true)
@@ -657,13 +684,14 @@ input:disabled + .sc-btn:active,
     caret-color: black;
 }
 #asm_pre {
-    pointer-events: none;
+    /*pointer-events: none;*/
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     overflow-x: hidden;
+    overflow-y: hidden;
     border:none;
     margin: 0;
     box-sizing: border-box;
@@ -706,7 +734,7 @@ input:disabled + .sc-btn:active,
     height: 100%;
     border: 1px solid #000;
     border-radius: 6px;
-    pointer-events: none;
+    pointer-events: none;  /* want these boxes to be transparent to the mouse */
     box-sizing: border-box;
 }
 #box_edit {
@@ -769,6 +797,20 @@ input:disabled + .sc-btn:active,
 
 .stdout_line_e, .stdout_line_w {
     padding: 0 0 0 8px;
+}
+
+.current_dbg {
+    background-color: #ddddff;
+}
+.dbg_comment_line {
+    background-color: white;
+}
+.dbg_opcodes {
+    display: inline-block;
+    width: 200px;
+}
+.dbg_backfill {
+    color: #c1c1c1;
 }
 
 /*--------------- side panel -----------------*/
@@ -1112,14 +1154,14 @@ table tr:last-child td:first-child {
               <pre id="asm_pre" class="codearea"><div id="asm_show_rel"><code id="asm_show" class="codearea"></code></div><code id="opcodes_edit" class="codearea allow_select" wrap="off"></code><code id="asm_linenums" class="codearea" wrap="off">1</code></pre>
               <textarea id="asm_edit" class="codearea allow_select" wrap="off"
                    spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
-                   onscroll="handleScroll()"></textarea>
-              <div id="box_opcodes"></div>
+                   onscroll="handle_asm_edit_scroll()"></textarea>
+              <div id="box_opcodes"></div> <!-- want these in front of the text but it ignores pointer events -->
               <div id="box_edit"></div>
           </div>
           <div id="debug_area" style="display:none;">
               <input type="text" id="debug_goto" spellcheck="false" onkeyup="triggerGoToKey()">
               <label id="btnGoTo" class="sc-btn" onclick="triggerGoTo()">go to</label>
-              <pre id="debug_text" class="allow_select" onscroll="debugAreaScroll()"></pre>
+              <pre id="debug_text" class="allow_select" onscroll="debugAreaScroll(false)"></pre>
           </div>
         </div>
         <br>

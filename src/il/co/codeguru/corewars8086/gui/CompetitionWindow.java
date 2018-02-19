@@ -296,7 +296,8 @@ public class CompetitionWindow extends JFrame
     }
 
     public void onWarStart() {
-    	showBattleFrameIfNeeded();
+
+        battleFrame.cpuframe.setVisible(true); // do this here since the messages need to scroll to the bottom and it needs to be visible
     }
 
     private void showBattleFrameIfNeeded() {

@@ -3,8 +3,6 @@ package il.co.codeguru.corewars8086.gui;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.cpu.CpuState;
-import il.co.codeguru.corewars8086.memory.RealModeAddress;
-import il.co.codeguru.corewars8086.utils.Disassembler;
 import il.co.codeguru.corewars8086.war.Competition;
 import il.co.codeguru.corewars8086.war.CompetitionEventListener;
 import il.co.codeguru.corewars8086.war.War;
@@ -27,7 +25,7 @@ import il.co.codeguru.corewars8086.war.Warrior;
 public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 	
 	private War currentWar;
-	private String m_currentPlayerLabel;
+	private String m_currentWarriorLabel;
 	
 	private Competition competition;
 	private int m_base = 16;
@@ -61,7 +59,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
     }
 
 	public void setSelectedPlayer(String playerLabel) {
-		m_currentPlayerLabel = playerLabel;
+		m_currentWarriorLabel = playerLabel;
 		updateFileds();
 	}
 
@@ -212,7 +210,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		if (currentWar == null)
 			return;
 		//CpuState state = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState();
-		CpuState state = currentWar.getWarriorByLabel(m_currentPlayerLabel).getCpuState();;
+		CpuState state = currentWar.getWarriorByLabel(m_currentWarriorLabel).getCpuState();;
 
 		regAX.setValue( state.getAX());
 		regBX.setValue( state.getBX());

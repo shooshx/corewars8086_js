@@ -3,23 +3,105 @@ package il.co.codeguru.corewars8086.gui;
 
 import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
+import il.co.codeguru.corewars8086.cpu.CpuState;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.jsadd.Format;
-import il.co.codeguru.corewars8086.war.Competition;
-import il.co.codeguru.corewars8086.war.War;
-import il.co.codeguru.corewars8086.war.Warrior;
-import il.co.codeguru.corewars8086.war.WarriorRepository;
+import il.co.codeguru.corewars8086.memory.MemoryEventListener;
+import il.co.codeguru.corewars8086.memory.RealModeAddress;
+import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
+import il.co.codeguru.corewars8086.war.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Vector;
 
-public class CodeEditor
+public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 {
-    private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show;
+    private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show, debug_area;
     private HTMLInputElement editor_title;
     private HTMLTextAreaElement asm_edit;
+    private boolean m_isDebugMode = false;
+
+    // competitionEventListener
+    @Override
+    public void onWarStart() {}
+    @Override
+    public void onWarEnd(int reason, String winners) {}
+    @Override
+    public void onRound(int round) {}
+    @Override
+    public void onWarriorBirth(Warrior w) {}
+    @Override
+    public void onWarriorDeath(String warriorName, String reason) {}
+    @Override
+    public void onCompetitionStart() {}
+    @Override
+    public void onCompetitionEnd() {}
+    @Override
+    public void onEndRound() {
+        updateDebugLine();
+
+    }
+
+    DbgLine getSingleByteLine(byte bval) {
+        int val = bval & 0xff; // to unsigned int
+        DbgLine byteline = m_singleByte[val];
+        if (byteline == null) {
+            byteline = new DbgLine();
+            String hexVal = Format.hex2(val);
+            byteline.text = "<span class='dbg_opcodes'>" + hexVal + "</span>db " + hexVal + "h";
+            //byteline.binOpcode = new byte[1];
+            //byteline.binOpcode[0] = War.ARENA_BYTE;
+        }
+        m_singleByte[val] = byteline;
+        return byteline;
+    }
+
+    private void setByte(int address, byte value) {
+        DbgLine dbgline = getSingleByteLine(value);
+        m_dbglines[address] = dbgline;
+        int page = address / PAGE_SIZE;
+        if (page == m_atScrollP1 || page == m_atScrollP1) {
+            renderLine(address, dbgline);
+        }
+    }
+
+
+    // MemoryEventListener
+    @Override
+    public void onMemoryWrite(RealModeAddress address, byte value)
+    {
+        int ipInsideArena = address.getLinearAddress() - 0x1000 *0x10; // arena * paragraph
+
+        int page = ipInsideArena / PAGE_SIZE;
+        if (page < 0 || page >= m_pages.length)
+            return;
+
+        m_pages[page].isDirty = true;
+
+        DbgLine existing = m_dbglines[ipInsideArena];
+
+        if (existing == m_fillCmd) {
+            setByte(ipInsideArena, value);
+            return;
+        }
+        else if (existing == null) {
+            // find where this opcode starts
+            --ipInsideArena;
+            while (m_dbglines[ipInsideArena] == null)
+                --ipInsideArena;
+        }
+
+        RealModeMemoryImpl mem = m_competition.getCurrentWar().getMemory();
+        do {
+            setByte(ipInsideArena, mem.readByte(ipInsideArena));
+            ++ipInsideArena;
+        } while (m_dbglines[ipInsideArena] == null);
+    }
+
+
+
 
     public static class LstLine {
         int lineNum = -1;
@@ -27,6 +109,7 @@ public class CodeEditor
         String addressStr = "";
         String opcode = "";
         String code = "";
+        int opcodesCount; // number of bytes in my opcode, without brackets and spaces
     }
     enum Field {
         START_SPACE,
@@ -44,7 +127,7 @@ public class CodeEditor
 
     public static class DbgLine {
         String text; // includes the command and any comment lines after it
-        byte[] binOpcode;
+        //byte[] binOpcode;
     }
     private DbgLine[] m_dbglines;
 
@@ -54,17 +137,23 @@ public class CodeEditor
         int endAddr;
     }
     private PageInfo[] m_pages; // marks when a page of 500 addresses should be redrawn in the next required time
+    private int m_atScrollP1 = -1, m_atScrollP2 = -1;
+    private DbgLine[] m_singleByte = new DbgLine[256]; // hold lines with db XXh for memory write events
 
     private ArrayList<LstLine> m_currentListing;
     public PlayersPanel m_playersPanel = null;
     private Competition m_competition = null;
+    private int PAGE_SIZE = _PAGE_SIZE();
 
-    private static native int PAGE_SIZE() /*-{
+    private static native int _PAGE_SIZE() /*-{
         return $wnd.PAGE_SIZE
     }-*/;
 
-    public CodeEditor(Competition competition) {
+    public CodeEditor(Competition competition)
+    {
         m_competition = competition;
+        m_competition.addCompetitionEventListener(this);
+
         asm_edit = (HTMLTextAreaElement)DomGlobal.document.getElementById("asm_edit");
         asm_show = (HTMLElement)DomGlobal.document.getElementById("asm_show");
         asm_output = (HTMLElement)DomGlobal.document.getElementById("asm_output");
@@ -81,14 +170,14 @@ public class CodeEditor
         });
 
         m_dbglines = new DbgLine[War.ARENA_SIZE];
-        int pageSize = PAGE_SIZE();
-        m_pages = new PageInfo[ (War.ARENA_SIZE / pageSize) + 1 ];
+
+        m_pages = new PageInfo[ (War.ARENA_SIZE / PAGE_SIZE) + 1 ];
         for(int i = 0; i < m_pages.length; ++i) {
             PageInfo pi = new PageInfo();
             m_pages[i] = pi;
             pi.isDirty = true;
-            pi.startAddr = i * pageSize;
-            pi.endAddr = Math.min( (i + 1) * pageSize, War.ARENA_SIZE);
+            pi.startAddr = i * PAGE_SIZE;
+            pi.endAddr = Math.min( (i + 1) * PAGE_SIZE, War.ARENA_SIZE);
         }
 
         exportMethods();
@@ -97,6 +186,7 @@ public class CodeEditor
     public native void exportMethods() /*-{
         var that = this
         $wnd.j_renderIfDirty = $entry(function(i) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_renderIfDirty(I)(i) });
+        $wnd.j_setScrollAt = $entry(function(i,j) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_setScrollAt(II)(i,j) });
     }-*/;
 
     private static native int run_nasm(String asmname, String text, String lstname)     /*-{
@@ -125,6 +215,21 @@ public class CodeEditor
         return $wnd.g_outputText
     }-*/;
 
+    public void spacedHex(String s, LstLine lstline) {
+        StringBuilder bs = new StringBuilder();
+        int digitCount = 0;
+        for(int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (isHexDigit(c)) {
+                if ((digitCount % 2) == 0 && digitCount > 0)
+                    bs.append("&#x202f;"); // thin space
+                ++digitCount;
+            }
+            bs.append(c);
+        }
+        lstline.opcode = bs.toString();
+        lstline.opcodesCount = digitCount / 2;
+    }
 
     private static boolean isDigit(char c) {
         return c >= '0' && c <= '9';
@@ -200,7 +305,7 @@ public class CodeEditor
                         break;
                     case OPCODE:
                         if (c == ' ') {
-                            l.opcode = line.substring(opcodeStart, j);
+                            spacedHex(line.substring(opcodeStart, j), l);
                             state = Field.SPACE_BEFORE_CODE;
                             ++charsBeforeCode;
                         }
@@ -426,7 +531,13 @@ public class CodeEditor
         asm_edit.value = incode.asmText;
         editor_title.value = incode.player.title;
         setText(incode.asmText, callback);
+
+        if (m_isDebugMode) {
+            updateDebugLine();
+            scrollToCodeInEditor(false);
+        }
     }
+
 
     // inspired by https://github.com/kazzkiq/CodeFlask.js#usage which also writes all the dome in every key press
     public void setText(String intext, PlayersPanel playersPanel)
@@ -515,8 +626,13 @@ public class CodeEditor
 
     }
 
-    private static native void scrollToAddr(int addr) /*-{
-        $wnd.deferredEditorToAddress = addr
+    // defer if we're inside setDebugMode
+    private static native void scrollToAddr(int addr, boolean defer) /*-{
+        if (defer)
+            $wnd.deferredEditorToAddress = addr
+        else {
+            $wnd.scrollToAddr(addr)
+        }
     }-*/;
 
     private static native double getTime() /*-{
@@ -527,7 +643,7 @@ public class CodeEditor
         editor_title.value = s;
     }
 
-    private static final int OPCODES_PAD = 18;
+    DbgLine m_fillCmd;
 
     private void initDebugAreaLines()
     {
@@ -535,42 +651,43 @@ public class CodeEditor
 
         //double _start = getTime();
 
-        DbgLine fillCmd = new DbgLine();
-        fillCmd.text = "CC  " + Format.padding(OPCODES_PAD-2,' ') + "int 3";;
-        fillCmd.binOpcode = new byte[1];
-        fillCmd.binOpcode[0] = War.ARENA_BYTE;
+        if (m_fillCmd == null) {
+            m_fillCmd = new DbgLine();
+            m_fillCmd.text = "<span class='dbg_backfill'><span class='dbg_opcodes'>CC</span>int 3</span>";;
+            //m_fillCmd.binOpcode = new byte[1];
+            //m_fillCmd.binOpcode[0] = War.ARENA_BYTE;
+        }
 
         for(int addr = 0; addr < War.ARENA_SIZE; ++addr) {
-            m_dbglines[addr] = fillCmd;
+            m_dbglines[addr] = m_fillCmd;
         }
+        for(PageInfo p: m_pages)
+            p.isDirty = true;
 
         //double _setup = getTime();
         //Console.log("cc-setup " + Double.toString(_setup - _start));
 
 
-        int inEditorAddr = -1;
+        //int inEditorAddr = -1;
         for(int i = 0; i < war.getNumWarriors(); ++i)
         {
             Warrior w = war.getWarrior(i);
-            int loadOffset = w.getLoadOffsetInt();
+            int playerLoadOffset = w.getLoadOffsetInt();
 
             PlayersPanel.Code code = m_playersPanel.findCode(w.getLabel());
 
-            if (code == m_playersPanel.getCodeInEditor())
-                inEditorAddr = loadOffset;
-
             DbgLine last_dbgline = null;
-            //HTMLElement last_dline = null;
 
             if (code.lines.get(0).address == -1) { // comment or label on the first line, need to belong to the address before first
-                int befFirst = loadOffset - 1;
+                int befFirst = playerLoadOffset - 1;
                 if (m_dbglines[befFirst] != null) {
                     last_dbgline = m_dbglines[befFirst];
-                    if (last_dbgline.binOpcode[0] == War.ARENA_BYTE) { // it's the shared DbgLine from above, make a copy of it since we don't want to change it
+                    if (last_dbgline == m_fillCmd) { // it's the shared DbgLine from above, make a copy of it since we don't want to change it
                         DbgLine copy = new DbgLine();
                         copy.text = last_dbgline.text;
-                        copy.binOpcode = last_dbgline.binOpcode;
+                        //copy.binOpcode = last_dbgline.binOpcode;
                         last_dbgline = copy;
+                        m_dbglines[befFirst] = last_dbgline;
                     }
                 }
                 else {
@@ -578,81 +695,124 @@ public class CodeEditor
                     last_dbgline.text = "";
                     m_dbglines[befFirst] = last_dbgline;
                 }
-                //last_dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(befFirst));
             }
 
             for(LstLine lstline : code.lines)
             {
                 if (lstline.address == -1) {
                     assert last_dbgline != null: "Unexpected blank prev line";
-                    last_dbgline.text += "\n" + Format.padding(4+2+2+OPCODES_PAD,  ' ') + lstline.code;
-                    //last_dline.innerHTML += "\n" + Format.padding(4+2+2+OPCODES_PAD,  ' ') + lstline.code;
+                    last_dbgline.text += "<div class='dbg_comment_line'>      <span class='dbg_opcodes'></span>" + lstline.code + "</div>";
                 }
                 else {
-                    int loadAddr = lstline.address + loadOffset;
+                    int loadAddr = lstline.address + playerLoadOffset;
                     DbgLine dbgline = new DbgLine();
                     String opcode = lstline.opcode;
 
-                    dbgline.text = opcode + "  " + Format.padding(OPCODES_PAD-opcode.length(),' ') + lstline.code;
+                    dbgline.text = "<span class='dbg_opcodes'>" + opcode + "</span>" + lstline.code;
 
-                    int opcodesNumsCount = 0;
-                    for(int j = 0; j < opcode.length(); ++j)
-                        if (isHexDigit(opcode.charAt(j))) // opcode can have things line [],() skipped
-                            ++opcodesNumsCount;
-                    // count how many bytes in the opcode
-                    int opcodesCount = opcodesNumsCount / 2;
-                    dbgline.binOpcode = new byte[opcodesCount];
-                    assert lstline.address + opcodesCount <= code.bin.length;
+                    /*dbgline.binOpcode = new byte[lstline.opcodesCount];
+                    assert lstline.address + lstline.opcodesCount <= code.bin.length: "too many opcodes for the program length?";
                     // copy the binary of this line to dbgline for later comparison when stepping
-                    for(int j = 0; j < opcodesCount; ++j) {
+                    for(int j = 0; j < lstline.opcodesCount; ++j) {
                         dbgline.binOpcode[j] = code.bin[lstline.address + j];
-                    }
+                    }*/
                     m_dbglines[loadAddr] = dbgline;
 
-                    //HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(loadAddr));
-                    //dline.innerHTML = Format.hex(loadAddr, 4) + "  " + dbgline.text;
-
                     last_dbgline = dbgline;
-                    //last_dline = dline;
 
-
+                    for(int j = 1; j < lstline.opcodesCount; ++j) {
+                        m_dbglines[loadAddr + j] = null;
+                    }
                 }
 
             }
         }
 
-        //double _done = getTime();
-        //Console.log("done " + Double.toString(_done - _setup));
 
-        if (inEditorAddr != -1)
-            scrollToAddr(inEditorAddr);
+    }
 
+    public void j_setScrollAt(int p1, int p2) {
+        //Console.log("~~~~1 bf96 " + m_dbglines[0xbf96].text);
+        //Console.log("~~~~1 9f14 " + m_dbglines[0x9f14].text);
+        j_renderIfDirty(p1);
+        j_renderIfDirty(p2);
+
+        m_atScrollP1 = p1;
+        m_atScrollP2 = p2;
+
+        //Console.log("~~~~2 bf96 " + m_dbglines[0xbf96].text);
+        //Console.log("~~~~2 9f14 " + m_dbglines[0x9f14].text);
+    }
+
+    // dbgline should already be in m_dgblines
+    public void renderLine(int addr, DbgLine dbgline) {
+        HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(addr));
+        if (dbgline == null) {
+            dline.style.display = "none";
+            return;
+        }
+
+        dline.innerHTML = Format.hex4(addr) + "  " + dbgline.text;
+        dline.removeAttribute("style");
     }
 
     // from javascript scroll of debug area
     public void j_renderIfDirty(int pagenum)
     {
+        if (pagenum == -1)
+            return;
         PageInfo page = m_pages[pagenum];
         if (!page.isDirty)
              return;
         for(int addr = page.startAddr; addr < page.endAddr; ++addr)
         {
             DbgLine dbgline = m_dbglines[addr];
-            HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(addr));
-            if (dbgline == null) {
-                dline.style.display = "none";
-                continue;
-            }
-
-            dline.innerHTML = Format.hex4(addr) + "  " + dbgline.text;
-            dline.removeAttribute("style");
-
-            for(int j = 1; j < dbgline.binOpcode.length; ++j) {
-                HTMLElement adline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(addr + j));
-                adline.style.display = "none";
-                m_dbglines[addr + j] = null;
-            }
+            renderLine(addr, dbgline);
         }
+        page.isDirty = false;
+    }
+
+    private int m_lastDbgAddr = -1;
+    private HTMLElement m_lastDbgElement;
+
+    private int getCurrentWarriorIp() {
+        War war = m_competition.getCurrentWar();
+        if (war == null)
+            return -1;
+        String label = m_playersPanel.getCodeInEditor().getLabel();
+        CpuState state = war.getWarriorByLabel(label).getCpuState();
+
+        short ip = state.getIP();
+        short cs = state.getCS();
+
+        int ipInsideArena = new RealModeAddress(cs, ip).getLinearAddress() - 0x10000;
+        return ipInsideArena;
+    }
+
+    public void updateDebugLine() {
+        int ipInsideArena = getCurrentWarriorIp();
+        if (ipInsideArena == -1)
+            return;
+
+        if (ipInsideArena == m_lastDbgAddr)
+            return;
+        if (m_lastDbgElement != null)
+            m_lastDbgElement.classList.remove("current_dbg");
+
+        HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(ipInsideArena));
+        dline.classList.add("current_dbg");
+        m_lastDbgElement = dline;
+        m_lastDbgAddr = ipInsideArena;
+    }
+
+
+    public void scrollToCodeInEditor(boolean defer) {
+        int ipInsideArena = getCurrentWarriorIp();
+        if (ipInsideArena == -1)
+            return;
+
+        scrollToAddr(ipInsideArena, defer);
+
     }
 
     // scroll triggers request for update of range of addresses
@@ -669,12 +829,14 @@ public class CodeEditor
             editor_title.readOnly = true;
 
             initDebugAreaLines();
+            scrollToCodeInEditor(true); // defer scrolling since we want to do this only after all sizes are correct and everything shown
         }
         else {
             asm_output.style.display = "";
             asm_edit.style.display = "";
             editor_title.readOnly = false;
         }
+        m_isDebugMode = v;
 
     }
 

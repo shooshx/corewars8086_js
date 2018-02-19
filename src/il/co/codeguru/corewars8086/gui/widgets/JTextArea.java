@@ -18,7 +18,7 @@ public class JTextArea extends JComponent<HTMLElement>
     }
 
     public void scrollToBottom() {
-
+        m_element.scrollTop = m_element.scrollHeight - m_element.clientHeight;
     }
 
     public String getDocument() {

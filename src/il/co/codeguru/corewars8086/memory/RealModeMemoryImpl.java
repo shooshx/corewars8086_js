@@ -32,6 +32,10 @@ public class RealModeMemoryImpl extends AbstractRealModeMemory {
         return m_data[address.getLinearAddress()];		
     }
 
+    public byte readByte(int address) {
+        return m_data[address];
+    }
+
     /**
      * Writes a single byte to the specified address.
      *
@@ -43,7 +47,7 @@ public class RealModeMemoryImpl extends AbstractRealModeMemory {
     public void writeByte(RealModeAddress address, byte value) {
         m_data[address.getLinearAddress()] = value;
         if (listener != null) {
-            listener.onMemoryWrite(address);
+            listener.onMemoryWrite(address, value);
         }
     }
 

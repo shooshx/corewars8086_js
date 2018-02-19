@@ -20,10 +20,10 @@ public class EventMulticasterMemory extends EventMulticasterBase {
     
     private class MulticasterHandler implements MemoryEventListener {
 		@Override
-		public void onMemoryWrite(RealModeAddress address) {
+		public void onMemoryWrite(RealModeAddress address, byte value) {
             isCasting = true;
 			for (Object mListener : mListenersArr) {
-                ((MemoryEventListener)mListener).onMemoryWrite(address);
+                ((MemoryEventListener)mListener).onMemoryWrite(address, value);
 			}
             isCasting = false;
             addWaiting();			

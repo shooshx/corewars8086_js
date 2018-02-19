@@ -17,3 +17,4 @@ aaa
 mov \
 ax,bx
 aa
+- scroll when the pointer is in the opcodes part

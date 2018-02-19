@@ -17,6 +17,9 @@ debugger
    disasm someone writing into my memory, show in red
    "rep inc cx" - invalid command that throws an exception - detect this
    warrior that coi
+   code with many comments
+
+- on debug end, keep the war alive so that it would be possible to view state
 
 
 https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
@@ -32,7 +35,6 @@ https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 - enable/disable players with checkbox
 - code button should be red if code has errors
 - add zombies
-- run messages zone
 - show stack, show common area
 - errors with html pointers on page to where should be pressed
 

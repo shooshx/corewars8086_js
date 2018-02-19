@@ -7,6 +7,12 @@ public class Format {
             s = "0" + s;
         return s;
     }
+    public static String hex2(int num) {
+        String s = Integer.toHexString(num);
+        if(s.length() == 1)
+            return "0" + s;
+        return s;
+    }
     public static String hex4(int num) {
         String s = Integer.toHexString(num);
         switch(s.length()) {
