@@ -116,7 +116,10 @@ public class PlayersPanel
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
         m_inEditor = m_players.get(0).code[0];
-        m_inEditor.asmText = "start:\ninc ax    ;hello\n          ;world\nadd WORD[bx],1234h\nmov ax,5678h\njmp start";
+        //m_inEditor.asmText = "start:\ninc ax    ;hello\n          ;world\nadd WORD[bx],1234h\nmov ax,5678h\njmp start";
+
+        m_inEditor.asmText = "start:\nmov bx, ax\nadd bx, 12\nloop:\nmov byte[bx],0x11\ninc bx\njmp loop";
+
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
     }

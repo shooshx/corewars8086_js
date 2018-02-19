@@ -60,8 +60,8 @@ public class WarFrame extends JFrame
 	private JLabel addressFiled;
 	//private JButton btnCpuState;
 	public CpuFrame cpuframe;
-	private JButton btnPause;
-	private JButton btnSingleRound;
+	public JButton btnPause;
+    public JButton btnSingleRound;
     
 
     private JSlider speedSlider;
@@ -144,7 +144,7 @@ public class WarFrame extends JFrame
 		//btnCpuState.addActionListener(new ActionListener() {
 		//	@Override
 		//	public void actionPerformed(ActionEvent arg0) {
-				cpuframe = new CpuFrame(competition);
+				cpuframe = new CpuFrame(competition, this.mainWnd);
 				competition.addCompetitionEventListener(cpuframe);
 
 		//	}
@@ -251,6 +251,7 @@ public class WarFrame extends JFrame
         addMessage("[" + round + "] "+ message);
     }	
 
+    @Override
     public void onMemoryWrite(RealModeAddress address, byte value) {
         if (!mainWnd.isBattleShown())
             return; // canvas not shown, no reason to update it
@@ -262,6 +263,10 @@ public class WarFrame extends JFrame
         			Unsigned.unsignedShort(ipInsideArena),
         			(byte)competition.getCurrentWarrior());
         }
+    }
+
+    @Override
+    public void onWriteState(EWriteState state) {
     }
 
     /* @see CompetitionEventListener#onWarStart(int) */

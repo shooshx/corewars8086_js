@@ -28,7 +28,17 @@ public class EventMulticasterMemory extends EventMulticasterBase {
             isCasting = false;
             addWaiting();			
 		}
-        
+
+        @Override
+        public void onWriteState(EWriteState state) {
+            isCasting = true;
+            for (Object mListener : mListenersArr) {
+                ((MemoryEventListener)mListener).onWriteState(state);
+            }
+            isCasting = false;
+            addWaiting();
+        }
+
     }
 
 

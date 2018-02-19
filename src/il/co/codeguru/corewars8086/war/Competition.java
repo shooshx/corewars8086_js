@@ -206,6 +206,8 @@ public class Competition {
 
     public void doneWar() 
     {
+        if (currentWar == null)
+            return;
         Console.log("doneWar rounds=" + Integer.toString(compState.round));
         competitionEventListener.onRound(compState.round);
 

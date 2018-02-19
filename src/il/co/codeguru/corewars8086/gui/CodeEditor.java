@@ -22,6 +22,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private HTMLInputElement editor_title;
     private HTMLTextAreaElement asm_edit;
     private boolean m_isDebugMode = false;
+    private MemoryEventListener.EWriteState m_memWriteState = MemoryEventListener.EWriteState.INIT;
 
     // competitionEventListener
     @Override
@@ -72,6 +73,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     @Override
     public void onMemoryWrite(RealModeAddress address, byte value)
     {
+        // don't rewrite lines if we're in the stage of putting warriors in memory
+        if (m_memWriteState != EWriteState.RUN)
+            return;
         int ipInsideArena = address.getLinearAddress() - 0x1000 *0x10; // arena * paragraph
 
         int page = ipInsideArena / PAGE_SIZE;
@@ -100,6 +104,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         } while (m_dbglines[ipInsideArena] == null);
     }
 
+    @Override
+    public void onWriteState(EWriteState state) {
+        m_memWriteState = state;
+    }
 
 
 
@@ -153,6 +161,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     {
         m_competition = competition;
         m_competition.addCompetitionEventListener(this);
+        m_competition.addMemoryEventLister(this);
 
         asm_edit = (HTMLTextAreaElement)DomGlobal.document.getElementById("asm_edit");
         asm_show = (HTMLElement)DomGlobal.document.getElementById("asm_show");
@@ -798,6 +807,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         if (m_lastDbgElement != null)
             m_lastDbgElement.classList.remove("current_dbg");
+
+        if (m_dbglines[ipInsideArena] == null) {
+
+        }
 
         HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(ipInsideArena));
         dline.classList.add("current_dbg");

@@ -20,11 +20,12 @@ debugger
    code with many comments
 
 - on debug end, keep the war alive so that it would be possible to view state
+  - what happens if the war ends while on Resume? - need to pause
 
 
 https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 
-
+|| 
 
 - colors on players pane
 
@@ -37,6 +38,9 @@ https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 - add zombies
 - show stack, show common area
 - errors with html pointers on page to where should be pressed
+- jump to line where mouse is pointing?
+- choose load address using gui
+- remove trailing spaces and the bottom of the asm text, looks back when debugging
 
 - check changes:
     https://forum.codeguru.co.il/wp/?topic=silenterrors-debugger
@@ -52,3 +56,4 @@ https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 - go to address when not a number - same as watch parsing
 - check long pages of comments at the start of .asm and in the middle, in either the player above or in me
 
+- all console.error, Console.error to message boxes

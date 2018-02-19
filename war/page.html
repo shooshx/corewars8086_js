@@ -157,8 +157,13 @@ function scrollToAddr(addr) {
 
 function triggerGoTo() {
     var addr = parseInt(debug_goto.value, 16)
-    if (isNaN(addr))
+    if (isNaN(addr)) {
+        console.error("failed to parse address");
         return
+    }
+    if (addr < 0  || addr > 0xffff) {
+        console.error("address out of range");
+    }
     scrollToAddr(addr)
 }
 function triggerGoToKey() {
@@ -657,6 +662,7 @@ input:disabled + .sc-btn:active,
     height: 518px;
     vertical-align: top; /* othewise the scroll bar hides the border */
     border: 1px solid black;
+    border-radius: 6px;
     overflow: auto;
     font-size: 16px;
     font-family: courier;
@@ -1080,6 +1086,11 @@ table tr:first-child td:first-child {
 table tr:last-child td:first-child {
     border-bottom-left-radius: 5px;
 }
+
+.dbg_reg_err {
+    background-color: #ff9999;
+}
+
 
 #hex_dec {
     float: right;

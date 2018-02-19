@@ -13,19 +13,25 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 public class FlagFields extends JPanel {
 	
 	private HTMLInputElement checkBox;
+	private CpuFrame m_frame;
 	
-	public FlagFields(String name) {
-		
+	public FlagFields(final String name, CpuFrame frame) {
+		m_frame = frame;
 		//super.setLayout(new GridLayout(1,2));
 		//super.setSize(20,20);
 		//super.add(new JLabel(name + ":"),BorderLayout.LINE_START);
-		name = name + "_fcheck";
-		checkBox = (HTMLInputElement) DomGlobal.document.getElementById( name);
+		String ename = name + "_fcheck";
+		checkBox = (HTMLInputElement) DomGlobal.document.getElementById( ename);
 		if (checkBox == null) {
 			Console.error("Did not find flag " + name);
 		}
 		
 		//super.add(checkBox,BorderLayout.LINE_START);
+
+		checkBox.addEventListener("change", (event) -> {
+			m_frame.flagChanged_callback(name, checkBox.checked);
+
+		});
 	}
 	
 	public void setValue(boolean value){

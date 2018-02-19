@@ -13,4 +13,11 @@ public interface MemoryEventListener {
      * @param address
      */
     void onMemoryWrite(RealModeAddress address, byte value);
+
+    enum EWriteState {
+        INIT,
+        ADD_WARRIORS,
+        RUN
+    }
+    void onWriteState(EWriteState state);
 }

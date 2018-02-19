@@ -237,10 +237,12 @@ public class War {
             m_warriors[m_numWarriors++] = w;
 
             // load warrior to arena
+            m_core.listener.onWriteState(MemoryEventListener.EWriteState.ADD_WARRIORS);
             for (int offset = 0; offset < warriorData.length; ++offset) {
                 RealModeAddress tmp = new RealModeAddress(ARENA_SEGMENT, (short)(loadOffset + offset));
                 m_core.writeByte(tmp, warriorData[offset]);			
             }
+            m_core.listener.onWriteState(MemoryEventListener.EWriteState.RUN);
             ++m_numWarriorsAlive;
 			++m_currentWarrior;
 

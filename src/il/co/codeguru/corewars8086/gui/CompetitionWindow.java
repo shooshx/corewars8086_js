@@ -405,5 +405,12 @@ public class CompetitionWindow extends JFrame
 	@Override
 	public void onEndRound() {
 	}
+
+	// when an edit in the registers has parse error
+	public void errorPreventsStep(boolean v, String reason) {
+
+        battleFrame.btnPause.setEnabled(!v);
+        battleFrame.btnSingleRound.setEnabled(!v);
+    }
 	
 }

@@ -1,0 +1,35 @@
+
+; infinite loop write
+start:
+mov bx, ax
+add bx, 10
+mov byte[bx],0x11
+inc bx
+jmp start
+
+
+
+; loop write  -- CHECK BUG
+start:
+mov bx, ax
+add bx, 12
+mov cx,16
+wrtl:
+mov byte[bx],0x90
+inc bx
+loop wrtl
+
+
+
+; writing and jumping to it
+start:
+mov bx, ax
+add bx, 20
+mov dx, bx
+mov cx,10
+
+wrtl:
+mov byte[bx],0x90
+inc bx
+loop wrtl
+jmp dx

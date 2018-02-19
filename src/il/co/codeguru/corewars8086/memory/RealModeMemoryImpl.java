@@ -8,7 +8,7 @@ package il.co.codeguru.corewars8086.memory;
 public class RealModeMemoryImpl extends AbstractRealModeMemory {
 
     /** Listener to memory events */
-    private MemoryEventListener listener;
+    public MemoryEventListener listener;
 
     /** Actual memory data */
     private byte[] m_data;
