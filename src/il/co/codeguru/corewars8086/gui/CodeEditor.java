@@ -9,7 +9,10 @@ import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
+import il.co.codeguru.corewars8086.utils.Disassembler;
 import il.co.codeguru.corewars8086.war.*;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,10 +100,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 --ipInsideArena;
         }
 
+        int linearAddress = address.getLinearAddress();
         RealModeMemoryImpl mem = m_competition.getCurrentWar().getMemory();
         do {
-            setByte(ipInsideArena, mem.readByte(ipInsideArena));
+            setByte(ipInsideArena, mem.readByte(linearAddress));
             ++ipInsideArena;
+            ++linearAddress;
         } while (m_dbglines[ipInsideArena] == null);
     }
 
@@ -117,7 +122,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String addressStr = "";
         String opcode = "";
         String code = "";
-        int opcodesCount; // number of bytes in my opcode, without brackets and spaces
+        int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
     }
     enum Field {
         START_SPACE,
@@ -227,12 +232,26 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public void spacedHex(String s, LstLine lstline) {
         StringBuilder bs = new StringBuilder();
         int digitCount = 0;
+        boolean doingDigits = s.length() > 0 && isHexDigit(s.charAt(0)); // if it's not a hex number thing, don't do any spacing (resb 4)
         for(int i = 0; i < s.length(); ++i) {
             char c = s.charAt(i);
-            if (isHexDigit(c)) {
+            if (digitCount == 7*2) {
+                // don't add more than 7 bytes of opcode to not overflow the field size
+                bs.append("&#x2026;"); // ellipsis
+                break;
+            }
+            if (doingDigits && isHexDigit(c)) {
                 if ((digitCount % 2) == 0 && digitCount > 0)
                     bs.append("&#x202f;"); // thin space
                 ++digitCount;
+            }
+            else if (c == '<') {
+                bs.append("&lt;");
+                continue;
+            }
+            else if (c == '>') {
+                bs.append("&gt;");
+                continue;
             }
             bs.append(c);
         }
@@ -254,6 +273,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         m_currentListing = new ArrayList<LstLine>();
 
         int lineIndex = 1; // does not increment in warning lines that appear in the listing file
+        LstLine prevLine = null;
         for(int i = 0; i < lines.length; ++i)
         {
             String line = lines[i];
@@ -305,21 +325,24 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                             state = Field.PARSE_ERR;
                         break;
                     case SPACE_AFTER_ADDRESS:
-                        if (isHexDigit(c)) {
-                            state = Field.OPCODE;
-                            opcodeStart = j;
-                        }
-                        else
-                            state = Field.PARSE_ERR;
+                        //if (isHexDigit(c)) {
+                        state = Field.OPCODE;
+                        opcodeStart = j;
+                        //}
+                        //else
+                        //    state = Field.PARSE_ERR;
                         break;
                     case OPCODE:
-                        if (c == ' ') {
+                        if (c == '*') {
+                            state = Field.WARNING;
+                        }
+                        else if (charsBeforeCode < 22)
+                            ++charsBeforeCode; // take anything as long as its in the field size of the opcode. need this sinc resb adds spaces
+                        else if (c == ' ') {
                             spacedHex(line.substring(opcodeStart, j), l);
                             state = Field.SPACE_BEFORE_CODE;
                             ++charsBeforeCode;
                         }
-                        else if (!isHexDigit(c) && c != '[' && c != ']' && c != '(' && c != ')')
-                            state = Field.PARSE_ERR;
                         else
                             ++charsBeforeCode;
                         break;
@@ -354,6 +377,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     ++lineIndex;
                 }
             }
+            else if (prevLine != null && l.lineNum == prevLine.lineNum) {
+                // it's a continuation line of the previous line. ignore it and do nothing with the opcode
+                // at this point the opcode would be too long to be displayed in the opcodes display so we don't need to bother concatenating it there
+                continue;
+            }
             else if (l.lineNum != lineIndex) {
                 Console.log("wrong line number " + Integer.toString(l.lineNum) + " at " + Integer.toString(lineIndex));
                 return false;
@@ -365,6 +393,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             opcodesText.append(l.opcode);
             opcodesText.append("\n");
 
+            prevLine = l;
         }
 
         // if text doen't end with new line, delete the one added to opcodes
@@ -374,14 +403,23 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return true;
     }
 
+
+    private static native Element DocumentFragment_getElementById(DocumentFragment df, String id) /*-{
+        return df.getElementById(id)
+    }-*/;
+
+
     // given a line number (starting 0), give the offset in the input text the line ends
     // this is a member in order to avoid reallocating it every time
     // this is used for knowing how many lines there are and placing double click cursor
     private ArrayList<Integer> m_lineOffsets = new ArrayList<Integer>();
 
+    // for each line, if there's an error 'e' or warning 'w' on it
+    // referenced later when we add more warnings
+    private char[] m_errLines = null;
 
     // returns the input asm text, with added formatting for error and warning lines
-    private void parseStdout(String stdoutText, String asmText, StringBuilder asmColored, StringBuilder stdoutShorten)
+    private void parseStdout(String stdoutText, DocumentFragment asmElem, StringBuilder stdoutShorten)
     {
         String[] lines = stdoutText.split("\\n");
         // warning come before errors so we can't assume the line numbers are ascending
@@ -397,7 +435,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         // have a potential char for every line in the asm text. this way there's no need to sort
         // and there is only one entry per line, error trumps warning
         // used for determining the color of a line
-        char[] errLines = new char[countAllNL]; // for every line in the asmText, 0,'e' or 'w'
+        m_errLines = new char[countAllNL]; // for every line in the asmText, 0,'e' or 'w'
 
         // go over stdout, find out which lines need marking
         for(int i = 0; i < lines.length; ++i)
@@ -417,8 +455,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                         if (j + 2 < line.length()) { // sanity check on the line length
                             assert lineNum < countAllNL : "unexpected lineNum";
                             lineType = line.charAt(j + 2); // +2 for a space and then the first letter of 'error' or 'warning'
-                            if (!(lineType == 'w' && errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
-                                errLines[lineNum] = lineType;
+                            if (!(lineType == 'w' && m_errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
+                                m_errLines[lineNum] = lineType;
                         }
                         break;
                     }
@@ -426,7 +464,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             }
             if (lineNum == -1) {
                 Console.log("Failed parsing error stdout");
-                asmColored.append(asmText);
                 return;
             }
 
@@ -439,42 +476,20 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
 
 
-        int asmIndex = 0;
-        int countNL = 0;
-
-        for(int lineNum = 0; lineNum < errLines.length; ++lineNum)
+        for(int lineNum = 0; lineNum < m_errLines.length; ++lineNum)
         {
-            char ec = errLines[lineNum];
+            char ec = m_errLines[lineNum];
             if (ec == 0)
                 continue;
-            // add to asmText
-            int searchStart = asmIndex;
-            while (asmIndex < asmText.length() && countNL < lineNum) {
-                if (asmText.charAt(asmIndex) == '\n')
-                    ++countNL;
-                ++asmIndex;
-            }
 
-            asmColored.append(asmText.substring(searchStart, asmIndex));
+            Element e = DocumentFragment_getElementById(asmElem, "mline_" + Integer.toString(lineNum+1));
             if (ec == 'e')
-                asmColored.append("<span class='edit_error' id='mark_line_");
+                e.classList.add("edit_error");
             else
-                asmColored.append("<span class='edit_warning' id='mark_line_");
-            asmColored.append(lineNum);
-            asmColored.append("'>");
-
-            searchStart = asmIndex;
-            while (asmIndex < asmText.length() && asmText.charAt(asmIndex) != '\n')
-                ++asmIndex;
-
-            asmColored.append(asmText.substring(searchStart, asmIndex));
-            asmColored.append("</span>");
+                e.classList.add("edit_warning");
 
         }
-        asmColored.append(asmText.substring(asmIndex)); // add all remaining ending texr
 
-        //if (asmColored.charAt(asmColored.length() - 1) == '\n')
-        //    asmColored.append("&nbsp;"); // html doesn't show last <br> without any chars after it
 
     }
 
@@ -509,7 +524,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     private boolean entered = false;
 
-    public void asm_edit_changed()
+    private void asm_edit_changed()
     {
         if (entered)
             return;
@@ -522,6 +537,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         entered = false;
     }
 
+    // return new lines the same number as the input text
     private String linesAsInput(String text)
     {
         StringBuilder opcodesText = new StringBuilder();
@@ -545,6 +561,43 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             updateDebugLine();
             scrollToCodeInEditor(false);
         }
+    }
+
+    private DocumentFragment htmlizeText(String intext)
+    {
+        DocumentFragment df = DomGlobal.document.createDocumentFragment();
+        int lastFound = -1;
+        int found = intext.indexOf('\n', 0);
+        int lineNum = 1;
+        while (found != -1) {
+            if (found != lastFound + 1) { // not an empty line
+                Element e = DomGlobal.document.createElement("span");
+                e.setAttribute("id", "mline_" + Integer.toString(lineNum));
+                String ss = intext.substring(lastFound + 1, found + 1);  // +1 to include the NL that is there
+                Text t = DomGlobal.document.createTextNode(ss);
+                e.appendChild(t);
+                df.appendChild(e);
+            }
+            else {
+                Text t = DomGlobal.document.createTextNode("\n");
+                df.appendChild(t);
+            }
+            lastFound = found;
+            found = intext.indexOf('\n', found+1);
+            ++lineNum;
+        }
+
+        // take care of the last line that might not end with NL
+        if (lastFound != intext.length() - 1)  // if it does end with NL, don't bother with the last empty line
+        {
+            Element e = DomGlobal.document.createElement("span");
+            e.setAttribute("id", "mline_" + Integer.toString(lineNum));
+            String ss = intext.substring(lastFound + 1);
+            Text t = DomGlobal.document.createTextNode(ss);
+            e.appendChild(t);
+            df.appendChild(e);
+        }
+        return df;
     }
 
 
@@ -574,21 +627,24 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         makeLineNums(intext, lineNumText);
         asm_linenums.innerHTML = lineNumText.toString();
 
-
+        DocumentFragment df = null;
         if (!stdout.isEmpty())
         {   // add coloring to the text
-            StringBuilder asmColored = new StringBuilder();
             StringBuilder stdoutShorten = new StringBuilder(); // removes the file name from the start of the lines
-            parseStdout(stdout, intext, asmColored, stdoutShorten);
 
-            String s = asmColored.toString();
-            asm_show.innerHTML = s;
+            df = htmlizeText(intext);
+            parseStdout(stdout, df, stdoutShorten);
+
+            asm_show.innerHTML = "";
+            asm_show.appendChild(df);
 
             asm_output.innerHTML = stdoutShorten.toString();
         }
         else {
             asm_show.innerHTML = intext; // clear all line marking
             setInnerText(asm_output, "");
+
+            m_errLines = null;
         }
 
 
@@ -630,10 +686,91 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         }
 
+        df = checkDisasmLines(buf, m_currentListing, df, intext);
+
+
         if (playersPanel != null)
             playersPanel.updateAsmResult(true, buf, m_currentListing);
 
     }
+
+
+    private DocumentFragment checkDisasmLines(byte[] binbuf, ArrayList<LstLine> listing, DocumentFragment asmElem, String intext)
+    {
+        int ptr = 0;
+        Disassembler dis = new Disassembler(binbuf, 0, binbuf.length);
+        int atLstLine = 0;
+        String msg = null;
+        while(ptr < binbuf.length) {
+            try {
+                while (atLstLine < listing.size() && listing.get(atLstLine).opcodesCount == 0) // skip comment lines
+                    ++atLstLine;
+                String asm = dis.nextOpcode();
+                int len = dis.lastOpcodeSize();
+
+                if (atLstLine == listing.size()) {
+                    Console.error("unexpected reached end of listing " + Integer.toString(atLstLine+1));
+                    break;
+                }
+                if (len != listing.get(atLstLine).opcodesCount) {
+                    Console.error("disassembled wrong number of bytes " + Integer.toString(atLstLine+1));
+                    break;
+                }
+                ++atLstLine;
+
+                ptr += len;
+            }
+            catch(Disassembler.DisassemblerLengthException e) {
+                msg = Integer.toString(atLstLine+1) + ": not enough bytes to parse"; // can happen if we db 09h for example, or just 'rep'
+                break;
+            }
+            catch(Disassembler.DisassemblerException e) {
+
+                msg = Integer.toString(atLstLine+1) + ": Although this is a legal x86 opcode, codewars8086 does not support it line ";
+                break; // no way to recover
+            }
+            catch(RuntimeException e) {
+                Console.error("failed parsing binbuf RuntimeException"); // this should not happen. only happens for missing cases
+                break; // no way to recover, we don't know the size of the opcode
+            }
+
+        }
+
+        if (msg != null)
+        {
+            Console.error(msg);
+            // if m_errLines is null it means there are no errors or warnings so we're good
+            if (m_errLines == null || atLstLine < m_errLines.length && m_errLines[atLstLine] == 0) // it exists and there isn't an something already there
+            {
+                if (asmElem == null) {
+                    asmElem = htmlizeText(intext);
+                    asm_show.innerHTML = "";
+                    asm_show.appendChild(asmElem); // this is somewhat replicated code from above that there's no easy way to avoid it
+                }
+                Element e = DomGlobal.document.getElementById("mline_" + Integer.toString(atLstLine+1));
+                if (e == null) {
+                    Console.error("did not find line?");
+                    return asmElem;
+                }
+                e.classList.add("edit_warning");
+
+                Element omsgdiv = DomGlobal.document.createElement("div");
+                omsgdiv.classList.add("stdout_line_w");
+
+                if (atLstLine < m_lineOffsets.size()) {
+                    omsgdiv.setAttribute("ondblclick","asm_cursorToLine(" + Integer.toString(m_lineOffsets.get(atLstLine)) + ")");
+                }
+                Text omsgtxt = DomGlobal.document.createTextNode(msg);
+                omsgdiv.appendChild(omsgtxt);
+
+                asm_output.appendChild(omsgdiv);
+            }
+
+        }
+
+        return asmElem;
+    }
+
 
     // defer if we're inside setDebugMode
     private static native void scrollToAddr(int addr, boolean defer) /*-{

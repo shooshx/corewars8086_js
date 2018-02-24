@@ -94,7 +94,7 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		}
 		
 		try {
-			instructionArea.setText(Disassembler.disassembler(bytes));
+			//instructionArea.setText(Disassembler.disassembler(bytes));
 		} catch (Exception e) {
 			instructionArea.setText(e.getMessage());
 			e.printStackTrace();

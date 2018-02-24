@@ -470,12 +470,13 @@ public class WarFrame extends JFrame
         //this.addressFiled.setText(Integer.toHexString(address).toUpperCase() + ": " + String.format("%02X", data).toUpperCase());
         this.addressFiled.setText(Format.hex(address, 2) + ": " + Format.hex((int)data, 2) );
 		
-		if(memory_frame == null || memory_frame.isVisible() == false){
+/*		if(memory_frame == null || memory_frame.isVisible() == false){
 			memory_frame = new MemoryFrame(competition, tmp.getLinearAddress());
 			WarFrame.this.competition.addCompetitionEventListener(memory_frame);
 		}
 		else
 			memory_frame.refrash(tmp.getLinearAddress());
+			*/
 	}
  
 }

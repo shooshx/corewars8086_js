@@ -9,7 +9,7 @@ jmp start
 
 
 
-; loop write  -- CHECK BUG
+; loop write
 start:
 mov bx, ax
 add bx, 12

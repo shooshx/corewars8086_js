@@ -2,13 +2,13 @@ package  il.co.codeguru.corewars8086.jsadd;
 
 public class Format {
     public static String hex(int num, int pad) {
-        String s = Integer.toHexString(num);
+        String s = Integer.toHexString(num).toUpperCase();
         for(int i = s.length(); i < pad; ++i)
             s = "0" + s;
         return s;
     }
     public static String hex2(int num) {
-        String s = Integer.toHexString(num);
+        String s = Integer.toHexString(num).toUpperCase();
         if(s.length() == 1)
             return "0" + s;
         return s;

@@ -1,0 +1,48 @@
+- continuing line - makes it a single line, skips a line
+aa:
+mov \
+ax,bx 
+
+- line with just backslash - can skip several lines
+aaa
+\
+mov \
+ax,bx
+
+- warnings inside the lst with asterisks - need to ignore line
+a
+b
+
+- indentation - need to keep the same as the code
+start:
+inc ax
+  inc bx
+    inc cx
+    
+- round brakets
+jnz 1
+
+- square brakets
+loop:
+mov ax, loop
+
+- multiple line value
+dt 0.0  
+db 'abcdefgggggg'
+dy "aa"
+dz "aa"
+
+- define uninitialized buffer
+resb 4
+resb 5
+
+- times 
+times 5 inc ax
+
+- nasm memory alloc too long
+resb 300000000
+
+- nasm assert
+resb -6
+
+
