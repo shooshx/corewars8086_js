@@ -1,7 +1,8 @@
 
   
 nasm assert:
-  resb 3000000000
+  resb 3000000000  -memory
+  resb -6  -assert
 
 nasm stuck
   times 200000 inc bx
@@ -53,10 +54,10 @@ editor:
 - code button should be red if code has errors
 - add zombies
 - show stack, show common area
-- errors with html pointers on page to where should be pressed
+- errors with html pointers on page to where should be pressed - change to link mouse pointer
 - jump to line where mouse is pointing?
 - choose load address using gui
-- remove trailing spaces and the bottom of the asm text, looks back when debugging
+- remove trailing spaces and the bottom of the asm text, looks bad when debugging
 
 - check changes:
     https://forum.codeguru.co.il/wp/?topic=silenterrors-debugger
