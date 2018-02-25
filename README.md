@@ -24,6 +24,6 @@ Coming up features:
 - online competition
 
 
-references:
-https://github.com/codeguru-il/corewars8086
+references:  
+https://github.com/codeguru-il/corewars8086  
 https://github.com/YoavKa/corewars8086
