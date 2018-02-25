@@ -7,15 +7,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/assembler/lst_parser_test_cases.txt" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/build_rel.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/war/codewars_js/988D97D9B14237DE959AC7D3E7AC90CD.cache.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/war/codewars_js/clear.cache.gif" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/war/codewars_js/codewars_js.nocache.js" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/TBD.txt" afterPath="$PROJECT_DIR$/TBD.txt" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/WarFrame.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" />
-      <change beforePath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/utils/Disassembler.java" afterPath="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/utils/Disassembler.java" />
-      <change beforePath="$PROJECT_DIR$/test_progs.txt" afterPath="$PROJECT_DIR$/test_progs.txt" />
+      <change beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
+      <change beforePath="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" afterPath="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/war/WEB-INF/classes/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,10 +25,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CodeEditor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
+            <state relative-caret-position="9745">
               <caret line="761" column="17" lean-forward="false" selection-start-line="761" selection-start-column="17" selection-end-line="761" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -110,10 +108,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="page.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="page.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/war/page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
+            <state relative-caret-position="19788">
               <caret line="1164" column="90" lean-forward="false" selection-start-line="1164" selection-start-column="82" selection-end-line="1164" selection-end-column="90" />
               <folding />
             </state>
@@ -248,7 +246,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1" />
     <option name="y" value="1" />
     <option name="width" value="1438" />
@@ -522,7 +520,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1021,17 +1019,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/war/page.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="1164" column="90" lean-forward="false" selection-start-line="1164" selection-start-column="82" selection-end-line="1164" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
+        <state relative-caret-position="9745">
           <caret line="761" column="17" lean-forward="false" selection-start-line="761" selection-start-column="17" selection-end-line="761" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1042,6 +1032,14 @@
             <element signature="e#29863#29864#0" expanded="true" />
             <element signature="e#29901#29902#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/war/page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19788">
+          <caret line="1164" column="90" lean-forward="false" selection-start-line="1164" selection-start-column="82" selection-end-line="1164" selection-end-column="90" />
+          <folding />
         </state>
       </provider>
     </entry>
