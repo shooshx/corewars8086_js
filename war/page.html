@@ -14,6 +14,7 @@ var LAST_PART_INDEX = Math.trunc(65535/PAGE_SIZE)
 
 function start()
 {
+    console.log("start()");
     run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
     Module['print'] = printConsole
     Module['printErr'] = printConsole
@@ -180,6 +181,7 @@ function triggerGoToKey() {
 // called when GWT finshed loading
 function gwtStart()
 {
+    console.log("gwtStart()");
    // start with two players
     addPlayersPanel()
     addPlayersPanel()

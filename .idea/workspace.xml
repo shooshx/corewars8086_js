@@ -2,18 +2,12 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" line="773" />
-    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="1157" />
-    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="1189" />
+    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="1159" />
+    <bookmark url="file://$PROJECT_DIR$/war/page.html" line="1191" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32876b25-ec22-47fd-a126-d7e51293de23" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/build_rel.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/codewars_js/988D97D9B14237DE959AC7D3E7AC90CD.cache.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/codewars_js/clear.cache.gif" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/war/codewars_js/codewars_js.nocache.js" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change beforePath="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" afterPath="$PROJECT_DIR$/src/com/codewars_js.gwt.xml" />
+      <change beforePath="$PROJECT_DIR$/war/page.html" afterPath="$PROJECT_DIR$/war/page.html" />
     </list>
     <ignored path="$PROJECT_DIR$/war/WEB-INF/classes/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -111,8 +105,8 @@
       <file leaf-file-name="page.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/war/page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19788">
-              <caret line="1164" column="90" lean-forward="false" selection-start-line="1164" selection-start-column="82" selection-end-line="1164" selection-end-column="90" />
+            <state relative-caret-position="276">
+              <caret line="183" column="25" lean-forward="false" selection-start-line="183" selection-start-column="25" selection-end-line="183" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -235,7 +229,6 @@
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/FlagFields.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/RegisterField.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CompetitionWindow.java" />
-        <option value="$PROJECT_DIR$/war/page.html" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CpuFrame.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/jsadd/Format.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/MemoryFrame.java" />
@@ -243,6 +236,7 @@
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/utils/DisassemblerLengthException.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/utils/Disassembler.java" />
         <option value="$PROJECT_DIR$/src/il/co/codeguru/corewars8086/gui/CodeEditor.java" />
+        <option value="$PROJECT_DIR$/war/page.html" />
       </list>
     </option>
   </component>
@@ -1037,8 +1031,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/war/page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19788">
-          <caret line="1164" column="90" lean-forward="false" selection-start-line="1164" selection-start-column="82" selection-end-line="1164" selection-end-column="90" />
+        <state relative-caret-position="276">
+          <caret line="183" column="25" lean-forward="false" selection-start-line="183" selection-start-column="25" selection-end-line="183" selection-end-column="25" />
           <folding />
         </state>
       </provider>
