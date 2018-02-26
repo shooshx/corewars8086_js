@@ -12,8 +12,12 @@ var run_nasm = null
 var PAGE_SIZE = 512
 var LAST_PART_INDEX = Math.trunc(65535/PAGE_SIZE)
 
+var did_start = false
+
 function start()
 {
+    if (did_start)
+        return;
     console.log("start()");
     run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
     Module['print'] = printConsole
@@ -27,6 +31,7 @@ function start()
     // asm_pre.addEventListener("mousewheel", asm_pre_mousewheel) not working
 
     populate_debug_area()
+    did_start = true
 }
 
 
@@ -181,6 +186,7 @@ function triggerGoToKey() {
 // called when GWT finshed loading
 function gwtStart()
 {
+    start();
     console.log("gwtStart()");
    // start with two players
     addPlayersPanel()
