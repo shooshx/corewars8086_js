@@ -694,79 +694,123 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     }
 
+    private boolean isDefineCode(String code) {
+        int start = -1, end = -1;
+        for(int i = 0; i < code.length(); ++i) {
+            char c = code.charAt(i);
+            if (start == -1) {
+                if (c > 32) // what about entering nbsp from keyboard? (persian?)
+                    start = i;
+            }
+            else {
+                if (c <= 32) {
+                    end = i;
+                    break;
+                }
+            }
+        }
+        if (start == -1 || end == -1)
+            return false; // didn't find the command it may be an argument less command
+        String cmd = code.substring(start, end).toLowerCase();
+        char s = 0;
+        if (cmd.length() == 2 && cmd.charAt(0) == 'd')
+            s = cmd.charAt(1);
+        if (cmd.length() == 4 && cmd.charAt(0) == 'r' && cmd.charAt(1) == 'e' && cmd.charAt(2) == 's')
+            s = cmd.charAt(3);
+
+        if (s == 'b' || s == 'w' || s == 'd' || s == 'q' || s == 't' || s == 'o' || s == 'y' || s == 'z')
+            return true;
+
+        return false;
+    }
 
     private DocumentFragment checkDisasmLines(byte[] binbuf, ArrayList<LstLine> listing, DocumentFragment asmElem, String intext)
     {
         int ptr = 0;
         Disassembler dis = new Disassembler(binbuf, 0, binbuf.length);
         int atLstLine = 0;
-        String msg = null;
-        while(ptr < binbuf.length) {
+
+        while(ptr < binbuf.length)
+        {
+            String msg = null;
+            LstLine lstline = null;
+
             try {
                 while (atLstLine < listing.size() && listing.get(atLstLine).opcodesCount == 0) // skip comment lines
                     ++atLstLine;
-                String asm = dis.nextOpcode();
-                int len = dis.lastOpcodeSize();
-
                 if (atLstLine == listing.size()) {
                     Console.error("unexpected reached end of listing " + Integer.toString(atLstLine+1));
                     break;
                 }
-                if (len != listing.get(atLstLine).opcodesCount) {
-                    Console.error("disassembled wrong number of bytes " + Integer.toString(atLstLine+1));
-                    break;
-                }
-                ++atLstLine;
+                lstline = listing.get(atLstLine);
 
-                ptr += len;
+                if (isDefineCode(lstline.code)) {  // don't want to check disassembled opcodes on lines that just define data
+                    dis.skipBytes(lstline.opcodesCount);
+                }
+                else {
+                    String asm = dis.nextOpcode();
+                    int len = dis.lastOpcodeSize();
+
+                    if (len != lstline.opcodesCount) {
+                        Console.error("disassembled wrong number of bytes " + Integer.toString(atLstLine+1));
+                        break;
+                    }
+                }
+
             }
             catch(Disassembler.DisassemblerLengthException e) {
                 msg = Integer.toString(atLstLine+1) + ": not enough bytes to parse"; // can happen if we db 09h for example, or just 'rep'
-                break;
+                //break;
             }
             catch(Disassembler.DisassemblerException e) {
 
                 msg = Integer.toString(atLstLine+1) + ": Although this is a legal x86 opcode, codewars8086 does not support it line ";
-                break; // no way to recover
+                //break; // no way to recover
             }
             catch(RuntimeException e) {
                 Console.error("failed parsing binbuf RuntimeException"); // this should not happen. only happens for missing cases
                 break; // no way to recover, we don't know the size of the opcode
             }
 
-        }
-
-        if (msg != null)
-        {
-            Console.error(msg);
-            // if m_errLines is null it means there are no errors or warnings so we're good
-            if (m_errLines == null || atLstLine < m_errLines.length && m_errLines[atLstLine] == 0) // it exists and there isn't an something already there
+            if (msg != null)
             {
-                if (asmElem == null) {
-                    asmElem = htmlizeText(intext);
-                    asm_show.innerHTML = "";
-                    asm_show.appendChild(asmElem); // this is somewhat replicated code from above that there's no easy way to avoid it
-                }
-                Element e = DomGlobal.document.getElementById("mline_" + Integer.toString(atLstLine+1));
-                if (e == null) {
-                    Console.error("did not find line?");
-                    return asmElem;
-                }
-                e.classList.add("edit_warning");
+                //Console.error(msg);
+                // if m_errLines is null it means there are no errors or warnings so we're good
+                if (m_errLines == null || atLstLine < m_errLines.length && m_errLines[atLstLine] == 0) // it exists and there isn't an something already there
+                {
+                    if (asmElem == null) {
+                        asmElem = htmlizeText(intext);
+                        asm_show.innerHTML = "";
+                        asm_show.appendChild(asmElem); // this is somewhat replicated code from above that there's no easy way to avoid it
+                    }
+                    Element e = DomGlobal.document.getElementById("mline_" + Integer.toString(atLstLine+1));
+                    if (e == null) {
+                        Console.error("did not find line?");
+                        return asmElem;
+                    }
+                    e.classList.add("edit_warning");
 
-                Element omsgdiv = DomGlobal.document.createElement("div");
-                omsgdiv.classList.add("stdout_line_w");
+                    Element omsgdiv = DomGlobal.document.createElement("div");
+                    omsgdiv.classList.add("stdout_line_w");
 
-                if (atLstLine < m_lineOffsets.size()) {
-                    omsgdiv.setAttribute("ondblclick","asm_cursorToLine(" + Integer.toString(m_lineOffsets.get(atLstLine)) + ")");
+                    if (atLstLine < m_lineOffsets.size()) {
+                        omsgdiv.setAttribute("ondblclick","asm_cursorToLine(" + Integer.toString(m_lineOffsets.get(atLstLine)) + ")");
+                    }
+                    Text omsgtxt = DomGlobal.document.createTextNode(msg);
+                    omsgdiv.appendChild(omsgtxt);
+
+                    asm_output.appendChild(omsgdiv);
                 }
-                Text omsgtxt = DomGlobal.document.createTextNode(msg);
-                omsgdiv.appendChild(omsgtxt);
 
-                asm_output.appendChild(omsgdiv);
             }
 
+            ++atLstLine;
+            ptr += lstline.opcodesCount;
+            dis.setPointer(ptr);
+
         }
+
+
 
         return asmElem;
     }

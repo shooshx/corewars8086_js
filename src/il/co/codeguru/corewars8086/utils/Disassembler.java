@@ -54,6 +54,14 @@ public class Disassembler
 		return ret;
 	}
 
+	public void skipBytes(int len) {
+	    pointer += len;
+        startOffset = pointer;
+    }
+    public void setPointer(int ptr) {
+	    pointer = ptr;
+    }
+
 
 	/**
 	 * disassemble the bytes
