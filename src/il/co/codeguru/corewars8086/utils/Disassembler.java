@@ -819,6 +819,7 @@ public class Disassembler
     private String opcode9X(byte opcode) throws DisassemblerException {
         switch (opcode) {
             case (byte)0x90: // XCHG reg16, AX
+				return "NOP";
             case (byte)0x91:
             case (byte)0x92:
             case (byte)0x93:

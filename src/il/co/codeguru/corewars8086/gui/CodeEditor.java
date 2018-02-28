@@ -55,6 +55,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             byteline = new DbgLine();
             String hexVal = Format.hex2(val);
             byteline.text = "<span class='dbg_opcodes'>" + hexVal + "</span>db " + hexVal + "h";
+            byteline.flags = FLAG_UNPARSED;
             //byteline.binOpcode = new byte[1];
             //byteline.binOpcode[0] = War.ARENA_BYTE;
         }
@@ -137,10 +138,14 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         PARSE_ERR
     };
 
+    public static final int FLAG_UNPARSED = 1;  // means this is a DbgLine of a value written by a warrior and not yet parsed by the disassembler
+    public static final int FLAG_DEFINE_CODE = 2; // line that came from the user typed text that defines a number (db 123)
+    public static final int FLAG_BREAKPOINT = 4;
 
     public static class DbgLine {
         String text; // includes the command and any comment lines after it
         //byte[] binOpcode;
+        int flags = 0;
     }
     private DbgLine[] m_dbglines;
 
@@ -229,6 +234,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return $wnd.g_outputText
     }-*/;
 
+    private static final String SPACE_FOR_HEX = "&#x202f;";
+
     public void spacedHex(String s, LstLine lstline) {
         StringBuilder bs = new StringBuilder();
         int digitCount = 0;
@@ -237,7 +244,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             char c = s.charAt(i);
             if (digitCount == 7*2) {
                 // don't add more than 7 bytes of opcode to not overflow the field size
-                bs.append("&#x2026;"); // ellipsis
+                bs.append(SPACE_FOR_HEX); // ellipsis
                 break;
             }
             if (doingDigits && isHexDigit(c)) {
@@ -899,6 +906,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     String opcode = lstline.opcode;
 
                     dbgline.text = "<span class='dbg_opcodes'>" + opcode + "</span>" + lstline.code;
+                    if (isDefineCode(lstline.code))
+                        dbgline.flags = FLAG_DEFINE_CODE;
 
                     /*dbgline.binOpcode = new byte[lstline.opcodesCount];
                     assert lstline.address + lstline.opcodesCount <= code.bin.length: "too many opcodes for the program length?";
@@ -992,12 +1001,49 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         if (m_dbglines[ipInsideArena] == null) {
 
         }
+        else {
+            DbgLine ipline = m_dbglines[ipInsideArena];
+            int flags = m_dbglines[ipInsideArena].flags;
+            if ((flags & FLAG_UNPARSED) != 0 || (flags & FLAG_DEFINE_CODE) != 0 ) {
+                disassembleAddr(ipInsideArena + 0x10000, ipInsideArena);
+            }
+        }
 
         HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(ipInsideArena));
         dline.classList.add("current_dbg");
         m_lastDbgElement = dline;
         m_lastDbgAddr = ipInsideArena;
     }
+
+    private void disassembleAddr(int absaddr, int addrInArea)
+    {
+        byte[] mem = m_competition.getCurrentWar().getMemory().m_data;
+        Disassembler dis = new Disassembler(mem, absaddr, mem.length);
+        String text;
+        try {
+            text = dis.nextOpcode();
+        }
+        catch(Disassembler.DisassemblerException e) {
+            return;
+        }
+        int len = dis.lastOpcodeSize();
+
+        DbgLine opline = new DbgLine();
+        StringBuilder bs = new StringBuilder();
+        for(int i = 0; i < len; ++i) {
+            bs.append( Format.hex2(mem[absaddr + i] & 0xff));
+            bs.append(SPACE_FOR_HEX);
+        }
+
+        opline.text = "<span class='dbg_opcodes'>" + bs.toString() + "</span>" + text;
+        m_dbglines[absaddr] = opline;
+        renderLine(addrInArea, opline);
+        for(int i = 1; i < len; ++i) { // remove the lines of the bytes after it
+            m_dbglines[absaddr + i] = null;
+            renderLine(addrInArea + i, null);
+        }
+    }
+
 
 
     public void scrollToCodeInEditor(boolean defer) {

@@ -27,9 +27,35 @@ mov bx, ax
 add bx, 20
 mov dx, bx
 mov cx,10
-
 wrtl:
 mov byte[bx],0x90
 inc bx
 loop wrtl
 jmp dx
+
+
+start:
+mov bx, ax
+add bx, 31
+mov dx, bx
+mov cx,5
+wrtl:
+mov byte[bx],0x83
+mov byte[bx+1],0xc2
+mov byte[bx+2],0x10
+add bx,3
+loop wrtl
+jmp dx
+
+
+;;;;;; db instead of opcodes in text
+start:
+mov bx, ax
+add bx, 12
+loop:
+db 0xc6
+db 07
+db 0x11
+db 0x43
+jmp loop
+

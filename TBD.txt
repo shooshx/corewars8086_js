@@ -11,7 +11,7 @@ BUG - showing wrong bin for 'resb 5' in debugger
     - also for 'times 5 db 1'
 
 
-BUG - spaces in brakets parse
+BUG - spaces in brakets parse spacedHex
 
 
 graph window
@@ -66,7 +66,7 @@ editor:
 - cpu view can change values, show in red and is able to revert?
 
 - try two players with the same name
-- round counter
+- round (step) counter
 
 - when not in debug mode don't update GUI
 - GUI zoom by browser
