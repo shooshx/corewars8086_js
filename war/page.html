@@ -158,6 +158,7 @@ function scrollToAddr(addr) {
         return
 
     e.parentElement.style.display = ""  // need to show it for it to have an offsetTop
+    e.style.display = "" // just in case it is hidden for some reason
     debug_text.scrollTop = e.offsetTop - 30  // have some margin from the top
 }
 

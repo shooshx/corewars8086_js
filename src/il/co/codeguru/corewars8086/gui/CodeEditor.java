@@ -27,11 +27,18 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private boolean m_isDebugMode = false;
     private MemoryEventListener.EWriteState m_memWriteState = MemoryEventListener.EWriteState.INIT;
 
+    public static final int CODE_ARENA_OFFSET = 0x10000;
+
+    private byte[] m_mem = null;
     // competitionEventListener
     @Override
-    public void onWarStart() {}
+    public void onWarStart() {
+        m_mem = m_competition.getCurrentWar().getMemory().m_data;
+    }
     @Override
-    public void onWarEnd(int reason, String winners) {}
+    public void onWarEnd(int reason, String winners) {
+        m_mem = null;
+    }
     @Override
     public void onRound(int round) {}
     @Override
@@ -66,12 +73,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private void setByte(int address, byte value) {
         DbgLine dbgline = getSingleByteLine(value);
         m_dbglines[address] = dbgline;
+        renderLineIfInView(address, dbgline);
+    }
+
+    private void renderLineIfInView(int address, DbgLine dbgline) {
         int page = address / PAGE_SIZE;
         if (page == m_atScrollP1 || page == m_atScrollP1) {
             renderLine(address, dbgline);
         }
     }
-
 
     // MemoryEventListener
     @Override
@@ -100,13 +110,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             while (m_dbglines[ipInsideArena] == null)
                 --ipInsideArena;
         }
-
-        int linearAddress = address.getLinearAddress();
-        RealModeMemoryImpl mem = m_competition.getCurrentWar().getMemory();
+        
+        //RealModeMemoryImpl mem = m_competition.getCurrentWar().getMemory();
         do {
-            setByte(ipInsideArena, mem.readByte(linearAddress));
+            // rewriting only a single opcode so its not possible to cross to a new opcode which will need reparsing
+            setByte(ipInsideArena, m_mem[ipInsideArena + CODE_ARENA_OFFSET]);
             ++ipInsideArena;
-            ++linearAddress;
         } while (m_dbglines[ipInsideArena] == null);
     }
 
@@ -988,6 +997,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return ipInsideArena;
     }
 
+    private void setByteFromMem(int addrInArea) {
+        int value = m_mem[addrInArea + CODE_ARENA_OFFSET];
+        setByte(addrInArea, (byte)(value & 0xff) );
+    }
+
     public void updateDebugLine() {
         int ipInsideArena = getCurrentWarriorIp();
         if (ipInsideArena == -1)
@@ -998,14 +1012,29 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         if (m_lastDbgElement != null)
             m_lastDbgElement.classList.remove("current_dbg");
 
-        if (m_dbglines[ipInsideArena] == null) {
-
+        // the first call to this is before debugMode is started to set the first debug line.
+        // in this case we don't want to disassemble since the dbglines have not even been inited yet. sort of a hack.
+        if (m_dbglines[ipInsideArena] == null)
+        {
+            // got to a null line, means this address is hidden and is part of a preceding opcode, first find that
+            int opcodeAddr = ipInsideArena;
+            while (m_dbglines[opcodeAddr] == null)
+                --opcodeAddr;
+            // fill the size of this opcode with db lines,
+            // do this before disassembly of the IP line to make sure we've erased the old opcode correctly
+            //byte[] mem = m_competition.getCurrentWar().getMemory().m_data;
+            do {
+                setByteFromMem(opcodeAddr);
+                ++opcodeAddr;
+            } while (m_dbglines[opcodeAddr] == null);
+            // disassemble may eat at any of the db's after it, and might also each opcode after that
+            disassembleAddr(ipInsideArena + CODE_ARENA_OFFSET, ipInsideArena);
         }
         else {
             DbgLine ipline = m_dbglines[ipInsideArena];
             int flags = m_dbglines[ipInsideArena].flags;
             if ((flags & FLAG_UNPARSED) != 0 || (flags & FLAG_DEFINE_CODE) != 0 ) {
-                disassembleAddr(ipInsideArena + 0x10000, ipInsideArena);
+                disassembleAddr(ipInsideArena + CODE_ARENA_OFFSET, ipInsideArena);
             }
         }
 
@@ -1037,13 +1066,25 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         opline.text = "<span class='dbg_opcodes'>" + bs.toString() + "</span>" + text;
         m_dbglines[absaddr] = opline;
-        renderLine(addrInArea, opline);
-        for(int i = 1; i < len; ++i) { // remove the lines of the bytes after it
-            m_dbglines[absaddr + i] = null;
-            renderLine(addrInArea + i, null);
+        renderLineIfInView(addrInArea, opline);
+        for(int i = 1; i < len; ++i) {
+            // remove the lines of the bytes after it
+            // don't know what opcodes I'm writing so need to make sure it remains consistant
+            eraseOpcode(addrInArea + i);
+            // this erases one line and possible adds db in the lines after it, this is simple good although it can write several times in the same place
         }
     }
 
+    // erase the opcode in addr, and take care to setByte the bytes after it that are affected
+    private void eraseOpcode(int addrInArea) {
+        m_dbglines[addrInArea] = null;
+        renderLineIfInView(addrInArea, null);
+        ++addrInArea;
+        while(m_dbglines[addrInArea] == null) {
+            setByteFromMem(addrInArea);
+            ++addrInArea;
+        }
+    }
 
 
     public void scrollToCodeInEditor(boolean defer) {

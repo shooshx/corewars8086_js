@@ -7,4 +7,7 @@ package il.co.codeguru.corewars8086.memory;
  */
 public class MemoryException extends Exception {
 	private static final long serialVersionUID = 1L;
+
+	public MemoryException() {}
+	public MemoryException(String msg) { super(msg); }
 }

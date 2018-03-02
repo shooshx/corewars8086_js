@@ -1,5 +1,7 @@
 package il.co.codeguru.corewars8086.memory;
 
+import il.co.codeguru.corewars8086.jsadd.Format;
+
 /**
  * Implementation of the RealModeMemory interface which limits memory access
  * to given regions of the memory.
@@ -39,7 +41,7 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
     public byte readByte(RealModeAddress address) throws MemoryException {
         // is reading allowed from this address ?
         if (!isAddressInRegions(m_readAccessRegions, address)) {
-            throw new MemoryException();			
+            throw new MemoryException("Read not allowed from address 0x" + Format.hex(address.getLinearAddress()) );
         }
 
         return m_memory.readByte(address);		
@@ -56,7 +58,7 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
     public void writeByte(RealModeAddress address, byte value) throws MemoryException {
         // is writing allowed to this address ?
         if (!isAddressInRegions(m_writeAccessRegions, address)) {
-            throw new MemoryException();			
+            throw new MemoryException("Write not allowed to address 0x" + Format.hex(address.getLinearAddress()) );
         }
 
         m_memory.writeByte(address, value);
@@ -73,7 +75,7 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
     public byte readExecuteByte(RealModeAddress address) throws MemoryException {
         // is reading allowed from this address ?
         if (!isAddressInRegions(m_executeAccessRegions, address)) {
-            throw new MemoryException();			
+            throw new MemoryException("Execute not allowed in address 0x" + Format.hex(address.getLinearAddress()));
         }
 
         return m_memory.readExecuteByte(address);		

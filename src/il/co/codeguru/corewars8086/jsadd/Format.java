@@ -1,6 +1,10 @@
 package  il.co.codeguru.corewars8086.jsadd;
 
 public class Format {
+    public static String hex(int num) {
+        return Integer.toHexString(num).toUpperCase();
+    }
+
     public static String hex(int num, int pad) {
         String s = Integer.toHexString(num).toUpperCase();
         for(int i = s.length(); i < pad; ++i)

@@ -17,7 +17,7 @@ public class Competition {
 
     private EventMulticasterCompetition competitionEventCaster;
     private EventMulticasterMemory memoryEventCaster;
-    private CompetitionEventListener competitionEventListener;
+    public CompetitionEventListener competitionEventListener;
     private MemoryEventListener memoryEventListener;
 
     private WarriorRepository warriorRepository;
@@ -76,7 +76,6 @@ public class Competition {
             {
                 startWar( warriorRepository.createGroupList(competitionIterator.next()) );
                 compState.state = CompState.State.RUN_ROUND;
-                competitionEventListener.onEndRound(); // it's like round -1, show the state at the start of the game
                 boolean wasStartPaused = compState.startPaused;
                 compState.startPaused = false; // start paused only applies to the first war
                 return !wasStartPaused;

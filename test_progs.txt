@@ -59,3 +59,58 @@ db 0x11
 db 0x43
 jmp loop
 
+
+;;;;; jump inside instruction and crash
+start:
+mov bx, ax
+add bx, 12
+jmp lup + 1
+lup:
+mov byte[bx],0x11
+inc bx
+jmp lup
+
+; and eat next opcode
+start:
+mov bx, ax
+add bx, 18
+jmp lup + 2
+lup:
+mov word[si],0x07c6
+inc bx
+jmp lup
+
+; and eat next opcode and write to the same place!
+start:
+mov bx, ax
+add bx, 12
+jmp lup + 2
+lup:
+mov word[si],0x07c6
+inc bx
+jmp lup
+
+
+; memory write inside a big opcode - should make it reparse completely
+start:
+mov bx, ax
+add bx, 17
+jmp lup + 2
+lup:
+mov word[si],0x07c6
+inc bx
+jmp lup
+
+mov word[si], 0x7C6
+
+; TBD memory write at the beginning of a big opcode
+start:
+mov bx, ax
+add bx, 14
+jmp lup + 2
+lup:
+mov word[si],0x07c6
+inc bx
+jmp lup
+
+mov word[si], 0x7C6

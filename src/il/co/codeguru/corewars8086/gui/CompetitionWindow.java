@@ -289,6 +289,9 @@ public class CompetitionWindow extends JFrame
             competitionRunning = true;
             runWarButton.setEnabled(false);
             setDebugMode(true);
+            // needs to be after gui was set up
+            competition.competitionEventListener.onEndRound(); // it's like round -1, show the state at the start of the game
+
             stepnum.innerHTML = "0";
             return true;
         }

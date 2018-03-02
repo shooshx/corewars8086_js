@@ -74,3 +74,13 @@ editor:
 - check long pages of comments at the start of .asm and in the middle, in either the player above or in me
 
 - all console.error, Console.error to message boxes
+- disassembled asm does not compile 'MOV [SI], 0x7C6' missing 'byte' or 'word'
+
+
+End of debug session:
+   - War instance shouldn't die at the end so its content can be examined (memory scrolled, registers watches)
+   - Debug should continue as long as there is any player alive
+
+
+BUG - parsing an opcode out of memory boundary would fail
+
