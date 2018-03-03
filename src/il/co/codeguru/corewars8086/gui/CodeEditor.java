@@ -110,7 +110,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             while (m_dbglines[ipInsideArena] == null)
                 --ipInsideArena;
         }
-        
+
         //RealModeMemoryImpl mem = m_competition.getCurrentWar().getMemory();
         do {
             // rewriting only a single opcode so its not possible to cross to a new opcode which will need reparsing
@@ -149,7 +149,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     public static final int FLAG_UNPARSED = 1;  // means this is a DbgLine of a value written by a warrior and not yet parsed by the disassembler
     public static final int FLAG_DEFINE_CODE = 2; // line that came from the user typed text that defines a number (db 123)
-    public static final int FLAG_BREAKPOINT = 4;
+    public static final int FLAG_HAS_COMMENT = 4; // This DbgLine has comment lines after the first code line so when highlighting this line, need to highlight dfXXXXX instead of dXXXXX
+    public static final int FLAG_BREAKPOINT = 8;
 
     public static class DbgLine {
         String text; // includes the command and any comment lines after it
@@ -209,6 +210,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
 
         exportMethods();
+
     }
 
     public native void exportMethods() /*-{
@@ -245,11 +247,20 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     private static final String SPACE_FOR_HEX = "&#x202f;";
 
-    public void spacedHex(String s, LstLine lstline) {
+    public void spacedHex(String s, LstLine lstline)
+    {
+        // find how many spaces from the end should be trimmed
+        // spaces appear at the end since we take everything in the code area of the lst
+        int upto = s.length() - 1;
+        for(; upto >= 0; --upto) {
+            if (s.charAt(upto) != ' ')
+                break;
+        }
         StringBuilder bs = new StringBuilder();
         int digitCount = 0;
         boolean doingDigits = s.length() > 0 && isHexDigit(s.charAt(0)); // if it's not a hex number thing, don't do any spacing (resb 4)
-        for(int i = 0; i < s.length(); ++i) {
+
+        for(int i = 0; i <= upto; ++i) {
             char c = s.charAt(i);
             if (digitCount == 7*2) {
                 // don't add more than 7 bytes of opcode to not overflow the field size
@@ -780,7 +791,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             }
             catch(Disassembler.DisassemblerException e) {
 
-                msg = Integer.toString(atLstLine+1) + ": Although this is a legal x86 opcode, codewars8086 does not support it line ";
+                msg = Integer.toString(atLstLine+1) + ": Although this is a legal x86 opcode, codewars8086 does not support it";
                 //break; // no way to recover
             }
             catch(RuntimeException e) {
@@ -883,6 +894,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             PlayersPanel.Code code = m_playersPanel.findCode(w.getLabel());
 
             DbgLine last_dbgline = null;
+            int last_address = 0;
 
             if (code.lines.get(0).address == -1) { // comment or label on the first line, need to belong to the address before first
                 int befFirst = playerLoadOffset - 1;
@@ -901,13 +913,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     last_dbgline.text = "";
                     m_dbglines[befFirst] = last_dbgline;
                 }
+                last_address = befFirst;
             }
 
             for(LstLine lstline : code.lines)
             {
                 if (lstline.address == -1) {
                     assert last_dbgline != null: "Unexpected blank prev line";
-                    last_dbgline.text += "<div class='dbg_comment_line'>      <span class='dbg_opcodes'></span>" + lstline.code + "</div>";
+                    last_dbgline.flags |= FLAG_HAS_COMMENT;
+                    //last_dbgline.text = "<div id='df" + Integer.toString(last_address) + "'>" + last_dbgline.text + "</div>";
+                    last_dbgline.text += "</div><div class='dbg_comment_line'>      <span class='dbg_opcodes'></span>" + lstline.code + "</div>";
                 }
                 else {
                     int loadAddr = lstline.address + playerLoadOffset;
@@ -954,13 +969,17 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     // dbgline should already be in m_dgblines
     public void renderLine(int addr, DbgLine dbgline) {
-        HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(addr));
+        String addrstr = Integer.toString(addr);
+        HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + addrstr);
         if (dbgline == null) {
             dline.style.display = "none";
             return;
         }
 
-        dline.innerHTML = Format.hex4(addr) + "  " + dbgline.text;
+        if ((dbgline.flags & FLAG_HAS_COMMENT) != 0) // this div tag is closed inside dbgline.text before the comment starts
+            dline.innerHTML = "<div id='df" + addrstr + "'>" + Format.hex4(addr) + "  " + dbgline.text;
+        else
+            dline.innerHTML = Format.hex4(addr) + "  " + dbgline.text;
         dline.removeAttribute("style");
     }
 
@@ -1038,7 +1057,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             }
         }
 
-        HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + Integer.toString(ipInsideArena));
+        String ider = "d";
+        if ( (m_dbglines[ipInsideArena].flags & FLAG_HAS_COMMENT) != 0)
+            ider = "df"; // a line with a comment after, don't highlight the entire line, just the first line. df is assured to exist if we have this flag
+
+        HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById(ider + Integer.toString(ipInsideArena));
         dline.classList.add("current_dbg");
         m_lastDbgElement = dline;
         m_lastDbgAddr = ipInsideArena;

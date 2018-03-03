@@ -28,3 +28,8 @@ references:
 https://codeguru.co.il/Xtreme/  
 https://github.com/codeguru-il/corewars8086  
 https://github.com/YoavKa/corewars8086
+
+
+tips and tricks
+- When debugging, you can always return to a warrior running point by clicking its name on the left pane
+- You can set value of any register manually by writing a value in its box. this includes IP and Flags registers.

@@ -661,7 +661,7 @@ input:disabled + .sc-btn:active,
 }
 
 #debug_area {
-
+    position: relative; /* for the absolute positiond gray address bar */
 }
 #debug_text {
     display: inline-block;
@@ -680,6 +680,14 @@ input:disabled + .sc-btn:active,
 }
 .dplace { /* placeholdr for dlines */
     height: 0;
+}
+#dbg_box_addr {
+    position: absolute;
+    top: 31px;
+    width: 50px;
+    height: calc( 100% - 31px);
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
 }
 
 #asm_edit {
@@ -798,16 +806,20 @@ input:disabled + .sc-btn:active,
 
 .stdout_line_w:nth-child(even) {
     background: #ffeb8b;
+    cursor: pointer;
 }
 .stdout_line_w:nth-child(odd) {
     background: #ffffaf;
+    cursor: pointer;
 }
 
 .stdout_line_e:nth-child(even) {
     background: #ffcece;
+    cursor: pointer;
 }
 .stdout_line_e:nth-child(odd) {
     background: #ffbcb4;
+    cursor: pointer;
 }
 
 
@@ -819,7 +831,7 @@ input:disabled + .sc-btn:active,
     background-color: #ddddff;
 }
 .dbg_comment_line {
-    background-color: white;
+    /*background-color: white; no needed since if there's a comment first line will be in a dfXXXX div */
 }
 .dbg_opcodes {
     display: inline-block;
@@ -1182,6 +1194,7 @@ table tr:last-child td:first-child {
           <div id="debug_area" style="display:none;">
               <input type="text" id="debug_goto" spellcheck="false" onkeyup="triggerGoToKey()">
               <label id="btnGoTo" class="sc-btn" onclick="triggerGoTo()">go to</label>
+              <div id="dbg_box_addr"></div>
               <pre id="debug_text" class="allow_select" onscroll="debugAreaScroll(false)"></pre>
           </div>
         </div>

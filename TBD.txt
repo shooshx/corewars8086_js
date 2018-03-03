@@ -83,4 +83,6 @@ End of debug session:
 
 
 BUG - parsing an opcode out of memory boundary would fail
+- don't disassemble lines that were in the original text
+- debug address area in gray
 
