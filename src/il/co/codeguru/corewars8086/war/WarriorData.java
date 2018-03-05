@@ -12,10 +12,11 @@ public class WarriorData {
      * @param name   Warrior's name.
      * @param code   Warrior's code.
      */
-    public WarriorData(String name, byte[] code, String label) {
+    public WarriorData(String name, byte[] code, String label, int debugLoadAddr) {
         m_name = name;
         m_code = code;
         m_label = label;
+        m_debugFixedLoadAddress = debugLoadAddr;
     }
 
     /** @return the warrior's name. */
@@ -37,6 +38,7 @@ public class WarriorData {
 
     /** Holds warrior's code */
     private final byte[] m_code;
+    public int m_debugFixedLoadAddress; // -1 for random or an address of the UI
 
 
     @Override

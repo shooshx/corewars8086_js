@@ -217,7 +217,11 @@ public class War {
             String warriorName = warrior.getName();
             byte[] warriorData = warrior.getCode();
 
-            short loadOffset = getLoadOffset(warriorData.length);
+            short loadOffset;
+            if (warrior.m_debugFixedLoadAddress < 0)
+                loadOffset = getLoadOffset(warriorData.length);
+            else
+                loadOffset = (short)warrior.m_debugFixedLoadAddress;
 
             RealModeAddress loadAddress =
                     new RealModeAddress(ARENA_SEGMENT, loadOffset); 

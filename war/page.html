@@ -156,6 +156,9 @@ function scrollToAddr(addr) {
     var e = document.getElementById("d" + addr)
     if (!e)
         return
+    var eoffs = e.offsetTop
+    if (eoffs > debug_text.scrollTop && eoffs < debug_text.scrollTop + debug_text.offsetHeight - 30)
+        return // already in view, don't need to scroll
 
     e.parentElement.style.display = ""  // need to show it for it to have an offsetTop
     e.style.display = "" // just in case it is hidden for some reason
@@ -233,8 +236,8 @@ function addPlayersPanel() {
             <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
             <br>\
-            <select id="wtype_pLETTER" class="sel_wtype" onchange="changedWType(\'LETTER\')">\
-              <option value="SINGLE" class="opt_single">Single Warrior</option>\
+            <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'LETTER\')">\
+              <option value="SINGLE">Single Warrior</option>\
               <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
               <option value="TWO_DIFFERENT">Two Different Warriors</option>\
             </select>\
@@ -365,9 +368,6 @@ function fixhscroll(e) {
     {
         asm_edit.scrollLeft = 0
     }
-
-
-
 }
 
 
@@ -452,6 +452,7 @@ function triggerDebug() {
         if (!j_startDebug()) {
             console.error("cannot start debug")
             debugCheckbox.checked = false;
+            prevDebug = debugCheckbox.checked
             return
         }
 
@@ -511,6 +512,32 @@ function triggerRegBase(ishex) {
         decCheckbox.checked = true;
     }
     j_setRegistersBase(ishex ? 16:10)
+}
+
+function loadAddrUpdateUI() {
+    if (asm_load_addr_type.value == "rand") {
+        fixed_load_addr.style.visibility = "hidden";
+        fixed_load_addr.style.opacity = "0.0";
+    }
+    else {
+        fixed_load_addr.style.visibility = "visible";
+        fixed_load_addr.style.opacity = "1.0";
+    }
+
+}
+function changedLoadAddrType() {
+    loadAddrUpdateUI()
+    j_loadAddrChanged(fixed_load_addr.value, asm_load_addr_type.value == "rand");
+
+}
+function changedFixedAddr() {
+    j_loadAddrChanged(fixed_load_addr.value, asm_load_addr_type.value == "rand");
+}
+// from java, when changing warrior
+function updateLoadAddr(strValue, isRand) {
+    asm_load_addr_type.value = isRand ? "rand":"fixed"
+    fixed_load_addr.value = strValue
+    loadAddrUpdateUI()
 }
 
 
@@ -798,6 +825,19 @@ input:disabled + .sc-btn:active,
     padding: 9px 0 9px 0;
     border: 1px solid #000000;
     border-radius: 4px;
+    margin: 8px 0 0 0;
+}
+#asm_options {
+    margin: 8px 0 0 0;
+}
+
+.my_combo_box {
+    border-radius: 6px;
+    font-size: 14px;
+    height: 25px;
+}
+
+#asm_load_addr_type {
 }
 
 .edit_text_error {
@@ -951,9 +991,6 @@ input:disabled + .sc-btn:active,
     vertical-align: bottom; /* needed becaue overflow hidden changed the baseline https://stackoverflow.com/questions/22421782/css-overflow-hidden-increases-height-of-container */
 }
 .sel_wtype {
-    border-radius: 6px;
-    font-size: 14px;
-    height: 25px;
     margin: 0 0 7px 3px;
     width: calc(100% - 7px);
 }
@@ -1011,17 +1048,31 @@ input:disabled + .sc-btn:active,
 #editor_boxes {
 }
 
-#debug_goto {
-    height: 18px;
+#fixed_load_addr {
+    height: 19px;
+    font-size: 16px;
+    font-family: courier;
+    border-radius: 6px;
+    border: 1px solid #000000;
+    padding: 2px;
+    vertical-align: bottom;
     width: 100px;
-    margin: 0 0 0 0;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.12s ease-in-out;
+}
+
+
+#debug_goto {
+    width: 100px;
+    margin: 0 0 6px 0;
+    height: 18px;
     font-size: 16px;
     font-family: courier;
     border-radius: 4px;
-    padding: 0 0 0 0;
     border: 1px solid #000000;
     padding: 2px;
-    margin: 0 0 6px 0;
 }
 #btnGoTo {
     height: 22px;
@@ -1198,8 +1249,17 @@ table tr:last-child td:first-child {
               <pre id="debug_text" class="allow_select" onscroll="debugAreaScroll(false)"></pre>
           </div>
         </div>
-        <br>
-        <div id="asm_output" class="codearea allow_select" wrap="off" > </div>
+        <div id="editor_bottom">
+            <div id="asm_output" class="codearea allow_select" wrap="off" ></div>
+            <div id="asm_options">
+                Debug load address:
+                <select id="asm_load_addr_type" class="my_combo_box" onchange="changedLoadAddrType()">
+                    <option value="rand">Random</option>
+                    <option value="fixed">Fixed</option>
+                </select>
+                <input type="text" id="fixed_load_addr" spellcheck="false" value="A000" oninput="changedFixedAddr()">
+            </div>
+        </div>
       </div>
 
       <div id="cpuPanel" style="display:none;">

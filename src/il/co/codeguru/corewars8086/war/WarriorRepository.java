@@ -67,6 +67,52 @@ public class WarriorRepository {
         return arr;
     }
 
+    class AddrRange {
+        String name;
+        int start, end;
+        AddrRange(String _name, int _start, int _end) { name = _name; start = _start; end = _end; }
+
+        boolean overlaps(AddrRange a) {
+            return this.start <= a.end && a.start <= this.end;
+        }
+        // this  s-------e
+        // a       s-------e
+    }
+
+    class LoadAddrChecker {
+        private ArrayList<AddrRange> fixedRanges;
+        public LoadAddrChecker(int capacity) {
+            fixedRanges = new ArrayList<AddrRange>(capacity);
+        }
+        public int addCheck(String startAddrStr, int len, String name) {
+            int startAddr = -1;
+            try {
+                startAddr = Integer.parseInt(startAddrStr, 16);
+            } catch (NumberFormatException e2) {
+                Console.error("Player " + name + " fixed start address is not a valid hex number");
+                return -2;
+            }
+            if (startAddr < 0 || startAddr > 0xffff) {
+                Console.error("Player " + name + " fixed start address is out of 16 bit number range");
+                return -2;
+            }
+            if (startAddr > 0xffff - len + 1) {
+                Console.error(   "Player " + name + " fixed start address does not leave enough space for code (" + Integer.toString(len) + " bytes)");
+                return -2;
+            }
+            // check no overlap
+            AddrRange r = new AddrRange(name, startAddr, startAddr + len - 1); // both ends of the range are inclusive
+            for(AddrRange a: fixedRanges) {
+                if (a.overlaps(r)) {
+                    Console.error("Player " + name + " fixed start address overlaps with that of player " + a.name);
+                    return -2;
+                }
+            }
+            fixedRanges.add(r);
+            return startAddr;
+        }
+    }
+
     public boolean readWarriorFilesFromUI(PlayersPanel.Code[] files, PlayersPanel.Code[] zombies)
     {
         warriorNameToGroup.clear();
@@ -79,6 +125,7 @@ public class WarriorRepository {
                 return o1.getName().compareToIgnoreCase(o2.getName());
             }});
 
+        LoadAddrChecker loadAddrChecker = new LoadAddrChecker(files.length + zombies.length);
 
         WarriorGroup currentGroup = null;
         for(PlayersPanel.Code c: files)
@@ -100,7 +147,14 @@ public class WarriorRepository {
                 return false;
             }
 
-            WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel());
+            int startAddr = -1;
+            if (!c.startAddrRandom) {
+                startAddr = loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
+                if (startAddr == -2)
+                    return false;
+            }
+
+            WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel(), startAddr);
             if (c.player.wtype != PlayersPanel.EWarriorType.SINGLE)
             {
                 if (name.endsWith("1")) {
@@ -132,7 +186,7 @@ public class WarriorRepository {
             return false;
         }
 
-        if (!readZombiesFromUI(zombies))
+        if (!readZombiesFromUI(zombies, loadAddrChecker))
             return false;
 
         return true;
@@ -212,7 +266,7 @@ public class WarriorRepository {
 	}
 	*/
 
-	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles) {
+	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles, LoadAddrChecker loadAddrChecker) {
         zombieGroup = null;
         if (zombieFiles == null || zombieFiles.length == 0)
             return true;
@@ -235,7 +289,14 @@ public class WarriorRepository {
                 return false;
             }
 
-            WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel());
+            int startAddr = -1;
+            if (!c.startAddrRandom) {
+                startAddr = loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
+                if (startAddr == -2)
+                    return false;
+            }
+
+            WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel(), startAddr);
             zombieGroup.addWarrior(data);
         }
         return true;

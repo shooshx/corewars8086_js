@@ -36,6 +36,8 @@ public class PlayersPanel
         public byte[] bin = null;  // can be null if last output was empty
         public boolean lastCompileOk = true;
         public ArrayList<CodeEditor.LstLine> lines;
+        public boolean startAddrRandom = true;
+        public String startAddress = "A000"; // from UI, as given from the input, may fail to parse address
     }
 
     public static class PlayerInfo {
@@ -84,6 +86,7 @@ public class PlayersPanel
         $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::removePlayer(Ljava/lang/String;)(s) });
         $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
+        $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
     }-*/;
 
     public PlayerInfo findPlayer(String label) {
@@ -161,6 +164,8 @@ public class PlayersPanel
         m_inEditor = p.code[num - 1];
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, null); // don't pass playerPanel since we don't want it to return update to us
         m_mainWnd.battleFrame.cpuframe.setSelectedPlayer(m_inEditor.getLabel());
+
+        updateLoadAddr(m_inEditor.startAddress, m_inEditor.startAddrRandom);
     }
 
     public void changedWType(String label, String v) {
@@ -168,6 +173,17 @@ public class PlayersPanel
         p.setWType(EWarriorType.valueOf(v));
 
         reWriteButtonsLabels(p);
+    }
+
+    private native void updateLoadAddr(String value, boolean isRand) /*-{
+        $wnd.updateLoadAddr(value, isRand);
+    }-*/;
+
+    public void j_loadAddrChanged(String value, boolean isRand) {
+        if (m_inEditor == null)
+            return;
+        m_inEditor.startAddrRandom = isRand;
+        m_inEditor.startAddress = value;
     }
 
 
@@ -213,7 +229,7 @@ public class PlayersPanel
     }
 
     public Code[] getZombies() {
-        return null;
+        return new Code[0];
     }
 
     public Code getCodeInEditor() {

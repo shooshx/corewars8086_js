@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 {
-    private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show, debug_area;
+    private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show, debug_area, editor_bottom;
     private HTMLInputElement editor_title;
     private HTMLTextAreaElement asm_edit;
     private boolean m_isDebugMode = false;
@@ -78,7 +78,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     private void renderLineIfInView(int address, DbgLine dbgline) {
         int page = address / PAGE_SIZE;
-        if (page == m_atScrollP1 || page == m_atScrollP1) {
+        if (page == m_atScrollP1 || page == m_atScrollP2) {
             renderLine(address, dbgline);
         }
     }
@@ -186,6 +186,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         asm_edit = (HTMLTextAreaElement)DomGlobal.document.getElementById("asm_edit");
         asm_show = (HTMLElement)DomGlobal.document.getElementById("asm_show");
         asm_output = (HTMLElement)DomGlobal.document.getElementById("asm_output");
+        editor_bottom = (HTMLElement)DomGlobal.document.getElementById("editor_bottom");
         opcodes_edit = (HTMLElement)DomGlobal.document.getElementById("opcodes_edit");
         asm_linenums = (HTMLElement)DomGlobal.document.getElementById("asm_linenums");
         editor_title = (HTMLInputElement)DomGlobal.document.getElementById("editor_title");
@@ -1112,7 +1113,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     public void scrollToCodeInEditor(boolean defer) {
         int ipInsideArena = getCurrentWarriorIp();
-        if (ipInsideArena == -1)
+        if (ipInsideArena == -1) // not in competition
             return;
 
         scrollToAddr(ipInsideArena, defer);
@@ -1128,7 +1129,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     public void setDebugMode(boolean v) {
         if (v) {
-            asm_output.style.display = "none";
+            editor_bottom.style.display = "none";
             asm_edit.style.display= "none"; // just the textarea
             editor_title.readOnly = true;
 
@@ -1136,7 +1137,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             scrollToCodeInEditor(true); // defer scrolling since we want to do this only after all sizes are correct and everything shown
         }
         else {
-            asm_output.style.display = "";
+            editor_bottom.style.display = "";
             asm_edit.style.display = "";
             editor_title.readOnly = false;
         }
