@@ -61,7 +61,7 @@ public class Disassembler
     public void setPointer(int ptr) {
 	    pointer = ptr;
     }
-
+	public int getPointer() { return pointer; }
 
 	/**
 	 * disassemble the bytes

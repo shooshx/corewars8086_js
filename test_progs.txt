@@ -114,3 +114,10 @@ inc bx
 jmp lup
 
 mov word[si], 0x7C6
+
+
+; comment on the second line - this crashed loading due to setting the working line as a line with comment when dfXXXX is still not created
+inc ax
+;bla
+inc ax
+

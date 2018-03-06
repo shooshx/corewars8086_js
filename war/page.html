@@ -473,6 +473,7 @@ function triggerDebug() {
         scrollToAddr(deferredEditorToAddress)
         deferredEditorToAddress = -1;
         debugAreaScroll(true)  // force scroll render due to dirty pages
+        j_debugUiInited();
 
         // disable editing the players
         for(var ui in g_usedLetters) {

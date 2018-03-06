@@ -130,7 +130,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         int lineNum = -1;
         int address = -1;
         String addressStr = "";
-        String opcode = "";
+        String opcode = "";  // for display
+        String fullOpcode = ""; // for knowing the real length
         String code = "";
         int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
     }
@@ -248,7 +249,22 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     private static final String SPACE_FOR_HEX = "&#x202f;";
 
-    public void spacedHex(String s, LstLine lstline)
+    // hex field in the opcode can have all sorts of brackets and -. need to know how many just digits
+    public int countDigits(String s) {
+        boolean doingDigits = s.length() > 0 && isHexDigit(s.charAt(0)); // see below 'nesb 4'
+        if (!doingDigits)
+            return 0; // not supported yet
+        int count = 0;
+        for(int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (isHexDigit(c)) {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    public String spacedHex(String s)
     {
         // find how many spaces from the end should be trimmed
         // spaces appear at the end since we take everything in the code area of the lst
@@ -283,8 +299,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             }
             bs.append(c);
         }
-        lstline.opcode = bs.toString();
-        lstline.opcodesCount = digitCount / 2;
+        return bs.toString();
     }
 
     private static boolean isDigit(char c) {
@@ -361,13 +376,17 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                         //    state = Field.PARSE_ERR;
                         break;
                     case OPCODE:
+                        boolean islast = (j == line.length() - 1);
                         if (c == '*') {
                             state = Field.WARNING;
                         }
-                        else if (charsBeforeCode < 22)
+                        else if (!islast && charsBeforeCode < 22)
                             ++charsBeforeCode; // take anything as long as its in the field size of the opcode. need this sinc resb adds spaces
-                        else if (c == ' ') {
-                            spacedHex(line.substring(opcodeStart, j), l);
+                        else if (c == ' ' || islast) { // continueation lines of a string definition end in the middle of the opcode field.
+                            //spacedHex(, l);
+                            l.fullOpcode = line.substring(opcodeStart, j);
+                            l.opcode = spacedHex(l.fullOpcode);
+                            l.opcodesCount = countDigits(l.fullOpcode) / 2;
                             state = Field.SPACE_BEFORE_CODE;
                             ++charsBeforeCode;
                         }
@@ -386,7 +405,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                             ++charsBeforeCode;
                         break;
                     case CODE:
-                        break;
+                        break; // don't care about the code part, we already have that from the input
                     case PARSE_ERR:
                         Console.log("ERROR: parsing list file!\n" + lsttext);
                         return false;
@@ -406,8 +425,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 }
             }
             else if (prevLine != null && l.lineNum == prevLine.lineNum) {
-                // it's a continuation line of the previous line. ignore it and do nothing with the opcode
-                // at this point the opcode would be too long to be displayed in the opcodes display so we don't need to bother concatenating it there
+                // it's a continuation line of the previous line. we need to concatenate to get the full opcode in order to know its size
+                // happens with string definition db "abcdefgh"
+                prevLine.fullOpcode += l.fullOpcode;
+                prevLine.opcodesCount = countDigits(prevLine.fullOpcode) / 2;
+                // no need to update the display opcode because its already too long
                 continue;
             }
             else if (l.lineNum != lineIndex) {
@@ -511,6 +533,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 continue;
 
             Element e = DocumentFragment_getElementById(asmElem, "mline_" + Integer.toString(lineNum+1));
+            if (e == null)
+                continue; // can happen with some strange case of dz... ? could not reproduce but it happened
             if (ec == 'e')
                 e.classList.add("edit_error");
             else
@@ -752,6 +776,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return false;
     }
 
+    // check opcodes that are emitten are supported by codewars8086 and issue warnings if not
     private DocumentFragment checkDisasmLines(byte[] binbuf, ArrayList<LstLine> listing, DocumentFragment asmElem, String intext)
     {
         int ptr = 0;
@@ -791,8 +816,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 //break;
             }
             catch(Disassembler.DisassemblerException e) {
-
                 msg = Integer.toString(atLstLine+1) + ": Although this is a legal x86 opcode, codewars8086 does not support it";
+                int eptr = dis.getPointer() - 1;
+                if (eptr >= 0 && eptr < binbuf.length)
+                    msg += ", opcode = 0x" + Format.hex2(binbuf[eptr] & 0xff);
                 //break; // no way to recover
             }
             catch(RuntimeException e) {
@@ -1079,6 +1106,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         catch(Disassembler.DisassemblerException e) {
             return;
         }
+        eraseOpcode(addrInArea); // for example replacing at the start of a long db "ABC"
         int len = dis.lastOpcodeSize();
 
         DbgLine opline = new DbgLine();
@@ -1089,7 +1117,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
 
         opline.text = "<span class='dbg_opcodes'>" + bs.toString() + "</span>" + text;
-        m_dbglines[absaddr] = opline;
+        m_dbglines[addrInArea] = opline;
         renderLineIfInView(addrInArea, opline);
         for(int i = 1; i < len; ++i) {
             // remove the lines of the bytes after it

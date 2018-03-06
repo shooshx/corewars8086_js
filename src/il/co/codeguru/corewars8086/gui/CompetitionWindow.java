@@ -158,6 +158,7 @@ public class CompetitionWindow extends JFrame
         var that = this
         $wnd.j_startDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startDebug()() });
         $wnd.j_stopDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopDebug()() });
+        $wnd.j_debugUiInited = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_debugUiInited()() });
     }-*/;
 
     public boolean j_startDebug()
@@ -289,14 +290,20 @@ public class CompetitionWindow extends JFrame
             competitionRunning = true;
             runWarButton.setEnabled(false);
             setDebugMode(true);
-            // needs to be after gui was set up
-            competition.competitionEventListener.onEndRound(); // it's like round -1, show the state at the start of the game
 
             stepnum.innerHTML = "0";
             return true;
         }
         return false;
     }
+
+    public void j_debugUiInited() {
+        // needs to be after gui was set up and after the editor was scrolled to its starting place and lines rendered
+        // this is because if the first line has a comment, dfXXXX is only going to exist once the line is rendered
+        competition.competitionEventListener.onEndRound(); // it's like round -1, show the state at the start of the game
+
+    }
+
 
     public void onWarStart() {
 
