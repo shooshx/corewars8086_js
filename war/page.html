@@ -14,6 +14,8 @@ var LAST_PART_INDEX = Math.trunc(65535/PAGE_SIZE)
 
 var did_start = false
 
+var selcount = 1
+
 function start()
 {
     if (did_start)
@@ -32,9 +34,144 @@ function start()
 
     populate_debug_area()
     did_start = true
+
+    document.addEventListener("selectionchange", function() {
+    //    var s = document.getSelection();
+    //    var r = s.getRangeAt(0)
+    //    console.log('Selection changed ' + (selcount++) + "  " + s.rangeCount + " " + r.startContainer.id + ":" + r.startOffset + " - " + r.endContainer.id + ":" + r.endOffset  );
+
+    /*    if (asm_edit.selectionStart == 2) {
+            asm_edit.selectionStart = 3;
+            console.log("moved")
+        }*/
+
+    });
+
+    setup_breakpoint_marker_skip()
 }
 
 
+var BREAKPOINT_MARKER = '\ufeff'
+
+function setup_breakpoint_marker_skip()
+{
+    // breakpoint markers are invisible spaces at the start of the line, when navigating in the
+    // text, we don't want to skip characters because of them
+    // first handle navigation using keys. the caret should never be placed at the left of the marker
+    // when moving right or left, skip it accordingly
+
+
+    asm_edit.addEventListener("keydown", function(e) {
+        //console.log("DOWN " + e.key + " " + asm_edit.selectionStart + ":" + asm_edit.value.charCodeAt(asm_edit.selectionStart).toString(16) + " " + asm_edit.selectionEnd + ":" + asm_edit.value.charCodeAt(asm_edit.selectionStart).toString(16)  )
+
+        var collapsed = (asm_edit.selectionStart == asm_edit.selectionEnd)
+
+        if (e.key == "ArrowLeft") {
+            var c = asm_edit.value.charAt(asm_edit.selectionStart - 1)
+            if (c == BREAKPOINT_MARKER) {
+                asm_edit.selectionStart -= 1;
+                if (collapsed) // if we're selecting backwards, don't want to reset the selectionEnd
+                    asm_edit.selectionEnd = asm_edit.selectionStart;
+                console.log("--skip-start " + collapsed)
+            }
+            if (!collapsed) {  // deselecting backwards
+                c = asm_edit.value.charAt(asm_edit.selectionEnd - 1)
+                if (c == BREAKPOINT_MARKER) {
+                    asm_edit.selectionEnd -= 1;
+                    console.log("--skip-end")
+                }
+            }
+        }
+        else if (e.key == "Backspace") {
+            var c = asm_edit.value.charAt(asm_edit.selectionStart - 1)
+            if (c == BREAKPOINT_MARKER) {
+                asm_edit.selectionStart -= 1;
+                asm_edit.selectionEnd = asm_edit.selectionStart;
+                document.execCommand("forwardDelete", false)
+                console.log("--backspace")
+            }
+        }
+        else if (e.key == "Delete") {
+            // we just deleted a new line a found a marker, delete it as well
+            var c = asm_edit.value.charAt(asm_edit.selectionStart + 1)
+            if (c == BREAKPOINT_MARKER) {
+                document.execCommand("forwardDelete", false)
+                console.log("--del")
+            }
+        }
+        /*else if (e.key == "ArrowRight" ) {
+            var c = asm_edit.value.charAt(asm_edit.selectionStart + 1)
+            if (c == BREAKPOINT_MARKER) {
+                asm_edit.selectionStart += 1
+                if (collapsed)
+                    asm_edit.selectionEnd = asm_edit.selectionStart
+                console.log("++skip-start " + collapsed )
+            }
+            if (!collapsed) {
+                c = asm_edit.value.charAt(asm_edit.selectionEnd + 1)
+                if (c == BREAKPOINT_MARKER) {
+                    asm_edit.selectionEnd += 1
+                    console.log("++skip-end")
+                }
+            }
+        }*/
+    })
+
+    asm_edit.addEventListener("keyup", function(e) {
+        //console.log("UP   " + e.key + " " + asm_edit.selectionStart + ":" + asm_edit.value.charCodeAt(asm_edit.selectionStart).toString(16) + " " + asm_edit.selectionEnd + ":" + asm_edit.value.charCodeAt(asm_edit.selectionStart).toString(16)  )
+        var collapsed = (asm_edit.selectionStart == asm_edit.selectionEnd)
+        // if we reched here say with keyup or any other way, check if we need to advance
+        if (e.key != "ArrowLeft") {
+            var c = asm_edit.value.charAt(asm_edit.selectionStart)
+            if (c == BREAKPOINT_MARKER) {
+                asm_edit.selectionStart += 1
+                if (collapsed)
+                    asm_edit.selectionEnd = asm_edit.selectionStart
+                console.log("++skip-start(up) " + collapsed)
+            }
+            if (!collapsed) {
+                c = asm_edit.value.charAt(asm_edit.selectionEnd)
+                if (c == BREAKPOINT_MARKER) {
+                    asm_edit.selectionEnd += 1
+                    console.log("++skip-end(up)")
+                }
+            }
+        }
+    })
+
+
+    var mouseevent = function(e) {
+        var c = asm_edit.value.charAt(asm_edit.selectionStart)
+        if (c == '\ufeff') {
+            asm_edit.selectionStart += 1
+            console.log("++mouse-start")
+        }
+        var c = asm_edit.value.charAt(asm_edit.selectionEnd)
+        if (c == '\ufeff') {
+            asm_edit.selectionEnd += 1
+            console.log("++mouse-end")
+        }
+
+
+    }
+
+    asm_edit.addEventListener("mousedown", mouseevent)
+    asm_edit.addEventListener("mousemove", mouseevent)
+    document.addEventListener("mouseup", mouseevent)
+
+
+    // TBD problems
+    // - position the caret using the mouse at the left of the start line puts it before the marker
+    // - moving text by dragging it in the editor moves the marker as well putting a marker in the middle of a line
+    // - copy-pasting a marker
+    // - selecting with keyboard doesn't work?
+    // - pressing Home and while it is pressed, press space...
+
+    // TEST
+    // - move cursor with arrows - left,right,up,down
+    // - select with key arrorw, change end: left+right, change start:left+right
+    // - select with shift+Home, shift+End
+}
 
 
 function populate_debug_area()
@@ -678,6 +815,10 @@ input:disabled + .sc-btn:active,
 
     margin: 0 0 1px 0; /* without this the editor is off by 1 pixel in chrome. no idea */
 }
+.edit_breakpoint {
+    background: #ff5555;
+}
+
 #edit_area {
     display: inline-block;
     position:relative;

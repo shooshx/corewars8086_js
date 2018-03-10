@@ -84,12 +84,6 @@ End of debug session:
 - export code to bin file
 
 
-BUG - db "longstring" fucks up disassembly since it doesn't have the correct number of bytes of the string
-BUG - fails to start debug doesn't find 'df...'
-  db "abcdefghij"
-
-  inc ax
-
 
 
 minor BUG - parsing an opcode out of memory boundary reads wrong number

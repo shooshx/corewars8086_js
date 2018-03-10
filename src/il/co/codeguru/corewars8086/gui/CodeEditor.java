@@ -4,7 +4,9 @@ package il.co.codeguru.corewars8086.gui;
 import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.gui.widgets.ActionEvent;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
+import il.co.codeguru.corewars8086.gui.widgets.JButton;
 import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
@@ -134,6 +136,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String fullOpcode = ""; // for knowing the real length
         String code = "";
         int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
+        boolean hasBreakpoint = false;
     }
     enum Field {
         START_SPACE,
@@ -545,24 +548,108 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     }
 
+    static native int asm_edit_selectionStart() /*-{
+        return $wnd.asm_edit.selectionStart
+    }-*/;
+    static native int asm_edit_selectionEnd() /*-{
+        return $wnd.asm_edit.selectionEnd
+    }-*/;
+    static native int asm_edit_setSelection(int start, int end) /*-{
+        $wnd.asm_edit.selectionStart = start
+        $wnd.asm_edit.selectionEnd = end
+    }-*/;
 
-    private void makeLineNums(String intext, StringBuilder lineNumText)
+
+    public static final char BERAKPOINT_MARKER = '\ufeff';
+    public static final String BERAKPOINT_MARKER_S = "\ufeff";
+
+
+
+
+    private void setLineNumBreakpoint(int lineNum, boolean v) {
+        Element e = DomGlobal.document.getElementById("ln" + Integer.toString(lineNum));
+        if (v)
+            e.classList.add("edit_breakpoint");
+        else
+            e.classList.remove("edit_breakpoint");
+    }
+
+    private void toggleBreakpointEdit(int atline, boolean addTextSentinel)
     {
+        int atindex = atline - 1; // 0 base index
+        if (atindex < 0 || atindex >= m_currentListing.size()) {
+            Console.error("addBreakpointEdit invalid line " + Integer.toString(atline));
+            return;
+        }
+        LstLine line = m_currentListing.get(atindex);
+        line.hasBreakpoint = !line.hasBreakpoint;
+
+        setLineNumBreakpoint(atline, line.hasBreakpoint);
+
+
+        // inject the character into asm_edit using selection
+        //int origStart = asm_edit_selectionStart();
+        //int origEnd = asm_edit_selectionEnd();
+        if (addTextSentinel) {
+            int lineStartOffset = 0; // start offset of line 0
+            if (atindex >= 1)
+                lineStartOffset = m_lineOffsets.get(atindex - 1) + 1; // +1 skips the NL char
+
+            char existing = asm_edit.value.charAt(lineStartOffset);
+            if (line.hasBreakpoint) {
+                if (existing != BERAKPOINT_MARKER) {
+                    StringBuilder sbv = new StringBuilder(asm_edit.value);
+                    sbv.insert(lineStartOffset, BERAKPOINT_MARKER);
+                    asm_edit.value = sbv.toString();
+                }
+            }
+            else { // need to remove it
+                if (existing == BERAKPOINT_MARKER) {
+                    String s = asm_edit.value;
+                    String removed = s.substring(0,lineStartOffset) + s.substring(lineStartOffset+1);
+                    asm_edit.value = removed;
+                }
+            }
+        }
+
+        //asm_edit_setSelection(origStart, origEnd);
+
+    }
+
+    private DocumentFragment makeLineNums(String intext)
+    {
+        DocumentFragment lndf = DomGlobal.document.createDocumentFragment();
         m_lineOffsets.clear();
 
+        EventListener clicker = new EventListener() {
+            @Override
+            public void handleEvent(Event event) {
+                Element e = (Element)event.target;
+                //Console.log(e.innerHTML);
+                toggleBreakpointEdit( Integer.parseInt(e.innerHTML), true);
+            }
+        };
+
         int lineCount = 1;
-        for (int i = 0; i < intext.length(); ++i) {
-            if (intext.charAt(i) == '\n') {
-                lineNumText.append(lineCount);
-                lineNumText.append("\n");
+        for (int i = 0; i <= intext.length(); ++i)
+        {
+            // need line number after with each new line and at the end
+            if (i == intext.length() || intext.charAt(i) == '\n')
+            {
+                Element e = DomGlobal.document.createElement("div");
+                e.addEventListener("click", clicker);
+                e.setAttribute("id", "ln" + Integer.toString(lineCount));
+                e.appendChild(DomGlobal.document.createTextNode(Integer.toString(lineCount)));
+                lndf.appendChild(e);
+
+
                 ++lineCount;
                 m_lineOffsets.add(i);
             }
         }
-        m_lineOffsets.add(intext.length());  // last line needs the cursor after the last character
 
-        lineNumText.append(lineCount);
-        lineNumText.append("\n");
+
+        return lndf;
     }
 
 
@@ -652,6 +739,26 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return df;
     }
 
+    private ArrayList<Integer> detectBreakpointLines(String intext) {
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+        int lineNum = 1;
+        int added = 0;
+        for(int i = 0; i < intext.length(); ++i) {
+            char c = intext.charAt(i);
+            if (c == '\n')
+                ++lineNum;
+            else if (c == BERAKPOINT_MARKER) {
+                for(int exist: ret) {
+                    if (exist == lineNum) {
+                        Console.error("double of the same breakpoint!");
+                    }
+                }
+                ret.add(lineNum);
+            }
+        }
+        return ret;
+    }
+
 
     // inspired by https://github.com/kazzkiq/CodeFlask.js#usage which also writes all the dome in every key press
     public void setText(String intext, PlayersPanel playersPanel)
@@ -666,18 +773,30 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             //Console.log("~Empty input");
             return;
         }
+
+        // 1 based line numbers
+        ArrayList<Integer> textBreakpoints = detectBreakpointLines(intext);
+
         intext = intext.replace('\u00A0', ' ') // no-break-space coming from html
                        .replace("&", "&amp;")  // other stuff coming from textarea we don't want to pass to html
                        .replace("<", "&lt;")
                        .replace(">", "&gt;");
+                // we want the markes to appear in the html for debugging but not in the nasm input
+        String nasm_intext = intext.replace(BERAKPOINT_MARKER_S, "");  // breakpoint marker
         // assemble
-        int retcode = run_nasm("player.asm", intext, "player.lst");
+        int retcode = run_nasm("player.asm", nasm_intext, "player.lst");
         String stdout = get_stdout();
 
 
-        StringBuilder lineNumText = new StringBuilder();
-        makeLineNums(intext, lineNumText);
-        asm_linenums.innerHTML = lineNumText.toString();
+        //StringBuilder lineNumText = new StringBuilder();
+        DocumentFragment lineNumDf = makeLineNums(intext);
+        asm_linenums.innerHTML = "";
+        asm_linenums.appendChild(lineNumDf);
+
+        // re introduce the breakpoints to line numes column
+        for(int bpline: textBreakpoints)
+            setLineNumBreakpoint(bpline, true);
+
 
         DocumentFragment df = null;
         if (!stdout.isEmpty())
@@ -706,6 +825,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             Console.error("~Assembler error");
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, null, null);
+            //setBreakpoints(textBreakpoints); // there isn't going to be a new listing, make the breakpoints marking now
             return;
         }
 
@@ -730,7 +850,14 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         opcodes_edit.innerHTML = opcodesText.toString();
         //Console.log("~OK");
 
-        byte[] buf = read_file_bin_arr("player"); // TBD check max size
+        // update new listing with where there are breakpoints
+        for(int bpline: textBreakpoints) {
+            if (bpline >= 0 && bpline < m_currentListing.size()) // just to be safe..
+                m_currentListing.get(bpline-1).hasBreakpoint = true;
+        }
+
+
+        byte[] buf = read_file_bin_arr("player");
         if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
             Console.error("Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes");
             if (playersPanel != null)
