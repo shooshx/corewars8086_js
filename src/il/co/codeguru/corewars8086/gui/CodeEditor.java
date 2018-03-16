@@ -3,6 +3,7 @@ package il.co.codeguru.corewars8086.gui;
 
 import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
+import elemental2.dom.EventListener;
 import il.co.codeguru.corewars8086.cpu.CpuState;
 import il.co.codeguru.corewars8086.gui.widgets.ActionEvent;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
@@ -16,18 +17,17 @@ import il.co.codeguru.corewars8086.war.*;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Vector;
+import java.util.*;
 
 public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 {
     private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show, debug_area, editor_bottom;
     private HTMLInputElement editor_title;
     private HTMLTextAreaElement asm_edit;
+
     private boolean m_isDebugMode = false;
     private MemoryEventListener.EWriteState m_memWriteState = MemoryEventListener.EWriteState.INIT;
+    private ArrayList<PlayersPanel.Breakpoint> m_breakpoints = null;
 
     public static final int CODE_ARENA_OFFSET = 0x10000;
 
@@ -136,7 +136,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String fullOpcode = ""; // for knowing the real length
         String code = "";
         int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
-        boolean hasBreakpoint = false;
     }
     enum Field {
         START_SPACE,
@@ -465,7 +464,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     // given a line number (starting 0), give the offset in the input text the line ends
     // this is a member in order to avoid reallocating it every time
     // this is used for knowing how many lines there are and placing double click cursor
-    private ArrayList<Integer> m_lineOffsets = new ArrayList<Integer>();
+    private ArrayList<Integer> m_lineOffsets = null;
 
     // for each line, if there's an error 'e' or warning 'w' on it
     // referenced later when we add more warnings
@@ -560,9 +559,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }-*/;
 
 
-    public static final char BERAKPOINT_MARKER = '\ufeff';
-    public static final String BERAKPOINT_MARKER_S = "\ufeff";
-
 
 
 
@@ -581,45 +577,32 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             Console.error("addBreakpointEdit invalid line " + Integer.toString(atline));
             return;
         }
-        LstLine line = m_currentListing.get(atindex);
-        line.hasBreakpoint = !line.hasBreakpoint;
 
-        setLineNumBreakpoint(atline, line.hasBreakpoint);
+       // LstLine line = m_currentListing.get(atindex);
+        //line.hasBreakpoint = !line.hasBreakpoint;
 
-
-        // inject the character into asm_edit using selection
-        //int origStart = asm_edit_selectionStart();
-        //int origEnd = asm_edit_selectionEnd();
-        if (addTextSentinel) {
-            int lineStartOffset = 0; // start offset of line 0
-            if (atindex >= 1)
-                lineStartOffset = m_lineOffsets.get(atindex - 1) + 1; // +1 skips the NL char
-
-            char existing = asm_edit.value.charAt(lineStartOffset);
-            if (line.hasBreakpoint) {
-                if (existing != BERAKPOINT_MARKER) {
-                    StringBuilder sbv = new StringBuilder(asm_edit.value);
-                    sbv.insert(lineStartOffset, BERAKPOINT_MARKER);
-                    asm_edit.value = sbv.toString();
-                }
+        PlayersPanel.Breakpoint found = null;
+        for(PlayersPanel.Breakpoint b: m_breakpoints)
+            if (b.lineNum == atline) {
+                found = b;
+                break;
             }
-            else { // need to remove it
-                if (existing == BERAKPOINT_MARKER) {
-                    String s = asm_edit.value;
-                    String removed = s.substring(0,lineStartOffset) + s.substring(lineStartOffset+1);
-                    asm_edit.value = removed;
-                }
-            }
-        }
 
-        //asm_edit_setSelection(origStart, origEnd);
+        setLineNumBreakpoint(atline, found == null);
+        if (found != null)
+            m_breakpoints.remove(found);
+        else
+            m_breakpoints.add(new PlayersPanel.Breakpoint(atline));
+
 
     }
+
 
     private DocumentFragment makeLineNums(String intext)
     {
         DocumentFragment lndf = DomGlobal.document.createDocumentFragment();
-        m_lineOffsets.clear();
+        // make a new one each time since the old one is kept around for breakpoints line reference
+        m_lineOffsets = new ArrayList<Integer>();
 
         EventListener clicker = new EventListener() {
             @Override
@@ -647,7 +630,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 m_lineOffsets.add(i);
             }
         }
-
+        m_lineCount = lineCount - 1; // we started from 1
 
         return lndf;
     }
@@ -669,9 +652,14 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         entered = true;
 
+        int prevLineCount = m_lineCount; // next line is going to change this
+        ArrayList<Integer> prevLiveOffsets = m_lineOffsets;
+
         String intext = asm_edit.value;
         setText(intext, m_playersPanel);
-        m_playersPanel.updateText(intext);
+        // update breakpoints only if there was an editing change (and not when switching displayed code)
+        updateBreakpoints(prevLiveOffsets, prevLineCount);
+        m_playersPanel.updateText(intext); // tell the players database that this player has a new text
 
         entered = false;
     }
@@ -695,6 +683,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         asm_edit.value = incode.asmText;
         editor_title.value = incode.player.title;
         setText(incode.asmText, callback);
+
+        // remove prev code breakpoints, add breakpoints of current one
+        // set them in the editor even if we're in debug mode
+        if (m_breakpoints != null) // will be null on the first time
+            for(PlayersPanel.Breakpoint b: m_breakpoints)
+                setLineNumBreakpoint(b.lineNum, false);
+        m_breakpoints = incode.breakpoints;
+        for(PlayersPanel.Breakpoint b: m_breakpoints)
+            setLineNumBreakpoint(b.lineNum, true);
 
         if (m_isDebugMode) {
             updateDebugLine();
@@ -739,24 +736,72 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return df;
     }
 
-    private ArrayList<Integer> detectBreakpointLines(String intext) {
-        ArrayList<Integer> ret = new ArrayList<Integer>();
-        int lineNum = 1;
-        int added = 0;
-        for(int i = 0; i < intext.length(); ++i) {
-            char c = intext.charAt(i);
-            if (c == '\n')
-                ++lineNum;
-            else if (c == BERAKPOINT_MARKER) {
-                for(int exist: ret) {
-                    if (exist == lineNum) {
-                        Console.error("double of the same breakpoint!");
-                    }
-                }
-                ret.add(lineNum);
+
+    private static native int saved_selectionStart() /*-{
+        return $wnd.saved_selectionStart
+    }-*/;
+    private static native int saved_selectionEnd() /*-{
+        return $wnd.saved_selectionEnd
+    }-*/;
+    private static native String saved_keydown() /*-{
+        return $wnd.saved_keydown
+    }-*/;
+
+
+    //a
+    //b
+    //c
+
+    // used for dececting if lines were added or removed
+    int m_lineCount = 0;
+
+    private void updateBreakpoints(ArrayList<Integer> prevLineOffsets, int prevLineCount)
+    {
+        if (m_breakpoints == null || m_breakpoints.size() == 0)
+            return;
+        int selStart = saved_selectionStart();
+        int selEnd = saved_selectionEnd();
+        String keydown = saved_keydown();
+
+        // for every breakpoint decide if it should be moved or deleted
+        ListIterator<PlayersPanel.Breakpoint> it = m_breakpoints.listIterator();
+        while(it.hasNext())
+        {
+            PlayersPanel.Breakpoint br = it.next();
+            int lineStartIndex = 0; // the case for lineNum==1
+            assert br.lineNum > 0: "unexpected breakpoint line number";
+            if (br.lineNum != 1) // -1 to make it 0 based, -1 because we want where the previous line ends, +1 to move past the NL
+                lineStartIndex = prevLineOffsets.get(br.lineNum - 1 - 1) + 1;
+
+            int lineNLIndex = prevLineOffsets.get(br.lineNum - 1); // -1 make it 0 based
+
+            if (selStart != selEnd && (selStart < lineStartIndex && selEnd > lineStartIndex  // removed the before the start of the line, including the start
+                                   ||  selStart >= lineStartIndex && selEnd > lineNLIndex ))  // removed from the middle of the line, passed the end of it
+            { // removing the whole line
+                // no need to remove markers because we just made a new line numbers column
+                it.remove();
+                continue;
             }
+
+            // if it's not the above case, we don't care about anything that doesn't change the line count
+            if  (prevLineCount != m_lineCount)
+            {
+                // if we backspaced on a breakpoint,  need to remove it
+                // need to happen in normal caret, no selection and the backspace on the line of the breakpoint
+                if (selStart == selEnd && selStart == lineStartIndex && keydown == "Backspace") {
+                    it.remove();
+                    continue;
+                }
+                // if we removed lines before this breakpoint line, move it up
+                if (selStart <= lineStartIndex && selEnd <= lineStartIndex) {
+                    br.lineNum += m_lineCount - prevLineCount;
+                    setLineNumBreakpoint(br.lineNum, true);
+                }
+            }
+
+            setLineNumBreakpoint(br.lineNum, true);
+
         }
-        return ret;
     }
 
 
@@ -774,28 +819,22 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         }
 
-        // 1 based line numbers
-        ArrayList<Integer> textBreakpoints = detectBreakpointLines(intext);
 
         intext = intext.replace('\u00A0', ' ') // no-break-space coming from html
                        .replace("&", "&amp;")  // other stuff coming from textarea we don't want to pass to html
                        .replace("<", "&lt;")
                        .replace(">", "&gt;");
                 // we want the markes to appear in the html for debugging but not in the nasm input
-        String nasm_intext = intext.replace(BERAKPOINT_MARKER_S, "");  // breakpoint marker
+        String nasm_intext = intext;
         // assemble
         int retcode = run_nasm("player.asm", nasm_intext, "player.lst");
         String stdout = get_stdout();
 
 
-        //StringBuilder lineNumText = new StringBuilder();
+        // this updates m_lineOffsets and m_lineCount
         DocumentFragment lineNumDf = makeLineNums(intext);
         asm_linenums.innerHTML = "";
         asm_linenums.appendChild(lineNumDf);
-
-        // re introduce the breakpoints to line numes column
-        for(int bpline: textBreakpoints)
-            setLineNumBreakpoint(bpline, true);
 
 
         DocumentFragment df = null;
@@ -850,11 +889,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         opcodes_edit.innerHTML = opcodesText.toString();
         //Console.log("~OK");
 
-        // update new listing with where there are breakpoints
-        for(int bpline: textBreakpoints) {
-            if (bpline >= 0 && bpline < m_currentListing.size()) // just to be safe..
-                m_currentListing.get(bpline-1).hasBreakpoint = true;
-        }
 
 
         byte[] buf = read_file_bin_arr("player");

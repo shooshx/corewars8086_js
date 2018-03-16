@@ -88,3 +88,6 @@ End of debug session:
 
 minor BUG - parsing an opcode out of memory boundary reads wrong number
 
+breakpoints
+- backspace need to delete BP
+

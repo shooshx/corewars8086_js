@@ -14,11 +14,20 @@ public class PlayersPanel
         TWO_IDENTICAL,
         TWO_DIFFERENT
     }
+
+    public static class Breakpoint {
+        public Breakpoint(int _lineNum) {
+            lineNum = _lineNum;
+        }
+        public int lineNum; // 1 based line number, -1 means there's no line number (debug only breakpoint)
+    }
+
     public static class Code {
         public Code(PlayerInfo p, int idx) {
             player = p;
             index = idx;
             label = p.label + Integer.toString(idx); // p.label is a single letter, index is 0 or 1
+            breakpoints = new ArrayList<Breakpoint>();
         }
         public String getName() {
             return name;
@@ -38,6 +47,8 @@ public class PlayersPanel
         public ArrayList<CodeEditor.LstLine> lines;
         public boolean startAddrRandom = true;
         public String startAddress = "A000"; // from UI, as given from the input, may fail to parse address
+        public ArrayList<Breakpoint> breakpoints;
+
     }
 
     public static class PlayerInfo {
