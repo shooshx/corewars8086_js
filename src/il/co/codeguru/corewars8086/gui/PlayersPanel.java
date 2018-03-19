@@ -18,8 +18,10 @@ public class PlayersPanel
     public static class Breakpoint {
         public Breakpoint(int _lineNum) {
             lineNum = _lineNum;
+            //arenaAddr = _arenaAddr;
         }
         public int lineNum; // 1 based line number, -1 means there's no line number (debug only breakpoint)
+        //public int arenaAddr; // breakpoints addd
     }
 
     public static class Code {

@@ -17,6 +17,7 @@ import il.co.codeguru.corewars8086.war.*;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
+
 import java.util.*;
 
 public class CodeEditor implements CompetitionEventListener, MemoryEventListener
@@ -136,6 +137,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String fullOpcode = ""; // for knowing the real length
         String code = "";
         int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
+        PlayersPanel.Breakpoint tmp_br = null; // used when initializing debug view (doesn't hold info when editing)
     }
     enum Field {
         START_SPACE,
@@ -153,14 +155,22 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public static final int FLAG_UNPARSED = 1;  // means this is a DbgLine of a value written by a warrior and not yet parsed by the disassembler
     public static final int FLAG_DEFINE_CODE = 2; // line that came from the user typed text that defines a number (db 123)
     public static final int FLAG_HAS_COMMENT = 4; // This DbgLine has comment lines after the first code line so when highlighting this line, need to highlight dfXXXXX instead of dXXXXX
-    public static final int FLAG_BREAKPOINT = 8;
 
+    public static final int FLAG_LSTLINE_MAX = 0x7ff;
+    public static final int FLAG_LSTLINE_SHIFT = 16;
+    public static final int FLAG_LSTLINE = 0x07ff0000; // 5 - upper 12 bits of the flat is a 1-based line number of the LstLine that created this DbgLine or 0 if there isn't one
+    public static final int FLAG_PLAYER_NUM_SHIFT = 27;
+    public static final int FLAG_PLAYER_NUM = 0xf8000000; // upper 5 bits is the player number, valid only if there is a non-zero LstLine
+
+    // one such object can appear in multiple addresses for instance the comment int3 line
     public static class DbgLine {
         String text; // includes the command and any comment lines after it
         //byte[] binOpcode;
         int flags = 0;
     }
-    private DbgLine[] m_dbglines;
+    private DbgLine[] m_dbglines;  // for every address, the line of display in the debugger panel or null if line is not displayed
+    private PlayersPanel.Breakpoint[] m_dbgBreakpoints; // for every address, reference to a Breakpoint object if one exists
+                                                        // this is initialized a new every debug session
 
     public static class PageInfo {
         boolean isDirty;
@@ -570,7 +580,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             e.classList.remove("edit_breakpoint");
     }
 
-    private void toggleBreakpointEdit(int atline, boolean addTextSentinel)
+    private void toggleBreakpointEdit(int atline)
     {
         int atindex = atline - 1; // 0 base index
         if (atindex < 0 || atindex >= m_currentListing.size()) {
@@ -593,9 +603,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             m_breakpoints.remove(found);
         else
             m_breakpoints.add(new PlayersPanel.Breakpoint(atline));
-
-
     }
+
+    private final EventListener m_editBrClickHandler = new EventListener() {
+        @Override
+        public void handleEvent(Event event) {
+            Element e = (Element)event.target;
+            //Console.log(e.innerHTML);
+            toggleBreakpointEdit( Integer.parseInt(e.innerHTML));
+        }
+    };
 
 
     private DocumentFragment makeLineNums(String intext)
@@ -604,15 +621,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         // make a new one each time since the old one is kept around for breakpoints line reference
         m_lineOffsets = new ArrayList<Integer>();
 
-        EventListener clicker = new EventListener() {
-            @Override
-            public void handleEvent(Event event) {
-                Element e = (Element)event.target;
-                //Console.log(e.innerHTML);
-                toggleBreakpointEdit( Integer.parseInt(e.innerHTML), true);
-            }
-        };
-
         int lineCount = 1;
         for (int i = 0; i <= intext.length(); ++i)
         {
@@ -620,7 +628,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             if (i == intext.length() || intext.charAt(i) == '\n')
             {
                 Element e = DomGlobal.document.createElement("div");
-                e.addEventListener("click", clicker);
+                e.addEventListener("click", m_editBrClickHandler);
                 e.setAttribute("id", "ln" + Integer.toString(lineCount));
                 e.appendChild(DomGlobal.document.createTextNode(Integer.toString(lineCount)));
                 lndf.appendChild(e);
@@ -645,11 +653,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }-*/;
 
     private boolean entered = false;
+    private String m_prevInText = null; // used for breakpoint move analysis
 
     private void asm_edit_changed()
     {
-        if (entered)
-            return;
+        if (entered) // edit recursion should not happen because we're not making changes to asm_edit.value;
+            return;  // so this probably does nothing but just to be safe...
         entered = true;
 
         int prevLineCount = m_lineCount; // next line is going to change this
@@ -658,8 +667,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String intext = asm_edit.value;
         setText(intext, m_playersPanel);
         // update breakpoints only if there was an editing change (and not when switching displayed code)
-        updateBreakpoints(prevLiveOffsets, prevLineCount);
+        updateBreakpoints(prevLiveOffsets, prevLineCount, m_prevInText);
         m_playersPanel.updateText(intext); // tell the players database that this player has a new text
+        m_prevInText = intext;
 
         entered = false;
     }
@@ -680,15 +690,17 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     // from PlayersPanel
     public void playerSelectionChanged(PlayersPanel.Code incode, PlayersPanel callback)
     {
+        // remove the prev code breakpoints before it's lines will be erased by setText
+        if (m_breakpoints != null) // will be null on the first time
+            for(PlayersPanel.Breakpoint b: m_breakpoints)
+                setLineNumBreakpoint(b.lineNum, false);
+
         asm_edit.value = incode.asmText;
         editor_title.value = incode.player.title;
         setText(incode.asmText, callback);
 
-        // remove prev code breakpoints, add breakpoints of current one
+        // add breakpoints of current one
         // set them in the editor even if we're in debug mode
-        if (m_breakpoints != null) // will be null on the first time
-            for(PlayersPanel.Breakpoint b: m_breakpoints)
-                setLineNumBreakpoint(b.lineNum, false);
         m_breakpoints = incode.breakpoints;
         for(PlayersPanel.Breakpoint b: m_breakpoints)
             setLineNumBreakpoint(b.lineNum, true);
@@ -738,10 +750,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
     private static native int saved_selectionStart() /*-{
-        return $wnd.saved_selectionStart
+        var v = $wnd.saved_selectionStart
+        // reset it so that we'll know something happened next time
+        //$wnd.saved_selectionStart = -1
+        return v
     }-*/;
     private static native int saved_selectionEnd() /*-{
-        return $wnd.saved_selectionEnd
+        var v = $wnd.saved_selectionEnd
+        //$wnd.saved_selectionEnd = -1
+        return v
     }-*/;
     private static native String saved_keydown() /*-{
         return $wnd.saved_keydown
@@ -751,17 +768,27 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     //a
     //b
     //c
+    //d
 
     // used for dececting if lines were added or removed
     int m_lineCount = 0;
 
-    private void updateBreakpoints(ArrayList<Integer> prevLineOffsets, int prevLineCount)
+    // this function analyzes the change made by knowing what was selected or where the caret was
+    // and how many lines were removed or added in order to move around breakpoints
+    // - it doesn't support dragging text that has NL in it (breakpoint doesn't move)
+    private void updateBreakpoints(ArrayList<Integer> prevLineOffsets, int prevLineCount, String prevInText)
     {
         if (m_breakpoints == null || m_breakpoints.size() == 0)
             return;
         int selStart = saved_selectionStart();
         int selEnd = saved_selectionEnd();
         String keydown = saved_keydown();
+
+        //if (selStart == -1 || selEnd == -1) {
+        //    Console.error("updateBreakpoints without selection");
+        //    return; // somehow we got here without knowing what's the selection/caret was. should not happe
+        //}  resetting the selection marker was a bad idea since a drag text move does 2 changes immediately one after
+        //   the other so the second change doesn't have a selection in
 
         // for every breakpoint decide if it should be moved or deleted
         ListIterator<PlayersPanel.Breakpoint> it = m_breakpoints.listIterator();
@@ -775,8 +802,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
             int lineNLIndex = prevLineOffsets.get(br.lineNum - 1); // -1 make it 0 based
 
-            if (selStart != selEnd && (selStart < lineStartIndex && selEnd > lineStartIndex  // removed the before the start of the line, including the start
-                                   ||  selStart >= lineStartIndex && selEnd > lineNLIndex ))  // removed from the middle of the line, passed the end of it
+            if (selStart != selEnd && (selStart < lineStartIndex && selEnd > lineStartIndex   // removed the before the start of the line, including the start
+                                   ||  selStart == lineStartIndex && selEnd > lineNLIndex ))  // removed from the start of the line, passed the end of it
             { // removing the whole line
                 // no need to remove markers because we just made a new line numbers column
                 it.remove();
@@ -788,9 +815,18 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             {
                 // if we backspaced on a breakpoint,  need to remove it
                 // need to happen in normal caret, no selection and the backspace on the line of the breakpoint
-                if (selStart == selEnd && selStart == lineStartIndex && keydown == "Backspace") {
-                    it.remove();
-                    continue;
+                if (selStart == selEnd && selStart == lineStartIndex && (keydown == "Backspace" || keydown == "Delete")) {
+                    boolean isLineWithText = false;
+                    if (prevInText != null) {
+                        for(int i = lineStartIndex; i < lineNLIndex && !isLineWithText; ++i) {
+                            char c = prevInText.charAt(i);
+                            isLineWithText = (c != ' ' && c != '\n');
+                        }
+                    }
+                    if (!isLineWithText) {
+                        it.remove();
+                        continue;
+                    }
                 }
                 // if we removed lines before this breakpoint line, move it up
                 if (selStart <= lineStartIndex && selEnd <= lineStartIndex) {
@@ -943,6 +979,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         int ptr = 0;
         Disassembler dis = new Disassembler(binbuf, 0, binbuf.length);
         int atLstLine = 0;
+        boolean hadError = false;
 
         while(ptr < binbuf.length)
         {
@@ -953,6 +990,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 while (atLstLine < listing.size() && listing.get(atLstLine).opcodesCount == 0) // skip comment lines
                     ++atLstLine;
                 if (atLstLine == listing.size()) {
+                    // should not happen
                     Console.error("unexpected reached end of listing " + Integer.toString(atLstLine+1));
                     break;
                 }
@@ -966,7 +1004,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     int len = dis.lastOpcodeSize();
 
                     if (len != lstline.opcodesCount) {
-                        Console.error("disassembled wrong number of bytes " + Integer.toString(atLstLine+1));
+                        // this can happen if a previous DisassemblerException was caught and didn't read enough bytes
+                        String msgtxt = "disassembled wrong number of bytes " + Integer.toString(atLstLine+1);
+                        if (hadError)
+                            Console.log(msgtxt); // if we had an error, than there's no reason to get excited here for instance 'rep aaa'
+                        else
+                            Console.error(msgtxt);
                         break;
                     }
                 }
@@ -974,6 +1017,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             }
             catch(Disassembler.DisassemblerLengthException e) {
                 msg = Integer.toString(atLstLine+1) + ": not enough bytes to parse"; // can happen if we db 09h for example, or just 'rep'
+                hadError = true;
                 //break;
             }
             catch(Disassembler.DisassemblerException e) {
@@ -981,7 +1025,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 int eptr = dis.getPointer() - 1;
                 if (eptr >= 0 && eptr < binbuf.length)
                     msg += ", opcode = 0x" + Format.hex2(binbuf[eptr] & 0xff);
+                int len = dis.lastOpcodeSize(); // advance the disassembler pointer
+                hadError = true;
                 //break; // no way to recover
+                // there might be a way to recover if we actually read the entiere opcode that threw the exception but this is not guaranteed
             }
             catch(RuntimeException e) {
                 Console.error("failed parsing binbuf RuntimeException"); // this should not happen. only happens for missing cases
@@ -1049,6 +1096,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         editor_title.value = s;
     }
 
+
+    private void setDbgAddrBreakpoint(int addr, boolean v) {
+        Element e = DomGlobal.document.getElementById("da" + Integer.toString(addr));
+        if (v)
+            e.classList.add("dbg_breakpoint");
+        else
+            e.classList.remove("dbg_breakpoint");
+    }
+
+
     DbgLine m_fillCmd;
 
     private void initDebugAreaLines()
@@ -1072,20 +1129,30 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         //double _setup = getTime();
         //Console.log("cc-setup " + Double.toString(_setup - _start));
-
+        m_dbgBreakpoints = new PlayersPanel.Breakpoint[War.ARENA_SIZE];
 
         //int inEditorAddr = -1;
         for(int i = 0; i < war.getNumWarriors(); ++i)
         {
             Warrior w = war.getWarrior(i);
-            int playerLoadOffset = w.getLoadOffsetInt();
+            int playerLoadOffset = w.getLoadOffsetInt(); // in the area segment
 
             PlayersPanel.Code code = m_playersPanel.findCode(w.getLabel());
 
-            DbgLine last_dbgline = null;
-            int last_address = 0;
+            // transfer breakpoints
+            for(LstLine lstline : code.lines)
+                lstline.tmp_br = null;
+            for(PlayersPanel.Breakpoint br : code.breakpoints) {
+                assert br.lineNum - 1 < code.lines.size() : "unexpected lineNum in breakpoint";
+                code.lines.get(br.lineNum - 1).tmp_br = br;
+            }
 
-            if (code.lines.get(0).address == -1) { // comment or label on the first line, need to belong to the address before first
+
+            DbgLine last_dbgline = null;
+
+            // comment or label on the first line, need to belong to the address before first
+            if (code.lines.get(0).address == -1)
+            {
                 int befFirst = playerLoadOffset - 1;
                 if (m_dbglines[befFirst] != null) {
                     last_dbgline = m_dbglines[befFirst];
@@ -1102,15 +1169,14 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     last_dbgline.text = "";
                     m_dbglines[befFirst] = last_dbgline;
                 }
-                last_address = befFirst;
             }
 
-            for(LstLine lstline : code.lines)
+            for(int lsti = 0; lsti < code.lines.size(); ++lsti)
             {
+                LstLine lstline = code.lines.get(lsti);
                 if (lstline.address == -1) {
                     assert last_dbgline != null: "Unexpected blank prev line";
                     last_dbgline.flags |= FLAG_HAS_COMMENT;
-                    //last_dbgline.text = "<div id='df" + Integer.toString(last_address) + "'>" + last_dbgline.text + "</div>";
                     last_dbgline.text += "</div><div class='dbg_comment_line'>      <span class='dbg_opcodes'></span>" + lstline.code + "</div>";
                 }
                 else {
@@ -1122,12 +1188,17 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     if (isDefineCode(lstline.code))
                         dbgline.flags = FLAG_DEFINE_CODE;
 
-                    /*dbgline.binOpcode = new byte[lstline.opcodesCount];
+                    /*dbgline.binOpcode = new byte[lstline.opcodesCount];  -- binOpcode not needed it seems
                     assert lstline.address + lstline.opcodesCount <= code.bin.length: "too many opcodes for the program length?";
                     // copy the binary of this line to dbgline for later comparison when stepping
                     for(int j = 0; j < lstline.opcodesCount; ++j) {
                         dbgline.binOpcode[j] = code.bin[lstline.address + j];
                     }*/
+
+                    if (lsti <= FLAG_LSTLINE_MAX) {// lines above 2^16 are not tracked... should not come to this but just to be safe
+                        dbgline.flags |= ((lsti+1) << FLAG_LSTLINE_SHIFT);
+                        dbgline.flags |= (i << FLAG_PLAYER_NUM_SHIFT);
+                    }
                     m_dbglines[loadAddr] = dbgline;
 
                     last_dbgline = dbgline;
@@ -1135,9 +1206,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     for(int j = 1; j < lstline.opcodesCount; ++j) {
                         m_dbglines[loadAddr + j] = null;
                     }
+
+                    if (lstline.tmp_br != null)
+                        m_dbgBreakpoints[loadAddr] = lstline.tmp_br;
+
                 }
 
             }
+
+
         }
 
 
@@ -1156,7 +1233,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         //Console.log("~~~~2 9f14 " + m_dbglines[0x9f14].text);
     }
 
+
+
     // dbgline should already be in m_dgblines
+    // dXXXXX is the whole line, possible containing the following comment lines
+    // dfXXXXX is just the first line that is not a comment - markable by debugger when stepping
+    // daXXXXX is the address of the line (not preset in comment lines)
     public void renderLine(int addr, DbgLine dbgline) {
         String addrstr = Integer.toString(addr);
         HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById("d" + addrstr);
@@ -1165,11 +1247,21 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         }
 
+        String addrhex = Format.hex4(addr);
         if ((dbgline.flags & FLAG_HAS_COMMENT) != 0) // this div tag is closed inside dbgline.text before the comment starts
-            dline.innerHTML = "<div id='df" + addrstr + "'>" + Format.hex4(addr) + "  " + dbgline.text;
+            dline.innerHTML = "<div id='df" + addrstr + "'><span id='da" + addrstr + "'>" + addrhex + "</span>  " + dbgline.text;
         else
-            dline.innerHTML = Format.hex4(addr) + "  " + dbgline.text;
+            dline.innerHTML = "<span id='da" + addrstr + "'>" + addrhex + "</span>  " + dbgline.text;
         dline.removeAttribute("style");
+
+        HTMLElement da = (HTMLElement)DomGlobal.document.getElementById("da" + addrstr);
+        da.addEventListener("click", m_dbgBrClickHandler);
+
+        // mark breakpoint?
+        PlayersPanel.Breakpoint br = m_dbgBreakpoints[addr];
+        if (br != null) {
+            setDbgAddrBreakpoint(addr, true);
+        }
     }
 
     // from javascript scroll of debug area
@@ -1187,6 +1279,67 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
         page.isDirty = false;
     }
+
+    // called when an address is clicked to add a breakpoint for a line
+    // all breakpoints of all players are visible and active
+    // breakpoints in the debug view that are in addresses that don't correspond to code lines are transient.
+    // they disappear once the debug session is over. They are not saved in the players m_breakpoints since it's unknown what players are they of
+    private void toggleBreakpointDbg(int addr)
+    {
+        PlayersPanel.Breakpoint br = null;
+        boolean wasAdded = false;
+
+        if (m_dbgBreakpoints[addr] == null) {
+            br = new PlayersPanel.Breakpoint(-1);
+            m_dbgBreakpoints[addr] = br;
+            wasAdded = true;
+        }
+        else {
+            br = m_dbgBreakpoints[addr];
+            m_dbgBreakpoints[addr] = null;
+            wasAdded = false;
+        }
+
+        War war = m_competition.getCurrentWar();
+
+        DbgLine dbgline = m_dbglines[addr];
+        int lsti = (dbgline.flags & FLAG_LSTLINE) >> FLAG_LSTLINE_SHIFT;
+        if (lsti >= 1) {
+            int playeri = (dbgline.flags & FLAG_PLAYER_NUM) >> FLAG_PLAYER_NUM_SHIFT;
+            Warrior warrior = war.getWarrior(playeri);
+
+            PlayersPanel.Code codeObj = m_playersPanel.findCode(warrior.getLabel());
+
+            if (wasAdded) {
+                br.lineNum = lsti;
+                // check sanity that there isn't a breakpoint in this line
+                for(PlayersPanel.Breakpoint exist_br : codeObj.breakpoints)
+                    assert exist_br.lineNum != br.lineNum : "Breakpoint of this line already exists! " + Integer.toString(br.lineNum);
+                codeObj.breakpoints.add(br);
+            }
+            else {
+                boolean removed = codeObj.breakpoints.remove(br);
+                if (!removed)
+                    Console.error("removed a breakpoint that did not exist?");
+            }
+
+            // add it to the editor as well if needed so it will be visible there when debugging is done
+            if (codeObj == m_playersPanel.getCodeInEditor())
+                setLineNumBreakpoint(lsti, wasAdded);
+        }
+
+
+        renderLine(addr, dbgline);
+    }
+
+    private final EventListener m_dbgBrClickHandler = new EventListener() {
+        @Override
+        public void handleEvent(Event event) {
+            Element e = (Element)event.target;
+            //Console.log(e.innerHTML);
+            toggleBreakpointDbg( Integer.parseInt(e.innerHTML, 16));
+        }
+    };
 
     private int m_lastDbgAddr = -1;
     private HTMLElement m_lastDbgElement;
@@ -1313,6 +1466,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     //  for each line,
 
     //    check if core content matches line content
+
 
 
 

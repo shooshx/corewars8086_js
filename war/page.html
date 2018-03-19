@@ -51,19 +51,27 @@ function start()
 }
 
 
-var saved_selectionStart = null
-var saved_selectionEnd = null
+var saved_selectionStart = -1 // need to be int for java to read
+var saved_selectionEnd = -1
 var saved_keydown = null
 
 // save the text area selection start and end in order to find out how to move the breakpoints
 function setup_breakpoints_savers()
 {
-
     asm_edit.addEventListener("keydown", function(e) {
         saved_selectionStart = asm_edit.selectionStart
         saved_selectionEnd = asm_edit.selectionEnd
         saved_keydown = e.key
     })
+
+    var mouseHandler = function(e) {
+        saved_selectionStart = asm_edit.selectionStart
+        saved_selectionEnd = asm_edit.selectionEnd
+        saved_keydown = null
+    }
+    // do both up and down to be safe. not sure if both are actually needed
+    asm_edit.addEventListener("mousedown", mouseHandler)
+    asm_edit.addEventListener("mouseup", mouseHandler)
 }
 
 
@@ -412,7 +420,7 @@ function asm_cursorToLine(charOffset) {
 
 /*function asm_pre_mousewheel(event) {
     asm_edit.dispatchEvent(new event.constructor(event.type, event));
-}  not working */
+}  scrolling in the code and numbers panes not working */
 
 
 function handle_asm_edit_scroll() {
@@ -708,8 +716,19 @@ input:disabled + .sc-btn:active,
 
     margin: 0 0 1px 0; /* without this the editor is off by 1 pixel in chrome. no idea */
 }
-.edit_breakpoint {
-    background: #ff5555;
+
+.dbg_breakpoint:after {
+    content: url(breakpoint_light.png);
+    position: absolute;
+    left: 31px;
+}
+
+.edit_breakpoint:after {
+    /*background: #ff5555;*/
+    /*background: url(breakpoint_light.png) no-repeat right center;*/
+    content: url(breakpoint_light.png);
+    position: absolute;
+    right: 2px;
 }
 
 #edit_area {
@@ -739,6 +758,7 @@ input:disabled + .sc-btn:active,
     font-family: courier;
     margin: 0;
     padding: 0 0 0 3px;
+    cursor: default;
 }
 .dplace { /* placeholdr for dlines */
     height: 0;
