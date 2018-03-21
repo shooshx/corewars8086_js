@@ -394,6 +394,9 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void onPaused() {}
+
 
 	@Override
 	public void onWarriorDeath(String warriorName, String reason) {

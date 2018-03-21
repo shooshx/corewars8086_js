@@ -45,7 +45,7 @@ public class Competition {
         public State state = State.NONE; 
         public int warIndex = 0;
         public boolean startPaused;
-        public boolean animateRound; // should we return after each round or after each war for a UI update
+        public boolean isInDebugger; // should we return after each round or after each war for a UI update. also activates breakpoints
         public int round;
     }
     public CompState compState;
@@ -68,6 +68,7 @@ public class Competition {
             return false;
         if (abort) {
             Console.log("Abort");
+            doneWar();
             return false;
         }
         if (compState.state == CompState.State.RUN_WAR)
@@ -90,9 +91,9 @@ public class Competition {
         }
         else if (compState.state == CompState.State.RUN_ROUND)
         {
-            compState.animateRound = stillAnimateRound;
+            //compState.isInDebugger = stillAnimateRound; // this is never false in the current GUI, this was just a confusing option
             int needMore = 1;
-            if (compState.animateRound) {
+            if (compState.isInDebugger) {
                 needMore = runRound();
             }
             else {
@@ -102,6 +103,7 @@ public class Competition {
             }
 
             if (needMore == 0) { // we return false due to being paused
+                competitionEventListener.onPaused();
                 return false;
             }
             else if (needMore == -1) {
@@ -114,7 +116,7 @@ public class Competition {
         return false;
     }
 
-    public void runCompetition(int warsPerCombination, int warriorsPerGroup, boolean startPaused, boolean animateRound) throws Exception
+    public void runCompetition(int warsPerCombination, int warriorsPerGroup, boolean startPaused, boolean isInDebugger) throws Exception
     {
         this.warsPerCombination = warsPerCombination;
         competitionIterator = new CompetitionIterator(warriorRepository.getNumberOfGroups(), warriorsPerGroup);
@@ -127,7 +129,7 @@ public class Competition {
         compState.warIndex = 0;
         compState.state = CompState.State.RUN_WAR;
         compState.startPaused = startPaused;
-        compState.animateRound = animateRound;
+        compState.isInDebugger = isInDebugger;
     }
 
     public int getTotalNumberOfWars() {
@@ -167,7 +169,7 @@ public class Competition {
         //if (currentWar.isSingleRound())
         //   currentWar.pause();
 
-        currentWar.nextRound(compState.round);
+        boolean atBreakpoint = currentWar.nextRound(compState.round);
 
         if (currentWar.isOver()) {
             Console.log("isOver");
@@ -180,15 +182,16 @@ public class Competition {
 
         //if (compState.round % 100 == 0)
         //    Console.log("round " + Integer.toString(compState.round));
-        if (currentWar.isSingleRound()) {
+        if (currentWar.isSingleRound() || atBreakpoint) {
             currentWar.pause();
         }
         if (currentWar.isPaused()) {
             return 0;
         }
-        if (compState.round < MAX_ROUND)
-            return 1;
-        return -1;
+        if (compState.round >= MAX_ROUND)
+            return -1;
+
+        return 1;
     }
 
     // return true if needs another round

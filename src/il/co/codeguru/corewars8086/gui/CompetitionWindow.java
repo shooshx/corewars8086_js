@@ -172,7 +172,7 @@ public class CompetitionWindow extends JFrame
 
     public void j_stopDebug()
     {
-        competition.doneWar();
+        competition.setAbort();
         setDebugMode(false);
     }
 
@@ -200,6 +200,7 @@ public class CompetitionWindow extends JFrame
         outRoundNum();
         if (needMore)
             requestFrame();
+
     }
 
     public void requestFrame() {
@@ -251,6 +252,12 @@ public class CompetitionWindow extends JFrame
         try {
             competition.runCompetition(battlesPerGroup, numOfGroups, m_isStartPaused, isBattleShown());
             callContinueRun(); // when runWar() returns we want the War object to be already constructured and ready
+            if (isBattleShown()) { // add breapointchecked only if we're in debugger
+                War war = competition.getCurrentWar();
+                war.setBreakpointCheck(m_codeEditor);
+                Warrior inEditorWarrior = war.getWarriorByLabel(m_playersPanel.getCodeInEditor().getLabel());
+                war.setUiWarrior(inEditorWarrior);
+            }
             return true;
         }
         catch (Exception e) {
@@ -320,58 +327,11 @@ public class CompetitionWindow extends JFrame
     private void showBattleRoom() {
         competition.setSpeed(5);
         battleFrame = new WarFrame(competition, this);
-       /* battleFrame.addWindowListener(new WindowListener() {
-            public void windowOpened(WindowEvent e) {
-            }
 
-            public void windowClosing(WindowEvent e) {
-            }
-
-            public void windowClosed(WindowEvent e) {
-                //System.out.println("BattleFrame=null");
-                battleFrame = null;
-                competition.setSpeed(Competition.MAXIMUM_SPEED);
-            }
-
-            public void windowIconified(WindowEvent e) {
-            }
-
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            public void windowActivated(WindowEvent e) {
-            }
-
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });*/
         
         competition.addMemoryEventLister(battleFrame);
         competition.addCompetitionEventListener(battleFrame);
-     /*   Rectangle battleFrameRect = new Rectangle(0, getY(), 750, 700);
-        Rectangle screen = getGraphicsConfiguration().getBounds(); //for multiple monitors
-           
-        if (getX() + getWidth() <= screen.getX() + screen.getWidth()
-        		- battleFrameRect.width)
-        {
-        	battleFrameRect.x = getX() + getWidth();
-        }
-        else if (screen.getX() + screen.getWidth() - battleFrameRect.width
-        	- getWidth() >= screen.getX())
-        {
-        	setLocation((int) (screen.getX() + screen.getWidth() - battleFrameRect.width
-        			- getWidth()), getY());
-        	battleFrameRect.x = getX() + getWidth();
-        }
-        else
-        {
-        	setLocation((int)screen.getX(), getY());
-        	battleFrameRect.x = getWidth();
-        }
-               
-        battleFrame.setBounds(battleFrameRect);
-        battleFrame.setVisible(true);
-        */
+
     }
 
     public void onWarEnd(int reason, String winners) {
@@ -386,6 +346,8 @@ public class CompetitionWindow extends JFrame
 
     public void onRound(int round) {
     }
+    @Override
+    public void onPaused() {}
 
     public void onWarriorBirth(Warrior w) {
     }
@@ -421,6 +383,15 @@ public class CompetitionWindow extends JFrame
 
         battleFrame.btnPause.setEnabled(!v);
         battleFrame.btnSingleRound.setEnabled(!v);
+    }
+
+    // war needs to know which player's breakpoint to check
+    public void srcSelectionChanged(String label) {
+        War war = competition.getCurrentWar();
+        if (war == null)
+            return; // not in debug mode
+        Warrior warrior = war.getWarriorByLabel(label);
+        war.setUiWarrior(warrior);
     }
 	
 }

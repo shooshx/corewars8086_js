@@ -81,7 +81,7 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		
 		i = 0;
 		for (JTextField tf : cells) {
-			byte b = comp.getCurrentWar().getMemory().readByte(new RealModeAddress(address + i++));
+			byte b = comp.getCurrentWar().getMemory().readByte(address + i++);
 			tf.setText("" + Format.hex(b & 0xFF, 2)); // "%02X"
 		}
 		
@@ -89,7 +89,7 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		byte[] bytes = new byte[30];
 		
 		for (short k = 0; k < 30; k++) {
-			short vs = comp.getCurrentWar().getMemory().readByte(new RealModeAddress(address +k));
+			short vs = comp.getCurrentWar().getMemory().readByte(address +k);
 			bytes[k] = (byte) vs;
 		}
 		
@@ -133,6 +133,8 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void onPaused() {}
 
 
 	@Override

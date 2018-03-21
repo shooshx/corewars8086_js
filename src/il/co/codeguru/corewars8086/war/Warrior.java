@@ -36,12 +36,14 @@ public class Warrior {
         RealModeAddress loadAddress,
         RealModeAddress initialStack,
         RealModeAddress groupSharedMemory,
-        short groupSharedMemorySize)
+        short groupSharedMemorySize,
+        int myIndex)
     {
         m_label = label;
         m_name = name;
         m_codeSize = codeSize;
         m_loadAddress = loadAddress;
+        m_myIndex = myIndex;
 
         m_state = new CpuState();
         initializeCpuState(loadAddress, initialStack, groupSharedMemory);
@@ -210,4 +212,6 @@ public class Warrior {
     private Cpu m_cpu;
     /** Whether or not the warrior is still alive */
     private boolean m_isAlive;
+
+    public final int m_myIndex; // in the War m_warriors array. used for identifying breakpoints
 }

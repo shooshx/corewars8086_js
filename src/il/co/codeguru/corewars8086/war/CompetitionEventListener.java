@@ -51,4 +51,6 @@ public interface CompetitionEventListener   {
     void onCompetitionEnd();
     
     void onEndRound();
+
+    void onPaused();
 }

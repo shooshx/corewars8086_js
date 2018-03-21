@@ -167,10 +167,10 @@ public class PlayersPanel
     }
 
     // from js
-    public void j_srcSelectionChanged(String label, int num) {
+    public void j_srcSelectionChanged(String playerLabel, int num) {
         //Console.log("~~~~" + label + Integer.toString(num));
 
-        PlayerInfo p = findPlayer(label);
+        PlayerInfo p = findPlayer(playerLabel);
         m_inEditor = null;
         if (p == null)
             return;
@@ -178,7 +178,10 @@ public class PlayersPanel
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, null); // don't pass playerPanel since we don't want it to return update to us
         m_mainWnd.battleFrame.cpuframe.setSelectedPlayer(m_inEditor.getLabel());
 
+        // in editor view, update the botton load address gui
         updateLoadAddr(m_inEditor.startAddress, m_inEditor.startAddrRandom);
+
+        m_mainWnd.srcSelectionChanged(m_inEditor.getLabel());
     }
 
     public void changedWType(String label, String v) {

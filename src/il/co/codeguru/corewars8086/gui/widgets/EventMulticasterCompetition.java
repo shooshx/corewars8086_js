@@ -103,7 +103,16 @@ public class EventMulticasterCompetition extends EventMulticasterBase {
             isCasting = false;
             addWaiting();				
 		}
-        
+
+        @Override
+        public void onPaused() {
+            isCasting = true;
+            for (Object mListener : mListenersArr) {
+                ((CompetitionEventListener)mListener).onPaused();
+            }
+            isCasting = false;
+            addWaiting();
+        }
     }
 
 

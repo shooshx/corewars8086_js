@@ -40,11 +40,19 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
      */
     public byte readByte(RealModeAddress address) throws MemoryException {
         // is reading allowed from this address ?
-        if (!isAddressInRegions(m_readAccessRegions, address)) {
+        if (!isAddressInRegions(m_readAccessRegions, address.getLinearAddress())) {
             throw new MemoryException("Read not allowed from address 0x" + Format.hex(address.getLinearAddress()) );
         }
 
         return m_memory.readByte(address);		
+    }
+    public byte readByte(int address) throws MemoryException {
+        // is reading allowed from this address ?
+        if (!isAddressInRegions(m_readAccessRegions, address)) {
+            throw new MemoryException("Read not allowed from address 0x" + Format.hex(address) );
+        }
+
+        return m_memory.readByte(address);
     }
 
     /**
@@ -57,7 +65,7 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
      */
     public void writeByte(RealModeAddress address, byte value) throws MemoryException {
         // is writing allowed to this address ?
-        if (!isAddressInRegions(m_writeAccessRegions, address)) {
+        if (!isAddressInRegions(m_writeAccessRegions, address.getLinearAddress())) {
             throw new MemoryException("Write not allowed to address 0x" + Format.hex(address.getLinearAddress()) );
         }
 
@@ -74,12 +82,20 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
      */
     public byte readExecuteByte(RealModeAddress address) throws MemoryException {
         // is reading allowed from this address ?
-        if (!isAddressInRegions(m_executeAccessRegions, address)) {
+        if (!isAddressInRegions(m_executeAccessRegions, address.getLinearAddress())) {
             throw new MemoryException("Execute not allowed in address 0x" + Format.hex(address.getLinearAddress()));
         }
 
         return m_memory.readExecuteByte(address);		
-    }	
+    }
+    public byte readExecuteByte(int linearAddress) throws MemoryException {
+
+        if (!isAddressInRegions(m_executeAccessRegions, linearAddress)) {
+            throw new MemoryException("Execute not allowed in address 0x" + Format.hex(linearAddress));
+        }
+        return m_memory.readExecuteByte(linearAddress);
+    }
+
 
     /**
      * Checks whether or not a given address is within at least a single
@@ -89,8 +105,7 @@ public class RestrictedAccessRealModeMemory extends AbstractRealModeMemory {
      * @param address    Address to check.
      * @return whether or not the address is within at least one of the regions.
      */
-    private boolean isAddressInRegions(
-        RealModeMemoryRegion[] regions, RealModeAddress address) {
+    private boolean isAddressInRegions(RealModeMemoryRegion[] regions, int address) {
 
         // iterate all regions, attempt to match address
         boolean found = false;

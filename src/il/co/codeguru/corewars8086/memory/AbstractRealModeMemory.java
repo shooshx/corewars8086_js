@@ -19,6 +19,7 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
      * @throws MemoryException  on any error. 
      */
     public abstract byte readByte(RealModeAddress address) throws MemoryException;
+    public abstract byte readByte(int linearAddress) throws MemoryException;
 
     /**
      * Reads a single word from the specified address.
@@ -33,12 +34,10 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
         byte low = readByte(address);
 
         // read high word
-        RealModeAddress nextAddress = new RealModeAddress(
-            address.getSegment(), (short)(address.getOffset() + 1));
+        RealModeAddress nextAddress = new RealModeAddress(address.getSegment(), (short)(address.getOffset() + 1));
         byte high = readByte(nextAddress);
 
-        return (short)((Unsigned.unsignedByte(high) << 8) |
-                Unsigned.unsignedByte(low));
+        return (short)((Unsigned.unsignedByte(high) << 8) | Unsigned.unsignedByte(low));
     }
 
     /**
@@ -49,8 +48,7 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
      * 
      * @throws MemoryException  on any error. 
      */
-    public abstract void writeByte(RealModeAddress address, byte value)
-        throws MemoryException;
+    public abstract void writeByte(RealModeAddress address, byte value) throws MemoryException;
 
     /**
      * Writes a single word to the specified address.
@@ -60,9 +58,8 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
      * 
      * @throws MemoryException  on any error. 
      */	
-    public void writeWord(RealModeAddress address, short value)
-        throws MemoryException {
-
+    public void writeWord(RealModeAddress address, short value) throws MemoryException
+    {
         byte low = (byte)value;
         byte high = (byte)(value >> 8);
 
@@ -70,8 +67,7 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
         writeByte(address, low);
 
         // write high byte
-        RealModeAddress nextAddress = new RealModeAddress(
-            address.getSegment(), (short)(address.getOffset() + 1));
+        RealModeAddress nextAddress = new RealModeAddress(address.getSegment(), (short)(address.getOffset() + 1));
         writeByte(nextAddress, high);		
     }
 
@@ -83,8 +79,9 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
      * 
      * @throws MemoryException  on any error. 
      */
-    public abstract byte readExecuteByte(RealModeAddress address)
-        throws MemoryException;
+    public abstract byte readExecuteByte(RealModeAddress address) throws MemoryException;
+
+    public abstract byte readExecuteByte(int address) throws MemoryException;
 
     /**
      * Reads a single word from the specified address, in order to execute it.
@@ -99,11 +96,9 @@ public abstract class AbstractRealModeMemory implements RealModeMemory {
         byte low = readExecuteByte(address);
 
         // read high word
-        RealModeAddress nextAddress = new RealModeAddress(
-            address.getSegment(), (short)(address.getOffset() + 1));
+        RealModeAddress nextAddress = new RealModeAddress(address.getSegment(), (short)(address.getOffset() + 1));
         byte high = readExecuteByte(nextAddress);
 
-        return (short)((Unsigned.unsignedByte(high) << 8) |
-            Unsigned.unsignedByte(low));
+        return (short)((Unsigned.unsignedByte(high) << 8) | Unsigned.unsignedByte(low));
     }	
 }

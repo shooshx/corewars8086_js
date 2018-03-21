@@ -26,10 +26,11 @@ public class OpcodeFetcher {
      * @throws MemoryException  on any error.
      */
     public byte nextByte() throws MemoryException {
-        RealModeAddress address = new RealModeAddress(
-            m_state.getCS(), m_state.getIP());
-        m_state.setIP((short)(m_state.getIP() + 1));
-        return m_memory.readExecuteByte(address);
+        final short ip = m_state.getIP();
+        int linearAddress = RealModeAddress.linearAddress(m_state.getCS(), ip);
+        //RealModeAddress address = new RealModeAddress(m_state.getCS(), m_state.getIP());
+        m_state.setIP((short)(ip + 1));
+        return m_memory.readExecuteByte(linearAddress);
     }
 
     /**
@@ -37,8 +38,7 @@ public class OpcodeFetcher {
      * @throws MemoryException  on any error.
      */
     public short nextWord() throws MemoryException {
-        RealModeAddress address = new RealModeAddress(
-            m_state.getCS(), m_state.getIP());
+        RealModeAddress address = new RealModeAddress(m_state.getCS(), m_state.getIP());
         m_state.setIP((short)(m_state.getIP() + 2));
         return m_memory.readExecuteWord(address);
     }

@@ -235,6 +235,12 @@ public class WarFrame extends JFrame
     }
 
 
+    @Override
+    public void onPaused() { // this can potentially replace all other places where we do the same thing
+        btnPause.setText("Resume");
+        btnSingleRound.setEnabled(true);
+    }
+
     /** Add a message to the message zone */
     public void addMessage(String message) {
         messagesArea.append(message + "\n");

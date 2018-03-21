@@ -31,10 +31,10 @@ public class RealModeMemoryImpl extends AbstractRealModeMemory {
     public byte readByte(RealModeAddress address) {
         return m_data[address.getLinearAddress()];		
     }
-
-    public byte readByte(int address) {
-        return m_data[address];
+    public byte readByte(int linearAddress) {
+        return m_data[linearAddress % RealModeAddress.MEMORY_SIZE];
     }
+
 
     /**
      * Writes a single byte to the specified address.
@@ -61,7 +61,11 @@ public class RealModeMemoryImpl extends AbstractRealModeMemory {
      */
     public byte readExecuteByte(RealModeAddress address) {
         return m_data[address.getLinearAddress()];		
-    }	
+    }
+    public byte readExecuteByte(int linearAddress) {
+        return m_data[linearAddress];
+    }
+
 
     /**
      * @return Returns the listener.

@@ -1,6 +1,7 @@
 package il.co.codeguru.corewars8086.war;
 
 import il.co.codeguru.corewars8086.cpu.CpuException;
+import il.co.codeguru.corewars8086.gui.IBreakpointCheck;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.MemoryException;
@@ -58,6 +59,16 @@ public class War {
     /** The listener for war events */
     private CompetitionEventListener m_warListener;
 
+    private IBreakpointCheck m_breakpointCheck = null;
+    private int m_uiWarriorIndex = -1; // break in breakpoints only of this warrior (he's the one selected in the PlayersPanel)
+
+    public void setUiWarrior(Warrior warrior) {
+        m_uiWarriorIndex = warrior.m_myIndex;
+    }
+    public void setBreakpointCheck(IBreakpointCheck brc) {
+        m_breakpointCheck = brc;
+    }
+
     /**
      * Constructor.
      * Fills the Arena with its initial data. 
@@ -69,8 +80,7 @@ public class War {
         m_numWarriors = 0;
         m_numWarriorsAlive = 0;
         m_core = new RealModeMemoryImpl();
-        m_nextFreeAddress = RealModeAddress.PARAGRAPH_SIZE *
-            (ARENA_SEGMENT + RealModeAddress.PARAGRAPHS_IN_SEGMENT);
+        m_nextFreeAddress = RealModeAddress.PARAGRAPH_SIZE * (ARENA_SEGMENT + RealModeAddress.PARAGRAPHS_IN_SEGMENT);
 
         // initialize arena
         for (int offset = 0; offset < ARENA_SIZE; ++offset) {
@@ -106,20 +116,25 @@ public class War {
     /**
      * Runs a single round of the war (every living warrior does his turn).
      * @param round The current round number.
+     * @return true when a breakpoint was hit
      */
-    public void nextRound(int round) {
-        for (int i = 0; i < m_numWarriors; ++i) {
+    public boolean nextRound(int round) {
+        boolean atBreakpoint = false;
+        for (int i = 0; i < m_numWarriors; ++i)
+        {
             Warrior warrior = m_warriors[i];
             m_currentWarrior = i;
             if (warrior.isAlive()) {
                 try {
                     // run first opcode
                     warrior.nextOpcode();
+                    atBreakpoint |= (m_breakpointCheck != null && m_currentWarrior == m_uiWarriorIndex && m_breakpointCheck.shouldBreak(warrior.getCpuState()));
 
                     // run one extra opcode, if warrior deserves it :)
                     updateWarriorEnergy(warrior, round);
                     if (shouldRunExtraOpcode(warrior)) {
                         warrior.nextOpcode();
+                        atBreakpoint |= (m_breakpointCheck != null && m_currentWarrior == m_uiWarriorIndex && m_breakpointCheck.shouldBreak(warrior.getCpuState()));
                     }
                 } catch (CpuException e) {
                     m_warListener.onWarriorDeath(warrior.getName(), "CPU exception");
@@ -132,6 +147,7 @@ public class War {
                 }
             }
         }
+        return atBreakpoint;
     }
 
     /**
@@ -237,7 +253,8 @@ public class War {
                 loadAddress,
                 initialStack,
                 groupSharedMemory,
-                GROUP_SHARED_MEMORY_SIZE);
+                GROUP_SHARED_MEMORY_SIZE,
+                m_numWarriors);
             m_warriors[m_numWarriors++] = w;
 
             // load warrior to arena

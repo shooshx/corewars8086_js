@@ -26,6 +26,15 @@ public class RealModeAddress {
 		m_linearAddress = linearAddressFull % MEMORY_SIZE;
     }
 
+    // copy of the above to avoid creating objects for nothing
+    public static int linearAddress(short segment, short offset) {
+        int unsignedSegment = Unsigned.unsignedShort(segment);
+        int unsignedOffset = Unsigned.unsignedShort(offset);
+        int linearAddressFull = unsignedSegment * PARAGRAPH_SIZE + unsignedOffset;
+        int linearAddress = linearAddressFull % MEMORY_SIZE;
+        return linearAddress;
+    }
+
     /**
      * Constructor from linear address.
      * 
@@ -38,8 +47,7 @@ public class RealModeAddress {
         linearAddress %= MEMORY_SIZE;
 
         int unsignedSegment = Unsigned.unsignedShort(linearAddress / PARAGRAPH_SIZE);
-        int unsignedOffset = Unsigned.unsignedShort(
-            (linearAddress - (unsignedSegment*PARAGRAPH_SIZE)));
+        int unsignedOffset = Unsigned.unsignedShort( (linearAddress - (unsignedSegment*PARAGRAPH_SIZE)));
 
         m_segment = (short)unsignedSegment;
         m_offset = (short)unsignedOffset;

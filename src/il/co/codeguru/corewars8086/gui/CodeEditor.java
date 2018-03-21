@@ -20,7 +20,7 @@ import jsinterop.annotations.JsType;
 
 import java.util.*;
 
-public class CodeEditor implements CompetitionEventListener, MemoryEventListener
+public class CodeEditor implements CompetitionEventListener, MemoryEventListener, IBreakpointCheck
 {
     private HTMLElement asm_output, opcodes_edit, asm_linenums, asm_show, debug_area, editor_bottom;
     private HTMLInputElement editor_title;
@@ -52,6 +52,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public void onCompetitionStart() {}
     @Override
     public void onCompetitionEnd() {}
+    @Override
+    public void onPaused() {}
     @Override
     public void onEndRound() {
         updateDebugLine();
@@ -943,6 +945,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     }
 
+    // check if code text is db ..
     private boolean isDefineCode(String code) {
         int start = -1, end = -1;
         for(int i = 0; i < code.length(); ++i) {
@@ -1280,6 +1283,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         page.isDirty = false;
     }
 
+    public boolean shouldBreak(CpuState state)
+    {
+        int absAddr = RealModeAddress.linearAddress(state.getCS(), state.getIP());
+        int arenaAddr = absAddr - CODE_ARENA_OFFSET;
+        if (m_dbgBreakpoints[arenaAddr] == null)
+            return false;
+        return true;
+    }
+
     // called when an address is clicked to add a breakpoint for a line
     // all breakpoints of all players are visible and active
     // breakpoints in the debug view that are in addresses that don't correspond to code lines are transient.
@@ -1354,7 +1366,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         short ip = state.getIP();
         short cs = state.getCS();
 
-        int ipInsideArena = new RealModeAddress(cs, ip).getLinearAddress() - 0x10000;
+        int ipInsideArena = new RealModeAddress(cs, ip).getLinearAddress() - CODE_ARENA_OFFSET;
         return ipInsideArena;
     }
 
