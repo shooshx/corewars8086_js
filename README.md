@@ -12,12 +12,14 @@ Features include:
 - easy management of players
 - step by step debugger
   - allows editing of registers on the fly
+- disassembly of code as it is executed
+- breakpoints in code
+- ability to set the program load address manually in the debugger
+
   
 Coming up features:
-- disassembly of code as it is executed
 - code and data breakpoints
 - view of the stack and common memory
-- ability to set the load address in the debugger
 - watch view with full featured watch language
 - zoomable memory canvas
 - fixed randomization bug

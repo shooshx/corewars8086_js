@@ -69,6 +69,7 @@ public class Competition {
         if (abort) {
             Console.log("Abort");
             doneWar();
+            abort = false;
             return false;
         }
         if (compState.state == CompState.State.RUN_WAR)
