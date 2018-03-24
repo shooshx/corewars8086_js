@@ -47,8 +47,6 @@ editor:
 
 - breakpoints in edit
    - disallow setting in comment, label lines?
-- breakpoints in debug
-   - actually break
 
 - data breakpoints
 - watch language
@@ -57,7 +55,6 @@ editor:
 - code button should be red if code has errors
 - add zombies
 - show stack, show common area
-- errors with html pointers on page to where should be pressed - change to link mouse pointer
 - jump to line where mouse is pointing?
 - choose load address using gui
 - remove trailing spaces and the bottom of the asm text, looks bad when debugging
@@ -88,7 +85,7 @@ End of debug session:
 - export code to bin file
 
 
-
+- Resume, Step button not grayed out after "Stop"
 
 minor BUG - parsing an opcode out of memory boundary reads wrong number
 

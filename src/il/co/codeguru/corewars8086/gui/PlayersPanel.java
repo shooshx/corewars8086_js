@@ -167,6 +167,7 @@ public class PlayersPanel
     }
 
     // from js
+    // called by button press and also at the very beginning
     public void j_srcSelectionChanged(String playerLabel, int num) {
         //Console.log("~~~~" + label + Integer.toString(num));
 

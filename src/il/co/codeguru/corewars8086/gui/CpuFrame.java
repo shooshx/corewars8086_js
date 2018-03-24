@@ -3,6 +3,7 @@ package il.co.codeguru.corewars8086.gui;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.war.Competition;
 import il.co.codeguru.corewars8086.war.CompetitionEventListener;
 import il.co.codeguru.corewars8086.war.War;
@@ -27,16 +28,12 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 	//private War currentWar;
 	private CompetitionWindow m_mainwnd;
 	private String m_currentWarriorLabel;
+	private int m_currentWarriorIndex = -1; // faster to use index than label during debug
 	
 	private Competition competition;
 	private int m_base = 16;
 	
-	//private JPanel menuPanel;
-	
-	//private JComboBox<String> dropMenu;
-	
-	//private JPanel regPanel,flagPanel;
-	
+
 	private RegisterField regAX,regBX,regCX,regDX,
 						regSI,regDI,regBP,regSP,
 						 regIP,regCS,regDS,regSS,
@@ -46,13 +43,10 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 						flagSF,flagZF,flagAF,flagPF,
 						flagCF;
 
-
-
-	//private JButton btnRefrash,btnSave;
-
-	//private JTextArea instructionArea;
-
     private HTMLElement cpuPanel;
+
+    public MemRegionView stackView;
+	public MemRegionView sharedMemView;
 
     public void setVisible(boolean v) {
         if (v)
@@ -63,10 +57,19 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 
 	public void setSelectedPlayer(String playerLabel) {
 		m_currentWarriorLabel = playerLabel;
+		m_currentWarriorIndex = -1; // invalidate
+
+		// need to do this first so that reading the registers would put this ss:sp in the right place
+		initMemRegions(false);
 		updateFileds();
+
 	}
 
-	public int regChanged_callback(String name, String value) {
+
+
+
+	public int regChanged_callback(String name, String value)
+	{
 		War currentWar = competition.getCurrentWar();
 		if (currentWar == null)
 			return 1;
@@ -106,12 +109,12 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 			case "SI": state.setSI(sv); break;
 			case "DI": state.setDI(sv); break;
 			case "BP": state.setBP(sv); break;
-			case "SP": state.setSP(sv); break;
+			case "SP": state.setSP(sv); stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), sv)); break;
 
-			case "IP": state.setIP(sv); updateDbgLine(); break;
-			case "CS": state.setCS(sv); updateDbgLine(); break;
+			case "IP": state.setIP(sv); m_mainwnd.m_codeEditor.updateDebugLine(); break;
+			case "CS": state.setCS(sv); m_mainwnd.m_codeEditor.updateDebugLine(); break;
 			case "DS": state.setDS(sv); break;
-			case "SS": state.setSS(sv); break;
+			case "SS": state.setSS(sv); stackView.moveToLine(RealModeAddress.linearAddress(sv, state.getSP())); break;
 			case "ES": state.setES(sv); break;
 
 			case "Energy": state.setEnergy(sv); break;
@@ -120,9 +123,6 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		return 1;
 	}
 
-	public void updateDbgLine() {
-    	m_mainwnd.m_codeEditor.updateDebugLine();
-	}
 
 	public void updateFlagBoxes(CpuState state) {
 		flagOF.setValue( state.getOverflowFlag());
@@ -166,20 +166,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		this.competition = c;
 
         cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
-		//super("CPU state viewer - CodeGuru");
-		//this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		//this.setSize(550, 400);
-		//this.competition = c;
-		//this.currentWar = c.getCurrentWar();
-		
-		//GridLayout l = new GridLayout(0,2);
-		//l.setVgap(5);
-		//l.setHgap(5);
-		
-		//registerFileds
-		//JPanel regPanel = new JPanel(null);
-		
-		//this.setAlwaysOnTop(true);
+
 		
 		regAX = new RegisterField("AX", this);
 		regBX = new RegisterField("BX", this);
@@ -200,7 +187,6 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		regF = new RegisterField("Flags", this);
 		
 		//Flags
-		//JPanel flagPanel = new JPanel(null);
 		
 		flagOF = new FlagFields("OF", this);
 		flagDF = new FlagFields("DF", this);
@@ -211,70 +197,9 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		flagAF = new FlagFields("AF", this);
 		flagPF = new FlagFields("PF", this);
 		flagCF = new FlagFields("CF", this);
-		
-		//menu panel
-		
-		//menuPanel = new JPanel();
-		
-/*		dropMenu = new JComboBox<String>(); // player selector (not used)
-		for( int i = 0 ; i < this.currentWar.getNumWarriors() ; i++ )
-			dropMenu.addItem(this.currentWar.getWarrior(i).getName());
-		
-		dropMenu.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateFileds();
-			}
-		});
-		
-		btnRefrash = new JButton("btnRefrash", "Refrash");
-		btnRefrash.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateFileds();
-				
-			}
-		});
-		
-		btnSave = new JButton("btnSave", "Save");
-		btnSave.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				saveFileds();
-			}
-		});
-		
-		instructionArea = new JTextArea(); 
-		instructionArea.setFont(new Font("Monospaced",Font.PLAIN,15));
-		instructionArea.setSize(50, 100);
-		instructionArea.setLineWrap(true);
-		instructionArea.setWrapStyleWord(true);*/
-		
-		//this.updateFileds();
-		
-		//menuPanel.add(dropMenu);
-		//menuPanel.add(btnRefrash);
-		//menuPanel.add(btnSave);
-		
-		
-		
-		//JPanel cpuPanel = new JPanel(new GridLayout(1, 3));
-		//cpuPanel.add(menuPanel);
-		//cpuPanel.add(flagPanel);
-		//cpuPanel.add(regPanel);
-		
-		//this.add(cpuPanel);
-		//this.add(instructionArea);
-		
-		//this.setLayout(new GridLayout(2,1,10,10));
-		//this.setResizable(false);
-		//this.setVisible(true);
-		
-				
+
+		stackView = new MemRegionView("stackList", "mk");
+		sharedMemView = new MemRegionView("sharedMemList", "mh");
 	}
 
 	public native void exportMethods() /*-{
@@ -306,8 +231,12 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		War currentWar = competition.getCurrentWar();
 		if (currentWar == null)
 			return;
+		if (m_currentWarriorIndex == -1) {
+			m_currentWarriorIndex = currentWar.getWarriorByLabel(m_currentWarriorLabel).m_myIndex;
+		}
+
 		//CpuState state = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState();
-		CpuState state = currentWar.getWarriorByLabel(m_currentWarriorLabel).getCpuState();;
+		CpuState state = currentWar.getWarrior(m_currentWarriorIndex).getCpuState();
 
 		regAX.setValue( state.getAX());
 		regBX.setValue( state.getBX());
@@ -326,117 +255,61 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		regF.setValue( state.getFlags());
 		
 		updateFlagBoxes(state);
-		
-		/*byte[] bytes = new byte[30];
-		
-		for (short i = 0; i < 30; i++) {
-			short ip = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getIP();
-			short cs = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState().getCS();
-			short vs = currentWar.getMemory().readByte(new RealModeAddress(cs, (short) (ip + i)));
-			bytes[i] = (byte) vs;
-		}
-		
-		try {
-			instructionArea.setText(Disassembler.disassembler(bytes));
-		} catch (Exception e) {
-			instructionArea.setText(e.getMessage());
-			e.printStackTrace();
-		}*/
+		stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), state.getSP()));
+
 	}
-	
-/*	public void saveFileds(){ // sets the values from the GUI to the state
-		try {
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setAX(regAX.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setBX(regBX.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setCX(regCX.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setDX(regDX.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setSI(regSI.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setDI(regDI.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setBP(regBP.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setSP(regSP.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setIP(regIP.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setCS(regCS.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setDS(regDS.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setSS(regSS.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setES(regES.getValue());
-			this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setEnergy(regE.getValue());
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "You are trying to save invalid value!");
-		}
-		
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setOverflowFlag(this.flagOF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setDirectionFlag(this.flagDF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setInterruptFlag(this.flagIF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setTrapFlag(this.flagTF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setSignFlag(this.flagSF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setZeroFlag(this.flagZF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setAuxFlag(this.flagAF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setParityFlag(this.flagPF.getValue());
-		this.currentWar.getWarrior(this.dropMenu.getSelectedIndex()).getCpuState().setCarryFlag(this.flagCF.getValue());
-	}*/
+
+	// set the mem regions with the correct address region and values
+	// force if we must reread the memory in a new battle (don't keep the old one but it may have the same regions)
+	void initMemRegions(boolean force)
+	{
+		War currentWar = competition.getCurrentWar();
+		if (currentWar == null)
+			return;
+
+		Warrior warrior = currentWar.getWarriorByLabel(m_currentWarriorLabel);
+
+		stackView.initMemRegion(warrior.m_stackWritableRegion, currentWar.getMemory(), force);
+		sharedMemView.initMemRegion(warrior.m_sharedWritableRegion, currentWar.getMemory(), force);
+	}
+
+
 
 	@Override
 	public void onWarStart() {
+		m_currentWarriorIndex = -1; // invalidate
+
+		initMemRegions(true);
 	}
 
 	@Override
 	public void onWarEnd(int reason, String winners) {
+		m_currentWarriorIndex = -1;
 	}
 
 	@Override
 	public void onRound(int round) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onWarriorBirth(Warrior w) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void onPaused() {}
 
-
 	@Override
 	public void onWarriorDeath(String warriorName, String reason) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void onCompetitionStart() {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void onCompetitionEnd() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onEndRound() {
-		// TODO Auto-generated method stub
 		this.updateFileds();
 	}
 
-	/*@Override
-	public void dispose() {
-		
-		//bug fix - event casted while window is being disposed FIXME find a better solution
-		this.competition.getCurrentWar().pause();
-		
-		try{
-			//Thread.sleep(300);
-		} catch (Exception e) {
-			
-		}
-		this.competition.removeCompetitionEventListener(this);
-		//this.competition.getCurrentWar().resume();
-		
-		//super.dispose();
-	}*/
-	
 }

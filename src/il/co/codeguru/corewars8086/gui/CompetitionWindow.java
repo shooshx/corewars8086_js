@@ -332,6 +332,9 @@ public class CompetitionWindow extends JFrame
         competition.addMemoryEventLister(battleFrame);
         competition.addCompetitionEventListener(battleFrame);
 
+        competition.addMemoryEventLister(battleFrame.cpuframe.stackView);
+        competition.addMemoryEventLister(battleFrame.cpuframe.sharedMemView);
+
     }
 
     public void onWarEnd(int reason, String winners) {

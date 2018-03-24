@@ -261,7 +261,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return $wnd.g_outputText
     }-*/;
 
-    private static final String SPACE_FOR_HEX = "&#x202f;";
+
+    public static final char SPACE_FOR_HEX_CHAR = '\u202f';
+    public static final String SPACE_FOR_HEX = "&#x202f;";
 
     // hex field in the opcode can have all sorts of brackets and -. need to know how many just digits
     public int countDigits(String s) {
@@ -647,12 +649,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
 
-    private static native String innerText(HTMLElement elem) /*-{
-        return elem.innerText
-    }-*/;
-    private static native void setInnerText(HTMLElement elem, String text)/*-{
-        elem.innerText = text
-    }-*/;
+
 
     private boolean entered = false;
     private String m_prevInText = null; // used for breakpoint move analysis
@@ -890,7 +887,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
         else {
             asm_show.innerHTML = intext; // clear all line marking
-            setInnerText(asm_output, "");
+            asm_output.innerHTML = "";
 
             m_errLines = null;
         }

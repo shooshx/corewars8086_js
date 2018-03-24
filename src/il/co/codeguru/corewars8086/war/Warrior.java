@@ -15,7 +15,10 @@ import il.co.codeguru.corewars8086.memory.RestrictedAccessRealModeMemory;
  * 
  * @author DL
  */
-public class Warrior {
+public class Warrior
+{
+    public RealModeMemoryRegion m_stackWritableRegion;
+    public RealModeMemoryRegion m_sharedWritableRegion;
 
     /**
      * Constructor.
@@ -66,12 +69,15 @@ public class Warrior {
                 new RealModeMemoryRegion(groupSharedMemory, highestGroupSharedMemoryAddress)
             };
 
+        m_stackWritableRegion = new RealModeMemoryRegion(lowestStackAddress, initialStack);
+        m_sharedWritableRegion = new RealModeMemoryRegion(groupSharedMemory, highestGroupSharedMemoryAddress);
+
         // initialize write-access regions
         RealModeMemoryRegion[] writeAccessRegions =
             new RealModeMemoryRegion[] {
-                new RealModeMemoryRegion(lowestStackAddress, initialStack),
+                m_stackWritableRegion,
                 new RealModeMemoryRegion(lowestCoreAddress, highestCoreAddress),
-                new RealModeMemoryRegion(groupSharedMemory, highestGroupSharedMemoryAddress)
+                m_sharedWritableRegion
             };
 
         // initialize execute-access regions

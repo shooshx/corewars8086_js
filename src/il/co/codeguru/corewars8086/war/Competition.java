@@ -32,7 +32,6 @@ public class Competition {
     
     private long seed = 0;
 
-    private boolean abort;
     public boolean globalPause = false;
 
     // continue state between animation frames
@@ -47,6 +46,7 @@ public class Competition {
         public boolean startPaused;
         public boolean isInDebugger; // should we return after each round or after each war for a UI update. also activates breakpoints
         public int round;
+        public boolean abort = false;
     }
     public CompState compState;
 
@@ -58,7 +58,6 @@ public class Competition {
         memoryEventCaster = new EventMulticasterMemory();
         memoryEventListener = (MemoryEventListener) memoryEventCaster.getProxy();
         speed = MAXIMUM_SPEED;
-        abort = false;
     }
 
     // return true if need to continue after
@@ -66,10 +65,9 @@ public class Competition {
     {
         if (globalPause)
             return false;
-        if (abort) {
+        if (compState.abort) {
             Console.log("Abort");
             doneWar();
-            abort = false;
             return false;
         }
         if (compState.state == CompState.State.RUN_WAR)
@@ -202,8 +200,8 @@ public class Competition {
         currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
         int war = 0;
         currentWar.setSeed(this.seed + war);
-        competitionEventListener.onWarStart();
         currentWar.loadWarriorGroups(warriorGroups);
+        competitionEventListener.onWarStart();
         compState.round = 0;
     }
 
@@ -272,7 +270,9 @@ public class Competition {
     }
 
     public void setAbort() {
-        this.abort = true;
+        if (compState == null)
+            return;
+        compState.abort = true;
     }
     
     

@@ -1252,13 +1252,64 @@ table tr:last-child td:first-child {
 #btnSingleRound {
 }
 
+/* --------------------- cpuPanel bottom --------------------- */
 #messagesArea {
     border: 1px solid #000000;
     height: 140px;
     display: inline-block;
     width: 600px;
     border-radius: 4px;
+    margin: 10px 0 0 0;
 }
+
+.submem_area {
+    border: 1px solid #000000;
+    border-radius: 4px;
+    display: inline-block;
+    height: 180px;
+    margin: 5px;
+    position: relative;
+}
+#stackArea {
+    width: 160px;
+}
+#sharedMemArea {
+    width: 160px;
+}
+
+#stackView {
+}
+#sharedMemView {
+}
+.submem_title {
+    background: #eaeaea;
+    border-radius: 6px 6px 0 0;;
+    border-bottom: 1px solid #000000;
+    padding: 3px;
+    text-align: center;
+}
+.submem_list {
+    overflow: auto;
+    height: calc( 100% - 28px );  /* minus header height */
+    font-family: courier;
+    font-size: 16px;
+    padding: 2px 0 0 4px;
+    white-space: pre;
+}
+.submem_box_addr {
+    position: absolute;
+    top: 26px;
+    width: 58px;
+    height: calc( 100% - 26px);
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+    z-index: -1; /* don't know why */
+}
+
+.atStackLine {
+    background-color: #ddddff;
+}
+
 
 </style>
   </head>
@@ -1389,7 +1440,18 @@ table tr:last-child td:first-child {
                       <input class="flag_check_box hidden mycheck" id="CF_fcheck" type="checkbox">
                       <label class="flag_check mycheck_label" for="CF_fcheck" title="Carry Flag"></label></td>
               </tr>
-          </table><br>
+          </table>
+          <div id="stackArea" class="submem_area">
+              <div class="submem_title">Stack</div>
+              <div class="submem_box_addr"></div>
+              <div id="stackList" class="submem_list"></div>
+          </div>
+          <div id="sharedMemArea" class="submem_area">
+              <div class="submem_title">Shared Memory</div>
+              <div class="submem_box_addr"></div>
+              <div id="sharedMemList" class="submem_list"></div>
+          </div>
+          <br>
           <div id="messagesArea" class="codearea allow_select" wrap="off" > </div>
         </div>
       </div>
