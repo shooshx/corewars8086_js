@@ -19,6 +19,7 @@ public class Warrior
 {
     public RealModeMemoryRegion m_stackWritableRegion;
     public RealModeMemoryRegion m_sharedWritableRegion;
+    public RealModeMemoryRegion m_codeRegion;
 
     /**
      * Constructor.
@@ -62,32 +63,33 @@ public class Warrior
             new RealModeAddress(groupSharedMemory.getSegment(),
             (short)(groupSharedMemorySize-1));
 
-        RealModeMemoryRegion[] readAccessRegions =
-            new RealModeMemoryRegion[] {
-                new RealModeMemoryRegion(lowestStackAddress, initialStack),
-                new RealModeMemoryRegion(lowestCoreAddress, highestCoreAddress),
-                new RealModeMemoryRegion(groupSharedMemory, highestGroupSharedMemoryAddress)
-            };
-
         m_stackWritableRegion = new RealModeMemoryRegion(lowestStackAddress, initialStack);
         m_sharedWritableRegion = new RealModeMemoryRegion(groupSharedMemory, highestGroupSharedMemoryAddress);
+        m_codeRegion = new RealModeMemoryRegion(lowestCoreAddress, highestCoreAddress);
+
+
+        RealModeMemoryRegion[] readAccessRegions =
+            new RealModeMemoryRegion[] {
+                m_stackWritableRegion,
+                m_codeRegion,
+                m_sharedWritableRegion
+            };
 
         // initialize write-access regions
         RealModeMemoryRegion[] writeAccessRegions =
             new RealModeMemoryRegion[] {
                 m_stackWritableRegion,
-                new RealModeMemoryRegion(lowestCoreAddress, highestCoreAddress),
+                m_codeRegion,
                 m_sharedWritableRegion
             };
 
         // initialize execute-access regions
         RealModeMemoryRegion[] executeAccessRegions =
             new RealModeMemoryRegion[] {
-                new RealModeMemoryRegion(lowestCoreAddress, highestCoreAddress)
+                m_codeRegion
             };
 
-        m_memory = new RestrictedAccessRealModeMemory(
-            core, readAccessRegions, writeAccessRegions, executeAccessRegions);
+        m_memory = new RestrictedAccessRealModeMemory(core, readAccessRegions, writeAccessRegions, executeAccessRegions);
 
         m_cpu = new Cpu(m_state, m_memory);
 

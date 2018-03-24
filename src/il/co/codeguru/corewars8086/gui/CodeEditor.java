@@ -37,6 +37,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     @Override
     public void onWarStart() {
         m_mem = m_competition.getCurrentWar().getMemory().m_data;
+
     }
     @Override
     public void onWarEnd(int reason, String winners) {
@@ -95,7 +96,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         // don't rewrite lines if we're in the stage of putting warriors in memory
         if (m_memWriteState != EWriteState.RUN)
             return;
-        int ipInsideArena = address.getLinearAddress() - 0x1000 *0x10; // arena * paragraph
+        int absAddr = address.getLinearAddress();
+        if (absAddr < War.ARENA_SEGMENT || absAddr >= War.ARENA_SEGMENT + War.ARENA_SIZE)
+            return;
+        int ipInsideArena = absAddr - 0x1000 *0x10; // arena * paragraph
 
         int page = ipInsideArena / PAGE_SIZE;
         if (page < 0 || page >= m_pages.length)
