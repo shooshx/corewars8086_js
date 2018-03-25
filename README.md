@@ -15,11 +15,11 @@ Features include:
 - disassembly of code as it is executed
 - breakpoints in code
 - ability to set the program load address manually in the debugger
+- view of the stack and shared memory
 
   
 Coming up features:
-- code and data breakpoints
-- view of the stack and common memory
+- data breakpoints
 - watch view with full featured watch language
 - zoomable memory canvas
 - fixed randomization bug

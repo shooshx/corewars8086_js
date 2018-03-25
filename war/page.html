@@ -48,6 +48,9 @@ function start()
     });
 
     setup_breakpoints_savers()
+
+    addWatchLine();
+    addWatchLine();
 }
 
 
@@ -580,6 +583,73 @@ function updateLoadAddr(strValue, isRand) {
 }
 
 
+function addTableChild(elem, txt) {
+    var dummy = document.createElement("TABLE")
+    dummy.innerHTML = txt
+    elem.appendChild(dummy.firstChild.firstChild)
+    // firstChild of table is tbody added automatically, bypass it
+}
+
+// http://jsfiddle.net/thrilleratplay/epcybL4v/
+var g_watchId = 0;
+var watch_expr_list = []
+
+
+function addWatchLine() {
+    var text = '<tr class="watch_row" id="watchID">\
+                  <td class="watch_expr allow_select" id="watchID_expr" style="width:100px;">\
+                     <div id="watchID_expr_content" >A</div>\
+                     <input type="text" class="watch_expr_edit" id="watchID_expr_edit" spellcheck="false">\
+                     <div class="watch_grip" id="watchID_grip"></div>\
+                  </td>\
+                  <td class="watch_val" id="watchID_val">B</td>\
+               </tr>'
+    text = text.replace(/ID/g, g_watchId)
+
+    addTableChild(watchTable, text)
+    var grip = document.getElementById("watchID_grip".replace(/ID/g, g_watchId) )
+    var expr = document.getElementById("watchID_expr".replace(/ID/g, g_watchId) )
+    watch_expr_list.push(expr)
+    var expr_edit = document.getElementById("watchID_expr_edit".replace(/ID/g, g_watchId) )
+    var expr_content = document.getElementById("watchID_expr_content".replace(/ID/g, g_watchId) )
+
+    expr.addEventListener('click', function() {
+        expr_edit.style.visibility = "visible"
+        expr_edit.focus()
+    });
+    expr_edit.addEventListener('change', function() { // enter was pressed
+        expr_content.innerText = expr_edit.value;
+        expr_edit.style.visibility = "hidden"
+    });
+    expr_edit.addEventListener('blur', function() { // enter was pressed
+        expr_edit.style.visibility = "hidden"
+    });
+
+
+    ++g_watchId
+
+    var moving = false;
+    var startOffset;
+
+    grip.addEventListener('mousedown', function(e) {
+        moving = true;
+        startOffset = watch_expr_list[0].offsetWidth - e.pageX;
+    });
+
+
+    document.addEventListener('mousemove', function(e) {
+      if (moving) {
+          var watch_expr_size = startOffset + e.pageX + 'px'
+          for(var elemi in watch_expr_list)
+              watch_expr_list[elemi].style.width = watch_expr_size;
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+        moving = false;
+    });
+
+}
 
 </script>    
 <style>
@@ -1208,10 +1278,10 @@ input:disabled + .sc-btn:active,
 .flag_unsed {
     background-color: #cccccc;
 }
-table tr:first-child td:first-child {
+#reg_flags_table tr:first-child td:first-child {
     border-top-left-radius: 5px;
 }
-table tr:last-child td:first-child {
+#reg_flags_table tr:last-child td:first-child {
     border-bottom-left-radius: 5px;
 }
 
@@ -1309,6 +1379,53 @@ table tr:last-child td:first-child {
 .atStackLine {
     background-color: #ddddff;
 }
+#watch_container {
+    height: 180px;
+    width:200px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+}
+
+#watchArea {
+    overflow:auto;
+    height: calc( 100% - 26px);
+}
+#watchTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-style: hidden hidden solid hidden;
+    border-width: 1px;
+}
+
+.watch_expr, .watch_val  {
+    position: relative;
+    border: 1px solid #000000;
+    font-family: courier;
+    font-size: 16px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.watch_expr_edit {
+    visibility: hidden;
+    position: absolute;
+    width: calc( 100% - 4px);
+    top: 0;
+    /*left: 0;*/
+    font-family:courier;
+    font-size: 16px;
+    border: none;
+}
+
+.watch_grip {
+position: absolute;
+    height: 20px;
+    width: 7px;
+    right: -4px;
+    top: 0;
+    cursor: col-resize;
+    z-index: 1;
+}
 
 
 </style>
@@ -1366,6 +1483,15 @@ table tr:last-child td:first-child {
                 <input type="text" id="fixed_load_addr" spellcheck="false" value="A000" oninput="changedFixedAddr()">
             </div>
         </div>
+
+        <div id="watch_container">
+          <div class="submem_title">Watch</div>
+          <div id="watchArea">
+              <table id="watchTable" cellspacing="0">
+              </table>
+          </div>
+        </div>
+
       </div>
 
       <div id="cpuPanel" style="display:none;">
@@ -1451,12 +1577,14 @@ table tr:last-child td:first-child {
               <div class="submem_box_addr"></div>
               <div id="sharedMemList" class="submem_list"></div>
           </div>
+
           <br>
           <div id="messagesArea" class="codearea allow_select" wrap="off" ></div>
         </div>
       </div>
 
     </div></div>
+
     <div id="players_panel">
       <div id="players_rel">
         <input id="debugCheckbox" class="hidden" onchange="triggerDebug()" type="checkbox">
