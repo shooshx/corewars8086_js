@@ -51,6 +51,7 @@ function start()
 
     addWatchLine();
     addWatchLine();
+    addWatchLine();
 }
 
 
@@ -596,17 +597,16 @@ var watch_expr_list = []
 
 
 function addWatchLine() {
-    var text = '<tr class="watch_row" id="watchID">\
-                  <td class="watch_expr allow_select" id="watchID_expr" style="width:100px;">\
-                     <div id="watchID_expr_content" >A</div>\
+    var text = '<div class="watch_row" id="watchID">\
+                  <div class="watch_expr allow_select" id="watchID_expr" style="width:100px;">\
+                     <div id="watchID_expr_content" class="watch_expr_content">A</div>\
                      <input type="text" class="watch_expr_edit" id="watchID_expr_edit" spellcheck="false">\
                      <div class="watch_grip" id="watchID_grip"></div>\
-                  </td>\
-                  <td class="watch_val" id="watchID_val">B</td>\
-               </tr>'
+                  </div><div class="watch_val allow_select" id="watchID_val">B</div>\
+               </div>'
     text = text.replace(/ID/g, g_watchId)
 
-    addTableChild(watchTable, text)
+    addTextChild(watchArea, text)
     var grip = document.getElementById("watchID_grip".replace(/ID/g, g_watchId) )
     var expr = document.getElementById("watchID_expr".replace(/ID/g, g_watchId) )
     watch_expr_list.push(expr)
@@ -634,19 +634,28 @@ function addWatchLine() {
     grip.addEventListener('mousedown', function(e) {
         moving = true;
         startOffset = watch_expr_list[0].offsetWidth - e.pageX;
+        //console.log("CAPTURE")
     });
 
 
     document.addEventListener('mousemove', function(e) {
       if (moving) {
-          var watch_expr_size = startOffset + e.pageX + 'px'
+          var watch_expr_size = startOffset + e.pageX
           for(var elemi in watch_expr_list)
-              watch_expr_list[elemi].style.width = watch_expr_size;
+              watch_expr_list[elemi].style.width = watch_expr_size + 'px';
+          e.preventDefault(); // prevent selection action from messing it up
+
+          //console.log(watch_expr_size + "  " + watchArea.offsetWidth - 30)
+          if (watch_expr_size > watchArea.offsetWidth - 30)
+              watchArea.style.overflowX = "auto"
+          else
+              watchArea.style.overflowX = "hidden"
       }
     });
 
     document.addEventListener('mouseup', function() {
         moving = false;
+        //console.log("-release")
     });
 
 }
@@ -1387,14 +1396,13 @@ input:disabled + .sc-btn:active,
 }
 
 #watchArea {
-    overflow:auto;
+    overflow:hidden;
     height: calc( 100% - 26px);
 }
-#watchTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-style: hidden hidden solid hidden;
-    border-width: 1px;
+
+.watch_row {
+    white-space:nowrap;
+    height: 21px
 }
 
 .watch_expr, .watch_val  {
@@ -1402,24 +1410,46 @@ input:disabled + .sc-btn:active,
     border: 1px solid #000000;
     font-family: courier;
     font-size: 16px;
-    height: 18px;
-    line-height: 18px;
+    height: 21px;
+    line-height: 21px;
+
+    display: inline-block;
+    white-space: normal;
+
+    border-top: none;
+    border-left: none;
+    padding: 0 0 0 3px;
+    box-sizing: border-box;
+}
+.watch_expr {
+
+}
+.watch_val {
+    border-right: none;
+    width: 200px;
+    overflow:hidden;
 }
 
 .watch_expr_edit {
     visibility: hidden;
     position: absolute;
-    width: calc( 100% - 4px);
+    width: calc( 100% - 8px);
     top: 0;
-    /*left: 0;*/
+    left: 3px;
+    height: 100%;
     font-family:courier;
     font-size: 16px;
     border: none;
+    padding: 0;
+
+}
+.watch_expr_content {
+    overflow:hidden;
 }
 
 .watch_grip {
-position: absolute;
-    height: 20px;
+    position: absolute;
+    height: 21px;
     width: 7px;
     right: -4px;
     top: 0;
@@ -1487,8 +1517,7 @@ position: absolute;
         <div id="watch_container">
           <div class="submem_title">Watch</div>
           <div id="watchArea">
-              <table id="watchTable" cellspacing="0">
-              </table>
+
           </div>
         </div>
 
