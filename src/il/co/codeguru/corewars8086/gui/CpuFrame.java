@@ -3,6 +3,7 @@ package il.co.codeguru.corewars8086.gui;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.war.Competition;
 import il.co.codeguru.corewars8086.war.CompetitionEventListener;
@@ -10,6 +11,9 @@ import il.co.codeguru.corewars8086.war.War;
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.war.Warrior;
+
+import java.util.Dictionary;
+import java.util.HashMap;
 //import java.awt.Font;
 //import java.awt.GridLayout;
 //import java.awt.event.ActionEvent;
@@ -61,7 +65,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 
 		// need to do this first so that reading the registers would put this ss:sp in the right place
 		initMemRegions(false);
-		updateFileds();
+		updateFields();
 
 	}
 
@@ -200,13 +204,15 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 
 		stackView = new MemRegionView("stackList", "mk");
 		sharedMemView = new MemRegionView("sharedMemList", "mh");
+
+		m_parser.m_stateAccess = m_stateAccess;
 	}
 
 	public native void exportMethods() /*-{
         var that = this
         $wnd.j_setRegistersBase = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_setRegistersBase(I)(b) });
-        $wnd.j_watchEval = $entry(function(s) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_watchEval(Ljava/lang/String;)(s) });
-
+        $wnd.j_watchTextChanged = $entry(function(s,i) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_watchTextChanged(Ljava/lang/String;I)(s,i) });
+        $wnd.j_addWatch = $entry(function(i) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_addWatch(I)(i) });
 	}-*/;
 
 	public void j_setRegistersBase(int base) {
@@ -229,7 +235,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		// setBase already updates the value if that's ok
 	}
 	
-	public void updateFileds(){
+	public void updateFields(){
 		War currentWar = competition.getCurrentWar();
 		if (currentWar == null)
 			return;
@@ -259,16 +265,112 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		updateFlagBoxes(state);
 		stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), state.getSP()));
 
+		// update watches;
+		m_stateAccess.state = state;
+		for (WatchEntry entry : m_watches.values()) {
+			String newval;
+			try {
+				int res = entry.root.eval();
+				newval = Integer.toString(res);
+			} catch (Exception e) {
+				Console.log("watch error: " + e.getMessage());
+				newval = "Error: " + e.getMessage();
+			}
+			Format.setInnerText(entry.resultElem, newval);
+		}
+
 	}
 
+	private static class StateAccess implements ExpressionParser.IStateAccess {
+		public CpuState state;
+
+		@Override
+		public short getRegisterValue(String name) throws Exception{
+		    if (state == null) {
+		        throw new Exception("invalid state");
+            }
+			switch (name) {
+				case "AX": return state.getAX();
+				case "AL": return state.getAL();
+				case "AH": return state.getAH();
+
+				case "BX": return state.getBX();
+				case "BL": return state.getBL();
+				case "BH": return state.getBH();
+
+				case "CX": return state.getCX();
+				case "CL": return state.getCL();
+				case "CH": return state.getCH();
+
+				case "DX": return state.getDX();
+				case "DL": return state.getDL();
+				case "DH": return state.getDH();
+
+				case "SI": return state.getSI();
+				case "DI": return state.getDI();
+				case "BP": return state.getBP();
+				case "SP": return state.getSP();
+				case "IP": return state.getIP();
+				case "CS": return state.getCS();
+				case "DS": return state.getDS();
+				case "SS": return state.getSS();
+				case "ES": return state.getES();
+
+				case "ENERGY": return state.getEnergy();
+				case "FLAGS": return state.getFlags();
+			}
+			throw new Exception("unknown register name " + name); // should not happen since we check before
+		}
+
+		@Override
+		public int getIdentifierValue(String name) throws Exception {
+		    throw new Exception("unknown identifier " + name);
+		}
+	}
+
+	class WatchEntry {
+		public ExpressionParser.INode root;
+		public HTMLElement resultElem;
+		boolean isValid = false;
+	}
+	HashMap<Integer, WatchEntry> m_watches = new HashMap<>();
+	StateAccess m_stateAccess = new StateAccess();
 	ExpressionParser m_parser = new ExpressionParser();
-	String j_watchEval(String s) {
+
+	void j_addWatch(int watchId) {
+        WatchEntry entry = new WatchEntry();
+        m_watches.put(watchId, entry);
+        entry.resultElem = (HTMLElement)DomGlobal.document.getElementById("watch" + Integer.toString(watchId) + "_val" );
+        assert entry.resultElem != null : "did not find watch result element";
+    }
+
+    boolean onlySpaces(String s) {
+	    for(int i = 0; i < s.length(); ++i) {
+	        char c = s.charAt(i);
+	        if (c != ' ')
+	            return false;
+        }
+	    return true;
+    }
+
+	String j_watchTextChanged(String s, int watchId)
+    {
+        WatchEntry entry = m_watches.get(watchId);
+        assert entry != null : "did not find watch";
+        if (onlySpaces(s)) {
+            entry.isValid = false;
+            return "";
+        }
 		try {
-			int v = m_parser.eval(s);
-			return Integer.toString(v);
-		} catch (Exception e) {
-			Console.log("Watch parse error: " + e.toString());
-			return "Error: " + e.toString();
+			entry.root = m_parser.eval(s);
+			entry.isValid = true;
+			int res = entry.root.eval();
+			return Integer.toString(res);
+		}
+		catch (Exception e) {
+		    entry.isValid = false;
+			Console.log("Watch parse error: " + e.getMessage());
+			return "Error: " + e.getMessage();
 		}
 	}
 
@@ -323,7 +425,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 
 	@Override
 	public void onEndRound() {
-		this.updateFileds();
+		this.updateFields();
 	}
 
 }

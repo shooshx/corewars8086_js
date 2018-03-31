@@ -49,9 +49,7 @@ function start()
 
     setup_breakpoints_savers()
 
-    addWatchLine();
-    addWatchLine();
-    addWatchLine();
+
 }
 
 
@@ -242,6 +240,10 @@ function gwtStart()
     triggerSrc('A', 1)
 
     j_demoDebugPlayers();
+
+    addWatchLine();
+    //addWatchLine();
+    //addWatchLine();
 }
 
 
@@ -591,42 +593,58 @@ function addTableChild(elem, txt) {
     // firstChild of table is tbody added automatically, bypass it
 }
 
-// http://jsfiddle.net/thrilleratplay/epcybL4v/
+// grip idea from http://jsfiddle.net/thrilleratplay/epcybL4v/
 var g_watchId = 0;
 var watch_expr_list = []
-
+var watch_expr_size = null  // size as dragged by the grip
 
 function addWatchLine() {
+    var wid = g_watchId++
+
     var text = '<div class="watch_row" id="watchID">\
                   <div class="watch_expr allow_select" id="watchID_expr" style="width:100px;">\
-                     <div id="watchID_expr_content" class="watch_expr_content">A</div>\
+                     <div id="watchID_expr_content" class="watch_expr_content">&nbsp;</div>\
                      <input type="text" class="watch_expr_edit" id="watchID_expr_edit" spellcheck="false">\
                      <div class="watch_grip" id="watchID_grip"></div>\
-                  </div><div class="watch_val allow_select" id="watchID_val">B</div>\
+                  </div><div class="watch_val allow_select" id="watchID_val"></div>\
+                  <div id="del_watch_but" class="sc-btn" title="Remove watch" onclick="delWatchLine()"> \
                </div>'
-    text = text.replace(/ID/g, g_watchId)
+    text = text.replace(/ID/g, wid)
 
     addTextChild(watchArea, text)
-    var grip = document.getElementById("watchID_grip".replace(/ID/g, g_watchId) )
-    var expr = document.getElementById("watchID_expr".replace(/ID/g, g_watchId) )
+    add_watch_but.style.top = (watch_expr_list.length * 21 + 21) + "px"
+
+    var grip = document.getElementById("watchID_grip".replace(/ID/g, wid) )
+    var expr = document.getElementById("watchID_expr".replace(/ID/g, wid) )
     watch_expr_list.push(expr)
-    var expr_edit = document.getElementById("watchID_expr_edit".replace(/ID/g, g_watchId) )
-    var expr_content = document.getElementById("watchID_expr_content".replace(/ID/g, g_watchId) )
+    if (watch_expr_size != null)
+        expr.style.width = watch_expr_size + 'px';
+    var expr_edit = document.getElementById("watchID_expr_edit".replace(/ID/g, wid) )
+    var expr_content = document.getElementById("watchID_expr_content".replace(/ID/g, wid) )
+    var valu = document.getElementById("watchID_val".replace(/ID/g, wid) )
+
+    j_addWatch(wid)
 
     expr.addEventListener('click', function() {
         expr_edit.style.visibility = "visible"
         expr_edit.focus()
     });
     expr_edit.addEventListener('change', function() { // enter was pressed
-        expr_content.innerText = expr_edit.value;
+        //expr_content.innerText = expr_edit.value;
         expr_edit.style.visibility = "hidden"
+    });
+    expr_edit.addEventListener('input', function() { // enter was pressed
+        var result = j_watchTextChanged(expr_edit.value, wid)
+        if (result == "")
+            expr_content.innerHTML = "&nbsp;"; // without this the watch window layout gets messed up for some reason
+        else
+            expr_content.innerText = expr_edit.value;
+        valu.innerText = result
     });
     expr_edit.addEventListener('blur', function() { // enter was pressed
         expr_edit.style.visibility = "hidden"
     });
 
-
-    ++g_watchId
 
     var moving = false;
     var startOffset;
@@ -640,13 +658,13 @@ function addWatchLine() {
 
     document.addEventListener('mousemove', function(e) {
       if (moving) {
-          var watch_expr_size = startOffset + e.pageX
+          watch_expr_size = startOffset + e.pageX
           for(var elemi in watch_expr_list)
               watch_expr_list[elemi].style.width = watch_expr_size + 'px';
           e.preventDefault(); // prevent selection action from messing it up
 
           //console.log(watch_expr_size + "  " + watchArea.offsetWidth - 30)
-          if (watch_expr_size > watchArea.offsetWidth - 30)
+          if (watch_expr_size > watchArea.offsetWidth - 50)
               watchArea.style.overflowX = "auto"
           else
               watchArea.style.overflowX = "hidden"
@@ -659,6 +677,12 @@ function addWatchLine() {
     });
 
 }
+
+
+function delWatchLine() {
+
+}
+
 
 </script>    
 <style>
@@ -1389,20 +1413,24 @@ input:disabled + .sc-btn:active,
     background-color: #ddddff;
 }
 #watch_container {
+    display: inline-block;
     height: 180px;
-    width:200px;
+    width: 243px;
     border: 1px solid #000000;
     border-radius: 4px;
 }
 
 #watchArea {
-    overflow:hidden;
-    height: calc( 100% - 26px);
+    overflow-x:hidden;
+    overflow-y:auto;
+    height: calc( 100% - 26px); /* needed so that the scrollbar would show at the bottom */
+    position: relative;
 }
 
 .watch_row {
     white-space:nowrap;
-    height: 21px
+    height: 21px;
+    position: relative; /* for X placement */
 }
 
 .watch_expr, .watch_val  {
@@ -1455,6 +1483,36 @@ input:disabled + .sc-btn:active,
     top: 0;
     cursor: col-resize;
     z-index: 1;
+}
+
+
+#add_watch_but {
+    width: 19px;
+    height: 19px;
+    background: url(small_plus.png) no-repeat;
+    background-position: 3px 3px;
+    background-color: #d5d5ff;
+    line-height:18px;
+    border-radius:3px;
+    position: absolute;
+    /* position from top set in code */
+}
+
+#del_watch_but {
+    width: 19px;
+    height: 19px;
+    background: url(small_ex.png) no-repeat;
+    line-height:18px;
+    border-radius:3px;
+    position: absolute;
+    left: 170px;
+    margin: 0;
+    background-position: 4px;
+    background-color: #ffcdcd;
+    display: none;
+}
+.watch_row:hover > #del_watch_but {
+    display:initial;
 }
 
 
@@ -1517,7 +1575,8 @@ input:disabled + .sc-btn:active,
         <div id="watch_container">
           <div class="submem_title">Watch</div>
           <div id="watchArea">
-
+              <div id="add_watch_but" class="sc-btn" title="Add watch" onclick="addWatchLine()">
+          </div>
           </div>
         </div>
 
@@ -1606,6 +1665,11 @@ input:disabled + .sc-btn:active,
               <div class="submem_box_addr"></div>
               <div id="sharedMemList" class="submem_list"></div>
           </div>
+            <div id="watch_container__">
+                <div class="submem_title">Watch</div>
+                <div id="watchArea__">
+                </div>
+            </div>
 
           <br>
           <div id="messagesArea" class="codearea allow_select" wrap="off" ></div>
