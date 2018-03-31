@@ -205,6 +205,8 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 	public native void exportMethods() /*-{
         var that = this
         $wnd.j_setRegistersBase = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_setRegistersBase(I)(b) });
+        $wnd.j_watchEval = $entry(function(s) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_watchEval(Ljava/lang/String;)(s) });
+
 	}-*/;
 
 	public void j_setRegistersBase(int base) {
@@ -258,6 +260,18 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), state.getSP()));
 
 	}
+
+	ExpressionParser m_parser = new ExpressionParser();
+	String j_watchEval(String s) {
+		try {
+			int v = m_parser.eval(s);
+			return Integer.toString(v);
+		} catch (Exception e) {
+			Console.log("Watch parse error: " + e.toString());
+			return "Error: " + e.toString();
+		}
+	}
+
 
 	// set the mem regions with the correct address region and values
 	// force if we must reread the memory in a new battle (don't keep the old one but it may have the same regions)
