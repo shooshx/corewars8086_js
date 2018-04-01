@@ -607,12 +607,12 @@ function addWatchLine() {
                      <input type="text" class="watch_expr_edit" id="watchID_expr_edit" spellcheck="false">\
                      <div class="watch_grip" id="watchID_grip"></div>\
                   </div><div class="watch_val allow_select" id="watchID_val"></div>\
-                  <div id="del_watch_but" class="sc-btn" title="Remove watch" onclick="delWatchLine()"> \
+                  <div id="watchID_del_but" class="sc-btn watch_del_but" title="Remove watch"></div> \
                </div>'
     text = text.replace(/ID/g, wid)
 
     addTextChild(watchArea, text)
-    add_watch_but.style.top = (watch_expr_list.length * 21 + 21) + "px"
+    //add_watch_but.style.top = (watch_expr_list.length * 21 + 21) + "px"
 
     var grip = document.getElementById("watchID_grip".replace(/ID/g, wid) )
     var expr = document.getElementById("watchID_expr".replace(/ID/g, wid) )
@@ -622,6 +622,7 @@ function addWatchLine() {
     var expr_edit = document.getElementById("watchID_expr_edit".replace(/ID/g, wid) )
     var expr_content = document.getElementById("watchID_expr_content".replace(/ID/g, wid) )
     var valu = document.getElementById("watchID_val".replace(/ID/g, wid) )
+    var delbut = document.getElementById("watchID_del_but".replace(/ID/g, wid) )
 
     j_addWatch(wid)
 
@@ -632,6 +633,10 @@ function addWatchLine() {
     expr_edit.addEventListener('change', function() { // enter was pressed
         //expr_content.innerText = expr_edit.value;
         expr_edit.style.visibility = "hidden"
+        // if it's the last one being edited and there is a non empty value written in it, add another one
+        if (watch_expr_list.indexOf(expr) == watch_expr_list.length - 1 && valu.innerText != "") {
+            addWatchLine();
+        }
     });
     expr_edit.addEventListener('input', function() { // enter was pressed
         var result = j_watchTextChanged(expr_edit.value, wid)
@@ -643,6 +648,19 @@ function addWatchLine() {
     });
     expr_edit.addEventListener('blur', function() { // enter was pressed
         expr_edit.style.visibility = "hidden"
+    });
+
+    delbut.addEventListener("click", function() {
+        if (watch_expr_list.length == 1)
+            return // don't delete the last one
+        if (watch_expr_list.indexOf(expr) == watch_expr_list.length - 1 && valu.innerText == "")
+            return // don't delete the last one that is empty that was last edded
+        var idx = watch_expr_list.indexOf(expr)
+        if (idx == -1)
+            return // should not happen
+        var row = document.getElementById("watchID".replace(/ID/g, wid) )
+        watchArea.removeChild(row)
+        watch_expr_list.splice(idx, 1)
     });
 
 
@@ -679,9 +697,6 @@ function addWatchLine() {
 }
 
 
-function delWatchLine() {
-
-}
 
 
 </script>    
@@ -1498,20 +1513,22 @@ input:disabled + .sc-btn:active,
     /* position from top set in code */
 }
 
-#del_watch_but {
+
+.watch_del_but {
     width: 19px;
     height: 19px;
-    background: url(small_ex.png) no-repeat;
+    background-image: url(small_ex.png) !important;
+    background-repeat: no-repeat;
     line-height:18px;
     border-radius:3px;
     position: absolute;
-    left: 170px;
+    left: calc(100% - 21px);
     margin: 0;
     background-position: 4px;
-    background-color: #ffcdcd;
+    background-color: #ffcdcd !important; /* override the sc-btn behaviour */
     display: none;
 }
-.watch_row:hover > #del_watch_but {
+.watch_row:hover > .watch_del_but {
     display:initial;
 }
 
@@ -1575,7 +1592,7 @@ input:disabled + .sc-btn:active,
         <div id="watch_container">
           <div class="submem_title">Watch</div>
           <div id="watchArea">
-              <div id="add_watch_but" class="sc-btn" title="Add watch" onclick="addWatchLine()">
+              <!--<div id="add_watch_but" class="sc-btn" title="Add watch" onclick="addWatchLine()">-->
           </div>
           </div>
         </div>
