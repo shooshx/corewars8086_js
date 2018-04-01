@@ -213,6 +213,8 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
         $wnd.j_setRegistersBase = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_setRegistersBase(I)(b) });
         $wnd.j_watchTextChanged = $entry(function(s,i) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_watchTextChanged(Ljava/lang/String;I)(s,i) });
         $wnd.j_addWatch = $entry(function(i) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_addWatch(I)(i) });
+        $wnd.j_delWatch = $entry(function(i) { return that.@il.co.codeguru.corewars8086.gui.CpuFrame::j_delWatch(I)(i) });
+
 	}-*/;
 
 	public void j_setRegistersBase(int base) {
@@ -233,7 +235,14 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		regE.setBase(base);
 		regF.setBase(base);
 		// setBase already updates the value if that's ok
+
+        for (WatchEntry entry : m_watches.values()) {
+            entry.base = base;
+            entry.evalAndDisplay();
+        }
 	}
+
+
 	
 	public void updateFields(){
 		War currentWar = competition.getCurrentWar();
@@ -268,18 +277,13 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		// update watches;
 		m_stateAccess.state = state;
 		for (WatchEntry entry : m_watches.values()) {
-			String newval;
-			try {
-				int res = entry.root.eval();
-				newval = Integer.toString(res);
-			} catch (Exception e) {
-				Console.log("watch error: " + e.getMessage());
-				newval = "Error: " + e.getMessage();
-			}
-			Format.setInnerText(entry.resultElem, newval);
+            entry.evalAndDisplay();
 		}
 
 	}
+
+
+
 
 	private static class StateAccess implements ExpressionParser.IStateAccess {
 		public CpuState state;
@@ -332,7 +336,35 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		public ExpressionParser.INode root;
 		public HTMLElement resultElem;
 		boolean isValid = false;
+        int base = 16;
+
+        public void setResult(int v) {
+            String sv;
+            if (base == 16)
+                sv = Format.hex(v, 4);
+            else
+                sv = Integer.toString(v);
+            setResult(sv);
+        }
+
+		public void setResult(String v) {
+            Format.setInnerText(resultElem, v);
+            resultElem.title = v; // tooltip also shows the same text in case it is obscured
+        }
+
+        public void evalAndDisplay() {
+            if (!isValid)
+                return;
+            try {
+                int res = root.eval();
+                setResult(res);
+            } catch (Exception e) {
+                Console.log("watch error: " + e.getMessage());
+                setResult("Error: " + e.getMessage());
+            }
+        }
 	}
+
 	HashMap<Integer, WatchEntry> m_watches = new HashMap<>();
 	StateAccess m_stateAccess = new StateAccess();
 	ExpressionParser m_parser = new ExpressionParser();
@@ -342,6 +374,11 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
         m_watches.put(watchId, entry);
         entry.resultElem = (HTMLElement)DomGlobal.document.getElementById("watch" + Integer.toString(watchId) + "_val" );
         assert entry.resultElem != null : "did not find watch result element";
+        Console.debug("Watchs: " + Integer.toString(m_watches.size()));
+    }
+
+    void j_delWatch(int watchId) {
+        m_watches.remove(watchId);
     }
 
     boolean onlySpaces(String s) {
@@ -353,25 +390,29 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 	    return true;
     }
 
-	String j_watchTextChanged(String s, int watchId)
+    // returns true if string is not empty or only spaces
+	boolean j_watchTextChanged(String s, int watchId)
     {
         WatchEntry entry = m_watches.get(watchId);
         assert entry != null : "did not find watch";
         if (onlySpaces(s)) {
             entry.isValid = false;
-            return "";
+            entry.setResult("");
+            return false;
         }
+
+        entry.isValid = false;
 		try {
 			entry.root = m_parser.eval(s);
 			entry.isValid = true;
-			int res = entry.root.eval();
-			return Integer.toString(res);
 		}
-		catch (Exception e) {
-		    entry.isValid = false;
-			Console.log("Watch parse error: " + e.getMessage());
-			return "Error: " + e.getMessage();
+		catch (Exception e) { // might be an exception from ast eval which doesn't make the watch not valid
+			Console.debug("Watch parse error: " + e.getMessage());
+            entry.setResult("Error: " + e.getMessage());
 		}
+		entry.evalAndDisplay();
+
+		return true;
 	}
 
 

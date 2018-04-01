@@ -93,3 +93,6 @@ breakpoints
 
 - scroll in opcodes and numbers panes not working in editor
 - make it not possible to add breakpoints in comment lines?
+
+- registers, watch - display can be hex/signed/unsigned
+

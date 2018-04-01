@@ -61,6 +61,11 @@ public class Console  {
         console.log(text);
     }-*/;
 
+    public static native void debug(String text)
+    /*-{
+        console.log(text);
+    }-*/;
+
     public static native void error(String text)
     /*-{
         console.error(text);

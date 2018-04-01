@@ -640,11 +640,10 @@ function addWatchLine() {
     });
     expr_edit.addEventListener('input', function() { // enter was pressed
         var result = j_watchTextChanged(expr_edit.value, wid)
-        if (result == "")
+        if (result == false)
             expr_content.innerHTML = "&nbsp;"; // without this the watch window layout gets messed up for some reason
         else
             expr_content.innerText = expr_edit.value;
-        valu.innerText = result
     });
     expr_edit.addEventListener('blur', function() { // enter was pressed
         expr_edit.style.visibility = "hidden"
@@ -660,6 +659,7 @@ function addWatchLine() {
             return // should not happen
         var row = document.getElementById("watchID".replace(/ID/g, wid) )
         watchArea.removeChild(row)
+        j_delWatch(wid)
         watch_expr_list.splice(idx, 1)
     });
 
@@ -1589,13 +1589,12 @@ input:disabled + .sc-btn:active,
             </div>
         </div>
 
-        <div id="watch_container">
+       <!-- <div id="watch_container">
           <div class="submem_title">Watch</div>
           <div id="watchArea">
-              <!--<div id="add_watch_but" class="sc-btn" title="Add watch" onclick="addWatchLine()">-->
           </div>
           </div>
-        </div>
+        </div>-->
 
       </div>
 
@@ -1682,9 +1681,9 @@ input:disabled + .sc-btn:active,
               <div class="submem_box_addr"></div>
               <div id="sharedMemList" class="submem_list"></div>
           </div>
-            <div id="watch_container__">
+            <div id="watch_container">
                 <div class="submem_title">Watch</div>
-                <div id="watchArea__">
+                <div id="watchArea">
                 </div>
             </div>
 

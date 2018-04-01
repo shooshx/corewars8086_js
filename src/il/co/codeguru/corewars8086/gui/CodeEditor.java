@@ -97,7 +97,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         if (m_memWriteState != EWriteState.RUN)
             return;
         int absAddr = address.getLinearAddress();
-        if (absAddr < War.ARENA_SEGMENT || absAddr >= War.ARENA_SEGMENT + War.ARENA_SIZE)
+        if (absAddr < War.ARENA_SEGMENT*RealModeAddress.PARAGRAPH_SIZE || absAddr >= War.ARENA_SEGMENT*RealModeAddress.PARAGRAPH_SIZE + War.ARENA_SIZE)
             return;
         int ipInsideArena = absAddr - 0x1000 *0x10; // arena * paragraph
 
