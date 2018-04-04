@@ -16,11 +16,18 @@ Features include:
 - breakpoints in code
 - ability to set the program load address manually in the debugger
 - view of the stack and shared memory
-
+- watch view with full featured watch language
+  - all operators: +,-,*,/,%,|,&,~,**(power)
+  - all operations are 16 bit math
+  - register access by the names
+  - memory access using square brackets 
+     - [bx] to access byte, 
+     - [bx]w to access a word, 
+     - [ds:bx] to access fully qualified address
+  - numbers in hex (0xA3F), binary (0b110111) and octal (0o14427)   
   
 Coming up features:
 - data breakpoints
-- watch view with full featured watch language
 - zoomable memory canvas
 - fixed randomization bug
 - online competition

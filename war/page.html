@@ -626,9 +626,12 @@ function addWatchLine() {
 
     j_addWatch(wid)
 
-    expr.addEventListener('click', function() {
+    expr.addEventListener('click', function(e) {
         expr_edit.style.visibility = "visible"
         expr_edit.focus()
+        // TBD should somehow put the cursor in the expected place inside expr_edit
+        // measure the text and use selectionStart, selectionEnd to place the cursor
+
     });
     expr_edit.addEventListener('change', function() { // enter was pressed
         //expr_content.innerText = expr_edit.value;

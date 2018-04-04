@@ -16,7 +16,7 @@ public class ExpressionParser
             v = _v;
         }
         public int eval(){
-            return v;
+            return v; // numbers remain as they are and not converted to 16 bit
         }
     }
     public static class BinaryOpNode implements INode {
@@ -34,37 +34,39 @@ public class ExpressionParser
             return v;
         }
         public int eval() throws Exception {
-            int v1 = left.eval();
-            int v2 = right.eval();
+            int v1 = left.eval() & 0xffff;
+            int v2 = right.eval() & 0xffff;
+            int ret;
             switch (op) {
-                case OPERATOR_BITWISE_OR:     return v1 | v2;
-                case OPERATOR_BITWISE_XOR:    return v1 ^ v2;
-                case OPERATOR_BITWISE_AND:    return v1 & v2;
-                case OPERATOR_BITWISE_SHL:    return v1 << v2;
-                case OPERATOR_BITWISE_SHR:    return v1 >> v2;
-                case OPERATOR_ADDITION:       return v1 + v2;
-                case OPERATOR_SUBTRACTION:    return v1 - v2;
-                case OPERATOR_MULTIPLICATION: return v1 * v2;
-                case OPERATOR_DIVISION:       return v1 / checkZero(v2);
-                case OPERATOR_MODULO:         return v1 % checkZero(v2);
-                case OPERATOR_POWER:          return pow(v1, v2);
-                case OPERATOR_EXPONENT:       return v1 * pow(10, v2);
-                default:  return 0;
+                case OPERATOR_BITWISE_OR:     ret = v1 | v2; break;
+                case OPERATOR_BITWISE_XOR:    ret = v1 ^ v2; break;
+                case OPERATOR_BITWISE_AND:    ret = v1 & v2; break;
+                case OPERATOR_BITWISE_SHL:    ret = v1 << v2; break;
+                case OPERATOR_BITWISE_SHR:    ret = v1 >> v2; break;
+                case OPERATOR_ADDITION:       ret = v1 + v2; break;
+                case OPERATOR_SUBTRACTION:    ret = v1 - v2; break;
+                case OPERATOR_MULTIPLICATION: ret = v1 * v2; break;
+                case OPERATOR_DIVISION:       ret = v1 / checkZero(v2); break;
+                case OPERATOR_MODULO:         ret = v1 % checkZero(v2); break;
+                case OPERATOR_POWER:          ret = pow(v1, v2); break;
+                case OPERATOR_EXPONENT:       ret = v1 * pow(10, v2); break;
+                default:  throw new Exception("unexpected operator");
             }
+            return ret & 0xffff;
         }
     }
     public static class UnaryNegNode implements INode {
         INode child;
         public UnaryNegNode(INode c) { child = c; }
         public int eval() throws Exception {
-            return -child.eval();
+            return (- (child.eval() & 0xffff)) & 0xffff;
         }
     }
     public static class UnaryNotNode implements INode {
         INode child;
         public UnaryNotNode(INode c) { child = c; }
         public int eval() throws Exception {
-            return ~child.eval();
+            return (~ (child.eval() & 0xffff)) & 0xffff;
         }
     }
     public static class RegisterNode implements INode {
@@ -75,7 +77,7 @@ public class ExpressionParser
             state = _state;
         }
         public int eval() throws Exception {
-            return state.getRegisterValue(name);
+            return state.getRegisterValue(name) & 0xffff;
         }
     }
     // the same but calls a different function
@@ -87,13 +89,32 @@ public class ExpressionParser
             state = _state;
         }
         public int eval() throws Exception {
-            return state.getIdentifierValue(name);
+            return state.getIdentifierValue(name) & 0xffff;
+        }
+    }
+
+    public static class MemAccessNode implements INode {
+        INode vseg, vaddr;
+        int sz;
+        IStateAccess state;
+        MemAccessNode(INode _vseg, INode _vaddr, int _sz, IStateAccess _state) {
+            vseg = _vseg;
+            vaddr = _vaddr;
+            sz = _sz; state = _state;
+        }
+        public int eval() throws Exception {
+            int addr = vaddr.eval() & 0xffff;
+            int seg = -1;
+            if (vseg != null)
+                seg = vseg.eval() & 0xffff;
+            return state.getMemory(addr, seg, sz);
         }
     }
 
     public interface IStateAccess {
         short getRegisterValue(String name) throws Exception;
         int getIdentifierValue(String name) throws Exception;
+        int getMemory(int addr, int seg, int size) throws Exception;
     }
 
 
@@ -377,15 +398,34 @@ public class ExpressionParser
             value = value * 0x10 + h;
         return new NumNode(value);
     }
+    private INode parseBin() {
+        index_ = index_ + 2;
+        int value = 0;
+        for (int h; (h = getInteger()) <= 1; index_++)
+            value = value * 2 + h;
+        return new NumNode(value);
+    }
+    private INode parseOct() {
+        index_ = index_ + 2;
+        int value = 0;
+        for (int h; (h = getInteger()) <= 7; index_++)
+            value = value * 8 + h;
+        return new NumNode(value);
+    }
 
-    private boolean isHex()
+    private int getBase()
     {
         if (index_ + 2 < expr_.length()) {
-            char x = expr_.charAt(index_ + 1);
+            char x = Character.toLowerCase(expr_.charAt(index_ + 1));
             char h = expr_.charAt(index_ + 2);
-            return (Character.toLowerCase(x) == 'x' && toInteger(h) <= 0xf);
+            if (x == 'x' && toInteger(h) <= 0xf)
+                return 16;
+            if (x == 'b' && toInteger(h) <= 1)
+                return 2;
+            if (x == 'o' && toInteger(h) <= 8)
+                return 8;
         }
-        return false;
+        return 10;
     }
 
     /// Parse an integer value at the current expression index.
@@ -398,8 +438,13 @@ public class ExpressionParser
         char c = getCharacter();
         switch (c) {
             case '0':
-                if (isHex())
+                int base = getBase();
+                if (base == 16)
                     val = parseHex();
+                else if (base == 2)
+                    val = parseBin();
+                else if (base == 8)
+                    val = parseOct();
                 else
                     val = parseDecimal();
                 break;
@@ -419,6 +464,34 @@ public class ExpressionParser
                 }
                 index_++;
                 break;
+
+            case '[':
+                index_++;
+                INode vseg = null, vaddr = parseExpr();
+                eatSpaces();
+                if (getCharacter() == ':') {
+                    index_++;
+                    vseg = vaddr;
+                    vaddr = parseExpr();
+                    eatSpaces();
+                }
+                if (getCharacter() != ']') {
+                    if (!isEnd())
+                        unexpected();
+                    throw new Exception("Syntax error: `]' expected at end of expression");
+                }
+                index_++;
+                c = getCharacter();
+                int sz = 1;
+                if (c == 'w' || c == 'W') {
+                    sz = 2;
+                    index_++;
+                }
+                if (c == 'b' || c == 'B')
+                    index_++;
+                val = new MemAccessNode(vseg, vaddr, sz, m_stateAccess);
+                break;
+
             case '~':
                 index_++;
                 val = new UnaryNotNode(parseValue());

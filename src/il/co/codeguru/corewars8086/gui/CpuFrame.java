@@ -5,6 +5,7 @@ import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.cpu.CpuState;
 import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
+import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
 import il.co.codeguru.corewars8086.war.Competition;
 import il.co.codeguru.corewars8086.war.CompetitionEventListener;
 import il.co.codeguru.corewars8086.war.War;
@@ -124,6 +125,13 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 			case "Energy": state.setEnergy(sv); break;
 			case "Flags": state.setFlags(sv); updateFlagBoxes(state); break;
 		}
+
+		// reeval watch - might change depending on the register that just changed
+		m_stateAccess.state = state;
+		for (WatchEntry entry : m_watches.values()) {
+			entry.evalAndDisplay();
+		}
+
 		return 1;
 	}
 
@@ -287,6 +295,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 
 	private static class StateAccess implements ExpressionParser.IStateAccess {
 		public CpuState state;
+		public RealModeMemoryImpl memory;
 
 		@Override
 		public short getRegisterValue(String name) throws Exception{
@@ -330,6 +339,19 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		public int getIdentifierValue(String name) throws Exception {
 		    throw new Exception("unknown identifier " + name);
 		}
+
+		@Override
+		public int getMemory(int addr, int seg, int size) throws Exception {
+			short sseg = (short)seg;
+			if (seg == -1)
+				sseg = state.getDS();
+			int linaddr = RealModeAddress.linearAddress(sseg, (short)addr);
+			if (size == 1)
+				return memory.readByte(linaddr) & 0xff;
+			else
+				return memory.readWord(new RealModeAddress(linaddr)) & 0xffff;
+		}
+
 	}
 
 	class WatchEntry {
@@ -428,6 +450,8 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 
 		stackView.initMemRegion(warrior.m_stackWritableRegion, currentWar.getMemory(), force);
 		sharedMemView.initMemRegion(warrior.m_sharedWritableRegion, currentWar.getMemory(), force);
+
+		m_stateAccess.memory = currentWar.getMemory();
 	}
 
 
@@ -437,6 +461,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		m_currentWarriorIndex = -1; // invalidate
 
 		initMemRegions(true);
+
 	}
 
 	@Override
