@@ -27,7 +27,7 @@ public class CompetitionWindow extends JFrame
     // widgets
     //private JButton runWarButton;
     private JLabel warCounterDisplay;
-    private JCheckBox showBattleCheckBox;
+    //private JCheckBox showBattleCheckBox;
     private boolean m_isBattleShown = false;
     private JTextField battlesPerGroupField;
     //private JTextField warriorsPerGroupField;
@@ -40,7 +40,7 @@ public class CompetitionWindow extends JFrame
 	
 	private JTextField seed;
 
-    private JCheckBox startPausedCheckBox;
+    //private JCheckBox startPausedCheckBox;
     private boolean m_isStartPaused = false;
 
     public CodeEditor m_codeEditor;
@@ -73,17 +73,17 @@ public class CompetitionWindow extends JFrame
         warCounterDisplay = new JLabel("");
         buttonPanel.add(warCounterDisplay);
         buttonPanel.add(Box.createHorizontalStrut(30));
-        showBattleCheckBox = new JCheckBox("showBattleCheckBox", "Show session on start");
+        /*showBattleCheckBox = new JCheckBox("showBattleCheckBox", "Show session on start");
 		showBattleCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
                 m_isBattleShown = showBattleCheckBox.isSelected();
                 Console.log("isBattleShown= " + (m_isBattleShown?"true":"false") );
             }
-		});        
-        buttonPanel.add(showBattleCheckBox);
+		});*/
+        //buttonPanel.add(showBattleCheckBox);
         
-        startPausedCheckBox = new JCheckBox("startPausedCheckBox", "Start Paused");
+        /*startPausedCheckBox = new JCheckBox("startPausedCheckBox", "Start Paused");
 		startPausedCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -92,7 +92,7 @@ public class CompetitionWindow extends JFrame
 				//	showBattleCheckBox.setSelected(true);
 			}
 		});
-		buttonPanel.add(startPausedCheckBox);
+		buttonPanel.add(startPausedCheckBox);*/
         
         controlArea.add(buttonPanel);
         // -------------
@@ -110,8 +110,8 @@ public class CompetitionWindow extends JFrame
         //warriorsPerGroupField = new JTextField("warriorsPerGroupField", Integer.toString(numberOfGropus), 3);
 		//controlPanel.add(warriorsPerGroupField);
 		controlPanel.add(new JLabel("Sessions per groups combination:"));
-		battlesPerGroupField = new JTextField("battlesPerGroupField", "100", 4);
-		controlPanel.add(battlesPerGroupField);
+		//battlesPerGroupField = new JTextField("battlesPerGroupField", "100", 4);
+		//controlPanel.add(battlesPerGroupField);
 		seed = new JTextField("seed", null, 4);
 		seed.setText("guru");
 		controlPanel.add(new JLabel("seed:"));
@@ -220,7 +220,7 @@ public class CompetitionWindow extends JFrame
         int battlesPerGroup = 0;
         try {
         	competition.setSeed(seed.getText().hashCode());
-            battlesPerGroup = Integer.parseInt(battlesPerGroupField.getText().trim());
+            battlesPerGroup = 100; //TBD-SHY Integer.parseInt(battlesPerGroupField.getText().trim());
           /*  final int warriorsPerGroup = Integer.parseInt(
                 warriorsPerGroupField.getText().trim());*/
         } catch (NumberFormatException e2) {

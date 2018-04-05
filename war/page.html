@@ -1087,7 +1087,7 @@ input:disabled + .sc-btn:active,
   position: absolute;
   left: 0;
   top: 0;
-  width: 630px;
+  width: 600px;
   margin: 8px;
 }
 #memory_panel {
@@ -1225,21 +1225,27 @@ input:disabled + .sc-btn:active,
 #editor_boxes {
 }
 
-#fixed_load_addr {
+.small_editline {
     height: 19px;
     font-size: 16px;
     font-family: courier;
     border-radius: 6px;
     border: 1px solid #000000;
     padding: 2px;
-    vertical-align: bottom;
+    vertical-align: 1px;
     width: 100px;
-
+}
+#fixed_load_addr {
     visibility: hidden;
     opacity: 0;
     transition: all 0.12s ease-in-out;
 }
-
+#seed_edit {
+    float:right;
+}
+#seed {
+    margin-left: 3px;
+}
 
 #debug_goto {
     width: 100px;
@@ -1612,17 +1618,10 @@ input:disabled + .sc-btn:active,
 
     <div id="action_panel"><div id="action_rel">
       <div id="memory_panel">
-        <input id="battlesPerGroupField" type="text">
+        <!--<input id="battlesPerGroupField" type="text">-->
 
-        <input id="seed" type="text">
 
-        <br>
-        <input id="showBattleCheckBox" type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
-        <input id="startPausedCheckBox" type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
-        <br>
-        <!-- WarFrame -->
         <canvas id="warCanvas"></canvas>
-        Round: <div id="roundNumber"></div>
 
 
       </div>
@@ -1657,7 +1656,9 @@ input:disabled + .sc-btn:active,
                     <option value="rand">Random</option>
                     <option value="fixed">Fixed</option>
                 </select>
-                <input type="text" id="fixed_load_addr" spellcheck="false" value="A000" oninput="changedFixedAddr()">
+                <input type="text" class="small_editline" id="fixed_load_addr" spellcheck="false" value="A000" oninput="changedFixedAddr()">
+                <span id="seed_edit">Seed:<input class="small_editline" id="seed" type="text" spellcheck="false"></span>
+
             </div>
         </div>
 
