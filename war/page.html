@@ -49,7 +49,9 @@ function start()
 
     setup_breakpoints_savers()
 
-
+    speedSlider.addEventListener("input", function() {
+        speedSliderVal.innerText = speedSlider.value
+    })
 }
 
 
@@ -116,7 +118,7 @@ function populate_debug_area()
 }
 
 function cssRuleBySelector(selText) {
-    var rules = document.styleSheets[0].rules
+    var rules = document.styleSheets[0].cssRules
     for(var i = 0; i < rules.length; ++i)
         if (rules[i].selectorText == selText)
             return rules[i]
@@ -701,7 +703,6 @@ function addWatchLine() {
 
 
 
-
 </script>    
 <style>
 body {
@@ -1260,6 +1261,12 @@ input:disabled + .sc-btn:active,
     margin: 0;
     font-size: 14px;
 }
+#stepnum_cont {
+    float:right;
+    display:inline-block;
+    width: 8em;
+    margin: 5px;
+}
 
 #debugBtn {
     width: 120px;
@@ -1360,18 +1367,81 @@ input:disabled + .sc-btn:active,
 }
 
 .title-buttons {
-    vertical-align: -32px;
     border: 1px solid;
     width: 77px;
-    height: 33px;
-    line-height: 30px;
-    margin: 6px 0 20px 0;
+    height: 30px;
+    line-height: 29px;
+    font-size: 17px;
+    margin: 0;
+}
+#dbgButtons {
+    margin: 0 0 6px 7px;
 }
 #btnPause {
-
 }
 #btnSingleRound {
 }
+#speedSliderCont {
+    vertical-align: 10px;
+    margin-left: 4px;
+    line-height: 29px;
+    border: 1px solid;
+    height: 30px;
+    display: inline-block;
+    border-radius: 0.4em;
+    padding: 0 5px 0 5px;
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0px -0.15em 0px, inset rgba(255, 255, 255, 0.2) 0px 0.15em 0px;
+}
+#speedSliderVal {
+    width: 2em;
+    display: inline-block;
+}
+#speedSlider {
+    vertical-align: 1px;
+}
+#speedZero {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border-radius: 3px;
+    border: 1px solid #d2cfcf;
+    display: inline-block;
+    vertical-align: -4px;
+    background-image: url(zero_but.png);
+    background-repeat: no-repeat;
+    background-position: 3px 3px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 170px;
+    height: 10px;
+    border-radius: 5px;
+    background: #afafaf;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #555555;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #555555;
+    cursor: pointer;
+}
+
+
 
 /* --------------------- cpuPanel bottom --------------------- */
 #messagesArea {
@@ -1542,11 +1612,10 @@ input:disabled + .sc-btn:active,
 
     <div id="action_panel"><div id="action_rel">
       <div id="memory_panel">
-        <label id="runWarButton" class="sc-btn" >Run!</label>
         <input id="battlesPerGroupField" type="text">
 
         <input id="seed" type="text">
-        Step:<span id="stepnum">0</span>
+
         <br>
         <input id="showBattleCheckBox" type="checkbox"><label for="showBattleCheckBox">Show session on start</label>
         <input id="startPausedCheckBox" type="checkbox"><label for="startPausedCheckBox">Start Paused</label>
@@ -1555,13 +1624,12 @@ input:disabled + .sc-btn:active,
         <canvas id="warCanvas"></canvas>
         Round: <div id="roundNumber"></div>
 
-        Speed: <input type="range" min="1" max="100" value="50" class="slider" id="speedSlider">
+
       </div>
 
       <div id="edit_panel">
         <input type="text" id="editor_title" spellcheck="false">
-        <label id="btnPause" class="sc-btn title-buttons">Pause</label>
-        <label id="btnSingleRound" class="sc-btn title-buttons">Step</label>
+
         <br>
         <div id="editor_boxes">
           <div id="edit_area">
@@ -1576,6 +1644,7 @@ input:disabled + .sc-btn:active,
           <div id="debug_area" style="display:none;">
               <input type="text" id="debug_goto" spellcheck="false" onkeyup="triggerGoToKey()">
               <label id="btnGoTo" class="sc-btn" onclick="triggerGoTo()">go to</label>
+              <span id="stepnum_cont">Step:<span id="stepnum">0</span></span>
               <div id="dbg_box_addr"></div>
               <pre id="debug_text" class="allow_select" onscroll="debugAreaScroll(false)"></pre>
           </div>
@@ -1602,6 +1671,14 @@ input:disabled + .sc-btn:active,
       </div>
 
       <div id="cpuPanel" style="display:none;">
+        <div id="dbgButtons">
+          <label id="btnPause" class="sc-btn title-buttons">Pause</label>
+          <label id="btnSingleRound" class="sc-btn title-buttons">Step</label>
+          <span id="speedSliderCont">Speed:<input type="range" min="-35" max="200" value="0" class="slider" id="speedSlider">
+              <span id="speedSliderVal">0</span>
+              <span id="speedZero" class="sc-btn base-btn" onclick="j_triggerZeroSpeed()">&#2205;</span><br>
+          </span>
+        </div>
         <div id="registers_block">
           <div id="hex_dec">
             <input id="hexCheckbox" class="sc-check hidden" onchange="triggerRegBase(true)" type="checkbox" checked="true">

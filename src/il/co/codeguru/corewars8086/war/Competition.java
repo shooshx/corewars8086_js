@@ -26,9 +26,9 @@ public class Competition {
 
     private int warsPerCombination= 20;
 
-    private int speed;
-    public static final int MAXIMUM_SPEED = -1;
-    private static final long DELAY_UNIT = 200;
+
+    private int speed;  // while debugging. 0 means 1 step each frame, >0 means how many steps to make each frame, <0 means how many frames to skip between steps
+    //private static final long DELAY_UNIT = 200;
     
     private long seed = 0;
 
@@ -47,6 +47,7 @@ public class Competition {
         public boolean isInDebugger; // should we return after each round or after each war for a UI update. also activates breakpoints
         public int round;
         public boolean abort = false;
+        public int waitedFrames = 0; // how many frames we just waited for negative speed
     }
     public CompState compState;
 
@@ -57,7 +58,7 @@ public class Competition {
         competitionEventListener = (CompetitionEventListener) competitionEventCaster.getProxy();
         memoryEventCaster = new EventMulticasterMemory();
         memoryEventListener = (MemoryEventListener) memoryEventCaster.getProxy();
-        speed = MAXIMUM_SPEED;
+        speed = 0;
     }
 
     // return true if need to continue after
@@ -93,7 +94,25 @@ public class Competition {
             //compState.isInDebugger = stillAnimateRound; // this is never false in the current GUI, this was just a confusing option
             int needMore = 1;
             if (compState.isInDebugger) {
-                needMore = runRound();
+                int stepsCount = 1;
+                if (!currentWar.isSingleRound()) { // speed doesn't do anyhthing when clicking single step
+                    if (speed > 1)
+                        stepsCount = speed;
+                    else if (speed < 0) {
+                        if (compState.waitedFrames > 0) {
+                            --compState.waitedFrames;
+                            stepsCount = 0;
+                        }
+                        else { // == 0
+                            compState.waitedFrames = -speed;
+                            stepsCount = 1;
+                        }
+                    }
+                }
+                while (needMore == 1 && stepsCount > 0) {
+                    needMore = runRound();
+                    --stepsCount;
+                }
             }
             else {
                 do {
@@ -256,11 +275,7 @@ public class Competition {
         return warriorRepository;
     }
 
-    /**
-     * Set the speed of the competition, wither MAX_SPEED or a positive integer 
-     * when 1 is the slowest speed
-     * @param speed
-     */
+
     public void setSpeed(int speed) {
         this.speed = speed;
     }

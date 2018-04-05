@@ -18,14 +18,14 @@ import static il.co.codeguru.corewars8086.gui.CompetitionWindow.call_gwtStart;
  * @author BS
  */
 public class CompetitionWindow extends JFrame
-    implements ScoreEventListener, ActionListener, CompetitionEventListener {
+    implements ScoreEventListener, CompetitionEventListener {
 	private static final long serialVersionUID = 1L;
 	
 	private Competition competition;
     private ColumnGraph columnGraph;
 
     // widgets
-    private JButton runWarButton;
+    //private JButton runWarButton;
     private JLabel warCounterDisplay;
     private JCheckBox showBattleCheckBox;
     private boolean m_isBattleShown = false;
@@ -67,9 +67,9 @@ public class CompetitionWindow extends JFrame
         controlArea.setLayout(new BoxLayout(controlArea, BoxLayout.Y_AXIS));
         // -------------- Button Panel
         JPanel buttonPanel = new JPanel();
-        runWarButton = new JButton("runWarButton", "<html><font color=red>Start!</font></html>");
-        runWarButton.addActionListener(this); // triggers actionPerformed
-        buttonPanel.add(runWarButton);
+        //runWarButton = new JButton("runWarButton", "<html><font color=red>Start!</font></html>");
+        //runWarButton.addActionListener(this); // triggers actionPerformed
+        //buttonPanel.add(runWarButton);
         warCounterDisplay = new JLabel("");
         buttonPanel.add(warCounterDisplay);
         buttonPanel.add(Box.createHorizontalStrut(30));
@@ -159,6 +159,7 @@ public class CompetitionWindow extends JFrame
         $wnd.j_startDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startDebug()() });
         $wnd.j_stopDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopDebug()() });
         $wnd.j_debugUiInited = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_debugUiInited()() });
+        $wnd.j_triggerZeroSpeed = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_triggerZeroSpeed()() });
     }-*/;
 
     public boolean j_startDebug()
@@ -176,7 +177,10 @@ public class CompetitionWindow extends JFrame
         setDebugMode(false);
     }
 
-
+    public void j_triggerZeroSpeed() {
+        competition.setSpeed(0);
+        battleFrame.speedSlider.setValue(0);
+    }
 
 
     private void outRoundNum() {
@@ -273,12 +277,12 @@ public class CompetitionWindow extends JFrame
         columnGraph.addToValue(groupIndex, subIndex, addedValue);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    /*public void actionPerformed(ActionEvent e) {
         if (e.getSource() == runWarButton) {
         	showBattleFrameIfNeeded();
         	gui_runWar(null, null);
         }
-    }
+    }*/
 
 
     public void setDebugMode(boolean v) {
@@ -295,7 +299,7 @@ public class CompetitionWindow extends JFrame
             m_isStartPaused = isStartPaused;
         if (runWar()) {
             competitionRunning = true;
-            runWarButton.setEnabled(false);
+            //runWarButton.setEnabled(false);
             setDebugMode(true);
 
             stepnum.innerHTML = "0";
@@ -325,7 +329,6 @@ public class CompetitionWindow extends JFrame
     }
     
     private void showBattleRoom() {
-        competition.setSpeed(5);
         battleFrame = new WarFrame(competition, this);
 
         
@@ -361,7 +364,7 @@ public class CompetitionWindow extends JFrame
     public void onCompetitionStart() {
         warCounter = 0;
         totalWars = competition.getTotalNumberOfWars();
-		this.runWarButton.setEnabled(false);
+		//this.runWarButton.setEnabled(false);
     }
 
     public void onCompetitionEnd() {
@@ -372,8 +375,8 @@ public class CompetitionWindow extends JFrame
             };
         });
         //warThread = null;
-		this.runWarButton.setEnabled(true);
-        runWarButton.setEnabled(true);
+		//this.runWarButton.setEnabled(true);
+        //runWarButton.setEnabled(true);
 		competitionRunning = false;
     }
     

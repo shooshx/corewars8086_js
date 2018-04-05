@@ -64,7 +64,7 @@ public class WarFrame extends JFrame
     public JButton btnSingleRound;
     
 
-    private JSlider speedSlider;
+    public JSlider speedSlider;
 
     private final Competition competition;
 
@@ -124,10 +124,10 @@ public class WarFrame extends JFrame
         buttonPanel.add(closeButton);*/
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(new JLabel("Speed:"));
-        speedSlider = new JSlider("speedSlider", 1,100,competition.getSpeed());
-        speedSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                WarFrame.this.competition.setSpeed((int) Math.pow(1.2, speedSlider.getValue()) ); //exponential speed slider		
+        speedSlider = new JSlider("speedSlider", "speedSliderVal");
+        speedSlider.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                WarFrame.this.competition.setSpeed(speedSlider.getValue() ); //exponential speed slider
             }
         });
         buttonPanel.add(speedSlider);
@@ -441,30 +441,7 @@ public class WarFrame extends JFrame
 			}
 	}
 
-	@Override
-	public void dispose() {
 
-		// bug fix - event casted while window is being disposed FIXME find a
-		// better solution
-		this.competition.getCurrentWar().pause();
-		try {
-			//Thread.sleep(300);
-		} catch (Exception e) {
-
-		}
-		this.competition.removeCompetitionEventListener(this);
-		this.competition.removeMemoryEventLister(this);
-		this.competition.getCurrentWar().resume();
-
-		try {
-			//this.cpuframe.dispose();
-		} catch (Exception e) {
-		}
-		// restoring maximum speed
-		competition.getCurrentWar().resume();
-		competition.setSpeed(Competition.MAXIMUM_SPEED);
-		super.dispose();
-	}
 
 	@Override
 	public void addressAtMouseLocationRequested(int address) {

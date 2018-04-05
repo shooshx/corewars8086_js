@@ -19,7 +19,7 @@ public class JComponent<T>
         m_element = (T)DomGlobal.document.getElementById(id);
 
         if (m_element == null) {
-            Console.log("did not find button " + id);
+            Console.log("did not find element " + id);
             return;
         }
         else {
@@ -30,8 +30,8 @@ public class JComponent<T>
     public JComponent() {
     }
 
-    public void setOnChange() {
-        ((Element)m_element).addEventListener("change", new EventListener() {
+    public void setOnEvent(String evname) {
+        ((Element)m_element).addEventListener(evname, new EventListener() {
             @Override
             public void handleEvent(Event event) { // this listener listens to all of the event
                 if (m_listener == null)

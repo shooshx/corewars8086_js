@@ -8,7 +8,7 @@ public class JCheckBox extends JComponent<HTMLInputElement>
 {
     public JCheckBox(String id, String text) {
         super(id);
-        setOnChange();
+        setOnEvent("change");
     }
     public JCheckBox() {
     }    
