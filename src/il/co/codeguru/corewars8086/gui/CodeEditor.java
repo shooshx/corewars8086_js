@@ -690,13 +690,17 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return opcodesText.toString();
     }
 
+    public void removeCurrentBreakpoints() {
+        if (m_breakpoints != null) // will be null on the first time
+            for(PlayersPanel.Breakpoint b: m_breakpoints)
+                setLineNumBreakpoint(b.lineNum, false);
+    }
+
     // from PlayersPanel
     public void playerSelectionChanged(PlayersPanel.Code incode, PlayersPanel callback)
     {
         // remove the prev code breakpoints before it's lines will be erased by setText
-        if (m_breakpoints != null) // will be null on the first time
-            for(PlayersPanel.Breakpoint b: m_breakpoints)
-                setLineNumBreakpoint(b.lineNum, false);
+        removeCurrentBreakpoints();
 
         asm_edit.value = incode.asmText;
         editor_title.value = incode.player.title;
@@ -713,6 +717,30 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             scrollToCodeInEditor(false);
         }
     }
+
+    // when the user uploads a new binary file
+    public void loadedNewBinary(PlayersPanel.Code incode, PlayersPanel callback)
+    {
+        if (m_isDebugMode)
+            return; // should not happen. can't load new code in debug
+
+        removeCurrentBreakpoints();
+
+        StringBuilder sb = new StringBuilder();
+        for(byte b: incode.bin) {
+            sb.append("db 0x");
+            sb.append(Format.hex2(b & 0xff));  // TBD
+            sb.append("\n");
+        }
+        String text = sb.toString();
+        incode.asmText = text;
+        asm_edit.value = text;
+        setText(incode.asmText, callback);
+
+
+        m_breakpoints = incode.breakpoints;
+    }
+
 
     private DocumentFragment htmlizeText(String intext)
     {

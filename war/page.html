@@ -701,6 +701,26 @@ function addWatchLine() {
 
 }
 
+function triggerUploadBinChanged()
+{
+    if (uploadBinInput.files.length == 0)
+        return
+    var file = uploadBinInput.files[0]
+    uploadBinInput.value = ""  // reset it so that next time we could upload the same filename again
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        j_loadBinary(e.target.result)
+    }
+    reader.onerror = function(e) {
+        console.error(e)
+    }
+    reader.readAsArrayBuffer(file);
+
+
+    return false
+}
+
 
 
 </script>    
@@ -1611,6 +1631,20 @@ input:disabled + .sc-btn:active,
     display:initial;
 }
 
+#uploadBinBut {
+    background-image: url(upload_bin.png);
+    background-repeat: no-repeat;
+    background-position: 2px 3px;
+    height: 34px;
+    width: 46px;
+    position: absolute;
+    border-radius: 5px;
+}
+#uploadBinBut:active {
+    background-position: 3px 4px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(upload_bin.png);
+    background-repeat: repeat, no-repeat;
+}
 
 </style>
   </head>
@@ -1628,6 +1662,8 @@ input:disabled + .sc-btn:active,
 
       <div id="edit_panel">
         <input type="text" id="editor_title" spellcheck="false">
+        <input id="uploadBinInput" type="file" class="hidden" onchange="return triggerUploadBinChanged()">
+        <label id="uploadBinBut" class="sc-btn" for="uploadBinInput" title="Upload binary file"></label>
 
         <br>
         <div id="editor_boxes">

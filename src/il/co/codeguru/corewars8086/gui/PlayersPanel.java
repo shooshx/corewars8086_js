@@ -1,6 +1,8 @@
 package il.co.codeguru.corewars8086.gui;
 
 
+import com.google.gwt.typedarrays.client.Int8ArrayNative;
+import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
@@ -46,7 +48,7 @@ public class PlayersPanel
         public String asmText = "";
         public byte[] bin = null;  // can be null if last output was empty
         public boolean lastCompileOk = true;
-        public ArrayList<CodeEditor.LstLine> lines;
+        public ArrayList<CodeEditor.LstLine> lines; //managed by the editor
         public boolean startAddrRandom = true;
         public String startAddress = "A000"; // from UI, as given from the input, may fail to parse address
         public ArrayList<Breakpoint> breakpoints;
@@ -100,6 +102,7 @@ public class PlayersPanel
         $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
         $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
+        $wnd.j_loadBinary      = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadBinary(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(b) });
     }-*/;
 
     public PlayerInfo findPlayer(String label) {
@@ -323,5 +326,28 @@ public class PlayersPanel
             addPlayerBtn.style.display = "";
         }
     }
+
+    public void j_loadBinary(ArrayBuffer buf) {
+        int len = buf.byteLength();
+        if (len == 0) {
+            Console.error("loaded file is empty, ignoring");
+            return;
+        }
+        //Console.log("~~~" + buf.byteLength());
+
+        Int8ArrayNative arr = Int8ArrayNative.create(buf);
+        byte[] ba = new byte[len];
+        for(int i = 0; i < len; ++i)
+            ba[i] = arr.get(i);
+
+        m_inEditor.bin = ba;
+        m_inEditor.asmText = "";
+        m_inEditor.lastCompileOk = true; // it's a binary that means it was compiled
+        m_inEditor.breakpoints.clear(); // any breakpoints that were no longer matter
+
+        m_mainWnd.m_codeEditor.loadedNewBinary(m_inEditor, this);
+
+    }
+
 
 }
