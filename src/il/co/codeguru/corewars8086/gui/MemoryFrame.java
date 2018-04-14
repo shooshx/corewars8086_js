@@ -106,6 +106,8 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		refrash(last);
 	}
 
+	@Override
+	public void onWarPreStartClear() {}
 
 	@Override
 	public void onWarStart() {

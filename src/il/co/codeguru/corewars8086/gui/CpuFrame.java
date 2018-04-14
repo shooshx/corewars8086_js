@@ -454,6 +454,8 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		m_stateAccess.memory = currentWar.getMemory();
 	}
 
+	@Override
+	public void onWarPreStartClear() {}
 
 
 	@Override

@@ -24,6 +24,16 @@ public class EventMulticasterCompetition extends EventMulticasterBase {
 
     private class MulticasterHandler implements CompetitionEventListener {
 
+        @Override
+        public void onWarPreStartClear() {
+            isCasting = true;
+            for (Object mListener : mListenersArr) {
+                ((CompetitionEventListener)mListener).onWarPreStartClear();
+            }
+            isCasting = false;
+            addWaiting();
+        }
+
 		@Override
 		public void onWarStart() {
             isCasting = true;

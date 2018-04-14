@@ -8,9 +8,12 @@ package il.co.codeguru.corewars8086.war;
  * @author DL
  */
 public interface CompetitionEventListener   {
-	
+
+    // called before warriors are loaded to clear the canvas
+    void onWarPreStartClear();
+
     /**
-     * Called when a new War is started.
+     * Called when a new War is started, after the warriors are already loaded
      * @param warId  0-based war counter.
      */
     void onWarStart();

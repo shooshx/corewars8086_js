@@ -264,7 +264,8 @@ public class WarFrame extends JFrame
 
 		int ipInsideArena = address.getLinearAddress() - 0x1000 *0x10; // arena * paragraph
 		
-        if ( address.getLinearAddress() >= War.ARENA_SEGMENT*0x10 && address.getLinearAddress() < 2*War.ARENA_SEGMENT*0x10 ) {
+        if ( address.getLinearAddress() >= War.ARENA_SEGMENT*0x10 && address.getLinearAddress() < 2*War.ARENA_SEGMENT*0x10 )
+        {
         	warCanvas.paintPixel(
         			Unsigned.unsignedShort(ipInsideArena),
         			(byte)competition.getCurrentWarrior());
@@ -275,11 +276,15 @@ public class WarFrame extends JFrame
     public void onWriteState(EWriteState state) {
     }
 
+    @Override
+    public void onWarPreStartClear() {
+        nameListModel.clear();
+        warCanvas.clear();
+    }
+
     /* @see CompetitionEventListener#onWarStart(int) */
     public void onWarStart() {
         addMessage("=== Session started ===");
-        nameListModel.clear();
-        warCanvas.clear();
         if (competition.getCurrentWar().isPaused()){
 			btnPause.setText("Resume");
 			btnSingleRound.setEnabled(true);
@@ -386,7 +391,9 @@ public class WarFrame extends JFrame
                 text = "<html><S>" + text + "</S></html>";
             }
             setText(text);
-            setForeground(warCanvas.getColorForWarrior(index));
+            Color c = ColorHolder.getInstance().getColor(index, false);
+
+            setForeground(c);
             return this;
         }
     }
@@ -435,7 +442,7 @@ public class WarFrame extends JFrame
 				short ip = state.getIP();
 				short cs = state.getCS();
 				
-				int ipInsideArena = new RealModeAddress(cs, ip).getLinearAddress() - 0x10000;
+				int ipInsideArena = RealModeAddress.linearAddress(cs, ip) - 0x10000;
 				
 				this.warCanvas.paintPointer((char) ipInsideArena,(byte) i);
 			}

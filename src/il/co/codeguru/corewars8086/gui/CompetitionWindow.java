@@ -315,6 +315,9 @@ public class CompetitionWindow extends JFrame
 
     }
 
+    @Override
+    public void onWarPreStartClear() {}
+
 
     public void onWarStart() {
 

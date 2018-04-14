@@ -96,3 +96,4 @@ breakpoints
 
 - registers, watch - display can be hex/signed/unsigned
 
+- at pause - scroll to IP

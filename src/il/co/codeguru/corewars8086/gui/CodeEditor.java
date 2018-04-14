@@ -35,6 +35,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private byte[] m_mem = null;
     // competitionEventListener
     @Override
+    public void onWarPreStartClear() {}
+    @Override
     public void onWarStart() {
         m_mem = m_competition.getCurrentWar().getMemory().m_data;
 
@@ -727,7 +729,24 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         removeCurrentBreakpoints();
 
         StringBuilder sb = new StringBuilder();
-        for(byte b: incode.bin) {
+        Disassembler dis = new Disassembler(incode.bin, 0, incode.bin.length);
+        int offset = 0;
+        try {
+            while (offset < incode.bin.length) {
+                String text = dis.nextOpcode();
+                sb.append(text);
+                sb.append("\n");
+                int len = dis.lastOpcodeSize();
+                offset += len;
+            }
+        }
+        catch(Disassembler.DisassemblerException e) {
+            // do nothing
+        }
+
+        // if there's anything left at the end that we didn't eat above
+        for(;offset < incode.bin.length; ++offset) {
+            byte b = incode.bin[offset];
             sb.append("db 0x");
             sb.append(Format.hex2(b & 0xff));  // TBD
             sb.append("\n");
@@ -736,7 +755,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         incode.asmText = text;
         asm_edit.value = text;
         setText(incode.asmText, callback);
-
 
         m_breakpoints = incode.breakpoints;
     }

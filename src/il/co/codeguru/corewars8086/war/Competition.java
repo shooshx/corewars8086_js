@@ -217,10 +217,11 @@ public class Competition {
     {
         //Console.log("runWar");
         currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
-        int war = 0;
+        int war = 0; // TBD
         currentWar.setSeed(this.seed + war);
+        competitionEventListener.onWarPreStartClear();
         currentWar.loadWarriorGroups(warriorGroups);
-        competitionEventListener.onWarStart();
+        competitionEventListener.onWarStart(); // need to be before loadWarriorGroups since this clears the canvas and that writes the warriors to the canvas
         compState.round = 0;
     }
 
