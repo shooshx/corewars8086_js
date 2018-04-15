@@ -363,7 +363,7 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
         public void setResult(int v) {
             String sv;
             if (base == 16)
-                sv = Format.hex(v, 4);
+                sv = Format.hex4(v);
             else
                 sv = Integer.toString(v);
             setResult(sv);

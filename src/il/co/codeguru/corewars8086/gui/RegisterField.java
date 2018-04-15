@@ -72,7 +72,7 @@ public class RegisterField /*extends JPanel*/ {
 	public void setValue(short value) {
 		m_lastValue = value;
 		if (m_base == 16)
-			textField.value = Format.hex((int)value & 0xffff, 4);
+			textField.value = Format.hex4((int)value & 0xffff);
 		else
 			textField.value = Integer.toString((int)value & 0xffff);
 	}

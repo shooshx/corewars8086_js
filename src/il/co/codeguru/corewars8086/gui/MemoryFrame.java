@@ -86,7 +86,7 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		}
 		
 		
-		byte[] bytes = new byte[30];
+	/*	byte[] bytes = new byte[30];
 		
 		for (short k = 0; k < 30; k++) {
 			short vs = comp.getCurrentWar().getMemory().readByte(address +k);
@@ -98,7 +98,7 @@ public class MemoryFrame extends JFrame implements CompetitionEventListener {
 		} catch (Exception e) {
 			instructionArea.setText(e.getMessage());
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@Override

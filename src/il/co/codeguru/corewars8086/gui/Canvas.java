@@ -8,7 +8,7 @@ import elemental2.dom.CanvasRenderingContext2D.StrokeStyleUnionType;
 import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
 
 
-
+import elemental2.dom.Path2D;
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.jsadd.Format;
 
@@ -17,10 +17,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	public static final int BOARD_SIZE = 256;
 	public static final int DOT_SIZE = 3;
-	public static final int MARGIN_SIZE = 45; // in pixels
+	//public static final int MARGIN_SIZE = 45; // in pixels
+    public static final int MARGIN_TOP = 20, MARGIN_RIGHT = 20, MARGIN_BOTTOM = 45, MARGIN_LEFT = 45;
+    public static final int BOARD_SIZE_PX = BOARD_SIZE * DOT_SIZE;
 
-    public static final int CANVAS_HEIGHT = BOARD_SIZE*DOT_SIZE+2*MARGIN_SIZE;
-    public static final int CANVAS_WIDTH = BOARD_SIZE*DOT_SIZE+2*MARGIN_SIZE;
+    public static final int CANVAS_HEIGHT = BOARD_SIZE*DOT_SIZE + MARGIN_TOP + MARGIN_BOTTOM;
+    public static final int CANVAS_WIDTH = BOARD_SIZE*DOT_SIZE + MARGIN_LEFT + MARGIN_RIGHT;
 
     public static final byte EMPTY = -1;
 
@@ -35,6 +37,21 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	private int MouseX, MouseY;
 
 	private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect
+    private Path2D m_memclip, m_coordXclip, m_coordYclip;
+
+    class Turtle {
+        float x, y;
+        Path2D p;
+        public Turtle(Path2D _p) { p = _p; }
+        public void moveTo(float _x, float _y) { x = _x; y = _y; p.moveTo(x, y); }
+        public void up(float v)   { y -= v; p.lineTo(x, y); }
+        public void down(float v) { y += v; p.lineTo(x, y); }
+        public void left(float v) { x -= v; p.lineTo(x, y); }
+        public void right(float v){ x += v; p.lineTo(x, y); }
+    };
+
+    public static final int TEXT_EPS = 6; // how much to leave in the clipping for half the text
+    public static final int TICK_WIDTH = 7;
 
 	public Canvas(String id) {
 		super(id);
@@ -49,6 +66,41 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 		Dimension d = getMinimumSize();
 		m_element.width = d.width;
 		m_element.height = d.height;
+        ctx.save(); // save state with full page clipping
+
+        m_memclip = new Path2D();
+        m_memclip.moveTo(MARGIN_LEFT, MARGIN_TOP);
+        m_memclip.lineTo(CANVAS_WIDTH - MARGIN_RIGHT, MARGIN_TOP);
+        m_memclip.lineTo(CANVAS_WIDTH - MARGIN_RIGHT, CANVAS_HEIGHT - MARGIN_BOTTOM);
+        m_memclip.lineTo(MARGIN_LEFT, CANVAS_HEIGHT - MARGIN_BOTTOM);
+
+        // make a D like shape that deletes the tick at the exact line of the canvas but leaves place for the text to not be clipped
+        m_coordYclip = new Path2D();
+        Turtle t = new Turtle(m_coordYclip);
+        t.moveTo(0, MARGIN_TOP-TEXT_EPS);
+        t.right(MARGIN_LEFT-TICK_WIDTH);
+        t.down(TEXT_EPS);
+        t.right(TICK_WIDTH);
+        t.down(BOARD_SIZE_PX);
+        t.left(TICK_WIDTH);
+        t.down(TEXT_EPS);
+        t.left(MARGIN_LEFT-TICK_WIDTH);
+
+        m_coordXclip = new Path2D();
+        t.p = m_coordXclip;
+        t.moveTo(MARGIN_LEFT-TEXT_EPS, CANVAS_HEIGHT);
+        t.up(MARGIN_BOTTOM-TICK_WIDTH);
+        t.right(TEXT_EPS);
+        t.up(TICK_WIDTH);
+        t.right(BOARD_SIZE_PX);
+        t.down(TICK_WIDTH);
+        t.right(TEXT_EPS);
+        t.down(MARGIN_BOTTOM-TICK_WIDTH);
+
+
+        ctx.clip(m_memclip);
+
+
 
 		exportMethods();
 		initZoom();
@@ -108,13 +160,21 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 				pointer[i][j] = EMPTY;
 			}
 
+		ctx.setTransform(1,0,0,1,0,0);
+
+
+        ctx.clip(m_memclip);
+
 		resetZoom(); // already does the repaint
 		//repaint();
+
+        // default clipping is the memory area - for random access writes to not go overboard
+        //Path2D
+
+
 	}
 
-	/**
-	 * When we have to - repaint the entire canvas
-	 */
+
 	@Override
 	public void paint() {
 		ctx.fillStyle = FillStyleUnionType.of(Color.WHITE);
@@ -145,16 +205,18 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 			}
 		}
 
-		ctx.save();
-		ctx.setTransform(1, 0, 0,1, 0, 0);
-		ctx.fillStyle = FillStyleUnionType.of("#ffffff");
-		ctx.fillRect(0,0, MARGIN_SIZE, CANVAS_HEIGHT);
-        ctx.fillRect(0,0, CANVAS_WIDTH, MARGIN_SIZE);
-        ctx.fillRect(CANVAS_WIDTH-MARGIN_SIZE,0, MARGIN_SIZE, CANVAS_HEIGHT);
-        ctx.fillRect(0,CANVAS_HEIGHT-MARGIN_SIZE, CANVAS_WIDTH, MARGIN_SIZE);
+		//------------ paint the X and Y coordinates at the margins -------------------
 
-        ctx.strokeStyle = StrokeStyleUnionType.of("#ffffff solid 1px");
-        ctx.beginPath();
+		ctx.restore(); // full clipping, no transform
+        ctx.save(); // re-save the full clipping state
+
+		//ctx.setTransform(1, 0, 0,1, 0, 0);
+		ctx.fillStyle = FillStyleUnionType.of("#ffffff");
+		ctx.fillRect(0,0, MARGIN_LEFT, CANVAS_HEIGHT);
+        //ctx.fillRect(0,0, CANVAS_WIDTH, MARGIN_SIZE);
+        //ctx.fillRect(CANVAS_WIDTH-MARGIN_SIZE,0, MARGIN_SIZE, CANVAS_HEIGHT);
+        ctx.fillRect(0,CANVAS_HEIGHT-MARGIN_BOTTOM, CANVAS_WIDTH, MARGIN_BOTTOM);
+
         ctx.font = "14px monospace";
         ctx.textBaseline = "middle";
 
@@ -166,35 +228,50 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             step /= 4;
         else if (rc >= 8 && rc <= 16)
             step /= 8;
+        else if (rc >= 16)
+            step /= 16;
         //step = Math.max(step / roundScale, 1);
+        ctx.fillStyle = FillStyleUnionType.of("#888888");
+        ctx.clip(m_coordYclip);
 
         for(int y = 0; y <= 256; y += step) {
-            ctx.fillStyle = FillStyleUnionType.of("#000000");
             int ry = Math.min(y, 255);
-
-            float ycoord = MARGIN_SIZE + m_zrY + ry * DOT_SIZE * m_zrVscale;
-            if (ycoord < MARGIN_SIZE || ycoord > CANVAS_HEIGHT-MARGIN_SIZE)
+            float scaledDot = DOT_SIZE*m_zrVscale;
+            float ycoord = MARGIN_TOP + m_zrY + ry * scaledDot;
+            if (ycoord + scaledDot < MARGIN_TOP || ycoord > CANVAS_HEIGHT-MARGIN_BOTTOM)
                 continue;
-            ctx.fillText(Format.hex4(ry*256), 1, ycoord);
-            ctx.moveTo(38, ycoord);
-            ctx.lineTo(44, ycoord);
+            ctx.fillText(Format.hex4(ry*256), 1, ycoord + scaledDot/2);
+            ctx.fillRect(38, ycoord,  6, scaledDot);
         }
-
-        for(int x = 0; x <= 256; x += step) {
-            ctx.fillStyle = FillStyleUnionType.of("#000000");
-            int rx = Math.min(x, 255);
-
-            float xcoord = MARGIN_SIZE + m_zrX + rx * DOT_SIZE * m_zrHscale;
-            if (xcoord < MARGIN_SIZE || xcoord > CANVAS_HEIGHT-MARGIN_SIZE)
-                continue;
-            ctx.fillText(Format.hex2(rx), xcoord-6, CANVAS_HEIGHT - 27);
-            ctx.moveTo(xcoord, CANVAS_HEIGHT-38);
-            ctx.lineTo(xcoord, CANVAS_HEIGHT-44);
-        }
-
-        ctx.stroke();
 
         ctx.restore();
+        ctx.save();
+        ctx.clip(m_coordXclip);
+
+        ctx.font = "14px monospace";
+        ctx.fillStyle = FillStyleUnionType.of("#888888");
+
+        for(int x = 0; x <= 256; x += step) {
+            int rx = Math.min(x, 255);
+
+            float scaledDot = DOT_SIZE*m_zrHscale;
+            float xcoord = MARGIN_LEFT + m_zrX + rx * scaledDot;
+
+            if (xcoord + scaledDot < MARGIN_LEFT || xcoord > CANVAS_HEIGHT-MARGIN_RIGHT)
+                continue;
+            ctx.fillText(Format.hex2(rx), xcoord-7+scaledDot/2, CANVAS_HEIGHT - 24);
+            ctx.fillRect(xcoord, CANVAS_HEIGHT-44, scaledDot, 6);
+        }
+
+        ctx.restore();
+        ctx.save();
+
+        //ctx.stroke();
+
+
+        // restore the transformation and clip we had before
+        ctx.clip(m_memclip);
+        ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
 
 	}
 
@@ -269,7 +346,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         m_zrVscale = vscale;
         m_zrX = x;
         m_zrY = y;
-        ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_SIZE, m_zrY+MARGIN_SIZE);
+        ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
     }
 
 

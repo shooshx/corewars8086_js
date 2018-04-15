@@ -68,7 +68,7 @@ public class WarFrame extends JFrame
 
     private final Competition competition;
 
-    private MemoryFrame memory_frame;
+    //private MemoryFrame memory_frame;
     
     private CompetitionWindow mainWnd;
 
@@ -333,7 +333,7 @@ public class WarFrame extends JFrame
 
     /** @see CompetitionEventListener#onWarriorBirth(Warrior) */
     public void onWarriorBirth(Warrior w) {
-        addMessage(nRoundNumber, w.getName() + " enters the arena at " + Format.hex(w.getLoadOffset() & 0xffff, 4));
+        addMessage(nRoundNumber, w.getName() + " enters the arena at " + Format.hex4(w.getLoadOffset() & 0xffff));
         nameListModel.addElement(new WarriorInfo(w.getName()));
     }
 
@@ -458,7 +458,7 @@ public class WarFrame extends JFrame
 		// Warrior w = this.competition.getCurrentWar().getNumWarriors()
 
         //this.addressFiled.setText(Integer.toHexString(address).toUpperCase() + ": " + String.format("%02X", data).toUpperCase());
-        this.addressFiled.setText(Format.hex(address, 2) + ": " + Format.hex((int)data, 2) );
+        this.addressFiled.setText(Format.hex2(address) + ": " + Format.hex2((int)data) );
 		
 /*		if(memory_frame == null || memory_frame.isVisible() == false){
 			memory_frame = new MemoryFrame(competition, tmp.getLinearAddress());

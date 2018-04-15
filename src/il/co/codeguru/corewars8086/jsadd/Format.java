@@ -20,7 +20,7 @@ public class Format {
         return s;
     }
     public static String hex4(int num) {
-        String s = Integer.toHexString(num);
+        String s = Integer.toHexString(num).toUpperCase();;
         switch(s.length()) {
             case 1: return "000" + s;
             case 2: return "00" + s;
@@ -30,7 +30,7 @@ public class Format {
         return s;
     }
     public static String hex5(int num) {
-        String s = Integer.toHexString(num);
+        String s = Integer.toHexString(num).toUpperCase();;
         switch(s.length()) {
             case 1: return "0000" + s;
             case 2: return "000" + s;
