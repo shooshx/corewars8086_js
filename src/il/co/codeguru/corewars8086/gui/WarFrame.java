@@ -266,9 +266,7 @@ public class WarFrame extends JFrame
 		
         if ( address.getLinearAddress() >= War.ARENA_SEGMENT*0x10 && address.getLinearAddress() < 2*War.ARENA_SEGMENT*0x10 )
         {
-        	warCanvas.paintPixel(
-        			Unsigned.unsignedShort(ipInsideArena),
-        			(byte)competition.getCurrentWarrior());
+        	warCanvas.paintPixel(Unsigned.unsignedShort(ipInsideArena), (byte)competition.getCurrentWarrior(), value);
         }
     }
 
@@ -280,6 +278,7 @@ public class WarFrame extends JFrame
     public void onWarPreStartClear() {
         nameListModel.clear();
         warCanvas.clear();
+        warCanvas.readFromMemory(competition.getCurrentWar().getMemory());
     }
 
     /* @see CompetitionEventListener#onWarStart(int) */

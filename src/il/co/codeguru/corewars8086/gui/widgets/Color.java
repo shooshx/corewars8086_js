@@ -7,6 +7,7 @@ public class Color {
 
     int m_r, m_g, m_b;
     float m_a;
+    public boolean m_isDark;
 
     private static final double FACTOR = 0.7;
 
@@ -15,13 +16,18 @@ public class Color {
         m_g = g;
         m_b = b;
         m_a = 1;
+        m_isDark = (0.3*r + 0.58*g + 0.12*b) < 128;
+        //Console.log("Color " + toString() + "  dark=" + Boolean.toString(m_isDark));
     }
     public Color(int r, int g, int b, int a) {
         m_r = r;
         m_g = g;
         m_b = b;
         m_a = a;
-    }    
+        m_isDark = (0.3*r + 0.58*g + 0.12*b) < 128;
+        //Console.log("Color2 " + toString() + "  dark=" + Boolean.toString(m_isDark));
+    }
+
 
     public static Color HSBtoRGB(float hue, float saturation, float brightness) {
         int r = 0, g = 0, b = 0;

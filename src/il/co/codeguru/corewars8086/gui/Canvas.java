@@ -11,6 +11,7 @@ import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
 import elemental2.dom.Path2D;
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.jsadd.Format;
+import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
 
 
 public class Canvas extends JComponent<HTMLCanvasElement> {
@@ -30,6 +31,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	private byte[][] data; // holds colors, not values
 
 	private byte[][] pointer;
+	private byte[][] values;
 
 	private EventMulticasterMouse eventCaster;
 	private MouseAddressRequest eventHandler;
@@ -37,6 +39,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	private int MouseX, MouseY;
 
 	private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect
+    private boolean m_showContent = false;
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
 
     class Turtle {
@@ -118,16 +121,19 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}
 
 
-	public void paintPixel(int number, byte color) {
-	    paintPixel(number % BOARD_SIZE, number / BOARD_SIZE, color);
+	public void paintPixel(int number, byte color, byte value) {
+	    paintPixel(number % BOARD_SIZE, number / BOARD_SIZE, color, value);
 	}
 
-	public void paintPixel(int x, int y, byte color) {
-		data[x][y] = color;
+	public void paintPixel(int x, int y, byte colorByte, byte value) {
+		data[x][y] = colorByte;
+        values[x][y] = value;
 
-		ctx.fillStyle = FillStyleUnionType.of(ColorHolder.getInstance().getColor(color, false).toString());
+        Color color = ColorHolder.getInstance().getColor(colorByte, false);
+		ctx.fillStyle = FillStyleUnionType.of(color.toString());
 		ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
-
+        if (m_showContent)
+            paintTextValue(x, y, color);
 	}
 
 
@@ -139,21 +145,50 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         pointer[x][y] = colorByte;
         ctx.fillStyle = FillStyleUnionType.of(color.toString());
         ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+        if (m_showContent)
+            paintTextValue(x, y, color);
 	}
+
+	public void paintTextValue(int x, int y, Color backCol) {
+        String textCol;
+        if (backCol != null) {
+            if (backCol.m_isDark)
+                textCol = "#ffffff";
+            else
+                textCol = "#000000";
+        }
+        else
+            textCol = "#666666";
+        ctx.fillStyle = FillStyleUnionType.of(textCol);
+        ctx.fillText(  Format.hex2(values[x][y] & 0xff),  x * DOT_SIZE + 0.2, y * DOT_SIZE + 2.2);
+    }
 
 
 	private static native void resetZoom() /*-{
 		$wnd.js_resetZoom()
 	}-*/;
 
-	/**
-	 * Clears the entire canvas
-	 */
+
+	public void readFromMemory(RealModeMemoryImpl mem) {
+        int addr = 0x10000;
+        for (int y = 0; y < BOARD_SIZE; y++)
+        {
+            for (int x = 0; x < BOARD_SIZE; x++)
+            {
+                values[x][y] = mem.readByte(addr);
+                addr += 1;
+            }
+        }
+    }
+
 	public void clear() {
 		if (data == null)
 			data = new byte[BOARD_SIZE][BOARD_SIZE];
 		if (pointer == null)
 			pointer = new byte[BOARD_SIZE][BOARD_SIZE];
+		if (values == null)
+            values = new byte[BOARD_SIZE][BOARD_SIZE];
+
 		for (int i = 0; i < BOARD_SIZE; i++)
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				data[i][j] = EMPTY;
@@ -182,26 +217,40 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.fillStyle = FillStyleUnionType.of(Color.BLACK);
 		ctx.fillRect(0, 0, BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
 
+        if (m_showContent) {
+		    //ctx.font = Integer.toString((int)(DOT_SIZE * m_zrHscale)) + "px monospace";
+            ctx.font = "2.3px monospace";
+        }
+
+        float sx = -m_zrX / DOT_SIZE / m_zrHscale - 1;
+        float sy = -m_zrY / DOT_SIZE / m_zrVscale;
+        float ex = sx + (256 / m_zrHscale) + 1;
+        float ey = sy + (256 / m_zrVscale) + 1;
+
 		for (int y = 0; y < BOARD_SIZE; y++)
 		{
 			for (int x = 0; x < BOARD_SIZE; x++)
 			{
 			    int cellPtr = pointer[x][y];
-			    String colStr = null;
+			    Color col = null;
 			    if (cellPtr != EMPTY) {
-                    colStr = ColorHolder.getInstance().getColor(cellPtr, true).toString();
+                    col = ColorHolder.getInstance().getColor(cellPtr, true);
                 }
 				else {
 			        int cellVal = data[x][y];
                     if (cellVal != EMPTY) {
-                        colStr = ColorHolder.getInstance().getColor(cellVal, false).toString();
+                        col = ColorHolder.getInstance().getColor(cellVal, false);
                     }
-                    else
-                        continue;
                 }
 
-				ctx.fillStyle = FillStyleUnionType.of(colStr);
-				ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+                if (col != null) {
+                    ctx.fillStyle = FillStyleUnionType.of(col.toString());
+                    ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+                }
+
+                if (m_showContent && (x > sx && x < ex && y > sy && y < ey)) {
+                    paintTextValue(x, y, col);
+                }
 			}
 		}
 
@@ -269,9 +318,10 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         //ctx.stroke();
 
 
-        // restore the transformation and clip we had before
+        // restore the transformation and clip we had before for random access writes
         ctx.clip(m_memclip);
         ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
+        ctx.font = "2.3px monospace";
 
 	}
 
@@ -319,7 +369,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				if (pointer[i][j] != EMPTY && data[i][j] != EMPTY) {
 					pointer[i][j] = EMPTY;
-					paintPixel(i, j, data[i][j]);
+					paintPixel(i, j, data[i][j], values[i][j]);
 				}
 			}
 	}
@@ -341,12 +391,13 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}-*/;
 
     public void j_warCanvas_setTransform(float hscale, float vscale, float x, float y) {
-        //Console.log("scale= " + Float.toString(hscale));
+        Console.log("scale= " + Float.toString(hscale) + "  x=" + Float.toString(-x / DOT_SIZE));
         m_zrHscale = hscale;
         m_zrVscale = vscale;
         m_zrX = x;
         m_zrY = y;
         ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
+        m_showContent = (m_zrHscale > 4.0);
     }
 
 
