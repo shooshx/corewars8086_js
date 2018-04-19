@@ -731,6 +731,7 @@ var bgHeight;
 var bgPosX;
 var bgPosY;
 var previousEvent = null;
+var downEvent = null
 var settings = {
     zoom: 0.10,
     maxZoom: false,
@@ -738,7 +739,13 @@ var settings = {
 };
 var warCtx = null;
 
-function updateBgStyle() {
+function js_updateFromKeyScroll(nx, ny) {
+    bgPosX = nx;
+    bgPosY = ny;
+    updateBgVars();
+}
+
+function updateBgVars() {
     if (bgPosX > 0) {
         bgPosX = 0;
     } else if (bgPosX < width - bgWidth) {
@@ -754,11 +761,11 @@ function updateBgStyle() {
     var hscale = bgWidth / width;
     var vscale = bgHeight / height
     j_warCanvas_setTransform(hscale, vscale, bgPosX, bgPosY);
-    //warCtx.setTransform(hscale, 0, 0, vscale, bgPosX, bgPosY);
-    j_warCanvas_repaint();
+}
 
-    //img.style.backgroundSize = bgWidth+'px '+bgHeight+'px';
-    //img.style.backgroundPosition = bgPosX+'px '+bgPosY+'px';
+function updateBgStyle() {
+    updateBgVars();
+    j_warCanvas_repaint();
 }
 
 function wheelzoom_reset() {
@@ -783,8 +790,8 @@ function onWarCanvasWheel(e) {
     // We have to calculate the target element's position relative to the document, and subtrack that from the
     // cursor's position relative to the document.
     var rect = warCanvas.getBoundingClientRect();
-    var offsetX = e.pageX - rect.left - window.pageXOffset;
-    var offsetY = e.pageY - rect.top - window.pageYOffset;
+    var offsetX = e.pageX - rect.left - window.pageXOffset - WC_MARGIN_LEFT;
+    var offsetY = e.pageY - rect.top - window.pageYOffset - WC_MARGIN_TOP;
 
     // Record the offset between the bg edge and cursor:
     var bgCursorX = offsetX - bgPosX;
@@ -823,13 +830,23 @@ function onWarCanvasWheel(e) {
 
 function drag(e) {
     e.preventDefault();
-    bgPosX += (e.pageX - previousEvent.pageX);
-    bgPosY += (e.pageY - previousEvent.pageY);
+    bgPosX += e.pageX - previousEvent.pageX;
+    bgPosY += e.pageY - previousEvent.pageY;
     previousEvent = e;
     updateBgStyle();
 }
 
-function removeDrag() {
+function removeDrag(e) {
+    var clickDx = Math.abs(e.pageX - downEvent.pageX);
+    var clickDy = Math.abs(e.pageY - downEvent.pageY);
+    if (clickDx < 6 && clickDy < 6) {
+        var rect = warCanvas.getBoundingClientRect();
+        var offsetX = e.pageX - rect.left - window.pageXOffset - WC_MARGIN_LEFT;
+        var offsetY = e.pageY - rect.top - window.pageYOffset - WC_MARGIN_TOP;
+        j_warCanvas_click(offsetX, offsetY);
+    }
+
+
     document.removeEventListener('mouseup', removeDrag);
     document.removeEventListener('mousemove', drag);
 }
@@ -837,6 +854,7 @@ function removeDrag() {
 function warCanvasDraggable(e) {
     e.preventDefault();
     previousEvent = e;
+    downEvent = e;
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', removeDrag);
 }
@@ -1793,7 +1811,7 @@ input:disabled + .sc-btn:active,
       <div id="memory_panel">
         <!--<input id="battlesPerGroupField" type="text">-->
 
-
+        <input type="checkbox" id="warCanvasDummyInput" class="hidden">
         <canvas id="warCanvas"></canvas>
 
 

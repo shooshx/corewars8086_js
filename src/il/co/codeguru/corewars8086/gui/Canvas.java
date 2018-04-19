@@ -1,15 +1,15 @@
 package il.co.codeguru.corewars8086.gui;
 
 
-import elemental2.dom.Event;
-import elemental2.dom.HTMLCanvasElement;
-import elemental2.dom.CanvasRenderingContext2D;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import elemental2.dom.*;
 import elemental2.dom.CanvasRenderingContext2D.StrokeStyleUnionType;
 import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
 
 
-import elemental2.dom.Path2D;
 import il.co.codeguru.corewars8086.gui.widgets.*;
+import il.co.codeguru.corewars8086.gui.widgets.Console;
+import il.co.codeguru.corewars8086.gui.widgets.MouseEvent;
 import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
 
@@ -41,6 +41,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect
     private boolean m_showContent = false;
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
+
+    HTMLInputElement m_dummyInput; // used to have something that could get input focus
 
     class Turtle {
         float x, y;
@@ -100,14 +102,14 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         t.right(TEXT_EPS);
         t.down(MARGIN_BOTTOM-TICK_WIDTH);
 
-
         ctx.clip(m_memclip);
 
-
+        m_dummyInput = (HTMLInputElement)DomGlobal.document.getElementById("warCanvasDummyInput");
 
 		exportMethods();
-		initZoom();
+		initZoom(MARGIN_TOP, MARGIN_LEFT);
 		clear();
+		setupInputEvents();
 	}
 
 	@Override
@@ -209,6 +211,33 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	}
 
+	private Color paintMemCellBack(int x, int y) {
+        int cellPtr = pointer[x][y];
+        Color col = null;
+        if (cellPtr != EMPTY) {
+            col = ColorHolder.getInstance().getColor(cellPtr, true);
+        }
+        else {
+            int cellVal = data[x][y];
+            if (cellVal != EMPTY) {
+                col = ColorHolder.getInstance().getColor(cellVal, false);
+            }
+        }
+
+        if (col != null) {
+            ctx.fillStyle = FillStyleUnionType.of(col.toString());
+            ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+        }
+	    return col;
+    }
+
+    private static final class Rect {
+	    float sx, sy, ex, ey;
+	    public boolean isInside(float x, float y) {
+	        return x > sx && x < ex && y > sy && y < ey;
+        }
+    }
+    private Rect m_contentVisibleRect = new Rect(); // in memory coordinates
 
 	@Override
 	public void paint() {
@@ -222,37 +251,21 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             ctx.font = "2.3px monospace";
         }
 
-        float sx = -m_zrX / DOT_SIZE / m_zrHscale - 1;
-        float sy = -m_zrY / DOT_SIZE / m_zrVscale;
-        float ex = sx + (256 / m_zrHscale) + 1;
-        float ey = sy + (256 / m_zrVscale) + 1;
 
 		for (int y = 0; y < BOARD_SIZE; y++)
 		{
 			for (int x = 0; x < BOARD_SIZE; x++)
 			{
-			    int cellPtr = pointer[x][y];
-			    Color col = null;
-			    if (cellPtr != EMPTY) {
-                    col = ColorHolder.getInstance().getColor(cellPtr, true);
-                }
-				else {
-			        int cellVal = data[x][y];
-                    if (cellVal != EMPTY) {
-                        col = ColorHolder.getInstance().getColor(cellVal, false);
-                    }
-                }
-
-                if (col != null) {
-                    ctx.fillStyle = FillStyleUnionType.of(col.toString());
-                    ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
-                }
-
-                if (m_showContent && (x > sx && x < ex && y > sy && y < ey)) {
+                boolean textVisible = m_showContent && m_contentVisibleRect.isInside(x, y);
+                Color col = paintMemCellBack(x, y);
+                if (textVisible) {
                     paintTextValue(x, y, col);
                 }
 			}
 		}
+		//Console.log("textCount=" + Integer.toString(textVisCount));
+		if (m_showContent && m_intervalId != null)
+		    paintCursor(true);
 
 		//------------ paint the X and Y coordinates at the margins -------------------
 
@@ -379,6 +392,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         var that = this
         $wnd.j_warCanvas_repaint = $entry(function() { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_repaint()() });
         $wnd.j_warCanvas_setTransform = $entry(function(a,b,c,d) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_setTransform(FFFF)(a,b,c,d) });
+        $wnd.j_warCanvas_click = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_click(FF)(a,b) });
     }-*/;
 
 
@@ -386,21 +400,152 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 		repaint();
 	}
 
-	private static native void initZoom() /*-{
+	private static native void initZoom(int marginTop, int marginLeft) /*-{
+	    $wnd.WC_MARGIN_TOP = marginTop
+	    $wnd.WC_MARGIN_LEFT = marginLeft
 		$wnd.js_initZoom()
 	}-*/;
 
     public void j_warCanvas_setTransform(float hscale, float vscale, float x, float y) {
-        Console.log("scale= " + Float.toString(hscale) + "  x=" + Float.toString(-x / DOT_SIZE));
+        //Console.log("scale= " + Float.toString(hscale) + "  y=" + Float.toString(y ));
         m_zrHscale = hscale;
         m_zrVscale = vscale;
         m_zrX = x;
         m_zrY = y;
         ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
         m_showContent = (m_zrHscale > 4.0);
+
+        m_contentVisibleRect.sx = -m_zrX / DOT_SIZE / m_zrHscale - 1;
+        m_contentVisibleRect.sy = -m_zrY / DOT_SIZE / m_zrVscale - 1;
+        m_contentVisibleRect.ex = m_contentVisibleRect.sx + (256 / m_zrHscale) + 1;
+        m_contentVisibleRect.ey = m_contentVisibleRect.sy + (256 / m_zrVscale) + 1;
     }
 
 
+    private double m_cursorX, m_cursorY;  // in memory coordinates, x can have half cells for the first digit of a byte
+    private Double m_intervalId; // id of the blinking interval. if this is null it means there is no cursor
+    private boolean m_blinkOn = false;
+
+
+
+    private void paintCursor(boolean isOn) {
+        //Console.log("BLINK");
+        int x = (int)m_cursorX, y = (int)m_cursorY;
+        if (isOn) {
+            Color col = paintMemCellBack(x, y);
+
+            ctx.fillStyle =  FillStyleUnionType.of("#eeeeee");
+            double rx = m_cursorX;
+            if (rx % 1 == 0)
+                rx += 0.08; // account for the space between numbers not being the same as the space between digits
+            ctx.fillRect(rx * DOT_SIZE, m_cursorY * DOT_SIZE + 0.32, 1.25, 2.2);
+            paintMemCellBack((int)m_cursorX, (int)m_cursorY);
+
+            paintTextValue(x, y, col);
+
+        }
+        else {
+            Color col = paintMemCellBack(x, y);
+            if (col == null) {
+                ctx.fillStyle = FillStyleUnionType.of("#000000");
+                ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+            }
+            paintTextValue(x, y, col);
+        }
+
+
+    }
+
+    public void j_warCanvas_click(float x, float y) {
+        if (x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE)
+            return;
+
+        float mx = (int)(( (x - m_zrX)/ DOT_SIZE/m_zrHscale )*2)/2.0f ; // need half percision to know on which digit we clicked
+        float my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale ) ;
+        Console.log("click " + Float.toString(x) + "," + Float.toString(y) + "  : " + Float.toString(mx) + "," + Float.toString(my) );
+
+        paintCursor(false);
+        m_cursorX = mx;
+        m_cursorY = my;
+        m_dummyInput.focus();
+
+        paintCursor(true);
+        m_blinkOn = false;
+
+        if (m_intervalId != null)
+            DomGlobal.clearInterval(m_intervalId);
+        m_intervalId = DomGlobal.setInterval((event) -> {
+            if (!m_showContent)
+                return; // we zoomed out when cursor is active
+            paintCursor(m_blinkOn);
+            m_blinkOn = !m_blinkOn;
+        }, 600);
+
+    }
+
+    private static native void js_updateFromKeyScroll(double nx, double ny)/*-{
+        $wnd.js_updateFromKeyScroll(nx, ny)
+    }-*/;
+
+    private void moveCursor(double dx, int dy) {
+        paintCursor(false);
+        m_cursorX = Math.max(Math.min(m_cursorX + dx, 255.5), 0.);
+        m_cursorY = Math.max(Math.min(m_cursorY + dy, 255.), 0.);
+
+        // need while since it might be completely off screen and need several steps to get to
+        while (m_cursorY < m_contentVisibleRect.sy + 1 && m_cursorY > 0) {
+            m_zrY = m_zrY+(5.1f*m_zrHscale*DOT_SIZE);
+            js_updateFromKeyScroll(m_zrX, m_zrY);
+        }
+        while (m_cursorY > m_contentVisibleRect.ey - 1 && m_cursorY <= 255) {
+            m_zrY = m_zrY-(5.1f*m_zrHscale*DOT_SIZE);
+            js_updateFromKeyScroll(m_zrX, m_zrY);
+        }
+        while (m_cursorX < m_contentVisibleRect.sx + 1 && m_cursorX > 0) {
+            m_zrX = m_zrX+(5.1f*m_zrVscale*DOT_SIZE);
+            js_updateFromKeyScroll(m_zrX, m_zrY);
+        }
+        while (m_cursorX > m_contentVisibleRect.ex - 0.5 && m_cursorX <= 255.5) {
+            m_zrX = m_zrX-(5.1f*m_zrVscale*DOT_SIZE);
+            js_updateFromKeyScroll(m_zrX, m_zrY);
+        }
+
+        // this will do bounds checking, update the js variable and call back to java to update the java state
+        j_warCanvas_repaint();
+
+        paintCursor(true);
+        // TBD scroll if going out of screen
+    }
+
+    private void setupInputEvents() {
+
+        m_dummyInput.addEventListener("blur", (event)-> {
+            Console.log("BLUR");
+            if (m_intervalId != null)
+                DomGlobal.clearInterval(m_intervalId);
+            if (m_showContent)
+                paintCursor(false);
+            m_intervalId = null;
+        });
+
+        m_dummyInput.addEventListener("keydown", (event) -> {
+            if (!m_showContent)
+                return;
+            String key = ((KeyboardEvent)event).key;
+            Console.log(key);
+            event.preventDefault();
+            if (key == "ArrowUp")
+                moveCursor(0,-1);
+            else if (key == "ArrowDown")
+                moveCursor(0,1);
+            else if (key == "ArrowRight")
+                moveCursor(0.5, 0);
+            else if (key == "ArrowLeft")
+                moveCursor(-0.5, 0);
+
+        });
+
+    }
 
 
 }
