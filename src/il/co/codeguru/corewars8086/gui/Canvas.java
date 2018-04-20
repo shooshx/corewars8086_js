@@ -11,7 +11,9 @@ import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.gui.widgets.MouseEvent;
 import il.co.codeguru.corewars8086.jsadd.Format;
+import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
+import il.co.codeguru.corewars8086.war.War;
 
 
 public class Canvas extends JComponent<HTMLCanvasElement> {
@@ -43,6 +45,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
 
     HTMLInputElement m_dummyInput; // used to have something that could get input focus
+    HTMLElement m_hoverCellInfo;
+    RealModeMemoryImpl m_mem;
+    War m_currentWar;
 
     class Turtle {
         float x, y;
@@ -105,6 +110,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.clip(m_memclip);
 
         m_dummyInput = (HTMLInputElement)DomGlobal.document.getElementById("warCanvasDummyInput");
+        m_hoverCellInfo = (HTMLElement)DomGlobal.document.getElementById("hoverCellInfo");
 
 		exportMethods();
 		initZoom(MARGIN_TOP, MARGIN_LEFT);
@@ -128,12 +134,24 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}
 
 	public void paintPixel(int x, int y, byte colorByte, byte value) {
-		data[x][y] = colorByte;
         values[x][y] = value;
 
-        Color color = ColorHolder.getInstance().getColor(colorByte, false);
-		ctx.fillStyle = FillStyleUnionType.of(color.toString());
-		ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+		Color color = null;
+		if (colorByte != -1)
+            data[x][y] = colorByte;
+        else
+            colorByte = data[x][y];
+        if (colorByte != -1) {
+            color = ColorHolder.getInstance().getColor(colorByte, false);
+            ctx.fillStyle = FillStyleUnionType.of(color.toString());
+        }
+        else {
+            // color remains null so that fill text would keep it gray
+            ctx.fillStyle = FillStyleUnionType.of("#000000");
+        }
+
+        ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
+
         if (m_showContent)
             paintTextValue(x, y, color);
 	}
@@ -171,13 +189,15 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}-*/;
 
 
-	public void readFromMemory(RealModeMemoryImpl mem) {
+	public void initStartWar(War war) {
+        m_mem = war.getMemory();
+        m_currentWar = war;
         int addr = 0x10000;
         for (int y = 0; y < BOARD_SIZE; y++)
         {
             for (int x = 0; x < BOARD_SIZE; x++)
             {
-                values[x][y] = mem.readByte(addr);
+                values[x][y] = m_mem.readByte(addr);
                 addr += 1;
             }
         }
@@ -207,9 +227,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         // default clipping is the memory area - for random access writes to not go overboard
         //Path2D
-
-
 	}
+
+    public void revokeWar() {
+	    m_mem = null;
+        m_currentWar = null;
+    }
 
 	private Color paintMemCellBack(int x, int y) {
         int cellPtr = pointer[x][y];
@@ -380,7 +403,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	public void deletePointers() {
 		for (int i = 0; i < BOARD_SIZE; i++)
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				if (pointer[i][j] != EMPTY && data[i][j] != EMPTY) {
+				if (pointer[i][j] != EMPTY) {
 					pointer[i][j] = EMPTY;
 					paintPixel(i, j, data[i][j], values[i][j]);
 				}
@@ -393,6 +416,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         $wnd.j_warCanvas_repaint = $entry(function() { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_repaint()() });
         $wnd.j_warCanvas_setTransform = $entry(function(a,b,c,d) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_setTransform(FFFF)(a,b,c,d) });
         $wnd.j_warCanvas_click = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_click(FF)(a,b) });
+        $wnd.j_warCanvas_showCurrent = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_showCurrent(FF)(a,b) });
     }-*/;
 
 
@@ -434,12 +458,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         if (isOn) {
             Color col = paintMemCellBack(x, y);
 
-            ctx.fillStyle =  FillStyleUnionType.of("#eeeeee");
             double rx = m_cursorX;
             if (rx % 1 == 0)
                 rx += 0.08; // account for the space between numbers not being the same as the space between digits
-            ctx.fillRect(rx * DOT_SIZE, m_cursorY * DOT_SIZE + 0.32, 1.25, 2.2);
             paintMemCellBack((int)m_cursorX, (int)m_cursorY);
+            ctx.fillStyle =  FillStyleUnionType.of("#eeeeee");
+            ctx.fillRect(rx * DOT_SIZE, m_cursorY * DOT_SIZE + 0.32, 1.25, 2.2);
 
             paintTextValue(x, y, col);
 
@@ -459,10 +483,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void j_warCanvas_click(float x, float y) {
         if (x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE)
             return;
-
         float mx = (int)(( (x - m_zrX)/ DOT_SIZE/m_zrHscale )*2)/2.0f ; // need half percision to know on which digit we clicked
         float my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale ) ;
-        Console.log("click " + Float.toString(x) + "," + Float.toString(y) + "  : " + Float.toString(mx) + "," + Float.toString(my) );
+        //Console.log("click " + Float.toString(x) + "," + Float.toString(y) + "  : " + Float.toString(mx) + "," + Float.toString(my) );
 
         paintCursor(false);
         m_cursorX = mx;
@@ -480,7 +503,38 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             paintCursor(m_blinkOn);
             m_blinkOn = !m_blinkOn;
         }, 600);
+    }
 
+    public void j_warCanvas_showCurrent(float x, float y) {
+        if (m_mem == null || x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE) {
+            m_hoverCellInfo.style.display = "none";
+            return;
+        }
+        int mx = (int)( (x - m_zrX)/ DOT_SIZE/m_zrHscale );
+        int my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale );
+
+        int addr = (int)(mx+my*256) & 0xffff;
+        int v = m_mem.readByte(addr + 0x10000) & 0xff;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("0x");
+        sb.append(Format.hex4(addr));
+        sb.append(": 0x");
+        sb.append(Format.hex2(v));
+        sb.append(" (");
+        int bef = sb.length();
+        sb.append(v);  // signed/unsigned?
+        sb.append(")");
+        for(int i = sb.length() - bef; i < 5; ++i)
+            sb.append('\u00A0');
+        byte player = data[mx][my];
+        if (player != -1) {
+            sb.append("  Player: ");
+            sb.append(m_currentWar.getWarrior(player).getName().substring(0,20));
+        }
+
+        m_hoverCellInfo.style.display = "";
+        Format.setInnerText(m_hoverCellInfo, sb.toString());
     }
 
     private static native void js_updateFromKeyScroll(double nx, double ny)/*-{
@@ -513,11 +567,10 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         // this will do bounds checking, update the js variable and call back to java to update the java state
         j_warCanvas_repaint();
 
-        paintCursor(true);
-        // TBD scroll if going out of screen
     }
 
-    private void setupInputEvents() {
+    private void setupInputEvents()
+    {
 
         m_dummyInput.addEventListener("blur", (event)-> {
             Console.log("BLUR");
@@ -532,7 +585,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             if (!m_showContent)
                 return;
             String key = ((KeyboardEvent)event).key;
-            Console.log(key);
+            //Console.log(key);
             event.preventDefault();
             if (key == "ArrowUp")
                 moveCursor(0,-1);
@@ -542,7 +595,29 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
                 moveCursor(0.5, 0);
             else if (key == "ArrowLeft")
                 moveCursor(-0.5, 0);
+            else if (m_mem != null) {
+                char c = key.charAt(0);
+                int v = -1;
+                if (c >= '0' && c <= '9')
+                    v = c - '0';
+                else if (c >= 'a' && c <= 'f')
+                    v = c - 'a' + 10;
+                else if (c >= 'A' && c <= 'A')
+                    v = c - 'A' + 10;
+                if (v != -1) {
+                    int ix = (int)m_cursorX, iy = (int)m_cursorY;
+                    int ev = values[ix][iy];
+                    if (m_cursorX % 1 == 0)
+                        ev = ev & 0xf | (v << 4);
+                    else
+                        ev = ev & 0xf0 | v;
+                    values[ix][iy] = (byte)ev;
+                    m_mem.writeByte(new RealModeAddress((short)0x1000, (short)(ix+iy*256)), (byte)ev);
+                    moveCursor(0.5, 0);
 
+                }
+
+            }
         });
 
     }

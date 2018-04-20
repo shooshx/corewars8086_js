@@ -104,13 +104,14 @@ public class War {
         ArrayList<WarriorGroup> groupsLeftToLoad = new ArrayList<WarriorGroup>();
         for (int i = 0; i < warriorGroups.length; ++i)
         	groupsLeftToLoad.add(warriorGroups[i]);
-               
+
         while (groupsLeftToLoad.size() > 0)
         {
         	int randomInt = rand.nextInt(groupsLeftToLoad.size());
         	loadWarriorGroup(groupsLeftToLoad.get(randomInt));
         	groupsLeftToLoad.remove(randomInt);
         }
+        m_currentWarrior = -1;
     }
 	
     /**
@@ -147,6 +148,7 @@ public class War {
                 }
             }
         }
+        m_currentWarrior = -1;
         return atBreakpoint;
     }
 
@@ -223,8 +225,7 @@ public class War {
     private void loadWarriorGroup(WarriorGroup warriorGroup) throws Exception {
         List<WarriorData> warriors = warriorGroup.getWarriors();
 
-        RealModeAddress groupSharedMemory =
-            allocateCoreMemory(GROUP_SHARED_MEMORY_SIZE);
+        RealModeAddress groupSharedMemory = allocateCoreMemory(GROUP_SHARED_MEMORY_SIZE);
 
         for (int i = 0; i < warriors.size(); ++i) {
 
@@ -263,6 +264,7 @@ public class War {
                 RealModeAddress tmp = new RealModeAddress(ARENA_SEGMENT, (short)(loadOffset + offset));
                 m_core.writeByte(tmp, warriorData[offset]);			
             }
+
             m_core.listener.onWriteState(MemoryEventListener.EWriteState.RUN);
             ++m_numWarriorsAlive;
 			++m_currentWarrior;
@@ -270,6 +272,7 @@ public class War {
             // notify listener
             m_warListener.onWarriorBirth(w);
         }
+
     }
 
     /**

@@ -217,7 +217,7 @@ public class Competition {
     {
         //Console.log("runWar");
         currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
-        int war = 0; // TBD
+        int war = 0;
         currentWar.setSeed(this.seed + war);
         competitionEventListener.onWarPreStartClear();
         currentWar.loadWarriorGroups(warriorGroups);

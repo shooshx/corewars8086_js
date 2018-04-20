@@ -25,10 +25,13 @@ Features include:
      - [bx]w to access a word, 
      - [ds:bx] to access fully qualified address
   - numbers in hex (0xA3F), binary (0b110111) and octal (0o14427)   
+- zoomable memory canvas
+  - show memory content at zoom factor 4
+  - edit memory content in canvas by setting a cursor with a click
+  - move the cursor using arrows and scroll around
   
 Coming up features:
 - data breakpoints
-- zoomable memory canvas
 - fixed randomization bug
 - online competition
 

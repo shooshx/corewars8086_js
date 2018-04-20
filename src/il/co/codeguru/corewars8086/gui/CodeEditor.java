@@ -127,7 +127,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             // rewriting only a single opcode so its not possible to cross to a new opcode which will need reparsing
             setByte(ipInsideArena, m_mem[ipInsideArena + CODE_ARENA_OFFSET]);
             ++ipInsideArena;
-        } while (m_dbglines[ipInsideArena] == null);
+        } while (ipInsideArena < 0x10000 && m_dbglines[ipInsideArena] == null);
     }
 
     @Override

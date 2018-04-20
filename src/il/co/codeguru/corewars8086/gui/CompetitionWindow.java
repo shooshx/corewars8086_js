@@ -334,8 +334,8 @@ public class CompetitionWindow extends JFrame
     private void showBattleRoom() {
         battleFrame = new WarFrame(competition, this);
 
-        
         competition.addMemoryEventLister(battleFrame);
+        competition.addMemoryEventLister(battleFrame.cpuframe);
         competition.addCompetitionEventListener(battleFrame);
 
         competition.addMemoryEventLister(battleFrame.cpuframe.stackView);

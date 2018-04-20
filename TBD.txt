@@ -15,24 +15,21 @@ BUG - spaces in brakets parse spacedHex
 
 
 graph window
-speed
+
 
 nasm memory leak
    errors with dy 12, dz 12
 
 check randomization similarity with real java
   https://github.com/tomer-schles/corewars8086-seed-bugfix/commits/master
-zoom to bytes
-check "updateScore Infinity"
+
 recreate scene with start addresses in URL?
 
 
 debugger
-   step showing the line
-   disasm jump into middle of command
-   disasm someone writing into my memory, show in red
-   "rep inc cx" - invalid command that throws an exception - detect this
-   warrior that coi
+
+   show in red things that were just changed
+
    code with many comments
 
 - on debug end, keep the war alive so that it would be possible to view state
@@ -49,14 +46,14 @@ editor:
    - disallow setting in comment, label lines?
 
 - data breakpoints
-- watch language
+
 - online live game?
 - enable/disable players with checkbox
 - code button should be red if code has errors
 - add zombies
-- show stack, show common area
+
 - jump to line where mouse is pointing?
-- choose load address using gui
+
 - remove trailing spaces and the bottom of the asm text, looks bad when debugging
 
 - check changes:
@@ -69,7 +66,7 @@ editor:
 - round (step) counter
 
 - when not in debug mode don't update GUI
-- GUI zoom by browser
+
 - go to address when not a number - same as watch parsing
 - check long pages of comments at the start of .asm and in the middle, in either the player above or in me
 
@@ -84,16 +81,19 @@ End of debug session:
 - don't disassemble lines that were in the original text
 - export code to bin file
 
+- fix colors to be consistant, IP pointer
+- main memory using an Int8Array from GWT
 
-- Resume, Step button not grayed out after "Stop"
 
 minor BUG - parsing an opcode out of memory boundary reads wrong number
 
-breakpoints
 
-- scroll in opcodes and numbers panes not working in editor
+- wheel scroll in opcodes and numbers panes not working in editor
 - make it not possible to add breakpoints in comment lines?
 
 - registers, watch - display can be hex/signed/unsigned
 
 - at pause - scroll to IP
+- click on canvas should not work when zoomed out
+
+- save entire state of game

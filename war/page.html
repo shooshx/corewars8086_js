@@ -851,6 +851,13 @@ function removeDrag(e) {
     document.removeEventListener('mousemove', drag);
 }
 
+function mouseMoveShowCurrent(e) {
+    var rect = warCanvas.getBoundingClientRect();
+    var offsetX = e.pageX - rect.left - window.pageXOffset - WC_MARGIN_LEFT;
+    var offsetY = e.pageY - rect.top - window.pageYOffset - WC_MARGIN_TOP;
+    j_warCanvas_showCurrent(offsetX, offsetY);
+}
+
 function warCanvasDraggable(e) {
     e.preventDefault();
     previousEvent = e;
@@ -862,6 +869,7 @@ function warCanvasDraggable(e) {
 function js_initZoom() {
     warCanvas.addEventListener('wheel', onWarCanvasWheel);
     warCanvas.addEventListener('mousedown', warCanvasDraggable);
+    warCanvas.addEventListener('mousemove', mouseMoveShowCurrent);
 
     warCtx = warCanvas.getContext('2d');
 }
@@ -1803,6 +1811,10 @@ input:disabled + .sc-btn:active,
     background-repeat: repeat, no-repeat;
 }
 
+#hoverCellInfo {
+    font: 14px monospace;
+}
+
 </style>
   </head>
   <body onload="start()">
@@ -1813,7 +1825,7 @@ input:disabled + .sc-btn:active,
 
         <input type="checkbox" id="warCanvasDummyInput" class="hidden">
         <canvas id="warCanvas"></canvas>
-
+        <div id="hoverCellInfo"></div>
 
       </div>
 

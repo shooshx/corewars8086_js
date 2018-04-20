@@ -3,6 +3,7 @@ package il.co.codeguru.corewars8086.gui;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
@@ -28,7 +29,7 @@ import java.util.HashMap;
 //import javax.swing.JTextArea;
 
 
-public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
+public class CpuFrame  implements CompetitionEventListener, MemoryEventListener {
 	
 	//private War currentWar;
 	private CompetitionWindow m_mainwnd;
@@ -116,8 +117,8 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 			case "BP": state.setBP(sv); break;
 			case "SP": state.setSP(sv); stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), sv)); break;
 
-			case "IP": state.setIP(sv); m_mainwnd.m_codeEditor.updateDebugLine(); break;
-			case "CS": state.setCS(sv); m_mainwnd.m_codeEditor.updateDebugLine(); break;
+			case "IP": state.setIP(sv); changedCSIP(); break;
+			case "CS": state.setCS(sv); changedCSIP(); break;
 			case "DS": state.setDS(sv); break;
 			case "SS": state.setSS(sv); stackView.moveToLine(RealModeAddress.linearAddress(sv, state.getSP())); break;
 			case "ES": state.setES(sv); break;
@@ -135,6 +136,21 @@ public class CpuFrame /*extends JFrame*/ implements CompetitionEventListener {
 		return 1;
 	}
 
+	public void changedCSIP() {
+		m_mainwnd.m_codeEditor.onEndRound(); // redraw the ip indicator
+
+		m_mainwnd.battleFrame.onEndRound(); // make it redraw ip pointers.
+
+	}
+
+	public void onMemoryWrite(RealModeAddress address, byte value){
+		for (WatchEntry entry : m_watches.values()) {
+			entry.evalAndDisplay();
+		}
+	}
+
+	public void onWriteState(MemoryEventListener.EWriteState state)
+	{}
 
 	public void updateFlagBoxes(CpuState state) {
 		flagOF.setValue( state.getOverflowFlag());

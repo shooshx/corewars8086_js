@@ -4,6 +4,7 @@ public class Color {
     public static String BLACK = "#000000";
     public static String black = "#000000";
     public static String WHITE = "#ffffff";
+    public static Color COL_BLACK = new Color(0,0,0);
 
     int m_r, m_g, m_b;
     float m_a;

@@ -34,8 +34,7 @@ import il.co.codeguru.corewars8086.jsadd.Format;
  * 
  * @author BS
  */
-public class WarFrame extends JFrame
-    implements MemoryEventListener,  CompetitionEventListener, MouseAddressRequest
+public class WarFrame extends JFrame implements MemoryEventListener,  CompetitionEventListener, MouseAddressRequest
 {
 
 	/** the canvas which show the core war memory area */
@@ -278,7 +277,7 @@ public class WarFrame extends JFrame
     public void onWarPreStartClear() {
         nameListModel.clear();
         warCanvas.clear();
-        warCanvas.readFromMemory(competition.getCurrentWar().getMemory());
+        warCanvas.initStartWar(competition.getCurrentWar());
     }
 
     /* @see CompetitionEventListener#onWarStart(int) */
@@ -314,6 +313,7 @@ public class WarFrame extends JFrame
 
         btnSingleRound.setEnabled(false); // done debugging this session
         btnPause.setEnabled(false);
+        warCanvas.revokeWar();
     }	
 
     /** @see CompetitionEventListener#onRound(int) */
