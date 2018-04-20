@@ -93,7 +93,5 @@ minor BUG - parsing an opcode out of memory boundary reads wrong number
 
 - registers, watch - display can be hex/signed/unsigned
 
-- at pause - scroll to IP
-- click on canvas should not work when zoomed out
 
 - save entire state of game
