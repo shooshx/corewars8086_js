@@ -481,7 +481,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
     public void j_warCanvas_click(float x, float y) {
-        if (x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE)
+        if (!m_showContent || x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE)
             return;
         float mx = (int)(( (x - m_zrX)/ DOT_SIZE/m_zrHscale )*2)/2.0f ; // need half percision to know on which digit we clicked
         float my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale ) ;

@@ -716,7 +716,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         if (m_isDebugMode) {
             updateDebugLine();
-            scrollToCodeInEditor(false);
+
         }
     }
 
@@ -1466,6 +1466,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         dline.classList.add("current_dbg");
         m_lastDbgElement = dline;
         m_lastDbgAddr = ipInsideArena;
+
+        scrollToCodeInEditor(false);
     }
 
     private void disassembleAddr(int absaddr, int addrInArea)
