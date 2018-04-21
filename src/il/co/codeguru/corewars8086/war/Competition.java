@@ -120,13 +120,21 @@ public class Competition {
                 } while (needMore == 1);
             }
 
+            if (compState.isInDebugger && currentWar.hasEnded() && currentWar.getNumRemainingWarriors() == 0) {
+                competitionEventListener.onNoneAlive();
+                return false;
+            }
+
             if (needMore == 0) { // we return false due to being paused
                 competitionEventListener.onPaused();
                 return false;
             }
             else if (needMore == -1) {
                 doneWar();
-                compState.state = CompState.State.RUN_WAR;
+                // when in debugger, we want to have the ability to continue stepping in a stopped war to see how it goes
+                // and it doesn't make sense any way to start a new war
+                if (!compState.isInDebugger)
+                    compState.state = CompState.State.RUN_WAR;
                 return false;
             }
             return true; // what's left is that it's equal to 1
@@ -189,14 +197,17 @@ public class Competition {
 
         boolean atBreakpoint = currentWar.nextRound(compState.round);
 
-        if (currentWar.isOver()) {
-            Console.log("isOver");
-            return -1;
-        }
-
         ++compState.round;
 
         competitionEventListener.onEndRound();
+
+        // it's possible to continue stepping in a war that has ended and was over
+        // don't tell that it's over every time, just on the time it ended first.
+        if (!currentWar.hasEnded() && currentWar.isOver()) {
+            Console.log("isOver");
+            currentWar.pause();
+            return -1;
+        }
 
         //if (compState.round % 100 == 0)
         //    Console.log("round " + Integer.toString(compState.round));
@@ -206,8 +217,10 @@ public class Competition {
         if (currentWar.isPaused()) {
             return 0;
         }
-        if (compState.round >= MAX_ROUND)
+        if (compState.round >= MAX_ROUND) {
+            currentWar.pause();
             return -1;
+        }
 
         return 1;
     }
@@ -243,7 +256,8 @@ public class Competition {
             competitionEventListener.onWarEnd(CompetitionEventListener.ABORTED, names);
         }
         currentWar.updateScores(warriorRepository);
-        currentWar = null;
+        currentWar.setEnded();
+        //currentWar = null; // keep war alive so it would be possible to get registers and memory state at the end
         ++compState.warIndex;
 
     }

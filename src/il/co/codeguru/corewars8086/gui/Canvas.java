@@ -35,10 +35,10 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	private byte[][] pointer;
 	private byte[][] values;
 
-	private EventMulticasterMouse eventCaster;
-	private MouseAddressRequest eventHandler;
+	//private EventMulticasterMouse eventCaster;
+	//private MouseAddressRequest eventHandler;
 
-	private int MouseX, MouseY;
+	//private int MouseX, MouseY;
 
 	private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect
     private boolean m_showContent = false;
@@ -65,12 +65,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	public Canvas(String id) {
 		super(id);
-		eventCaster = new EventMulticasterMouse();
-		eventHandler = (MouseAddressRequest) eventCaster.getProxy();
+		//eventCaster = new EventMulticasterMouse();
+		//eventHandler = (MouseAddressRequest) eventCaster.getProxy();
 		//this.addMouseMotionListener(this);
 		//this.addMouseListener(this);
-		this.MouseX = 0;
-		this.MouseY = 0;
+		//this.MouseX = 0;
+		//this.MouseY = 0;
 		ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
 
 		Dimension d = getMinimumSize();
@@ -230,8 +230,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}
 
     public void revokeWar() {
-	    m_mem = null;
-        m_currentWar = null;
+	    //m_mem = null;
+        //m_currentWar = null;
     }
 
 	private Color paintMemCellBack(int x, int y) {
@@ -362,43 +362,11 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}
 
 
-	public void mouseMoved(MouseEvent e) {
-
-		//Graphics g = this.getGraphics();
-
-		/*if (g != null)*/ {
-			// delete Mouse
-			//this.clearMousePointer(g);
-
-			if (true) {
-				MouseX = e.getX() / DOT_SIZE;
-				MouseY = e.getY() / DOT_SIZE;
-
-				// draw new Mouse
-				//	g.setColor(Color.WHITE);
-
-				//	g.fillRect(MouseX * DOT_SIZE, MouseY * DOT_SIZE, DOT_SIZE,
-				//			DOT_SIZE);
-			}
-		}
-	}
-
-	private void clearMousePointer() {
-		try {
-			//g.setColor(ColorHolder.getInstance()
-			//		.getColor(data[MouseX][MouseY],false));
-		} catch (Exception ex) {
-			// TODO the true variable of the color
-			//g.setColor(new Color(51, 51, 51)); 
-		}
-		//g.fillRect(MouseX * DOT_SIZE, MouseY * DOT_SIZE, DOT_SIZE, DOT_SIZE);
-	}
 
 
-
-	public void addListener(MouseAddressRequest l) {
+	/*public void addListener(MouseAddressRequest l) {
 		eventCaster.add(l);
-	}
+	}*/
 
 	public void deletePointers() {
 		for (int i = 0; i < BOARD_SIZE; i++)

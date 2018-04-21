@@ -56,4 +56,7 @@ public interface CompetitionEventListener   {
     void onEndRound();
 
     void onPaused();
+
+    // happens if we run more steps after the war ended and no players to step though are left alive
+    void onNoneAlive();
 }

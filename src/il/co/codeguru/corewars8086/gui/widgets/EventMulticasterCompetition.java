@@ -123,6 +123,16 @@ public class EventMulticasterCompetition extends EventMulticasterBase {
             isCasting = false;
             addWaiting();
         }
+
+        @Override
+        public void onNoneAlive() {
+            isCasting = true;
+            for (Object mListener : mListenersArr) {
+                ((CompetitionEventListener)mListener).onNoneAlive();
+            }
+            isCasting = false;
+            addWaiting();
+        }
     }
 
 

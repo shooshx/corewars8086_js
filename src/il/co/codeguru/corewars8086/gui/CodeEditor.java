@@ -43,7 +43,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }
     @Override
     public void onWarEnd(int reason, String winners) {
-        m_mem = null;
+        //m_mem = null;
     }
     @Override
     public void onRound(int round) {}
@@ -57,6 +57,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public void onCompetitionEnd() {}
     @Override
     public void onPaused() {}
+    @Override
+    public void onNoneAlive() {}
     @Override
     public void onEndRound() {
         updateDebugLine();

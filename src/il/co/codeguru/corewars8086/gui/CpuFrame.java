@@ -484,7 +484,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 
 	@Override
 	public void onWarEnd(int reason, String winners) {
-		m_currentWarriorIndex = -1;
+		//m_currentWarriorIndex = -1;
 	}
 
 	@Override
@@ -496,6 +496,9 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 	}
 	@Override
 	public void onPaused() {}
+	@Override
+	public void onNoneAlive() {}
+
 
 	@Override
 	public void onWarriorDeath(String warriorName, String reason) {

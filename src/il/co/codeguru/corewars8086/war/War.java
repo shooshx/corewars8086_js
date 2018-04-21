@@ -61,12 +61,23 @@ public class War {
 
     private IBreakpointCheck m_breakpointCheck = null;
     private int m_uiWarriorIndex = -1; // break in breakpoints only of this warrior (he's the one selected in the PlayersPanel)
+    private boolean m_inDebugger = false; // controls the end condition
+    private boolean m_hasEnded = false; // this war has ended but the object remains alive for post-mortem examination
 
     public void setUiWarrior(Warrior warrior) {
         m_uiWarriorIndex = warrior.m_myIndex;
     }
     public void setBreakpointCheck(IBreakpointCheck brc) {
         m_breakpointCheck = brc;
+    }
+    public void setInDebugger() {
+        m_inDebugger = true;
+    }
+    public boolean hasEnded() {
+        return m_hasEnded;
+    }
+    public void setEnded() {
+        m_hasEnded = true;
     }
 
     /**
@@ -156,8 +167,11 @@ public class War {
      * @return whether or not the War is over.
      */
     public boolean isOver() {
+        // when in debugger, run until everybody dies
         return (m_numWarriorsAlive < 2);
     }
+
+
 	
     /**
      * Decrements the warrior's Energy value, if the current round is

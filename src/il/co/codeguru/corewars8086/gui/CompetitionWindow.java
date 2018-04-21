@@ -261,6 +261,7 @@ public class CompetitionWindow extends JFrame
                 war.setBreakpointCheck(m_codeEditor);
                 Warrior inEditorWarrior = war.getWarriorByLabel(m_playersPanel.getCodeInEditor().getLabel());
                 war.setUiWarrior(inEditorWarrior);
+                war.setInDebugger();
             }
             return true;
         }
@@ -345,24 +346,16 @@ public class CompetitionWindow extends JFrame
 
     public void onWarEnd(int reason, String winners) {
         warCounter++;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                warCounterDisplay.setText("Sessions so far:" + warCounter +
-                    " (out of " + totalWars + ")");
-            };
-        });
+        warCounterDisplay.setText("Sessions so far:" + warCounter + " (out of " + totalWars + ")");
     }
 
-    public void onRound(int round) {
-    }
+    public void onRound(int round) {}
     @Override
     public void onPaused() {}
-
-    public void onWarriorBirth(Warrior w) {
-    }
-
-    public void onWarriorDeath(String warriorName, String reason) {
-    }
+    @Override
+    public void onNoneAlive() {}
+    public void onWarriorBirth(Warrior w) {}
+    public void onWarriorDeath(String warriorName, String reason) {}
 
     public void onCompetitionStart() {
         warCounter = 0;

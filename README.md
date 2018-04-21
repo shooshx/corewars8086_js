@@ -29,20 +29,23 @@ Features include:
   - show memory content at zoom factor 4
   - edit memory content in canvas by setting a cursor with a click
   - move the cursor using arrows and scroll around
+- it is possible to inspect the state of warriors in the debugger after
+  a war is over and even continue running the war with just the winner running.
   
 Coming up features:
 - data breakpoints
 - fixed randomization bug
 - online competition
+- all features of the original GUI
 
 
 references:  
 https://codeguru.co.il/Xtreme/  
 https://github.com/codeguru-il/corewars8086  
-https://github.com/YoavKa/corewars8086    (disassembler) 
-https://github.com/kimwalisch/calculator  (watch language)
+https://github.com/YoavKa/corewars8086    (disassembler)   
+https://github.com/kimwalisch/calculator  (watch language)   
 
 
 tips and tricks
 - When debugging, you can always return to a warrior running point by clicking its name on the left pane
-- You can set value of any register manually by writing a value in its box. this includes IP and Flags registers.
+- You can set value of any register manually by writing a value in its box. This includes IP and Flags registers.

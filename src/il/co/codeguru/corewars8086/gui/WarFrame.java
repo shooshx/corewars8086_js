@@ -34,7 +34,7 @@ import il.co.codeguru.corewars8086.jsadd.Format;
  * 
  * @author BS
  */
-public class WarFrame extends JFrame implements MemoryEventListener,  CompetitionEventListener, MouseAddressRequest
+public class WarFrame extends JFrame implements MemoryEventListener,  CompetitionEventListener
 {
 
 	/** the canvas which show the core war memory area */
@@ -136,7 +136,7 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
         
 		// Debugger
 		addressFiled = new JLabel("Click on the arena to see the memory");
-		warCanvas.addListener(this);
+		//warCanvas.addListener(this);
 
 		//btnCpuState = new JButton("btnCpuState", "View CPU");
 		//btnCpuState.setEnabled(false);
@@ -296,25 +296,35 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
 
         switch (reason) {
             case SINGLE_WINNER:
-                addMessage(nRoundNumber,
-                    "Session over: The winner is " + winners + "!");
+                addMessage(nRoundNumber,"Session over: The winner is " + winners + "!");
                 break;
             case MAX_ROUND_REACHED:
-                addMessage(nRoundNumber,
-                    "Maximum round reached: The winners are " + winners + "!");
+                addMessage(nRoundNumber,"Maximum round reached: The winners are " + winners + "!");
                 break;
             case ABORTED:
-                addMessage(nRoundNumber,
-                    "Session aborted: The winners are " + winners + "!");
+                addMessage(nRoundNumber,"Session aborted: The winners are " + winners + "!");
                 break;
             default:
                 throw new RuntimeException();			
         }
 
-        btnSingleRound.setEnabled(false); // done debugging this session
-        btnPause.setEnabled(false);
+        btnPause.setText("Resume");
+        btnSingleRound.setEnabled(true);
+
+        // not disabling since its possible to step more in an ended war until none alive.
+        //btnSingleRound.setEnabled(false); // done debugging this session
+        //btnPause.setEnabled(false);
         warCanvas.revokeWar();
-    }	
+    }
+
+    @Override
+    public void onNoneAlive() {
+        addMessage(nRoundNumber, "No players left alive");
+        btnSingleRound.setEnabled(false);
+        btnPause.setEnabled(false);
+
+    }
+
 
     /** @see CompetitionEventListener#onRound(int) */
     public void onRound(int round) {
@@ -449,7 +459,7 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
 
 
 
-	@Override
+/*	@Override
 	public void addressAtMouseLocationRequested(int address) {
 		RealModeAddress tmp = new RealModeAddress(War.ARENA_SEGMENT, (short) address);
 		byte data = this.competition.getCurrentWar().getMemory().readByte(tmp);
@@ -466,6 +476,6 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
 		else
 			memory_frame.refrash(tmp.getLinearAddress());
 			*/
-	}
+	//}
  
 }
