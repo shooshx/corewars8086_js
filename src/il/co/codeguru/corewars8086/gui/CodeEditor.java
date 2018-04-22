@@ -104,6 +104,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         if (absAddr < War.ARENA_SEGMENT*RealModeAddress.PARAGRAPH_SIZE || absAddr >= War.ARENA_SEGMENT*RealModeAddress.PARAGRAPH_SIZE + War.ARENA_SIZE)
             return;
         int ipInsideArena = absAddr - 0x1000 *0x10; // arena * paragraph
+        final int cIpInsideArea = ipInsideArena;
 
         int page = ipInsideArena / PAGE_SIZE;
         if (page < 0 || page >= m_pages.length)
@@ -115,21 +116,26 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         if (existing == m_fillCmd) {
             setByte(ipInsideArena, value);
-            return;
         }
-        else if (existing == null) {
+        else  {
             // find where this opcode starts
-            --ipInsideArena;
             while (m_dbglines[ipInsideArena] == null)
                 --ipInsideArena;
+
+            do {
+                // rewriting only a single opcode so its not possible to cross to a new opcode which will need reparsing
+                setByte(ipInsideArena, m_mem[ipInsideArena + CODE_ARENA_OFFSET]);
+                ++ipInsideArena;
+            } while (ipInsideArena < 0x10000 && m_dbglines[ipInsideArena] == null);
         }
 
-        //RealModeMemoryImpl mem = m_competition.getCurrentWar().getMemory();
-        do {
-            // rewriting only a single opcode so its not possible to cross to a new opcode which will need reparsing
-            setByte(ipInsideArena, m_mem[ipInsideArena + CODE_ARENA_OFFSET]);
-            ++ipInsideArena;
-        } while (ipInsideArena < 0x10000 && m_dbglines[ipInsideArena] == null);
+        // if we just edited the byte under the debugger, need to reparse it
+        if (cIpInsideArea >= m_lastDbgAddr && cIpInsideArea < m_lastDbgAddrEnd) {
+            m_lastDbgAddr = -1; // make it go inside the next function
+            updateDebugLine();
+        }
+
+
     }
 
     @Override
@@ -1402,7 +1408,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
     };
 
-    private int m_lastDbgAddr = -1;
+    private int m_lastDbgAddr = -1; // for knowing if we need to move it
+    private int m_lastDbgAddrEnd = -1; // end (one after last) of the debugged opcode (for edit handling)
     private HTMLElement m_lastDbgElement;
 
     private int getCurrentWarriorIp() {
@@ -1429,8 +1436,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         if (ipInsideArena == -1)
             return;
 
-        if (ipInsideArena == m_lastDbgAddr)
+        if (ipInsideArena == m_lastDbgAddr) {
+            scrollToCodeInEditor(false); // make sure to scroll to it even we're  on it
             return;
+        }
         if (m_lastDbgElement != null)
             m_lastDbgElement.classList.remove("current_dbg");
 
@@ -1468,6 +1477,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         dline.classList.add("current_dbg");
         m_lastDbgElement = dline;
         m_lastDbgAddr = ipInsideArena;
+        m_lastDbgAddrEnd = m_lastDbgAddr + 1;
+        while (m_lastDbgAddrEnd < 0x10000 && m_dbglines[m_lastDbgAddrEnd] == null)
+            ++m_lastDbgAddrEnd;
 
         scrollToCodeInEditor(false);
     }

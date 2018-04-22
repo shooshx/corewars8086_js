@@ -20,4 +20,6 @@ public interface MemoryEventListener {
         RUN
     }
     void onWriteState(EWriteState state);
+
+
 }

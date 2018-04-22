@@ -18,3 +18,13 @@ mov \
 ax,bx
 aa
 - scroll when the pointer is in the opcodes part
+
+
+wrong opcode - 3f
+
+memory exception:
+
+mov sp,0xfffe
+pop bx
+
+mem exception in the middle of an opcode?

@@ -137,7 +137,9 @@ public class War {
             Warrior warrior = m_warriors[i];
             m_currentWarrior = i;
             if (warrior.isAlive()) {
+                short savedIp = warrior.getCpuState().getIP();
                 try {
+
                     // run first opcode
                     warrior.nextOpcode();
                     atBreakpoint |= (m_breakpointCheck != null && m_currentWarrior == m_uiWarriorIndex && m_breakpointCheck.shouldBreak(warrior.getCpuState()));
@@ -148,13 +150,17 @@ public class War {
                         warrior.nextOpcode();
                         atBreakpoint |= (m_breakpointCheck != null && m_currentWarrior == m_uiWarriorIndex && m_breakpointCheck.shouldBreak(warrior.getCpuState()));
                     }
-                } catch (CpuException e) {
+                }
+                catch (CpuException e) {
                     m_warListener.onWarriorDeath(warrior.getName(), "CPU exception");
                     warrior.kill();
+                    warrior.getCpuState().setIP(savedIp); // don't advance IP, show where the exception occured
                     --m_numWarriorsAlive;
-                } catch (MemoryException e) {
+                }
+                catch (MemoryException e) {
                     m_warListener.onWarriorDeath(warrior.getName(), "memory exception: " + e.getMessage());
                     warrior.kill();
+                    warrior.getCpuState().setIP(savedIp); 
                     --m_numWarriorsAlive;
                 }
             }
