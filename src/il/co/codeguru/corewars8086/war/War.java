@@ -160,7 +160,7 @@ public class War {
                 catch (MemoryException e) {
                     m_warListener.onWarriorDeath(warrior.getName(), "memory exception: " + e.getMessage());
                     warrior.kill();
-                    warrior.getCpuState().setIP(savedIp); 
+                    warrior.getCpuState().setIP(savedIp);
                     --m_numWarriorsAlive;
                 }
             }

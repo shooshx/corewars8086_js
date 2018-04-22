@@ -32,13 +32,13 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     public static final int CODE_ARENA_OFFSET = 0x10000;
 
-    private byte[] m_mem = null;
+    private RealModeMemoryImpl m_mem = null;
     // competitionEventListener
     @Override
     public void onWarPreStartClear() {}
     @Override
     public void onWarStart() {
-        m_mem = m_competition.getCurrentWar().getMemory().m_data;
+        m_mem = m_competition.getCurrentWar().getMemory();
 
     }
     @Override
@@ -124,7 +124,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
             do {
                 // rewriting only a single opcode so its not possible to cross to a new opcode which will need reparsing
-                setByte(ipInsideArena, m_mem[ipInsideArena + CODE_ARENA_OFFSET]);
+                setByte(ipInsideArena, m_mem.readByte(ipInsideArena + CODE_ARENA_OFFSET));
                 ++ipInsideArena;
             } while (ipInsideArena < 0x10000 && m_dbglines[ipInsideArena] == null);
         }
@@ -737,7 +737,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         removeCurrentBreakpoints();
 
         StringBuilder sb = new StringBuilder();
-        Disassembler dis = new Disassembler(incode.bin, 0, incode.bin.length);
+        Disassembler dis = new Disassembler.ArrDisassembler(incode.bin, 0, incode.bin.length);
         int offset = 0;
         try {
             while (offset < incode.bin.length) {
@@ -1035,7 +1035,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private DocumentFragment checkDisasmLines(byte[] binbuf, ArrayList<LstLine> listing, DocumentFragment asmElem, String intext)
     {
         int ptr = 0;
-        Disassembler dis = new Disassembler(binbuf, 0, binbuf.length);
+        Disassembler dis = new Disassembler.ArrDisassembler(binbuf, 0, binbuf.length);
         int atLstLine = 0;
         boolean hadError = false;
 
@@ -1427,7 +1427,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }
 
     private void setByteFromMem(int addrInArea) {
-        int value = m_mem[addrInArea + CODE_ARENA_OFFSET];
+        int value = m_mem.readByte(addrInArea + CODE_ARENA_OFFSET);
         setByte(addrInArea, (byte)(value & 0xff) );
     }
 
@@ -1486,8 +1486,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     private void disassembleAddr(int absaddr, int addrInArea)
     {
-        byte[] mem = m_competition.getCurrentWar().getMemory().m_data;
-        Disassembler dis = new Disassembler(mem, absaddr, mem.length);
+        Disassembler dis = new Disassembler.NArrDisassembler(m_mem.m_data, absaddr, m_mem.length()); // TBDTBD
         String text;
         try {
             text = dis.nextOpcode();
@@ -1501,7 +1500,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         DbgLine opline = new DbgLine();
         StringBuilder bs = new StringBuilder();
         for(int i = 0; i < len; ++i) {
-            bs.append( Format.hex2(mem[absaddr + i] & 0xff));
+            bs.append( Format.hex2(m_mem.readByte(absaddr + i) & 0xff));
             bs.append(SPACE_FOR_HEX);
         }
 

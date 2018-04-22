@@ -79,14 +79,16 @@ End of debug session:
 - export code to bin file
 
 - fix colors to be consistant, IP pointer
-- main memory using an Int8Array from GWT
+- check timing of - main memory using an Int8Array from GWT
 
-- DISAS: editing the memory just under IP and doing step, does not disassemble it
+
 - after war ended, change stop icon to re-run?
 
 - work with task instead of nasm
 - options window
   - nasm/tasm
+
+- add GUI indicator of steps/second
 
 - stop when current debugged player dies
 - check what happens in debugger at 200,000 steps
@@ -100,6 +102,8 @@ minor BUG - parsing an opcode out of memory boundary reads wrong number
 - make it not possible to add breakpoints in comment lines?
 
 - registers, watch - display can be hex/signed/unsigned
+
+- mark failure point when player dies
 
 
 - save entire state of game

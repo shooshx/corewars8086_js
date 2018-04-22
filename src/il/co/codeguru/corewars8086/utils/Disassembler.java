@@ -1,5 +1,6 @@
 package il.co.codeguru.corewars8086.utils;
 
+import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 /**
  * A fast disassembler, similar to Cpu.java
  */
-public class Disassembler
+public abstract class Disassembler
 {
 
 	public static class DisassemblerException extends Exception {
@@ -17,17 +18,64 @@ public class Disassembler
 		private static final long serialVersionUID = 1L;
 	}
 
-	/**
-	 * the bytes to disassemble.
-	 */
-	private byte[] bytes;
+	// I hate Java.
+	public static class ArrDisassembler extends Disassembler
+	{
+		private byte[] bytes;
+		public ArrDisassembler(byte[] memory, int offset, int sizeLimit) {
+			super(offset, sizeLimit);
+			bytes = memory;
+		}
+
+		protected byte getByte() throws DisassemblerException
+		{
+			if (!hasNextByte())
+				throw new DisassemblerLengthException();
+			return bytes[pointer];
+		}
+
+		protected byte nextByte() throws DisassemblerException
+		{
+			if (!hasNextByte())
+				throw new DisassemblerLengthException();
+			pointer++;
+			return bytes[pointer -1];
+		}
+	}
+
+	public static class NArrDisassembler extends Disassembler
+	{
+		private Int8ArrayNative bytes;
+		public NArrDisassembler(Int8ArrayNative memory, int offset, int sizeLimit) {
+			super(offset, sizeLimit);
+			bytes = memory;
+		}
+
+		protected byte getByte() throws DisassemblerException
+		{
+			if (!hasNextByte())
+				throw new DisassemblerLengthException();
+			return bytes.get(pointer);
+		}
+
+		protected byte nextByte() throws DisassemblerException
+		{
+			if (!hasNextByte())
+				throw new DisassemblerLengthException();
+			pointer++;
+			return bytes.get(pointer -1);
+		}
+	}
+
+
+
 	/**
 	 * the pointer to the next byte to disassemble.
 	 */
-	private int pointer;
+	protected int pointer;
 
-	private int startOffset;
-	private int sizeLimit;
+	protected int startOffset;
+	protected int sizeLimit;
 	
 	/**
 	 * the current mode or register index or memory index of the indirect address function
@@ -37,12 +85,12 @@ public class Disassembler
 	//public Disassembler()
 	//{}
 
-	public Disassembler(byte[] memory, int offset, int sizeLimit) {
-		reset(memory, offset, sizeLimit);
+	public Disassembler(int offset, int sizeLimit) {
+		reset(offset, sizeLimit);
 	}
 
-	public void reset(byte[] memory, int offset, int sizeLimit) {
-		bytes = memory;
+	public void reset(int offset, int sizeLimit) {
+
 		pointer = offset;
 		startOffset = offset;
 		this.sizeLimit = sizeLimit;
@@ -68,7 +116,7 @@ public class Disassembler
 	 * @param bytes to disassemble
 	 * @return string array of the disassembled opcodes
 	 */
-	public String[] disassemble(byte[] bytes, RealModeAddress address)
+/*	public String[] disassemble(byte[] bytes, RealModeAddress address)
 	{
 		this.bytes = bytes;
 		pointer = 0;
@@ -97,39 +145,26 @@ public class Disassembler
 		String[] results = new String[res.size()];
 		return res.toArray(results);
 	}
+	*/
 	
 	/**
 	 * 
 	 * @return if you have more bytes to disassemble
 	 */
-	private boolean hasNextByte()
+	protected boolean hasNextByte()
 	{
 		return pointer < sizeLimit; //bytes.length;
 	}
 	
-	private byte getByte() throws DisassemblerException
-	{
-		if (!hasNextByte())
-			throw new DisassemblerLengthException();
-		
-		return bytes[pointer];
-	}
-	
+	protected abstract byte getByte() throws DisassemblerException;
+
 	/**
 	 * similar to OpcodeFetcher#nextByte()
 	 * @return the next byte to disassemble
 	 * @throws DisassemblerException 
 	 */
-	private byte nextByte() throws DisassemblerException
-	{
-		if (!hasNextByte())
-			throw new DisassemblerLengthException();
-		
-		pointer++;
-		
-		return bytes[pointer -1];
-	}
-	
+	protected abstract byte nextByte() throws DisassemblerException;
+
 	/**
 	 * similar to OpcodeFetcher#nextWord()
 	 * @return the next word to disassemble
