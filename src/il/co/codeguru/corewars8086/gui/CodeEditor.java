@@ -317,9 +317,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 break;
             }
             if (doingDigits && isHexDigit(c)) {
+                bs.append(c);
+                ++digitCount;
                 if ((digitCount % 2) == 0 && digitCount > 0)
                     bs.append("&#x202f;"); // thin space
-                ++digitCount;
+                continue;
             }
             else if (c == '<') {
                 bs.append("&lt;");
@@ -327,6 +329,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             }
             else if (c == '>') {
                 bs.append("&gt;");
+                continue;
+            }
+            else if ( (c == ')' || c == ']') && bs.length() > 8 && bs.substring(bs.length()-8) == "&#x202f;") {
+                // if we see an end brace but we just added a space
+                // put the end brace before the space so it would look good
+                bs.insert(bs.length() - 8, c);
                 continue;
             }
             bs.append(c);

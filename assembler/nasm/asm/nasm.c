@@ -1929,7 +1929,7 @@ int run_nasm(const char* inname, const char* outname)
 
 int main(int argc, char **argv)
 {
-    const char* args[] = { "nasm.exe", "a.asm", "-l", "a.lst", 0 };
+    const char* args[] = { "nasm.exe", "times.asm", "-l", "times.lst", 0 };
 
     /*for(int i = 0; i < 100; ++i) {
     init_globals();

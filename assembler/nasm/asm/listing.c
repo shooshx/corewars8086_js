@@ -300,8 +300,8 @@ static void list_uplevel(int type)
     if (!listp)
         return;
     if (type == LIST_INCBIN || type == LIST_TIMES) {
-        suppress |= (type == LIST_INCBIN ? 1 : 2);
-        list_out(listoffset, type == LIST_INCBIN ? "<incbin>" : "<rept>");
+        suppress |= (type == LIST_INCBIN ? 1 : 0); // 2->0 SHY change
+        list_out(listoffset, type == LIST_INCBIN ? "<incbin>" : ""); // "<rept>"->"" SHY change to make times parsable in the lst
         return;
     }
 

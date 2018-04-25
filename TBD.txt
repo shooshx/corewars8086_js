@@ -84,9 +84,8 @@ End of debug session:
 
 - after war ended, change stop icon to re-run?
 
-- work with tasm instead of nasm
-- options window
-  - nasm/tasm
+- options window?
+
 
 - add GUI indicator of steps/second
 
@@ -103,7 +102,7 @@ minor BUG - parsing an opcode out of memory boundary reads wrong number
 
 - registers, watch - display can be hex/signed/unsigned
 
-- mark failure point when player dies
+
 
 
 - save entire state of game
