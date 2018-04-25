@@ -355,7 +355,7 @@ public class CompetitionWindow extends JFrame
     @Override
     public void onNoneAlive() {}
     public void onWarriorBirth(Warrior w) {}
-    public void onWarriorDeath(String warriorName, String reason) {}
+    public void onWarriorDeath(Warrior warrior, String reason) {}
 
     public void onCompetitionStart() {
         warCounter = 0;

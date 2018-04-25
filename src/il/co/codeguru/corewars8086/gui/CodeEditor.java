@@ -50,7 +50,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     @Override
     public void onWarriorBirth(Warrior w) {}
     @Override
-    public void onWarriorDeath(String warriorName, String reason) {}
+    public void onWarriorDeath(Warrior warrior, String reason) {
+
+    }
     @Override
     public void onCompetitionStart() {}
     @Override
@@ -1411,19 +1413,29 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private int m_lastDbgAddr = -1; // for knowing if we need to move it
     private int m_lastDbgAddrEnd = -1; // end (one after last) of the debugged opcode (for edit handling)
     private HTMLElement m_lastDbgElement;
+    private boolean m_lastIsAlive = false;
 
-    private int getCurrentWarriorIp() {
+    private Warrior getCurrentWarrior() {
         War war = m_competition.getCurrentWar();
         if (war == null)
-            return -1;
+            return null;
         String label = m_playersPanel.getCodeInEditor().getLabel();
-        CpuState state = war.getWarriorByLabel(label).getCpuState();
+        return war.getWarriorByLabel(label);
+    }
+    private static int getWarrirorIp(Warrior w) {
+        if (w == null)
+            return -1;
+        CpuState state = w.getCpuState();
 
         short ip = state.getIP();
         short cs = state.getCS();
 
-        int ipInsideArena = new RealModeAddress(cs, ip).getLinearAddress() - CODE_ARENA_OFFSET;
+        int ipInsideArena = RealModeAddress.linearAddress(cs, ip) - CODE_ARENA_OFFSET;
         return ipInsideArena;
+    }
+
+    private int getCurrentWarriorIp() {
+        return getWarrirorIp(getCurrentWarrior());
     }
 
     private void setByteFromMem(int addrInArea) {
@@ -1432,16 +1444,18 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }
 
     public void updateDebugLine() {
-        int ipInsideArena = getCurrentWarriorIp();
-        if (ipInsideArena == -1)
+        Warrior currentWarrior = getCurrentWarrior();
+        if (currentWarrior == null)
             return;
+        final int ipInsideArena = getWarrirorIp(currentWarrior);
+        final boolean isAlive = currentWarrior.isAlive();
 
-        if (ipInsideArena == m_lastDbgAddr) {
-            scrollToCodeInEditor(false); // make sure to scroll to it even we're  on it
-            return;
+        scrollToAddr(ipInsideArena, false); // make sure to scroll to it even the current line marker is on it
+        if (ipInsideArena == m_lastDbgAddr && isAlive == m_lastIsAlive) {
+            return; // nothing to do, the line is what we want it to be
         }
-        if (m_lastDbgElement != null)
-            m_lastDbgElement.classList.remove("current_dbg");
+        if (m_lastDbgElement != null) // remove the last thing we put there
+            m_lastDbgElement.classList.remove(m_lastIsAlive ? "current_dbg" : "current_dbg_dead");
 
         // the first call to this is before debugMode is started to set the first debug line.
         // in this case we don't want to disassemble since the dbglines have not even been inited yet. sort of a hack.
@@ -1474,14 +1488,14 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             ider = "df"; // a line with a comment after, don't highlight the entire line, just the first line. df is assured to exist if we have this flag
 
         HTMLElement dline = (HTMLElement)DomGlobal.document.getElementById(ider + Integer.toString(ipInsideArena));
-        dline.classList.add("current_dbg");
+        dline.classList.add( isAlive ? "current_dbg" : "current_dbg_dead");
         m_lastDbgElement = dline;
         m_lastDbgAddr = ipInsideArena;
         m_lastDbgAddrEnd = m_lastDbgAddr + 1;
+        m_lastIsAlive = isAlive;
         while (m_lastDbgAddrEnd < 0x10000 && m_dbglines[m_lastDbgAddrEnd] == null)
             ++m_lastDbgAddrEnd;
 
-        scrollToCodeInEditor(false);
     }
 
     private void disassembleAddr(int absaddr, int addrInArea)

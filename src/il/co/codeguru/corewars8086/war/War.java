@@ -152,13 +152,13 @@ public class War {
                     }
                 }
                 catch (CpuException e) {
-                    m_warListener.onWarriorDeath(warrior.getName(), "CPU exception");
+                    m_warListener.onWarriorDeath(warrior, "CPU exception");
                     warrior.kill();
                     warrior.getCpuState().setIP(savedIp); // don't advance IP, show where the exception occured
                     --m_numWarriorsAlive;
                 }
                 catch (MemoryException e) {
-                    m_warListener.onWarriorDeath(warrior.getName(), "memory exception: " + e.getMessage());
+                    m_warListener.onWarriorDeath(warrior, "memory exception: " + e.getMessage());
                     warrior.kill();
                     warrior.getCpuState().setIP(savedIp);
                     --m_numWarriorsAlive;

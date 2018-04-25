@@ -84,7 +84,7 @@ End of debug session:
 
 - after war ended, change stop icon to re-run?
 
-- work with task instead of nasm
+- work with tasm instead of nasm
 - options window
   - nasm/tasm
 

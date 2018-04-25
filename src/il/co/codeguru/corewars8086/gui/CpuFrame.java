@@ -501,7 +501,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 
 
 	@Override
-	public void onWarriorDeath(String warriorName, String reason) {
+	public void onWarriorDeath(Warrior warrior, String reason) {
 	}
 	@Override
 	public void onCompetitionStart() {

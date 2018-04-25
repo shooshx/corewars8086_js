@@ -44,10 +44,10 @@ public interface CompetitionEventListener   {
 
     /**
      * Called when a warrior dies.
-     * @param warriorName  Warrior's name.
+     * @param warrior      Warrior.
      * @param reason       Reason for death.
      */
-    void onWarriorDeath(String warriorName, String reason);
+    void onWarriorDeath(Warrior warrior, String reason);
 
     void onCompetitionStart();
 

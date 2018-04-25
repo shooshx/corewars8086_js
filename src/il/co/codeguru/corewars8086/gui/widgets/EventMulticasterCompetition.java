@@ -75,10 +75,10 @@ public class EventMulticasterCompetition extends EventMulticasterBase {
 		}
 
 		@Override
-		public void onWarriorDeath(String warriorName, String reason) {
+		public void onWarriorDeath(Warrior warrior, String reason) {
             isCasting = true;
 			for (Object mListener : mListenersArr) {
-                ((CompetitionEventListener)mListener).onWarriorDeath(warriorName, reason);
+                ((CompetitionEventListener)mListener).onWarriorDeath(warrior, reason);
 			}
             isCasting = false;
             addWaiting();				

@@ -1232,6 +1232,16 @@ input:disabled + .sc-btn:active,
 .current_dbg {
     background-color: #ddddff;
 }
+.current_dbg_dead {
+    background-image: url("dbg_fail_red_ex.png");
+    background-color: #ffc7c7;
+    background-repeat: no-repeat;
+    background-position: calc( 100% - 5px) 1px;
+}
+.current_dbg_dead > .dbg_backfill {
+    color: #000000;
+}
+
 .dbg_comment_line {
     /*background-color: white; no needed since if there's a comment first line will be in a dfXXXX div */
 }

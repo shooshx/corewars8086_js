@@ -43,7 +43,7 @@ public class Warrior
         short groupSharedMemorySize,
         int myIndex)
     {
-        m_label = label;
+        m_label = label;  // this comes from Code label
         m_name = name;
         m_codeSize = codeSize;
         m_loadAddress = loadAddress;

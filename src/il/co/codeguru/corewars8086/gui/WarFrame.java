@@ -347,9 +347,10 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
     }
 
     /* @see CompetitionEventListener#onWarriorDeath(String) */
-    public void onWarriorDeath(String warriorName, String reason) {
+    public void onWarriorDeath(Warrior warrior, String reason) {
+        String warriorName = warrior.getName();
         addMessage(nRoundNumber, warriorName + " died due to " + reason + ".");
-        Enumeration namesListElements = nameListModel.elements();
+    /*    Enumeration namesListElements = nameListModel.elements();
         while(namesListElements.hasMoreElements()) {
             WarriorInfo info = (WarriorInfo) namesListElements.nextElement();
             if (info.name.equals(warriorName)) {
@@ -358,13 +359,8 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
             }
         }
 
-        // a bit bogus... just to make the list refresh and show the new status.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                nameList.repaint();
-            }
-        });
-    }	
+        nameList.repaint();*/
+    }
 
     /**
      * A renderer for the names on the warrior list. 
