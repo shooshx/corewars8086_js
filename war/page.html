@@ -258,6 +258,7 @@ function addTextChild(elem, txt) {
 var g_nextLetter = 'A'
 var g_usedLetters = []
 var g_srcButtons = []  // ids of elements that are checkboxes that select a source file to be displayer
+var g_usedZnums = []
 
 function asciiAdd(letter, val) {
     return String.fromCharCode(letter.charCodeAt(0) + val)
@@ -272,6 +273,8 @@ function arrayRemove(arr, value) {
 
 
 function addPlayersPanel() {
+    if (addPlayerBtn.getAttribute("disabled") == "true")
+        return;
     if (g_usedLetters.length >= 20)
         return; // max players
 
@@ -281,18 +284,17 @@ function addPlayersPanel() {
             <label class="fam_check mycheck_label" for="player_check_pLETTER"></label>\
             <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
-            <br>\
-            <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'LETTER\')">\
-              <option value="SINGLE">Single Warrior</option>\
-              <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
-              <option value="TWO_DIFFERENT">Two Different Warriors</option>\
-            </select>\
-            <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 1)" type="radio" name="src_select">\
-            <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
-            <br>\
-            <input id="sel_code_w2_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 2)" type="radio" name="src_select">\
-            <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
           </div>\
+          <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'LETTER\')">\
+            <option value="SINGLE">Single Warrior</option>\
+            <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
+            <option value="TWO_DIFFERENT">Two Different Warriors</option>\
+          </select>\
+          <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 1)" type="radio" name="src_select">\
+          <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
+          <br>\
+          <input id="sel_code_w2_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 2)" type="radio" name="src_select">\
+          <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
         </div>'
 
     addTextChild(players_contaier, text.replace(/LETTER/g, g_nextLetter))
@@ -321,7 +323,7 @@ function changedWType(letter)
         elem2.style.visibility = 'hidden'
         elem2.style.opacity = 0.0
         elem1.style.marginTop = '7px'
-        frame.style.height = '110px'
+        frame.style.height = '105px'
     }
     else if (v == 'TWO_DIFFERENT') {
         elem2.style.visibility = 'visible'
@@ -388,6 +390,33 @@ function triggerErasePlayer(buttonElem, elem, letter)
             g_nextLetter = check // upper limit on number of players should avoid this causing a problem
         }
     }
+}
+
+var g_nextZombNum = 1
+
+function addZombieCode() {
+    if (addZombieBtn.getAttribute("disabled") == "true")
+        return;
+    var text = '<div id="zomb_line_zNUM">\
+        <input id="sel_code_w1_zNUM" class="hidden sc-check" onclick="triggerSrc(\'NUM\', 1)" type="radio" name="src_select">\
+        <label id="sel_code_lbl_w1_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >Zombie NUM</label>\
+        <label id="player_erase_zNUM" class="pl_close_icon za_close_icon" onclick="triggerEraseZombie(this, zomb_line_zNUM, \'NUM\')"></label>\
+        </div>'
+
+    addTextChild(zombies_container, text.replace(/NUM/g, g_nextZombNum))
+    var num = g_nextZombNum
+    g_nextZombNum += 1
+
+    g_usedZnums.push(num)
+
+}
+
+function triggerEraseZombie(buttonElem, elem, num) {
+    if (buttonElem.getAttribute("disabled") == "true")
+        return;
+
+    elem.parentNode.removeChild(elem);
+    arrayRemove(g_usedZnums, num)
 }
 
 
@@ -522,11 +551,18 @@ function triggerDebug() {
         j_debugUiInited();
 
         // disable editing the players
+        addPlayerBtn.setAttribute("disabled", true)
         for(var ui in g_usedLetters) {
             var u = g_usedLetters[ui]
             document.getElementById("player_erase_p" + u).setAttribute("disabled", true)
             document.getElementById("player_check_p" + u).setAttribute("disabled", true)
             document.getElementById("wtype_p" + u).setAttribute("disabled", true)
+        }
+        player_check_zombies.setAttribute("disabled", true)
+        addZombieBtn.setAttribute("disabled", true)
+        for(var uzi in g_usedZnums) {
+            var uz = g_usedZnums[uzi]
+            document.getElementById("player_erase_z" + uz).setAttribute("disabled", true)
         }
     }
     else {
@@ -539,11 +575,18 @@ function triggerDebug() {
         debug_area.style.display="none"
 
 
+        addPlayerBtn.removeAttribute("disabled")
         for(var ui in g_usedLetters) {
             var u = g_usedLetters[ui]
             document.getElementById("player_erase_p" + u).removeAttribute("disabled")
             document.getElementById("player_check_p" + u).removeAttribute("disabled")
             document.getElementById("wtype_p" + u).removeAttribute("disabled")
+        }
+        player_check_zombies.removeAttribute("disabled")
+        addZombieBtn.removeAttribute("disabled")
+        for(var uzi in g_usedZnums) {
+            var uz = g_usedZnums[uzi]
+            document.getElementById("player_erase_z" + uz).removeAttribute("disabled")
         }
 
     }
@@ -950,6 +993,7 @@ body {
 
 .sc-btn[disabled="true"] {
     box-shadow: initial;
+    cursor: initial;
 }
 .sc-btn[disabled="true"] > .sc-span { /* comes after */
     opacity: 0.3; /* for buttons with image*/
@@ -1260,7 +1304,7 @@ input:disabled + .sc-btn:active,
     left: 0;
     top: 0;
     bottom: 0;
-    background: #d3ffd3;
+    background: #ececec;
     width: 190px;
     border-right: 1px solid #008800;
     overflow: auto;
@@ -1318,13 +1362,15 @@ input:disabled + .sc-btn:active,
 
 .toppic {
     margin: 10px 11px 5px 10px;
-    background: #71e671;
+    background: #cfcfcf;
     font-family: Verdana;
     padding: 4px;
     border-radius: 5px;
-    height: 145px;
+    height: 142px;
     transition: height 0.1s ease-in-out;
     animation: fadeIn 200ms;
+    line-height: 26px;
+    overflow: hidden;
 }
 .removed_anim {
     animation: fadeOut 100ms;
@@ -1375,24 +1421,35 @@ input:disabled + .sc-btn:active,
     font-size: 16px;
     margin: 3px 0 0 15px;
     width: calc(100% - 20px);
-    transition: all 0.1s ease-in-out;
+    transition: opacity 0.1s ease-in-out, height 0.1s ease-in-out, margin-top 0.1s ease-in-out;
 }
 
 #addPlayerBtn {
     width: 34px;
     height: 34px;
-    margin: 4px 7px 7px 11px;;
+    margin: 4px 7px 0px 11px;;
 }
 #addPlayerBtnIn {
-    background: url(plus.png) center no-repeat;
+    background-image: url(plus.png);
+    background-position: center;
+    background-repeat: no-repeat;
     display: inline-block;
     width: 34px;
     height: 33px;
 }
+.sc-btn[disabled="true"] > #addPlayerBtnIn {
+    box-shadow: initial;
+    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(plus.png);
+}
+.sc-btn[disabled="true"] > #addZombieBtnIn {
+    box-shadow: initial;
+    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(plus.png);
+}
+
 .pl_close_icon {
     width: 15px;
     height: 15px;
-    background-image: url('red_ex.png');
+    background-image: url('reddish_ex.png');
     background-position: center;
     background-repeat: no-repeat;
     float: right;
@@ -1401,12 +1458,38 @@ input:disabled + .sc-btn:active,
     padding: 4px;
 }
 .pl_close_icon:hover {
+    background-image: url('red_ex.png');
     background-color: rgba(255,255,255,0.7);
 }
 .pl_close_icon[disabled="true"] {
     background-image: url('gray_ex.png');
     background-color: transparent;
 }
+
+#pl_frame_zombies {
+    height:initial;
+    padding-bottom: 0px;
+}
+#addZombieBtn {
+    width: 28px;
+    height: 28px;
+    margin: 4px 7px 7px 15px;
+}
+#addZombieBtnIn {
+    background: url(plus.png) 6px 5px no-repeat;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+}
+
+.zomb_sel_but {
+    width: calc(100% - 40px);
+}
+.za_close_icon {
+    margin-top: 6px;
+}
+
+/* ------------------------------------------------------*/
 
 #editor_title {
     height: 30px;
@@ -2000,7 +2083,22 @@ input:disabled + .sc-btn:active,
         <div id="players_contaier">
 
         </div>
-        <label id="addPlayerBtn" class="sc-btn" onclick="addPlayersPanel()"><span id="addPlayerBtnIn"></span></label>
+        <label id="addPlayerBtn" class="sc-btn" onclick="addPlayersPanel()" title="Add Player"><span id="addPlayerBtnIn"></span></label>
+
+        <div id="pl_frame_zombies" class="toppic">
+            <div class="famtitle">
+                <input class="fam_check_box hidden mycheck" id="player_check_zombies" type="checkbox" checked onchange="" >
+                <label class="fam_check mycheck_label" for="player_check_zombies"></label>
+                <label id="player_name_lbl_zombies" class="fam_label">Zombies</label>
+            </div>
+            <div id="zombies_container">
+
+            </div>
+            <label id="addZombieBtn" class="sc-btn" onclick="addZombieCode()" title="Add Zombie"><span id="addZombieBtnIn"></span></label>
+
+        </div>
+
+
       </div>
     </div>
 

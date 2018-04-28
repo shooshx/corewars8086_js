@@ -82,12 +82,12 @@ public class PlayersPanel
     private CompetitionWindow m_mainWnd;
     private ArrayList<PlayerInfo> m_players = new ArrayList<PlayerInfo>();
     private Code m_inEditor = null; // point to the above ArrayList
-    private HTMLElement addPlayerBtn;
+    //private HTMLElement addPlayerBtn;
 
     public PlayersPanel(CompetitionWindow mainWnd) {
         m_mainWnd = mainWnd;
 
-        addPlayerBtn = (HTMLElement)DomGlobal.document.getElementById("addPlayerBtn");
+        //addPlayerBtn = (HTMLElement)DomGlobal.document.getElementById("addPlayerBtn");
 
         exportMethods();
         //Console.log( findPlayer("bla") == null ? "null":"not-null");
@@ -319,12 +319,12 @@ public class PlayersPanel
 
     public void setDebugMode(boolean v) {
 
-        if (v) {
+        /*if (v) {
             addPlayerBtn.style.display = "none";
         }
         else {
             addPlayerBtn.style.display = "";
-        }
+        }*/
     }
 
     public void j_loadBinary(ArrayBuffer buf) {
