@@ -123,10 +123,16 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
         buttonPanel.add(closeButton);*/
         //buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(new JLabel("Speed:"));
+
+        HTMLElement speedSliderVal = (HTMLElement)DomGlobal.document.getElementById("speedSliderVal");
         speedSlider = new JSlider("speedSlider", "speedSliderVal");
         speedSlider.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                WarFrame.this.competition.setSpeed(speedSlider.getValue() ); //exponential speed slider
+                int s = speedSlider.getValue();
+                if (s > 100)
+                    s = (int)Math.pow((double)(s - 80.0), 1.5);
+                speedSliderVal.innerHTML = Integer.toString(s);
+                WarFrame.this.competition.setSpeed(s ); //exponential speed slider
             }
         });
         buttonPanel.add(speedSlider);

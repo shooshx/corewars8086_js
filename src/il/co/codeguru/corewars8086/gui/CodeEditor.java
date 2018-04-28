@@ -357,6 +357,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         int lineIndex = 1; // does not increment in warning lines that appear in the listing file
         LstLine prevLine = null;
+        int totalOpcodeCount = 0;
         for(int i = 0; i < lines.length; ++i)
         {
             String line = lines[i];
@@ -427,6 +428,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                             l.fullOpcode = line.substring(opcodeStart, j);
                             l.opcode = spacedHex(l.fullOpcode);
                             l.opcodesCount = countDigits(l.fullOpcode) / 2;
+                            totalOpcodeCount += l.opcodesCount;
+                            if (totalOpcodeCount > WarriorRepository.MAX_WARRIOR_SIZE)
+                                return true; // is going to fail later in setText we check here just for not getting stuch in a long loop
                             state = Field.SPACE_BEFORE_CODE;
                             ++charsBeforeCode;
                         }
@@ -996,7 +1000,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         byte[] buf = read_file_bin_arr("player");
         if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
-            Console.error("Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes");
+            String msg = "Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes";
+            Console.error(msg);
+            asm_output.innerHTML = "<div class='stdout_line_e'>" + msg + "</div>";
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, buf, null);
             return;
@@ -1044,63 +1050,42 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     // check opcodes that are emitten are supported by codewars8086 and issue warnings if not
     private DocumentFragment checkDisasmLines(byte[] binbuf, ArrayList<LstLine> listing, DocumentFragment asmElem, String intext)
     {
-        int ptr = 0;
         Disassembler dis = new Disassembler.ArrDisassembler(binbuf, 0, binbuf.length);
-        int atLstLine = 0;
-        boolean hadError = false;
 
-        while(ptr < binbuf.length)
+        // process each line independently
+        for(int atLstLine = 0; atLstLine < listing.size(); ++atLstLine)
         {
             String msg = null;
-            LstLine lstline = null;
+            LstLine lstline = listing.get(atLstLine);
+            if (lstline.address == -1)
+                continue; // not a code line
+            if (isDefineCode(lstline.code)) {  // don't want to check disassembled opcodes on lines that just define data
+                continue;
+            }
 
             try {
-                while (atLstLine < listing.size() && listing.get(atLstLine).opcodesCount == 0) // skip comment lines
-                    ++atLstLine;
-                if (atLstLine == listing.size()) {
-                    // should not happen
-                    Console.error("unexpected reached end of listing " + Integer.toString(atLstLine+1));
-                    break;
-                }
-                lstline = listing.get(atLstLine);
+                dis.reset(lstline.address, lstline.address + lstline.opcodesCount);
+                String asm = dis.nextOpcode();
+                int len = dis.lastOpcodeSize();
 
-                if (isDefineCode(lstline.code)) {  // don't want to check disassembled opcodes on lines that just define data
-                    dis.skipBytes(lstline.opcodesCount);
-                }
-                else {
-                    String asm = dis.nextOpcode();
-                    int len = dis.lastOpcodeSize();
-
-                    if (len != lstline.opcodesCount) {
-                        // this can happen if a previous DisassemblerException was caught and didn't read enough bytes
-                        String msgtxt = "disassembled wrong number of bytes " + Integer.toString(atLstLine+1);
-                        if (hadError)
-                            Console.log(msgtxt); // if we had an error, than there's no reason to get excited here for instance 'rep aaa'
-                        else
-                            Console.error(msgtxt);
-                        break;
-                    }
+                if (len != lstline.opcodesCount) {
+                    // can happen with `times 5 inc ax`
+                   // String msgtxt = "disassembled wrong number of bytes " + Integer.toString(atLstLine+1);
+                   // Console.error(msgtxt);
                 }
 
             }
             catch(Disassembler.DisassemblerLengthException e) {
                 msg = Integer.toString(atLstLine+1) + ": not enough bytes to parse"; // can happen if we db 09h for example, or just 'rep'
-                hadError = true;
-                //break;
             }
             catch(Disassembler.DisassemblerException e) {
                 msg = Integer.toString(atLstLine+1) + ": Although this is a legal x86 opcode, codewars8086 does not support it";
                 int eptr = dis.getPointer() - 1;
                 if (eptr >= 0 && eptr < binbuf.length)
                     msg += ", opcode = 0x" + Format.hex2(binbuf[eptr] & 0xff);
-                int len = dis.lastOpcodeSize(); // advance the disassembler pointer
-                hadError = true;
-                //break; // no way to recover
-                // there might be a way to recover if we actually read the entiere opcode that threw the exception but this is not guaranteed
             }
             catch(RuntimeException e) {
                 Console.error("failed parsing binbuf RuntimeException"); // this should not happen. only happens for missing cases
-                break; // no way to recover, we don't know the size of the opcode
             }
 
             if (msg != null)
@@ -1132,16 +1117,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
                     asm_output.appendChild(omsgdiv);
                 }
-
             }
-
-            ++atLstLine;
-            ptr += lstline.opcodesCount;
-            dis.setPointer(ptr);
-
         }
-
-
 
         return asmElem;
     }

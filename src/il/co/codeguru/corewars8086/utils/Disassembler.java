@@ -22,8 +22,8 @@ public abstract class Disassembler
 	public static class ArrDisassembler extends Disassembler
 	{
 		private byte[] bytes;
-		public ArrDisassembler(byte[] memory, int offset, int sizeLimit) {
-			super(offset, sizeLimit);
+		public ArrDisassembler(byte[] memory, int offset, int endOffset) {
+			super(offset, endOffset);
 			bytes = memory;
 		}
 
@@ -46,8 +46,8 @@ public abstract class Disassembler
 	public static class NArrDisassembler extends Disassembler
 	{
 		private Int8ArrayNative bytes;
-		public NArrDisassembler(Int8ArrayNative memory, int offset, int sizeLimit) {
-			super(offset, sizeLimit);
+		public NArrDisassembler(Int8ArrayNative memory, int offset, int endOffset) {
+			super(offset, endOffset);
 			bytes = memory;
 		}
 
@@ -75,7 +75,7 @@ public abstract class Disassembler
 	protected int pointer;
 
 	protected int startOffset;
-	protected int sizeLimit;
+	protected int endOffset;
 	
 	/**
 	 * the current mode or register index or memory index of the indirect address function
@@ -85,15 +85,15 @@ public abstract class Disassembler
 	//public Disassembler()
 	//{}
 
-	public Disassembler(int offset, int sizeLimit) {
-		reset(offset, sizeLimit);
+	public Disassembler(int offset, int endOffset) {
+		reset(offset, endOffset);
 	}
 
-	public void reset(int offset, int sizeLimit) {
+	public void reset(int offset, int endOffset) {
 
 		pointer = offset;
 		startOffset = offset;
-		this.sizeLimit = sizeLimit;
+		this.endOffset = endOffset;
 	}
 
 	public int lastOpcodeSize() {
@@ -153,7 +153,7 @@ public abstract class Disassembler
 	 */
 	protected boolean hasNextByte()
 	{
-		return pointer < sizeLimit; //bytes.length;
+		return pointer < endOffset; //bytes.length;
 	}
 	
 	protected abstract byte getByte() throws DisassemblerException;

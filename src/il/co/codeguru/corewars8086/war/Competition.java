@@ -15,8 +15,8 @@ public class Competition {
 
     private CompetitionIterator competitionIterator;
 
-    private EventMulticasterCompetition competitionEventCaster;
-    private EventMulticasterMemory memoryEventCaster;
+    public EventMulticasterCompetition competitionEventCaster;
+    public EventMulticasterMemory memoryEventCaster;
     public CompetitionEventListener competitionEventListener;
     private MemoryEventListener memoryEventListener;
 
@@ -55,10 +55,19 @@ public class Competition {
         warriorRepository = new WarriorRepository();
 
         competitionEventCaster = new EventMulticasterCompetition();
-        competitionEventListener = (CompetitionEventListener) competitionEventCaster.getProxy();
+        competitionEventListener = competitionEventCaster.debugProxy;
         memoryEventCaster = new EventMulticasterMemory();
-        memoryEventListener = (MemoryEventListener) memoryEventCaster.getProxy();
+        memoryEventListener = memoryEventCaster.debugProxy;
         speed = 0;
+    }
+
+    private void switchToCompete() {
+        competitionEventListener = competitionEventCaster.competeProxy;
+        memoryEventListener = memoryEventCaster.competeProxy;
+    }
+    private void switchToDebug() {
+        competitionEventListener = competitionEventCaster.debugProxy;
+        memoryEventListener = memoryEventCaster.debugProxy;
     }
 
     // return true if need to continue after
@@ -109,9 +118,15 @@ public class Competition {
                         }
                     }
                 }
-                while (needMore == 1 && stepsCount > 0) {
-                    needMore = runRound();
-                    --stepsCount;
+                if (stepsCount > 0) {
+                    switchToCompete();
+                    while (needMore == 1 && stepsCount > 1) {
+                        needMore = runRound();
+                        --stepsCount;
+                    }
+                    switchToDebug();
+                    if (needMore == 1)
+                        needMore = runRound();
                 }
             }
             else {
@@ -274,17 +289,17 @@ public class Competition {
         competitionEventCaster.add(lis);
     }
 
-    public void removeCompetitionEventListener(CompetitionEventListener lis) {
+    /*public void removeCompetitionEventListener(CompetitionEventListener lis) {
     	competitionEventCaster.remove(lis);
-    }
+    }*/
     
     public void addMemoryEventLister(MemoryEventListener lis) {
         memoryEventCaster.add(lis);
     }
 
-    public void removeMemoryEventLister(MemoryEventListener lis) {
+    /*public void removeMemoryEventLister(MemoryEventListener lis) {
     	memoryEventCaster.remove(lis);
-    }
+    }*/
     
     public WarriorRepository getWarriorRepository() {
         return warriorRepository;

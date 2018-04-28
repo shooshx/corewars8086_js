@@ -9,129 +9,103 @@ import java.util.*;
  * An event multicaster which broadcasts Events to a number of listeners.
  * @author BS
  */
-public class EventMulticasterCompetition extends EventMulticasterBase {
-    
+public class EventMulticasterCompetition extends EventMulticasterBase<CompetitionEventListener>
+{
+    public CompetitionEventListener debugProxy, competeProxy;
 
-    
+    public EventMulticasterCompetition() {
+        debugProxy = new DebugHandler();
+        competeProxy = new CompeteHandler();
+    }
 
-    public  Object getProxy() {
-        if ( mProxy == null ) {
-            mProxy = new MulticasterHandler();
+    private class CompeteHandler extends DebugHandler {
+
+        @Override
+        public void onRound(int round) {
         }
-        return mProxy;
+        @Override
+        public void onEndRound() {
+        }
     }
 
 
-    private class MulticasterHandler implements CompetitionEventListener {
+    private class DebugHandler implements CompetitionEventListener {
 
         @Override
         public void onWarPreStartClear() {
-            isCasting = true;
             for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onWarPreStartClear();
             }
-            isCasting = false;
-            addWaiting();
         }
 
 		@Override
 		public void onWarStart() {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onWarStart();
 			}
-            isCasting = false;
-            addWaiting();			
 		}
 
 		@Override
 		public void onWarEnd(int reason, String winners) {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onWarEnd(reason, winners);
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
 		@Override
 		public void onRound(int round) {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onRound(round);
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
 		@Override
 		public void onWarriorBirth(Warrior w) {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onWarriorBirth(w);
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
 		@Override
 		public void onWarriorDeath(Warrior warrior, String reason) {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onWarriorDeath(warrior, reason);
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
 		@Override
 		public void onCompetitionStart() {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onCompetitionStart();
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
 		@Override
 		public void onCompetitionEnd() {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onCompetitionEnd();
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
 		@Override
 		public void onEndRound() {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onEndRound();
 			}
-            isCasting = false;
-            addWaiting();				
 		}
 
         @Override
         public void onPaused() {
-            isCasting = true;
             for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onPaused();
             }
-            isCasting = false;
-            addWaiting();
         }
 
         @Override
         public void onNoneAlive() {
-            isCasting = true;
             for (Object mListener : mListenersArr) {
                 ((CompetitionEventListener)mListener).onNoneAlive();
             }
-            isCasting = false;
-            addWaiting();
         }
     }
 

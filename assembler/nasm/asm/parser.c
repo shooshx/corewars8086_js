@@ -1128,6 +1128,10 @@ is_expression:
      * Transform RESW, RESD, RESQ, REST, RESO, RESY, RESZ into RESB.
      */
     if (opcode_is_resb(result->opcode)) {
+        if (result->oprs[0].offset < 0) {
+            nasm_error(ERR_NONFATAL, "RES value %"PRId64" is negative", result->oprs[0].offset);
+            goto fail;
+        }
         result->oprs[0].offset *= resv_bytes(result->opcode);
         result->oprs[0].offset *= result->times;
         result->times = 1;

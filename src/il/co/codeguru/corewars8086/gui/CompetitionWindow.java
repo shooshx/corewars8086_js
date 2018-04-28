@@ -51,14 +51,14 @@ public class CompetitionWindow extends JFrame
         return m_isBattleShown;
     }
 
-    public CompetitionWindow() throws IOException {
+    public CompetitionWindow() throws IOException
+    {
         super("CodeGuru Extreme - Competition Viewer");
         getContentPane().setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         competition = new Competition();
         competition.addCompetitionEventListener(this);
-        WarriorRepository warriorRepository = competition
-                        .getWarriorRepository();
+        WarriorRepository warriorRepository = competition.getWarriorRepository();
         warriorRepository.addScoreEventListener(this);
         columnGraph = new ColumnGraph(warriorRepository.getGroupNames());
         getContentPane().add(columnGraph, BorderLayout.CENTER);
@@ -130,6 +130,9 @@ public class CompetitionWindow extends JFrame
         stepnum = (HTMLElement) DomGlobal.document.getElementById("stepnum");
 
         exportMethods();
+
+        competition.competitionEventCaster.doneAdding();
+        competition.memoryEventCaster.doneAdding();
 
         call_gwtStart();
 
@@ -304,6 +307,7 @@ public class CompetitionWindow extends JFrame
             setDebugMode(true);
 
             stepnum.innerHTML = "0";
+            battleFrame.speedSlider.setValue(0);
             return true;
         }
         return false;

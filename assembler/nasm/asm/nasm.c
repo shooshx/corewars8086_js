@@ -1927,7 +1927,11 @@ int run_nasm(const char* inname, const char* outname)
 }
 #else
 
-int main(int argc, char **argv)
+int main(int argc, char **argv) {
+    return nasm_main(argc, argv);
+}
+
+int mainz(int argc, char **argv)
 {
     const char* args[] = { "nasm.exe", "times.asm", "-l", "times.lst", 0 };
 
@@ -1947,7 +1951,7 @@ int main(int argc, char **argv)
     init_globals();
     nasm_main(4, args2);
 
-    //return 0;
+    return 0;
 }
 
 unsigned int __stdcall GetTickCount(void);

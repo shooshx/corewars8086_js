@@ -2,16 +2,13 @@
   
 nasm assert:
   resb 3000000000  -memory
-  resb -6  -assert
+  resb 4 - not displayed correctly as zeros
 
 nasm stuck
   times 200000 inc bx
 
 BUG - showing wrong bin for 'resb 5' in debugger 
-    - also for 'times 5 db 1'
 
-
-BUG - spaces in brakets parse spacedHex
 
 
 graph window
@@ -23,7 +20,7 @@ nasm memory leak
 check randomization similarity with real java
   https://github.com/tomer-schles/corewars8086-seed-bugfix/commits/master
 
-recreate scene with start addresses in URL?
+
 
 
 debugger
@@ -71,9 +68,6 @@ debugger
 - disassembled asm does not compile 'MOV [SI], 0x7C6' missing 'byte' or 'word'
 
 
-End of debug session:
-   - War instance shouldn't die at the end so its content can be examined (memory scrolled, registers watches)
-   - Debug should continue as long as there is any player alive
 
 - don't disassemble lines that were in the original text
 - export code to bin file

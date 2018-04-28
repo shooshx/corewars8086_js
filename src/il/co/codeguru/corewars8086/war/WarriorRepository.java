@@ -32,11 +32,12 @@ public class WarriorRepository {
         //readWarriorFiles();
 
         scoreEventsCaster = new EventMulticasterScore();
-        scoreListener = (ScoreEventListener) scoreEventsCaster.getProxy();
+        scoreListener = scoreEventsCaster.proxy;
     }
 
     public void addScoreEventListener(ScoreEventListener lis) {
         scoreEventsCaster.add(lis);
+        scoreEventsCaster.doneAdding();
     }
 
     public void addScore(String name, float value) {

@@ -8,35 +8,39 @@ import java.util.*;
  * An event multicaster which broadcasts Events to a number of listeners.
  * @author BS
  */
-public class EventMulticasterMemory extends EventMulticasterBase {
+public class EventMulticasterMemory extends EventMulticasterBase<MemoryEventListener> {
 
+    public MemoryEventListener debugProxy, competeProxy;
 
-    public Object getProxy() {
-        if ( mProxy == null ) {
-            mProxy = new MulticasterHandler();
-        }
-        return mProxy;
+    public EventMulticasterMemory() {
+        debugProxy = new DebugHandler();
+        competeProxy = new CompeteHandler();
     }
-    
-    private class MulticasterHandler implements MemoryEventListener {
+
+    private class CompeteHandler implements MemoryEventListener {
+        @Override
+        public void onMemoryWrite(RealModeAddress address, byte value) {
+        }
+
+        @Override
+        public void onWriteState(EWriteState state) {
+        }
+
+    }
+
+    private class DebugHandler implements MemoryEventListener {
 		@Override
 		public void onMemoryWrite(RealModeAddress address, byte value) {
-            isCasting = true;
 			for (Object mListener : mListenersArr) {
                 ((MemoryEventListener)mListener).onMemoryWrite(address, value);
 			}
-            isCasting = false;
-            addWaiting();			
 		}
 
         @Override
         public void onWriteState(EWriteState state) {
-            isCasting = true;
             for (Object mListener : mListenersArr) {
                 ((MemoryEventListener)mListener).onWriteState(state);
             }
-            isCasting = false;
-            addWaiting();
         }
 
     }
