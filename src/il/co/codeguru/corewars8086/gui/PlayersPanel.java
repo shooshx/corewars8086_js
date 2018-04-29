@@ -44,7 +44,7 @@ public class PlayersPanel
         public PlayerInfo player; // reference back to the player this is in
         public int index; // 0 or 1 - there are two snippets per player
         public String name; // name of this code snippet (name on the button)
-        public String label; // the label of the player + the index of the warrior, for instance A0, A1
+        public String label; // the label of the player + the index of the warrior (0,1), for instance A0, A1
         public String asmText = "";
         public byte[] bin = null;  // can be null if last output was empty
         public boolean lastCompileOk = true;
@@ -82,7 +82,8 @@ public class PlayersPanel
     private CompetitionWindow m_mainWnd;
     private ArrayList<PlayerInfo> m_players = new ArrayList<PlayerInfo>();
     private Code m_inEditor = null; // point to the above ArrayList
-    //private HTMLElement addPlayerBtn;
+    private boolean m_isDebugMode = false;
+
 
     public PlayersPanel(CompetitionWindow mainWnd) {
         m_mainWnd = mainWnd;
@@ -97,9 +98,9 @@ public class PlayersPanel
     public native void exportMethods() /*-{
         var that = this
         $wnd.j_srcSelectionChanged = $entry(function(s,i) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_srcSelectionChanged(Ljava/lang/String;I)(s,i) });
-        $wnd.j_addPlayer =    $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::addPlayer(Ljava/lang/String;Ljava/lang/String;)(a,b) });
-        $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::removePlayer(Ljava/lang/String;)(s) });
-        $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
+        $wnd.j_addPlayer =    $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_addPlayer(Ljava/lang/String;Ljava/lang/String;)(a,b) });
+        $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_removePlayer(Ljava/lang/String;)(s) });
+        $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
         $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
         $wnd.j_loadBinary      = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadBinary(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(b) });
@@ -113,19 +114,14 @@ public class PlayersPanel
         }
         return null;
     }
-    public PlayerInfo findPlayer(char label) {
-        for(PlayerInfo p : m_players) {
-            if (p.label.charAt(0) == label)
-                return p;
-        }
-        return null;
-    }
+
 
     public Code findCode(String label) {
-        PlayerInfo pi = findPlayer(label.charAt(0));
+        // format of code label is for player is PA1,PA2,PB1... and for zombie Z10,Z20..
+        PlayerInfo pi = findPlayer(label.substring(0,label.length()-1));
         if (pi == null)
             return null;
-        int ci = label.charAt(1) - '0';
+        int ci = label.charAt(label.length()-1) - '0';
         return pi.code[ci];
     }
 
@@ -145,7 +141,7 @@ public class PlayersPanel
 
 
     // from js
-    public void addPlayer(String label, String title) {
+    public void j_addPlayer(String label, String title) {
         if (label == null)
             return;
         if (findPlayer(label) != null)
@@ -158,7 +154,7 @@ public class PlayersPanel
         Console.log("Added " + label + " " + Integer.toString(m_players.size()));
     }
     // from js
-    public void removePlayer(String label) {
+    public void j_removePlayer(String label) {
         for(PlayerInfo p : m_players) {
             if (label.equals(p.label)) {
                 m_players.remove(p);
@@ -176,11 +172,11 @@ public class PlayersPanel
 
         PlayerInfo p = findPlayer(playerLabel);
         m_inEditor = null;
-        if (p == null)
-            return;
+        assert p != null: "did not find player with label " + playerLabel;
+
         m_inEditor = p.code[num - 1];
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, null); // don't pass playerPanel since we don't want it to return update to us
-        m_mainWnd.battleFrame.cpuframe.setSelectedPlayer(m_inEditor.getLabel());
+        m_mainWnd.battleFrame.cpuframe.setSelectedPlayer(m_inEditor.getLabel(), m_isDebugMode);
 
         // in editor view, update the botton load address gui
         updateLoadAddr(m_inEditor.startAddress, m_inEditor.startAddrRandom);
@@ -188,7 +184,7 @@ public class PlayersPanel
         m_mainWnd.srcSelectionChanged(m_inEditor.getLabel());
     }
 
-    public void changedWType(String label, String v) {
+    public void j_changedWType(String label, String v) {
         PlayerInfo p = findPlayer(label);
         p.setWType(EWarriorType.valueOf(v));
 
@@ -215,31 +211,36 @@ public class PlayersPanel
         switch(p.wtype) {
         case SINGLE:
             p.code[0].name = vu;
-            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_p" + p.label)).innerHTML = vu;
+            if (p.label.charAt(0) != 'z') { // if it's a zombie, it doesn't have this element and the name was written in my caller
+                ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_" + p.label)).innerHTML = vu;
+            }
             break;
         case TWO_IDENTICAL:
             String vup = vu + "1,2";
             p.code[0].name = vup;
-            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_p" + p.label)).innerHTML = vup;
+            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_" + p.label)).innerHTML = vup;
             break;
         case TWO_DIFFERENT:
             String vu1 = vu + "1", vu2 = vu + "2";
             p.code[0].name = vu1;
             p.code[1].name = vu2;
-            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_p" + p.label)).innerHTML = vu1;
-            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w2_p" + p.label)).innerHTML = vu2;
+            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w1_" + p.label)).innerHTML = vu1;
+            ((HTMLElement)DomGlobal.document.getElementById("sel_code_lbl_w2_" + p.label)).innerHTML = vu2;
             break;
         }
     }
 
-    public Code[] getFiles() {
+    public Code[] getFiles(char prefix) {
         int count = 0;
         for(PlayerInfo p: m_players)
-            count += p.activeCodes;
+            if (p.label.charAt(0) == prefix)
+                count += p.activeCodes;
 
         int i = 0;
         Code[] c = new Code[count];
         for(PlayerInfo p: m_players) {
+            if (p.label.charAt(0) != prefix)
+                continue;
             c[i++] = p.code[0];
             if (p.wtype != EWarriorType.SINGLE)
                 c[i++] = p.code[1];
@@ -248,8 +249,12 @@ public class PlayersPanel
         return c;
     }
 
+    public Code[] getFiles() {
+        return getFiles('p');
+    }
+
     public Code[] getZombies() {
-        return new Code[0];
+        return getFiles('z');
     }
 
     public Code getCodeInEditor() {
@@ -270,7 +275,7 @@ public class PlayersPanel
         m_inEditor.player.title = v;
 
         String pt = m_inEditor.player.label;
-        ((HTMLElement)DomGlobal.document.getElementById("player_name_lbl_p" + pt)).innerHTML = v;
+        ((HTMLElement)DomGlobal.document.getElementById("player_name_lbl_" + pt)).innerHTML = v;
 
         reWriteButtonsLabels(m_inEditor.player);
     }
@@ -319,12 +324,7 @@ public class PlayersPanel
 
     public void setDebugMode(boolean v) {
 
-        /*if (v) {
-            addPlayerBtn.style.display = "none";
-        }
-        else {
-            addPlayerBtn.style.display = "";
-        }*/
+        m_isDebugMode = v;
     }
 
     public void j_loadBinary(ArrayBuffer buf) {

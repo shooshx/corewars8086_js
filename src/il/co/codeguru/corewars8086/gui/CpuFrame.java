@@ -33,7 +33,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 	
 	//private War currentWar;
 	private CompetitionWindow m_mainwnd;
-	private String m_currentWarriorLabel;
+	private String m_currentWarriorLabel = null;
 	private int m_currentWarriorIndex = -1; // faster to use index than label during debug
 	
 	private Competition competition;
@@ -61,14 +61,15 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
             cpuPanel.style.display = "none";
     }
 
-	public void setSelectedPlayer(String playerLabel) {
+	public void setSelectedPlayer(String playerLabel, boolean isDebugMode) {
 		m_currentWarriorLabel = playerLabel;
 		m_currentWarriorIndex = -1; // invalidate
 
-		// need to do this first so that reading the registers would put this ss:sp in the right place
-		initMemRegions(false);
-		updateFields();
-
+		if (isDebugMode) {
+			// need to do this first so that reading the registers would put this ss:sp in the right place
+			initMemRegions(false);
+			updateFields();
+		}
 	}
 
 

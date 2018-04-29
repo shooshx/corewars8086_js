@@ -119,7 +119,7 @@ public class WarriorRepository {
         warriorNameToGroup.clear();
         warriorGroups.clear();
 
-        Console.log("Found " + Integer.toString(files.length) + " survivors");
+        Console.log("Found " + Integer.toString(files.length) + " survivors, " + Integer.toString(zombies.length) + " zombies");
 
         Arrays.sort(files, new Comparator<PlayersPanel.Code>() {
             public int compare(PlayersPanel.Code o1, PlayersPanel.Code o2) {

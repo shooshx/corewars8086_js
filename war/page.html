@@ -239,7 +239,7 @@ function gwtStart()
     addPlayersPanel()
 
     sel_code_w1_pA.checked = true
-    triggerSrc('A', 1)
+    triggerSrc('pA', 1)
 
     j_demoDebugPlayers();
 
@@ -266,9 +266,8 @@ function asciiAdd(letter, val) {
 
 function arrayRemove(arr, value) {
     var index = arr.indexOf(value);
-    if (index > -1) {
-        arr.splice(index, 1);
-    }
+    console.assert(index > -1, "did not find " + value)
+    arr.splice(index, 1);
 }
 
 
@@ -285,15 +284,15 @@ function addPlayersPanel() {
             <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
           </div>\
-          <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'LETTER\')">\
+          <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'pLETTER\')">\
             <option value="SINGLE">Single Warrior</option>\
             <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
             <option value="TWO_DIFFERENT">Two Different Warriors</option>\
           </select>\
-          <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 1)" type="radio" name="src_select">\
+          <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'pLETTER\', 1)" type="radio" name="src_select">\
           <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
           <br>\
-          <input id="sel_code_w2_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'LETTER\', 2)" type="radio" name="src_select">\
+          <input id="sel_code_w2_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'pLETTER\', 2)" type="radio" name="src_select">\
           <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
         </div>'
 
@@ -303,8 +302,8 @@ function addPlayersPanel() {
     g_srcButtons.push('sel_code_w1_p' + letter)
     g_srcButtons.push('sel_code_w2_p' + letter)
 
-    j_addPlayer(letter, "Player " + letter)
-    changedWType(letter)
+    j_addPlayer('p'+letter, "Player " + letter)
+    changedWType('p'+letter)
 
     g_usedLetters.push(letter)
     g_nextLetter = asciiAdd(g_nextLetter, 1)
@@ -312,12 +311,12 @@ function addPlayersPanel() {
 
 }
 
-function changedWType(letter)
+function changedWType(label)
 {
-    var v = document.getElementById('wtype_p' + letter).value
-    var elem1 = document.getElementById('sel_code_lbl_w1_p' + letter)
-    var elem2 = document.getElementById('sel_code_lbl_w2_p' + letter)
-    var frame = document.getElementById('pl_frame_p' + letter)
+    var v = document.getElementById('wtype_' + label).value
+    var elem1 = document.getElementById('sel_code_lbl_w1_' + label)
+    var elem2 = document.getElementById('sel_code_lbl_w2_' + label)
+    var frame = document.getElementById('pl_frame_' + label)
 
     if (v == 'SINGLE' || v == 'TWO_IDENTICAL') {
         elem2.style.visibility = 'hidden'
@@ -332,22 +331,14 @@ function changedWType(letter)
         frame.style.height = ''
     }
 
-    j_changedWType(letter, v);
+    j_changedWType(label, v);
 
 }
 
 
-function triggerSrc(letter, index)
+function triggerSrc(label, index)
 {
-    var except_id = 'sel_code_w' + index + '_p' + letter
-    for(var ni in g_srcButtons) {
-        var name = g_srcButtons[ni]
-        if (name == except_id)
-            continue
-        document.getElementById(name).checked = false
-    }
-
-    j_srcSelectionChanged(letter, index)
+    j_srcSelectionChanged(label, index)
 }
 
 function triggerErasePlayer(buttonElem, elem, letter)
@@ -364,7 +355,7 @@ function triggerErasePlayer(buttonElem, elem, letter)
     arrayRemove(g_srcButtons, 'sel_code_w1_p' + letter)
     arrayRemove(g_srcButtons, 'sel_code_w2_p' + letter)
 
-    j_removePlayer(letter)
+    j_removePlayer('p'+letter)
 
     if (g_usedLetters.length == 0) {
         g_nextLetter = 'A'
@@ -398,16 +389,18 @@ function addZombieCode() {
     if (addZombieBtn.getAttribute("disabled") == "true")
         return;
     var text = '<div id="zomb_line_zNUM">\
-        <input id="sel_code_w1_zNUM" class="hidden sc-check" onclick="triggerSrc(\'NUM\', 1)" type="radio" name="src_select">\
-        <label id="sel_code_lbl_w1_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >Zombie NUM</label>\
+        <input id="sel_code_w1_zNUM" class="hidden sc-check" onclick="triggerSrc(\'zNUM\', 1)" type="radio" name="src_select">\
+        <label id="player_name_lbl_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >Zombie NUM</label>\
         <label id="player_erase_zNUM" class="pl_close_icon za_close_icon" onclick="triggerEraseZombie(this, zomb_line_zNUM, \'NUM\')"></label>\
         </div>'
 
     addTextChild(zombies_container, text.replace(/NUM/g, g_nextZombNum))
-    var num = g_nextZombNum
+    var num = '' + g_nextZombNum  // turn to a string
     g_nextZombNum += 1
 
     g_usedZnums.push(num)
+
+    j_addPlayer('z'+num, "Zombie " + num) // players are identified by a letter, zombies by a number
 
 }
 
@@ -417,6 +410,8 @@ function triggerEraseZombie(buttonElem, elem, num) {
 
     elem.parentNode.removeChild(elem);
     arrayRemove(g_usedZnums, num)
+
+    j_removePlayer('z'+num)
 }
 
 

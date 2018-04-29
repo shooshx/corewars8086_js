@@ -65,7 +65,10 @@ public class War {
     private boolean m_hasEnded = false; // this war has ended but the object remains alive for post-mortem examination
 
     public void setUiWarrior(Warrior warrior) {
-        m_uiWarriorIndex = warrior.m_myIndex;
+        if (warrior != null)
+            m_uiWarriorIndex = warrior.m_myIndex;
+        else
+            m_uiWarriorIndex = -1; // can happen if we're not debugging right now
     }
     public void setBreakpointCheck(IBreakpointCheck brc) {
         m_breakpointCheck = brc;

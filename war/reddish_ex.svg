@@ -15,7 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="reddish_ex.svg">
+   sodipodi:docname="reddish_ex.svg"
+   inkscape:export-filename="C:\projects\codewars_js\eclipse\codewars_js\war\reddish_ex.png"
+   inkscape:export-xdpi="93.048401"
+   inkscape:export-ydpi="93.048401">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -27,7 +30,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="7.8957115"
      inkscape:cx="27.825865"
-     inkscape:cy="33.532321"
+     inkscape:cy="33.595646"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -38,7 +41,7 @@
      units="px"
      inkscape:window-width="1387"
      inkscape:window-height="919"
-     inkscape:window-x="1925"
+     inkscape:window-x="485"
      inkscape:window-y="26"
      inkscape:window-maximized="0" />
   <metadata
@@ -59,7 +62,7 @@
      id="layer1"
      transform="translate(-1.0168641e-8,-1037.3622)">
     <path
-       style="opacity:1;fill:#ffcece;fill-opacity:1;stroke:#ebcece;stroke-width:0.745;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#c98b8b;fill-opacity:1;stroke:#af8b8b;stroke-width:0.745;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 11.790784,1037.7345 -4.2907837,4.2907 -4.2907842,-4.2907 -2.83689095,2.8369 4.29078415,4.2908 -4.29078365,4.2907 2.83689105,2.837 4.2907836,-4.2908 4.2907837,4.2908 2.836891,-2.837 -4.290784,-4.2907 4.290784,-4.2908 -2.836891,-2.8369 z"
        id="rect4136"
        inkscape:connector-curvature="0"
