@@ -1367,7 +1367,7 @@ static void assemble_file(char *fname, StrList **depend_ptr)
         globalbits = cmd_sb;  /* set 'bits' to command line default */
         cpu = cmd_cpu;
         if (pass0 == 2) {
-	    lfmt->init(listname);
+	        lfmt->init(listname);
         } else if (passn == 1 && *listname) {
             /* Remove the list file in case we die before the output pass */
             remove(listname);

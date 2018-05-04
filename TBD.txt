@@ -10,6 +10,9 @@ nasm stuck
 BUG - showing wrong bin for 'resb 5' in debugger 
 
 
+disassembler bug
+   hello db 10   - not enough bytes to parse, doesn't recognise it as db
+
 
 graph window
 
@@ -29,8 +32,8 @@ debugger
 
    code with many comments
 
-- on debug end, keep the war alive so that it would be possible to view state
-  - what happens if the war ends while on Resume? - need to pause
+
+- what happens if the war ends while on Resume? - need to pause
 
 
 || 
@@ -45,7 +48,7 @@ debugger
 - online live game?
 - enable/disable players with checkbox
 - code button should be red if code has errors
-- add zombies
+
 
 - jump to line where mouse is pointing?
 
@@ -57,11 +60,12 @@ debugger
 
 - cpu view can change values, show in red and is able to revert?
 
-- try two players with the same name
+
 
 - when not in debug mode don't update GUI
 
 - go to address when not a number - same as watch parsing. problem - default would not be hex anymore
+- labels from code in watch?
 - check long pages of comments at the start of .asm and in the middle, in either the player above or in me
 
 - all console.error, Console.error to message boxes

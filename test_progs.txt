@@ -121,3 +121,7 @@ inc ax
 ;bla
 inc ax
 
+; parens in lst
+start:
+add DI, start+1
+jmp 1

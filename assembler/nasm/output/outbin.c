@@ -1664,13 +1664,50 @@ static void do_output_srec(void)
     write_srecord(0, alen, 0, etype, NULL);
 }
 
+FILE* mdfile = NULL;
+static void mydbg_init(void)
+{
+    mdfile = nasm_open_write("_sym.txt", NF_TEXT);
+}
+static void mydbg_deflabel(char *name, int32_t segment,  int64_t offset, int is_global, char *special)
+{
+    fprintf(mdfile, "dbglabel %s := %08"PRIx32":%016"PRIx64" %s (%d)%s%s\n",
+        name,
+        segment, offset,
+        is_global == 2 ? "common" : is_global ? "global" : "local",
+        is_global, special ? ": " : "", special);
+}
+static void mydbg_cleanup(void)
+{
+    fclose(mdfile);
+    mdfile = NULL;
+}
+
+const struct dfmt my_debug_debug_form = {
+    "Trace of all info passed to debug stage",
+    "mydebug",
+    mydbg_init,
+    null_debug_linenum,
+    mydbg_deflabel,
+    null_debug_directive,
+    null_debug_typevalue,
+    null_debug_output,
+    mydbg_cleanup,
+    NULL
+};
+
+static const struct dfmt * const my_debug_debug_arr[3] = {
+    &my_debug_debug_form,
+    &null_debug_form,
+    NULL
+};
 
 const struct ofmt of_bin = {
     "flat-form binary files (e.g. DOS .COM, .SYS)",
     "bin",
     0,
     64,
-    null_debug_arr,
+    my_debug_debug_arr, //null_debug_arr,
     &null_debug_form,
     bin_stdmac,
     bin_init,
