@@ -42,7 +42,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     }
     @Override
-    public void onWarEnd(int reason, String winners) {
+    public void onWarEnd(int reason, String winners, boolean inDebug) {
         //m_mem = null;
     }
     @Override

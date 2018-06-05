@@ -18,13 +18,44 @@ public class EventMulticasterCompetition extends EventMulticasterBase<Competitio
         competeProxy = new CompeteHandler();
     }
 
-    private class CompeteHandler extends DebugHandler {
-
+    private class CompeteHandler  implements CompetitionEventListener {
+        public void onWarPreStartClear() {
+        }
+        public void onWarStart() {
+        }
+        @Override
+        public void onWarEnd(int reason, String winners, boolean inDebug) {
+            for (Object mListener : mListenersArr) {
+                ((CompetitionEventListener)mListener).onWarEnd(reason, winners, inDebug);
+            }
+        }
         @Override
         public void onRound(int round) {
         }
+        public void onWarriorBirth(Warrior w) {
+        }
+        public void onWarriorDeath(Warrior warrior, String reason) {
+        }
+        @Override
+        public void onCompetitionStart() {
+            for (Object mListener : mListenersArr) {
+                ((CompetitionEventListener)mListener).onCompetitionStart();
+            }
+        }
+
+        @Override
+        public void onCompetitionEnd() {
+            for (Object mListener : mListenersArr) {
+                ((CompetitionEventListener)mListener).onCompetitionEnd();
+            }
+        }
         @Override
         public void onEndRound() {
+        }
+
+        public void onPaused() {
+        }
+        public void onNoneAlive() {
         }
     }
 
@@ -46,9 +77,9 @@ public class EventMulticasterCompetition extends EventMulticasterBase<Competitio
 		}
 
 		@Override
-		public void onWarEnd(int reason, String winners) {
+		public void onWarEnd(int reason, String winners, boolean inDebug) {
 			for (Object mListener : mListenersArr) {
-                ((CompetitionEventListener)mListener).onWarEnd(reason, winners);
+                ((CompetitionEventListener)mListener).onWarEnd(reason, winners, inDebug);
 			}
 		}
 

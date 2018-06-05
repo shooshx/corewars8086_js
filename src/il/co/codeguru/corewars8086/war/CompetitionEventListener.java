@@ -28,7 +28,7 @@ public interface CompetitionEventListener   {
      * @param reason   One of the above reasons.
      * @param winners  Winning warrior(s) name(s).
      */
-    void onWarEnd(int reason, String winners);	
+    void onWarEnd(int reason, String winners, boolean inDebug);
 
     /**
      * Called when a new round is started.

@@ -61,7 +61,7 @@ public class ColumnGraph extends JComponent {
 
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < values.length; ++i) {
-            sb.append(values[0][0]);
+            sb.append(values[i][0]);
             sb.append("  ");
         }
         Console.log("Score add " + Integer.toString(pos) + " " + Integer.toString(subIndex) + " " + Float.toString(value) +

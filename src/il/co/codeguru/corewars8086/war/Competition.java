@@ -48,6 +48,7 @@ public class Competition {
         public int round;
         public boolean abort = false;
         public int waitedFrames = 0; // how many frames we just waited for negative speed
+        public long startTime = 0;
     }
     public CompState compState;
 
@@ -93,6 +94,8 @@ public class Competition {
             else {
                 // done competition
                 competitionEventListener.onCompetitionEnd();
+                long elapsed = System.currentTimeMillis() - compState.startTime;
+                Console.log("Total time=" + Double.toString(elapsed / 1000.0) );
                 warriorRepository.saveScoresToFile(SCORE_FILENAME);
                 compState = null;
                 return false;
@@ -148,8 +151,10 @@ public class Competition {
                 doneWar();
                 // when in debugger, we want to have the ability to continue stepping in a stopped war to see how it goes
                 // and it doesn't make sense any way to start a new war
-                if (!compState.isInDebugger)
+                if (!compState.isInDebugger) {
                     compState.state = CompState.State.RUN_WAR;
+                    return true;
+                }
                 return false;
             }
             return true; // what's left is that it's equal to 1
@@ -171,6 +176,13 @@ public class Competition {
         compState.state = CompState.State.RUN_WAR;
         compState.startPaused = startPaused;
         compState.isInDebugger = isInDebugger;
+        compState.startTime = System.currentTimeMillis();
+
+        if (isInDebugger)
+            switchToDebug();
+        else
+            switchToCompete();
+
     }
 
     public int getTotalNumberOfWars() {
@@ -219,7 +231,7 @@ public class Competition {
         // it's possible to continue stepping in a war that has ended and was over
         // don't tell that it's over every time, just on the time it ended first.
         if (!currentWar.hasEnded() && currentWar.isOver()) {
-            Console.log("isOver");
+            //Console.log("isOver");
             currentWar.pause();
             return -1;
         }
@@ -245,8 +257,7 @@ public class Competition {
     {
         //Console.log("runWar");
         currentWar = new War(memoryEventListener, competitionEventListener, compState.startPaused);
-        int war = 0;
-        currentWar.setSeed(this.seed + war);
+        currentWar.setSeed(this.seed);
         competitionEventListener.onWarPreStartClear();
         currentWar.loadWarriorGroups(warriorGroups);
         competitionEventListener.onWarStart(); // need to be before loadWarriorGroups since this clears the canvas and that writes the warriors to the canvas
@@ -257,18 +268,18 @@ public class Competition {
     {
         if (currentWar == null)
             return;
-        Console.log("doneWar rounds=" + Integer.toString(compState.round));
+        //Console.log("doneWar rounds=" + Integer.toString(compState.round));
         competitionEventListener.onRound(compState.round);
 
         int numAlive = currentWar.getNumRemainingWarriors();
         String names = currentWar.getRemainingWarriorNames();
 
         if (numAlive == 1) { // we have a single winner!
-            competitionEventListener.onWarEnd(CompetitionEventListener.SINGLE_WINNER, names);
+            competitionEventListener.onWarEnd(CompetitionEventListener.SINGLE_WINNER, names, compState.isInDebugger);
         } else if (compState.round == MAX_ROUND) { // maximum round reached
-            competitionEventListener.onWarEnd(CompetitionEventListener.MAX_ROUND_REACHED, names);
+            competitionEventListener.onWarEnd(CompetitionEventListener.MAX_ROUND_REACHED, names, compState.isInDebugger);
         } else { // user abort
-            competitionEventListener.onWarEnd(CompetitionEventListener.ABORTED, names);
+            competitionEventListener.onWarEnd(CompetitionEventListener.ABORTED, names, compState.isInDebugger);
         }
         currentWar.updateScores(warriorRepository);
         currentWar.setEnded();
@@ -328,5 +339,8 @@ public class Competition {
     public void setSeed(long seed){
     	this.seed = seed;
     }
-    
+
+    public long getSeed(){
+        return seed;
+    }
 }

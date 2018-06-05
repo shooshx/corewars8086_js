@@ -295,10 +295,12 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
         }
     }
 
-    /** @see CompetitionEventListener#onWarEnd(int, String) */
-    public void onWarEnd(int reason, String winners) {
+    public void onWarEnd(int reason, String winners, boolean inDebug) {
         /*roundNumber.setText(Integer.toString(nRoundNumber));
         roundNumber.repaint();*/
+
+        if (!inDebug)
+            return;
 
         switch (reason) {
             case SINGLE_WINNER:

@@ -216,7 +216,10 @@ public class War {
      * returns false.
      */
     private boolean shouldRunExtraOpcode(Warrior warrior) {
-        int energy = Unsigned.unsignedShort(warrior.getEnergy());
+        short enr = warrior.getEnergy();
+        if (enr == 0)
+            return false;
+        int energy = Unsigned.unsignedShort(enr);
         int speed = calculateWarriorSpeed(energy);
 
         return (rand.nextInt(MAX_SPEED) < speed);
@@ -423,7 +426,7 @@ public class War {
      */
     public void updateScores(WarriorRepository repository) {
         float score = (float)1.0 / m_numWarriorsAlive;
-        Console.log("updateScore " + Float.toString(score));
+        //Console.log("updateScore " + Float.toString(score));
     	for (int i = 0; i < m_numWarriors; ++i) {
             Warrior warrior = m_warriors[i];
             if (warrior.isAlive()) {

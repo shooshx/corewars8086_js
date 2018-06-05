@@ -37,7 +37,8 @@ public class CompetitionWindow extends JFrame
     private int totalWars;
     //private Thread warThread;
 	private boolean competitionRunning;
-	
+
+    private static final String SEED_PREFIX = "SEED!@#=";
 	private JTextField seed;
 
     //private JCheckBox startPausedCheckBox;
@@ -163,6 +164,9 @@ public class CompetitionWindow extends JFrame
         $wnd.j_stopDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopDebug()() });
         $wnd.j_debugUiInited = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_debugUiInited()() });
         $wnd.j_triggerZeroSpeed = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_triggerZeroSpeed()() });
+        $wnd.j_startCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startCompete()() });
+        $wnd.j_stopCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopCompete()() });
+
     }-*/;
 
     public boolean j_startDebug()
@@ -178,6 +182,18 @@ public class CompetitionWindow extends JFrame
     {
         competition.setAbort();
         setDebugMode(false);
+    }
+
+    public boolean j_startCompete()
+    {
+        if (!m_playersPanel.checkPlayersReady())
+            return false;
+        if (!gui_runWar(false, false))
+            return false;
+        return true;
+    }
+    public void j_stopCompete()
+    {
     }
 
     public void j_triggerZeroSpeed() {
@@ -222,7 +238,14 @@ public class CompetitionWindow extends JFrame
     {
         int battlesPerGroup = 0;
         try {
-        	competition.setSeed(seed.getText().hashCode());
+            long seedValue;
+            if (seed.getText().startsWith(SEED_PREFIX)){
+                seedValue = Long.parseLong(seed.getText().substring(SEED_PREFIX.length()));
+            }
+            else {
+                seedValue = seed.getText().hashCode();
+            }
+            competition.setSeed(seedValue);
             battlesPerGroup = 100; //TBD-SHY Integer.parseInt(battlesPerGroupField.getText().trim());
           /*  final int warriorsPerGroup = Integer.parseInt(
                 warriorsPerGroupField.getText().trim());*/
@@ -304,7 +327,8 @@ public class CompetitionWindow extends JFrame
         if (runWar()) {
             competitionRunning = true;
             //runWarButton.setEnabled(false);
-            setDebugMode(true);
+            if (isBattleShown)
+                setDebugMode(true);
 
             stepnum.innerHTML = "0";
             battleFrame.speedSlider.setValue(0);
@@ -348,8 +372,9 @@ public class CompetitionWindow extends JFrame
 
     }
 
-    public void onWarEnd(int reason, String winners) {
+    public void onWarEnd(int reason, String winners, boolean inDebug) { //###// SHY-TBD
         warCounter++;
+        seed.setText(SEED_PREFIX + competition.getSeed());
         warCounterDisplay.setText("Sessions so far:" + warCounter + " (out of " + totalWars + ")");
     }
 
@@ -368,12 +393,7 @@ public class CompetitionWindow extends JFrame
     }
 
     public void onCompetitionEnd() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                warCounterDisplay.setText("The competition is over. " +
-                    warCounter + " sessions were run.");
-            };
-        });
+        warCounterDisplay.setText("The competition is over. " + warCounter + " sessions were run.");
         //warThread = null;
 		//this.runWarButton.setEnabled(true);
         //runWarButton.setEnabled(true);

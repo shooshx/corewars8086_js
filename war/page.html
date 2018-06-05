@@ -513,7 +513,7 @@ var deferredEditorToAddress = -1 // set by code in CodeEditor.java
 var prevDebug = false;
 function triggerDebug() {
     console.log("triggerDebug " + debugCheckbox.checked)
-    if (prevDebug == debugCheckbox.checked)
+    if (prevDebug == debugCheckbox.checked) // not sure how this is possible
         return;
     prevDebug = debugCheckbox.checked
 
@@ -528,6 +528,7 @@ function triggerDebug() {
 
         debugBtnIn.style.backgroundImage = "url(red_stop.png)"
         debugBtnIn2.innerText = "Stop"
+        competeCheckbox.setAttribute("disabled", true);
 
         edit_area.style.display="none"
         debug_area.style.display=""
@@ -563,8 +564,9 @@ function triggerDebug() {
     else {
         j_stopDebug()
 
-        debugBtnIn.style.backgroundImage = "url(green_play.png)"
+        debugBtnIn.style.backgroundImage = ""
         debugBtnIn2.innerText = "Debug"
+        competeCheckbox.removeAttribute("disabled");
 
         edit_area.style.display=""
         debug_area.style.display="none"
@@ -924,6 +926,55 @@ function js_resetZoom() {
     updateBgStyle();
 }
 
+// ------------------------------------------ Competition --------------------------------------------
+
+function graph_panel_anim_end() {
+    if (competeCheckbox.checked) {
+        // setting the style in the normal way doesn't work here for some reason
+        graphs_panel.setAttribute("style", "opacity: 1; transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.56, 0.02, 0.89, 0.26);");
+    }
+    else {
+        graphs_panel.style.transition = "";
+    }
+
+}
+
+function openCompete() {
+    if (competeCheckbox.checked) {
+        graphs_panel.style.width = "";
+        graphs_panel.style.opacity = 1;
+        debugCheckbox.setAttribute("disabled", true);
+        debugBtn.setAttribute("disabled", true);
+    }
+    else {
+        graphs_panel.style.width = "0";
+        graphs_panel.style.opacity = 0;
+        debugCheckbox.removeAttribute("disabled");
+        debugBtn.removeAttribute("disabled");
+    }
+}
+
+function triggerStartCompete()
+ {
+    if (competeRunCheckbox.checked)
+    {
+        if (!j_startCompete()) {
+            console.error("cannot start competition")
+            competeRunCheckbox.checked = false;
+            return
+        }
+
+        competeRunBtnIn.style.backgroundImage = "url(red_stop.png)"
+        competeRunBtnIn2.innerText = "Stop"
+    }
+    else {
+        j_stopCompete()
+
+        competeRunBtnIn.style.backgroundImage = ""
+        competeRunBtnIn2.innerText = "Start!"
+
+    }
+}
 
 
 </script>    
@@ -1334,7 +1385,7 @@ input:disabled + .sc-btn:active,
 #players_rel {
     position: relative;
     width: 100%;
-    top: 50px;
+    top: 10px;
     /*bottom: 20px;*/
 }
 
@@ -1547,9 +1598,10 @@ input:disabled + .sc-btn:active,
     margin: 5px;
 }
 
-#debugBtn {
+#debugBtn{
     width: 120px;
     text-align:left;
+    margin-left: 20px;
 }
 #debugBtnIn {
     display: inline-block;
@@ -1557,8 +1609,48 @@ input:disabled + .sc-btn:active,
     height: 30px;
     vertical-align: -8px;
     margin: 0 0px 0 9px;
+    background-image: url(green_play.png);
 }
 #debugBtnIn2 {
+    margin: 0 0 0 3px;
+}
+#competeBtn{
+    width: 130px;
+    text-align:left;
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+#competeBtnIn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: -8px;
+    margin: 0 0px 0 9px;
+}
+#competeBtnIn2 {
+    margin: 0 0 0 12px;
+}
+
+#competeRunBtn{
+    width: 120px;
+    text-align:left;
+    margin-left: 20px;
+    height: 30px;
+    line-height: 30px;
+
+}
+#competeRunBtnIn {
+    display: inline-block;
+    background-image: url(green_play.png);
+    width: 30px;
+    height: 30px;
+    margin: 0 0px 0 9px;
+    vertical-align: -10px;
+    background-size: 80%;
+    background-repeat: no-repeat;
+
+}
+#competeRunBtnIn2 {
     margin: 0 0 0 3px;
 }
 
@@ -1903,6 +1995,24 @@ input:disabled + .sc-btn:active,
     font: 14px monospace;
 }
 
+/*----------------------- graphs panel ---------------------------*/
+
+#graphs_panel {
+    position: absolute;
+    top: 10px;
+    left: 191px;
+    width: 700px;
+    background: linear-gradient(to right, #c9c9c9 0%,#fdfdfd 20px); /* http://www.colorzilla.com/gradient-editor/ */
+    border: 1px solid;
+    border-left: none;
+    border-radius: 0 15px 15px 0;
+    bottom: 30px;
+    box-shadow: 2px 2px 14px -1px rgba(255, 255, 255, 1), 4px 4px 14px -1px rgba(0, 0, 0, 1);
+
+    transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.32, 0.57, 0.15, 1);
+    box-sizing: border-box;
+}
+
 </style>
   </head>
   <body onload="start()">
@@ -2070,9 +2180,14 @@ input:disabled + .sc-btn:active,
 
     <div id="players_panel">
       <div id="players_rel">
+        <input id="competeCheckbox" class="hidden sc-check" onchange="openCompete()" type="checkbox">
+        <label id="competeBtn" class="sc-btn" for="competeCheckbox">
+            <span id="competeBtnIn2">Competition</span>
+        </label>
+        <br>
         <input id="debugCheckbox" class="hidden" onchange="triggerDebug()" type="checkbox">
         <label id="debugBtn" class="sc-btn" for="debugCheckbox">
-          <span id="debugBtnIn" class="sc-span" style="visibility: visible; background-image: url(&quot;green_play.png&quot;);"></span>
+          <span id="debugBtnIn" class="sc-span"></span>
           <span id="debugBtnIn2">Debug</span>
         </label>
         <div id="players_contaier">
@@ -2095,6 +2210,17 @@ input:disabled + .sc-btn:active,
 
 
       </div>
+    </div>
+
+    <div id="graphs_panel" style="width:0; opacity:0;" ontransitionend="graph_panel_anim_end()">
+        <div id="graphs_control">
+            <input id="competeRunCheckbox" class="hidden" onchange="triggerStartCompete()" type="checkbox">
+            <label id="competeRunBtn" class="sc-btn" for="competeRunCheckbox">
+                <span id="competeRunBtnIn" class="sc-span"></span>
+                <span id="competeRunBtnIn2">Start!</span>
+            </label>
+        </div>
+
     </div>
 
   </body>
