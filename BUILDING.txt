@@ -1,0 +1,11 @@
+install gwt http://www.gwtproject.org/download.html
+  put it in ../gwt-2.8.2
+install JDK 1.8
+install ant https://ant.apache.org/bindownload.cgi
+
+set environment variable 
+JAVA_HOME = C:\Program Files\Java\jdk1.8.0_181
+
+C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant devmode
+
+C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant build
