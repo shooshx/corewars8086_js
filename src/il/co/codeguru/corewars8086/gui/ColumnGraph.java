@@ -5,33 +5,56 @@ package il.co.codeguru.corewars8086.gui;
 //import java.awt.Graphics;
 //
 //import javax.swing.JComponent;
+import elemental2.dom.CanvasRenderingContext2D;
+import elemental2.dom.HTMLCanvasElement;
 import il.co.codeguru.corewars8086.gui.widgets.*;
 
 /**
  * @author BS
  */
-public class ColumnGraph extends JComponent {
+public class ColumnGraph extends JComponent<HTMLCanvasElement> {
 	private static final long serialVersionUID = 1L;
-	
-	private float[][] values; // 0 is the total, 1 is of warrior 1, 2 is of warrior 2
-    private String[] names;
+
+    static class PlayerColumn {
+        public String name;
+        public float[] values;
+        public String col1, col2;
+
+        PlayerColumn(String nm, String c1, String c2) {
+            name = nm;
+            col1 = c1;
+            col2 = c2;
+            // the first element holds the sum of all the other values
+            values = new float[3];
+        }
+    }
+
+    private PlayerColumn[] columns;
     private float maxValue;
     private double reduceFactor;
 
     private static final int NAME_HEIGHT = 14;
+    private CanvasRenderingContext2D ctx;
 
     public ColumnGraph(String[] names) {
-        super();
+        super("graphs_canvas");
         clear(names);
+
+        ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
     }
 
+
     void clear(String[] names) {
-        this.names = new String[names.length];
-        // the first element holds the sum of all the other values
-        values = new float[names.length][3];
-        System.arraycopy(names, 0, this.names, 0, names.length);
         maxValue = 0;
         reduceFactor = 5;
+
+        ColorHolder colorHolder = ColorHolder.getInstance();
+        columns = new PlayerColumn[names.length];
+        for(int i = 0; i < names.length; ++i) {
+            Color c1 = colorHolder.getColor(i, false);
+            Color c2 = colorHolder.getColor(i, true);
+            columns[i] = new PlayerColumn(names[i], c1.toString(), c2.toString());
+        }
     }
 
     @Override
@@ -47,54 +70,52 @@ public class ColumnGraph extends JComponent {
 
     
     public void addToValue(int pos, int subIndex, float value) {
-        values[pos][0]+= value;
-        values[pos][subIndex+1]+= value;
+        columns[pos].values[0]+= value;
+        columns[pos].values[subIndex+1]+= value;
 
-        if (values[pos][0] > maxValue) {
+        if (columns[pos].values[0] > maxValue) {
             // reset graph factor by half to make more room
-            maxValue = values[pos][0];
-            if (maxValue * reduceFactor > getSize().height-10) {
+            maxValue = columns[pos].values[0];
+            if (maxValue * reduceFactor > m_element.height-10) {
                 reduceFactor *= 0.5;
             }
         }
         repaint();
 
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < values.length; ++i) {
-            sb.append(values[i][0]);
+        for(int i = 0; i < columns.length; ++i) {
+            sb.append(columns[i].values[0]);
             sb.append("  ");
         }
         Console.log("Score add " + Integer.toString(pos) + " " + Integer.toString(subIndex) + " " + Float.toString(value) +
                     "  totals= " + sb.toString());
-
+        paintComponent();
     }
 
     /* (non-Javadoc)
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
-    //protected void paintComponent(Graphics g) {
-    //    Dimension d = getSize();
-    //    g.setColor(Color.BLACK);
-    //    g.fillRect(0,0,d.width, d.height);
-    //    d.setSize(d.width, d.height - NAME_HEIGHT);
-    //    g.drawRect(0,0,d.width, d.height);
-	//	final int numPlayers = names.length;
-	//	int columnWidth = d.width / numPlayers;
-    //    ColorHolder colorHolder= ColorHolder.getInstance();
-    //    for (int i = 0; i < numPlayers; i++) {
-    //        paintColumn(g, i, columnWidth, d.height, colorHolder);
-    //        g.setColor(colorHolder.getColor(i, false));
-    //        g.drawString(names[i], i*columnWidth+5, d.height+NAME_HEIGHT-2);
-    //    }
-    //}
+    protected void paintComponent() {
+        int width = m_element.width, height = m_element.height;
+        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(Color.BLACK);
+        ctx.fillRect(0, 0, width, height);
 
-    //private void paintColumn(Graphics g, int col, int width, int startHeight, ColorHolder colorHolder) {
-    //    g.setColor(colorHolder.getColor(col, false));
-    //    int height1 = (int) (reduceFactor*values[col][1]);
-    //    g.fill3DRect(col*width, startHeight - height1, width, height1, true);
-    //    g.setColor(colorHolder.getColor(col, true));
-    //    int height2 = (int) (reduceFactor*values[col][2]);
-    //    g.fill3DRect(col*width, startHeight - height1 - height2, width, height2, true);
-    //    g.drawString(""+values[col][0], col*width+5, startHeight-height1-height2- 5);
-    //}	
+		final int numPlayers = columns.length;
+		int columnWidth = width / numPlayers;
+        for (int i = 0; i < numPlayers; i++) {
+            paintColumn(i, columnWidth, height);
+            ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[i].col1);
+            ctx.fillText(columns[i].name, i*columnWidth+5, height+NAME_HEIGHT-2);
+        }
+    }
+
+    private void paintColumn(int col, int width, int startHeight) {
+        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col1);
+        int height1 = (int) (reduceFactor * columns[col].values[1]);
+        ctx.fillRect(col*width, startHeight - height1, width, height1);
+        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col2);
+        int height2 = (int) (reduceFactor * columns[col].values[2]);
+        ctx.fillRect(col*width, startHeight - height1 - height2, width, height2);
+        ctx.fillText(""+columns[col].values[0], col*width+5, startHeight-height1-height2- 5);
+    }
 }

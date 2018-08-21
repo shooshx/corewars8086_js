@@ -430,7 +430,7 @@ function fixhscroll(e) {
 
     if (asm_edit.selectionStart == 0 || asm_edit.selectionStart == 1)
     {
-        console.log("fixing scroll")
+        // console.log("fixing scroll")
         asm_edit.scrollLeft = 0
         asm_edit.scrollTop = 0
     }
@@ -935,12 +935,14 @@ function graph_panel_anim_end() {
     }
     else {
         graphs_panel.style.transition = "";
+        graphs_panel.style.display = "none"
     }
 
 }
 
 function openCompete() {
     if (competeCheckbox.checked) {
+        graphs_panel.style.display = "";
         graphs_panel.style.width = "";
         graphs_panel.style.opacity = 1;
         debugCheckbox.setAttribute("disabled", true);
@@ -1635,8 +1637,8 @@ input:disabled + .sc-btn:active,
     width: 120px;
     text-align:left;
     margin-left: 20px;
-    height: 30px;
-    line-height: 30px;
+    height: 35px;
+    line-height: 35px;
 
 }
 #competeRunBtnIn {
@@ -2011,6 +2013,11 @@ input:disabled + .sc-btn:active,
 
     transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.32, 0.57, 0.15, 1);
     box-sizing: border-box;
+    display: none;
+}
+
+#graphs_canvas {
+    margin: 10px;
 }
 
 </style>
@@ -2080,7 +2087,7 @@ input:disabled + .sc-btn:active,
           <label id="btnSingleRound" class="sc-btn title-buttons">Step</label>
           <span id="speedSliderCont">Speed:<input type="range" min="-35" max="200" value="0" class="slider" id="speedSlider">
               <span id="speedSliderVal">0</span>
-              <span id="speedZero" class="sc-btn base-btn" onclick="j_triggerZeroSpeed()">&#2205;</span><br>
+              <span id="speedZero" class="sc-btn base-btn" onclick="j_triggerZeroSpeed()"></span><br>
           </span>
         </div>
         <div id="registers_block">
@@ -2219,6 +2226,7 @@ input:disabled + .sc-btn:active,
                 <span id="competeRunBtnIn" class="sc-span"></span>
                 <span id="competeRunBtnIn2">Start!</span>
             </label>
+            <canvas id="graphs_canvas" width="680" height="600"></canvas>
         </div>
 
     </div>

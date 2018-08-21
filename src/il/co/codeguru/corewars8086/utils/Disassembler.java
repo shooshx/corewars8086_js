@@ -1167,58 +1167,46 @@ public abstract class Disassembler
     }
 	
     private String opcodeFX(byte opcode) throws DisassemblerException {
-        byte nextOpcode = getByte();
+        byte nextOpcode;
         switch (opcode) {
             case (byte)0xF2: // REPNZ
+				nextOpcode = nextByte();
                 switch (nextOpcode)
                 {
                     case (byte)0xA6: // REPNZ CMPSB
-                    	nextByte();
                         return "REPNZ CMPSB";
                     case (byte)0xA7: // REPNZ CMPSW
-                    	nextByte();
                     	return "REPNZ CMPSW";
                     case (byte)0xAE: // REPNZ SCASB
-                    	nextByte();
                     	return "REPNZ SCASB";
                     case (byte)0xAF: // REPNZ SCASW
-                    	nextByte();
                     	return "REPNZ SCASW";
                     default:
                         throw new DisassemblerException();							
                 }
             case (byte)0xF3: // REP, REPZ
+				nextOpcode = nextByte();
                 switch (nextOpcode)
                 {
                     case (byte)0xA4: // REP MOVSB
-                    	nextByte();
                         return "REP MOVSB";
                     case (byte)0xA5: // REP MOVSW
-                    	nextByte();
                     	return "REP MOVSW";
                     case (byte)0xA6: // REPZ CMPSB
-                    	nextByte();
                     	return "REP CMPSB";
                     case (byte)0xA7: // REPZ CMPSW
-                    	nextByte();
                     	return "REP CMPSW";
                     case (byte)0xAA: // REP STOSB
-                    	nextByte();
-                    	return "REP STOSB";		
+                    	return "REP STOSB";
                     case (byte)0xAB: // REP STOSW
-                    	nextByte();
-                    	return "REP STOSW";			
+                    	return "REP STOSW";
                     case (byte)0xAC: // REP LODSB
-                    	nextByte();
-                    	return "REP LODSB";			
+                    	return "REP LODSB";
                     case (byte)0xAD: // REP LODSW
-                    	nextByte();
                     	return "REP LODSW";
                     case (byte)0xAE: // REPZ SCASB
-                    	nextByte();
                     	return "REP SCASB";
                     case (byte)0xAF: // REPZ SCASW
-                    	nextByte();
                     	return "REP SCASW";
                     default:
                         throw new DisassemblerException();

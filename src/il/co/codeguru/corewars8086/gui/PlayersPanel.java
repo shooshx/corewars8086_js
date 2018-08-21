@@ -59,7 +59,7 @@ public class PlayersPanel
         public PlayerInfo(String lbl, String ttl) {
             label = lbl;
             title = ttl;
-            code[0] = new Code(this, 0);
+            code[0] = new Code(this,0);
             code[1] = new Code(this,1);
         }
 
@@ -68,7 +68,9 @@ public class PlayersPanel
         }
         public void setWType(EWarriorType v) {
             wtype = v;
-            activeCodes = (v == EWarriorType.SINGLE) ? 1:2;
+        }
+        public int activeCodes() {
+            return (wtype == EWarriorType.SINGLE) ? 1:2;
         }
 
         public boolean isEnabled = true; // the checkbox next to the player TBD
@@ -76,7 +78,6 @@ public class PlayersPanel
         public String title;  // 'Player A'
         public Code[] code = new Code[2];
         public EWarriorType wtype = EWarriorType.SINGLE;
-        public int activeCodes = 1; // depends on wtype
     }
 
     private CompetitionWindow m_mainWnd;
@@ -234,7 +235,7 @@ public class PlayersPanel
         int count = 0;
         for(PlayerInfo p: m_players)
             if (p.label.charAt(0) == prefix)
-                count += p.activeCodes;
+                count += p.activeCodes();
 
         int i = 0;
         Code[] c = new Code[count];
@@ -302,7 +303,12 @@ public class PlayersPanel
             if (!p.isEnabled)
                 continue;
             ++countEnabled;
-            for(int ci = 0; ci < p.activeCodes; ++ci) {
+
+            if (p.wtype == EWarriorType.TWO_IDENTICAL) {
+                p.code[1].bin = p.code[0].bin;
+            }
+
+            for(int ci = 0; ci < p.activeCodes(); ++ci) {
                 Code c = p.code[ci];
                 if (!c.lastCompileOk) {
                     Console.error("Errors in code " + c.getName() + " of player " + p.getName());

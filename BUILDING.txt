@@ -9,3 +9,8 @@ JAVA_HOME = C:\Program Files\Java\jdk1.8.0_181
 C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant devmode
 
 C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant build
+
+C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant build -f build_rel.xml
+cd war
+python -m http.server 8888
+http://localhost:8888/page.html

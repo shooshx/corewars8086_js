@@ -158,13 +158,13 @@ public class WarriorRepository {
             WarriorData data = new WarriorData(name, truncToSize(bin), c.getLabel(), startAddr);
             if (c.player.wtype != PlayersPanel.EWarriorType.SINGLE)
             {
-                if (name.endsWith("1")) {
+                if (c.label.endsWith("0")) {
                     // start a new group!
                     currentGroup = new WarriorGroup(name.substring(0, name.length()-1));
                     currentGroup.addWarrior(data);
                     warriorNameToGroup.put(name, warriorGroups.size());
                 }
-                else if (name.endsWith("2")) {
+                else if (c.label.endsWith("1")) {
                     currentGroup.addWarrior(data);
                     warriorNameToGroup.put(name, warriorGroups.size());
                     warriorGroups.add(currentGroup);

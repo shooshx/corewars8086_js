@@ -103,6 +103,6 @@ public class Color {
     public String toString() {
         if (m_a == 1.0)
             return "rgb(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + ")";
-        return "rgb(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + "," + Float.toString(m_a) + ")";
+        return "rgba(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + "," + Float.toString(m_a) + ")";
     }
 }
