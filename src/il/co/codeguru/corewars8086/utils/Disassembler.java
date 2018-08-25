@@ -1,6 +1,7 @@
 package il.co.codeguru.corewars8086.utils;
 
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
+import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 
 import java.util.ArrayList;
@@ -74,7 +75,8 @@ public abstract class Disassembler
 	 */
 	protected int pointer;
 
-	protected int startOffset;
+	protected int startOffset; // start of current opcode
+	protected int progStartOffset; // offset the program is loaded to
 	protected int endOffset;
 	
 	/**
@@ -93,6 +95,7 @@ public abstract class Disassembler
 
 		pointer = offset;
 		startOffset = offset;
+		progStartOffset = offset;
 		this.endOffset = endOffset;
 	}
 
@@ -729,8 +732,8 @@ public abstract class Disassembler
             	jump = "JNLE";
             	break;
         }
-        
-        return jump + " " + toString(nextByte());
+
+        return jump + " SHORT " + toString(absFromRel(nextByte()));
     }
 
     private String opcode8X(byte opcode) throws DisassemblerException {
@@ -1133,25 +1136,35 @@ public abstract class Disassembler
                 throw new RuntimeException();
         }
     }
+
+    private byte absFromRel(byte rel8) {
+		int startOfProgram = pointer-progStartOffset;
+		return (byte)(startOfProgram + rel8);
+	}
+	private short absFromRel16(short rel16) {
+		int startOfProgram = pointer-progStartOffset;
+		return (short)(startOfProgram + rel16);
+	}
 	
     private String opcodeEX(byte opcode) throws DisassemblerException {
         switch (opcode) {
             case (byte)0xE0: // LOOPNZ, LOOPNE
-                return "LOOPNZ " + toString(nextByte());
+                return "LOOPNZ " + toString(absFromRel(nextByte()));
             case (byte)0xE1: // LOOPZ, LOOPE
-            	return "LOOPZ " + toString(nextByte());
+            	return "LOOPZ " + toString(absFromRel(nextByte()));
             case (byte)0xE2: // LOOP
-            	return "LOOP " + toString(nextByte());
+            	return "LOOP " + toString(absFromRel(nextByte()));
             case (byte)0xE3: // JCXZ
-            	return "JCXZ " + toString(nextByte());
+            	return "JCXZ " + toString(absFromRel(nextByte()));
             case (byte)0xE8: // CALL near imm16
-                return "CALL NEAR " + toString(nextWord());		
+                return "CALL NEAR " + toString(absFromRel16(nextWord()));
             case (byte)0xE9: // JMP near imm16
-            	return "JMP NEAR " + toString(nextWord());				
+            	return "JMP NEAR " + toString(absFromRel16(nextWord()));
             case (byte)0xEA: // JMP far imm16:imm16
                 return "JMP FAR " + toString(nextWord()) + ":" + toString(nextWord());				
-            case (byte)0xEB: // JMP short imm8
-            	return "JMP SHORT " + toString(nextByte());			
+            case (byte)0xEB: // JMP short rel8
+
+            	return "JMP SHORT " + toString(absFromRel(nextByte()));
             case (byte)0xE4: // IN AL, imm8
             case (byte)0xE5: // IN AX, imm8
             case (byte)0xE6: // OUT imm8, AL

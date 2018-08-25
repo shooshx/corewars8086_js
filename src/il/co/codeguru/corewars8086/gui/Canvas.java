@@ -46,8 +46,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
     HTMLInputElement m_dummyInput; // used to have something that could get input focus
     HTMLElement m_hoverCellInfo;
-    RealModeMemoryImpl m_mem;
-    War m_currentWar;
+    RealModeMemoryImpl m_mem = null;
+    boolean m_indebug = false;
+    War m_currentWar = null;
 
     class Turtle {
         float x, y;
@@ -192,6 +193,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	public void initStartWar(War war) {
         m_mem = war.getMemory();
         m_currentWar = war;
+        m_indebug = true;
         int addr = 0x10000;
         for (int y = 0; y < BOARD_SIZE; y++)
         {
@@ -232,6 +234,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void revokeWar() {
 	    //m_mem = null;
         //m_currentWar = null;
+        m_indebug = false;
     }
 
 	private Color paintMemCellBack(int x, int y) {
@@ -451,6 +454,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void j_warCanvas_click(float x, float y) {
         if (!m_showContent || x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE)
             return;
+        if (!m_indebug) // not debuggin
+            return;
         float mx = (int)(( (x - m_zrX)/ DOT_SIZE/m_zrHscale )*2)/2.0f ; // need half percision to know on which digit we clicked
         float my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale ) ;
         //Console.log("click " + Float.toString(x) + "," + Float.toString(y) + "  : " + Float.toString(mx) + "," + Float.toString(my) );
@@ -560,10 +565,10 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             else if (key == "ArrowDown")
                 moveCursor(0,1);
             else if (key == "ArrowRight")
-                moveCursor(0.5, 0);
-            else if (key == "ArrowLeft")
+                moveCursor(0.5, 0); // halfs because move half a byte
+            else if (key == "ArrowLeft" || key == "Backspace")
                 moveCursor(-0.5, 0);
-            else if (m_mem != null) {
+            else if (m_mem != null && m_indebug) { // not debugging
                 char c = key.charAt(0);
                 int v = -1;
                 if (c >= '0' && c <= '9')

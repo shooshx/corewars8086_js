@@ -677,8 +677,6 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
 
-
-
     private boolean entered = false;
     private String m_prevInText = null; // used for breakpoint move analysis
 
@@ -738,8 +736,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         if (m_isDebugMode) {
             updateDebugLine();
-
         }
+    }
+
+    private int bin_equal(byte[] a, byte[] b) {
+        if (a.length != b.length)
+            return -1;
+        for(int i = 0; i < a.length; ++i)
+            if (a[i] != b[i])
+                return i;
+        return 0;
     }
 
     // when the user uploads a new binary file
@@ -776,8 +782,18 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String text = sb.toString();
         incode.asmText = text;
         asm_edit.value = text;
+        byte[] setbin = incode.bin;
+        // setting the text will redo the bin according to the disassemler. due to disassembler bugs this may be different
+        // than the original, check it
         setText(incode.asmText, callback);
 
+        int neq = bin_equal(setbin, incode.bin);
+        if (neq != 0) {
+            Console.error("Disassembled code is different from original code at " + Integer.toString(neq));
+        }
+
+
+        // when setting breakpoints, set to this
         m_breakpoints = incode.breakpoints;
     }
 
@@ -1185,6 +1201,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             PlayersPanel.Code code = m_playersPanel.findCode(w.getLabel());
 
             // transfer breakpoints
+            assert code.lines != null: "unexpected null lines for code " + code.label + " of player" + code.player.getName();
             for(LstLine lstline : code.lines)
                 lstline.tmp_br = null;
             for(PlayersPanel.Breakpoint br : code.breakpoints) {

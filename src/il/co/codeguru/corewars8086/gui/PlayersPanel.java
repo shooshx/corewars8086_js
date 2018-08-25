@@ -6,6 +6,7 @@ import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
+import org.eclipse.jdt.internal.compiler.codegen.IntegerCache;
 
 import java.util.ArrayList;
 
@@ -126,18 +127,60 @@ public class PlayersPanel
         return pi.code[ci];
     }
 
-    public void j_demoDebugPlayers() {
+    public native void addPlayerPanel() /*-{
+        $wnd.addPlayersPanel();
+    }-*/;
+    public native void changedWType(String label, String v) /*-{
+        $wnd.changedWType(label, v, true);
+    }-*/;
+
+    private void demo_simple() {
         m_inEditor = m_players.get(1).code[0];
         m_inEditor.asmText = "start:\ninc cx\njmp start";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
         m_inEditor = m_players.get(0).code[0];
         //m_inEditor.asmText = "start:\ninc ax    ;hello\n          ;world\nadd WORD[bx],1234h\nmov ax,5678h\njmp start";
-
         m_inEditor.asmText = "start:\nmov bx, ax\nadd bx, 12\nloop:\nmov byte[bx],0x11\ninc bx\njmp loop";
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+    }
 
+    private void demo_like_original() {
+        addPlayerPanel(); // this demo has 4 players. initialization of the page adds 2 panels
+        addPlayerPanel();
+
+        String shooterCode = " PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n";
+
+        m_inEditor = m_players.get(1).code[0];
+        m_inEditor.asmText = shooterCode;
+        m_inEditor.player.wtype = EWarriorType.TWO_IDENTICAL;
+        m_inEditor.name = "shooterA";
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+        changedWType(m_inEditor.player.label, "TWO_IDENTICAL");
+
+        m_inEditor = m_players.get(2).code[0];
+        m_inEditor.asmText = shooterCode;
+        m_inEditor.player.wtype = EWarriorType.SINGLE;
+        m_inEditor.name = "shooterB";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
+        m_inEditor = m_players.get(3).code[0];
+        m_inEditor.asmText = shooterCode;
+        m_inEditor.player.wtype = EWarriorType.SINGLE;
+        m_inEditor.name = "shooterC";
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+
+        // the one that is selected at the end
+        m_inEditor = m_players.get(0).code[0];
+        m_inEditor.asmText = "PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n";
+        m_inEditor.player.wtype = EWarriorType.TWO_IDENTICAL;
+        m_inEditor.name = "bimp";
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+        changedWType(m_inEditor.player.label, "TWO_IDENTICAL");
+    }
+
+    public void j_demoDebugPlayers() {
+        demo_like_original();
     }
 
 
@@ -285,6 +328,7 @@ public class PlayersPanel
     {
         if (m_inEditor == null)
             return;
+        //Console.log("LINES " + m_inEditor.label + " " + ((lines == null)?"NULL":Integer.toString(lines.size())));
         m_inEditor.bin = binbuffer;
         m_inEditor.lastCompileOk = compileOk;
         m_inEditor.lines = lines;
@@ -306,6 +350,8 @@ public class PlayersPanel
 
             if (p.wtype == EWarriorType.TWO_IDENTICAL) {
                 p.code[1].bin = p.code[0].bin;
+                p.code[1].lines = p.code[0].lines;
+                p.code[1].lastCompileOk = p.code[0].lastCompileOk;
             }
 
             for(int ci = 0; ci < p.activeCodes(); ++ci) {

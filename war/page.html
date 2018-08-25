@@ -284,7 +284,7 @@ function addPlayersPanel() {
             <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
           </div>\
-          <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'pLETTER\')">\
+          <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'pLETTER\', this.value)">\
             <option value="SINGLE">Single Warrior</option>\
             <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
             <option value="TWO_DIFFERENT">Two Different Warriors</option>\
@@ -303,7 +303,7 @@ function addPlayersPanel() {
     g_srcButtons.push('sel_code_w2_p' + letter)
 
     j_addPlayer('p'+letter, "Player " + letter)
-    changedWType('p'+letter)
+    changedWType('p'+letter, "SINGLE") // do update label
 
     g_usedLetters.push(letter)
     g_nextLetter = asciiAdd(g_nextLetter, 1)
@@ -311,9 +311,12 @@ function addPlayersPanel() {
 
 }
 
-function changedWType(label)
+function changedWType(label, v, move_ui)
 {
-    var v = document.getElementById('wtype_' + label).value
+    if (move_ui) {
+        document.getElementById('wtype_' + label).value = v
+    }
+
     var elem1 = document.getElementById('sel_code_lbl_w1_' + label)
     var elem2 = document.getElementById('sel_code_lbl_w2_' + label)
     var frame = document.getElementById('pl_frame_' + label)
@@ -935,14 +938,12 @@ function graph_panel_anim_end() {
     }
     else {
         graphs_panel.style.transition = "";
-        graphs_panel.style.display = "none"
     }
 
 }
 
 function openCompete() {
     if (competeCheckbox.checked) {
-        graphs_panel.style.display = "";
         graphs_panel.style.width = "";
         graphs_panel.style.opacity = 1;
         debugCheckbox.setAttribute("disabled", true);
@@ -2013,7 +2014,7 @@ input:disabled + .sc-btn:active,
 
     transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.32, 0.57, 0.15, 1);
     box-sizing: border-box;
-    display: none;
+    overflow: hidden; /* when the panel is hidden, hide its content */
 }
 
 #graphs_canvas {

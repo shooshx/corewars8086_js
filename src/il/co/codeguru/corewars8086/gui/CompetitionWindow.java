@@ -317,6 +317,8 @@ public class CompetitionWindow extends JFrame
         m_playersPanel.setDebugMode(v);
 
         battleFrame.cpuframe.setVisible(v);
+        if (!v)
+            battleFrame.warCanvas.revokeWar();
     }
 
     public boolean gui_runWar(Boolean isBattleShown, Boolean isStartPaused) {

@@ -97,7 +97,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
      */
     protected void paintComponent() {
         int width = m_element.width, height = m_element.height;
-        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(Color.BLACK);
+        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(Color.WHITE);
         ctx.fillRect(0, 0, width, height);
 
 		final int numPlayers = columns.length;
