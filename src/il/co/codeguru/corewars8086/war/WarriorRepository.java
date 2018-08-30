@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.*;
 
 //import javax.swing.JOptionPane;
+import il.co.codeguru.corewars8086.gui.CompetitionWindow;
+import il.co.codeguru.corewars8086.gui.LoadAddrChecker;
 import il.co.codeguru.corewars8086.gui.PlayersPanel;
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
@@ -68,65 +70,22 @@ public class WarriorRepository {
         return arr;
     }
 
-    class AddrRange {
-        String name;
-        int start, end;
-        AddrRange(String _name, int _start, int _end) { name = _name; start = _start; end = _end; }
+    // it's an ugly singletop but that's the only reasonable way War and WarriorRepository can communicate about fixed addresses
+    static public LoadAddrChecker m_loadAddrChecker;
 
-        boolean overlaps(AddrRange a) {
-            return this.start <= a.end && a.start <= this.end;
-        }
-        // this  s-------e
-        // a       s-------e
-    }
 
-    class LoadAddrChecker {
-        private ArrayList<AddrRange> fixedRanges;
-        public LoadAddrChecker(int capacity) {
-            fixedRanges = new ArrayList<AddrRange>(capacity);
-        }
-        public int addCheck(String startAddrStr, int len, String name) {
-            int startAddr = -1;
-            try {
-                startAddr = Integer.parseInt(startAddrStr, 16);
-            } catch (NumberFormatException e2) {
-                Console.error("Player " + name + " fixed start address is not a valid hex number");
-                return -2;
-            }
-            if (startAddr < 0 || startAddr > 0xffff) {
-                Console.error("Player " + name + " fixed start address is out of 16 bit number range");
-                return -2;
-            }
-            if (startAddr > 0xffff - len + 1) {
-                Console.error(   "Player " + name + " fixed start address does not leave enough space for code (" + Integer.toString(len) + " bytes)");
-                return -2;
-            }
-            // check no overlap
-            AddrRange r = new AddrRange(name, startAddr, startAddr + len - 1); // both ends of the range are inclusive
-            for(AddrRange a: fixedRanges) {
-                if (a.overlaps(r)) {
-                    Console.error("Player " + name + " fixed start address overlaps with that of player " + a.name);
-                    return -2;
-                }
-            }
-            fixedRanges.add(r);
-            return startAddr;
-        }
-    }
-
-    public boolean readWarriorFilesFromUI(PlayersPanel.Code[] files, PlayersPanel.Code[] zombies)
+    public boolean readWarriorFilesFromUI(PlayersPanel.Code[] files, PlayersPanel.Code[] zombies, boolean isInDebug)
     {
         warriorNameToGroup.clear();
         warriorGroups.clear();
 
         Console.log("Found " + Integer.toString(files.length) + " survivors, " + Integer.toString(zombies.length) + " zombies");
+        m_loadAddrChecker = null; // reset it before potentially being used again
 
         Arrays.sort(files, new Comparator<PlayersPanel.Code>() {
             public int compare(PlayersPanel.Code o1, PlayersPanel.Code o2) {
                 return o1.getName().compareToIgnoreCase(o2.getName());
             }});
-
-        LoadAddrChecker loadAddrChecker = new LoadAddrChecker(files.length + zombies.length);
 
         WarriorGroup currentGroup = null;
         for(PlayersPanel.Code c: files)
@@ -149,8 +108,13 @@ public class WarriorRepository {
             }
 
             int startAddr = -1;
-            if (!c.startAddrRandom) {
-                startAddr = loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
+            if (!c.startAddrRandom && isInDebug) {
+                if (m_loadAddrChecker == null) {
+                    // having it in the competition window is an ugly hack but is the only way for it to get to the random
+                    // loading where it will be needed later
+                    m_loadAddrChecker = new LoadAddrChecker(files.length + zombies.length);
+                }
+                startAddr = m_loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
                 if (startAddr == -2)
                     return false;
             }
@@ -187,7 +151,7 @@ public class WarriorRepository {
             return false;
         }
 
-        if (!readZombiesFromUI(zombies, loadAddrChecker))
+        if (!readZombiesFromUI(zombies, m_loadAddrChecker))
             return false;
 
         return true;

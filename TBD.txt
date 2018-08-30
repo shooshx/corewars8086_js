@@ -28,22 +28,16 @@ check randomization similarity with real java
 disassembler incorrect??
    do something automatic that checks all disassembler
 
-
-
-BUG fixed address:
-[6] Player_A enters the arena at BF96
-[6] Player_B enters the arena at BF96
+debugger
+   show in red things that were just changed
+   code with many comments
 
 CONCEPTUAL BUG:
   Two identical - in debug, must be able to select each of them
   their names in the output window is wrong
   maybe it was a bad idea
 
-debugger
 
-   show in red things that were just changed
-
-   code with many comments
 
 BUG indentation
    pressing enter in a line that already has text

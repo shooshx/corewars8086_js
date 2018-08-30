@@ -48,6 +48,7 @@ public class CompetitionWindow extends JFrame
     public PlayersPanel m_playersPanel;
     private HTMLElement stepnum;
 
+
     public boolean isBattleShown() {
         return m_isBattleShown;
     }
@@ -233,8 +234,9 @@ public class CompetitionWindow extends JFrame
     /**
      * Starts a new war.
      * @return whether or not a new war was started.
+     * isInDebug needed for knowing if we want fixed addresses to be used
      */
-    public boolean runWar()
+    public boolean runWar(boolean isInDebug)
     {
         int battlesPerGroup = 0;
         try {
@@ -269,7 +271,7 @@ public class CompetitionWindow extends JFrame
         }
 
         WarriorRepository repo = competition.getWarriorRepository();
-        if (!repo.readWarriorFilesFromUI( m_playersPanel.getFiles(), m_playersPanel.getZombies() ))
+        if (!repo.readWarriorFilesFromUI( m_playersPanel.getFiles(), m_playersPanel.getZombies(), isInDebug))
             return false;
         columnGraph.clear(repo.getGroupNames());
 
@@ -326,7 +328,7 @@ public class CompetitionWindow extends JFrame
             m_isBattleShown = isBattleShown;
         if (isStartPaused != null)
             m_isStartPaused = isStartPaused;
-        if (runWar()) {
+        if (runWar(isBattleShown)) {
             competitionRunning = true;
             //runWarButton.setEnabled(false);
             if (isBattleShown)

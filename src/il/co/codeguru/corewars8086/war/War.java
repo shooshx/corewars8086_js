@@ -353,6 +353,16 @@ public class War {
                 found = false;
             }
 
+            // check intersections with fixed (which might still be not loaded
+            if (WarriorRepository.m_loadAddrChecker != null) {
+                if (!WarriorRepository.m_loadAddrChecker.checkOverlap(loadAddress, warriorSize)) {
+                    found = false;
+                    Console.log("overlap with fixed!");
+                    continue;
+                }
+            }
+
+            // check intersections with loaded
             for (int i = 0; i < m_numWarriors; ++i) {
                 int otherLoadAddress =
                     Unsigned.unsignedShort(m_warriors[i].getLoadOffset());
@@ -363,6 +373,8 @@ public class War {
 
                 if ((loadAddress+warriorSize >= otherStart) && (loadAddress < otherEnd)) {
                     found = false;
+                    Console.log("overlap with loaded!");
+                    break;
                 }
             }
         }
