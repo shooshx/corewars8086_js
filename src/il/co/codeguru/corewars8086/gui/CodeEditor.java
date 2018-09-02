@@ -249,6 +249,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         var that = this
         $wnd.j_renderIfDirty = $entry(function(i) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_renderIfDirty(I)(i) });
         $wnd.j_setScrollAt = $entry(function(i,j) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_setScrollAt(II)(i,j) });
+        $wnd.j_asm_edit_changed = $entry(function() { that.@il.co.codeguru.corewars8086.gui.CodeEditor::asm_edit_changed()() });
     }-*/;
 
     private static native int run_nasm(String asmname, String text, String lstname)     /*-{

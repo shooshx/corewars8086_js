@@ -284,11 +284,8 @@ function addPlayersPanel() {
             <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
           </div>\
-          <select id="wtype_pLETTER" class="sel_wtype my_combo_box" onchange="changedWType(\'pLETTER\', this.value)">\
-            <option value="SINGLE">Single Warrior</option>\
-            <option value="TWO_IDENTICAL">Two Identical Warriors</option>\
-            <option value="TWO_DIFFERENT">Two Different Warriors</option>\
-          </select>\
+          <input class="fam_check_box hidden mycheck" id="wtype_pLETTER" type="checkbox" onchange="changedWType(\'pLETTER\', this.checked)" >\
+          <label class="fam_check mycheck_label wtype_label" for="wtype_pLETTER">Two Warriors</label>\
           <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'pLETTER\', 1)" type="radio" name="src_select">\
           <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
           <br>\
@@ -303,7 +300,7 @@ function addPlayersPanel() {
     g_srcButtons.push('sel_code_w2_p' + letter)
 
     j_addPlayer('p'+letter, "Player " + letter)
-    changedWType('p'+letter, "SINGLE") // do update label
+    changedWType('p'+letter, false) // do update label
 
     g_usedLetters.push(letter)
     g_nextLetter = asciiAdd(g_nextLetter, 1)
@@ -313,6 +310,10 @@ function addPlayersPanel() {
 
 function changedWType(label, v, move_ui)
 {
+    if (v === true)
+        v = 'TWO_DIFFERENT'
+    else if (v == false)
+        v = 'SINGLE'
     if (move_ui) {
         document.getElementById('wtype_' + label).value = v
     }
@@ -325,12 +326,12 @@ function changedWType(label, v, move_ui)
         elem2.style.visibility = 'hidden'
         elem2.style.opacity = 0.0
         elem1.style.marginTop = '7px'
-        frame.style.height = '105px'
+        frame.style.height = '98px'
     }
     else if (v == 'TWO_DIFFERENT') {
         elem2.style.visibility = 'visible'
         elem2.style.opacity = 1
-        elem1.style.marginTop = ''
+        elem1.style.marginTop = '7px'
         frame.style.height = ''
     }
 
@@ -490,8 +491,9 @@ function fixIndent(e) {
     { // line indentation
         var selStartPos = asm_edit.selectionStart
         var inputVal = asm_edit.value;
-        var pos = selStartPos - 2 // skip the last added \n
+        var pos = selStartPos - 2 // skip the last added \n (previous line)
         var seenSpaces = 0;
+        // go to the start of the line, check if there is indentation there
         while (pos >= 0) {
             if (inputVal[pos] == ' ')
                 ++seenSpaces;
@@ -502,10 +504,11 @@ function fixIndent(e) {
             --pos;
         }
         if (seenSpaces > 0) {
+            // problem with this is it flushes the undo buffer, test initTextEvent ?
             asm_edit.value = inputVal.substring(0, selStartPos) + " ".repeat(seenSpaces) + inputVal.substring(selStartPos, inputVal.length);
             asm_edit.selectionStart = selStartPos + seenSpaces;
             asm_edit.selectionEnd = selStartPos + seenSpaces;
-
+            j_asm_edit_changed() // simulate input
         }
     }
 }
@@ -1461,6 +1464,13 @@ input:disabled + .sc-btn:active,
     margin: 0 0 7px 3px;
     width: calc(100% - 7px);
 }
+.wtype_label {
+    width: 200px;
+    text-indent: 24px;
+    line-height: 17px;
+    margin: 0 0 0 20px;
+}
+
 .opt_single {
     background: url(check_none.png) no-repeat;
 }

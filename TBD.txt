@@ -38,10 +38,6 @@ CONCEPTUAL BUG:
   maybe it was a bad idea
 
 
-
-BUG indentation
-   pressing enter in a line that already has text
-
 - what happens if the war ends while on Resume? - need to pause
 
 
