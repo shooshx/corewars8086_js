@@ -274,7 +274,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         if (m_showContent) {
 		    //ctx.font = Integer.toString((int)(DOT_SIZE * m_zrHscale)) + "px monospace";
-            ctx.font = "2.3px monospace";
+            ctx.font = "2.3px  monospace";
         }
 
 
