@@ -314,8 +314,10 @@ function changedWType(label, v, move_ui)
         v = 'TWO_DIFFERENT'
     else if (v == false)
         v = 'SINGLE'
+
     if (move_ui) {
-        document.getElementById('wtype_' + label).value = v
+        var checked = (v = 'TWO_DIFFERENT')
+        document.getElementById('wtype_' + label).checked = checked
     }
 
     var elem1 = document.getElementById('sel_code_lbl_w1_' + label)
@@ -1434,7 +1436,8 @@ input:disabled + .sc-btn:active,
 }
 
 .mycheck + .mycheck_label {
-    background: url(check_none.png) no-repeat;
+    background-image: url(check_none.png);
+    background-repeat: no-repeat;
     display: inline-block;
 }
 .mycheck:checked + .mycheck_label {
@@ -1466,9 +1469,11 @@ input:disabled + .sc-btn:active,
 }
 .wtype_label {
     width: 200px;
-    text-indent: 24px;
-    line-height: 17px;
+    text-indent: 20px;
+    line-height: 14px;
     margin: 0 0 0 20px;
+    font-size: 85%;
+    background-size: 14px;
 }
 
 .opt_single {

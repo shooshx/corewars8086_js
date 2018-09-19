@@ -153,36 +153,35 @@ public class PlayersPanel
 
         m_inEditor = m_players.get(1).code[0];
         m_inEditor.asmText = shooterCode;
-        m_inEditor.name = "shooterA1";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
         m_inEditor = m_players.get(1).code[1];
         m_inEditor.asmText = shooterCode;
-        m_inEditor.name = "shooterA2";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
         m_inEditor.player.wtype = EWarriorType.TWO_DIFFERENT;
+        updateTitle("shooterA");
         changedWType(m_inEditor.player.label, "TWO_DIFFERENT");
 
         m_inEditor = m_players.get(2).code[0];
         m_inEditor.asmText = shooterCode;
         m_inEditor.player.wtype = EWarriorType.SINGLE;
-        m_inEditor.name = "shooterB";
+        updateTitle("shooterB");
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
         m_inEditor = m_players.get(3).code[0];
         m_inEditor.asmText = shooterCode;
         m_inEditor.player.wtype = EWarriorType.SINGLE;
-        m_inEditor.name = "shooterC";
+        updateTitle("shooterC");
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+
 
         // the one that is selected at the end
         String bimpCode = "PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n";
         m_inEditor = m_players.get(0).code[0];
+        updateTitle("bimp");
         m_inEditor.asmText = bimpCode;
-        m_inEditor.name = "bimp1";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
         m_inEditor = m_players.get(0).code[1];
         m_inEditor.asmText = bimpCode;
-        m_inEditor.name = "bimp2";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
         m_inEditor.player.wtype = EWarriorType.TWO_DIFFERENT;
         changedWType(m_inEditor.player.label, "TWO_DIFFERENT");
