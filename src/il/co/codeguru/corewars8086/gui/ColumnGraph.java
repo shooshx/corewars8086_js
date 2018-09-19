@@ -33,7 +33,9 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
     private float maxValue;
     private double reduceFactor;
 
-    private static final int NAME_HEIGHT = 14;
+    private static final int NAME_HEIGHT = 17;
+    private static final int BOTTOM_MARGIN = 30;
+
     private CanvasRenderingContext2D ctx;
 
     public ColumnGraph(String[] names) {
@@ -99,23 +101,28 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         int width = m_element.width, height = m_element.height;
         ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(Color.WHITE);
         ctx.fillRect(0, 0, width, height);
+        ctx.font = "16px monospace";
 
 		final int numPlayers = columns.length;
 		int columnWidth = width / numPlayers;
         for (int i = 0; i < numPlayers; i++) {
-            paintColumn(i, columnWidth, height);
-            ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[i].col1);
-            ctx.fillText(columns[i].name, i*columnWidth+5, height+NAME_HEIGHT-2);
+            paintColumn(i, columnWidth, height - BOTTOM_MARGIN);
+            ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[i].col2);
+            ctx.fillText(columns[i].name, i*columnWidth+5, height - BOTTOM_MARGIN + NAME_HEIGHT - 2);
         }
     }
 
     private void paintColumn(int col, int width, int startHeight) {
         ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col1);
         int height1 = (int) (reduceFactor * columns[col].values[1]);
-        ctx.fillRect(col*width, startHeight - height1, width, height1);
-        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col2);
+        if (height1 > 0) {
+            ctx.fillRect(col * width, startHeight - height1, width - 5, height1);
+            ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col2);
+        }
         int height2 = (int) (reduceFactor * columns[col].values[2]);
-        ctx.fillRect(col*width, startHeight - height1 - height2, width, height2);
-        ctx.fillText(""+columns[col].values[0], col*width+5, startHeight-height1-height2- 5);
+        //if (height2 > 0) {
+            ctx.fillRect(col * width, startHeight - height1 - height2, width - 5, height2);
+            ctx.fillText("" + columns[col].values[0], col * width + 5, startHeight - height1 - height2 - 5);
+        //}
     }
 }

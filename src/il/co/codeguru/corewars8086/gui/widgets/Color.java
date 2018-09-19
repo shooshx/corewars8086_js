@@ -6,8 +6,8 @@ public class Color {
     public static String WHITE = "#ffffff";
     public static Color COL_BLACK = new Color(0,0,0);
 
-    int m_r, m_g, m_b;
-    float m_a;
+    int m_r, m_g, m_b; // 0-255
+    float m_a; // 0-1
     public boolean m_isDark;
 
     private static final double FACTOR = 0.7;
@@ -20,7 +20,7 @@ public class Color {
         m_isDark = (0.3*r + 0.58*g + 0.12*b) < 128;
         //Console.log("Color " + toString() + "  dark=" + Boolean.toString(m_isDark));
     }
-    public Color(int r, int g, int b, int a) {
+    public Color(int r, int g, int b, float a) {
         m_r = r;
         m_g = g;
         m_b = b;
@@ -84,13 +84,13 @@ public class Color {
         return m_r;
     }
     public int getGreen() {
-        return m_r;
+        return m_g;
     }
     public int getBlue() {
-        return m_r;
+        return m_b;
     }
-    public int getAlpha() {
-        return m_r;
+    public float getAlpha() {
+        return m_a;
     }
 
     public Color darker() {
