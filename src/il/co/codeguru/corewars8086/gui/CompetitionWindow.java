@@ -112,7 +112,7 @@ public class CompetitionWindow extends JFrame
         //warriorsPerGroupField = new JTextField("warriorsPerGroupField", Integer.toString(numberOfGropus), 3);
 		//controlPanel.add(warriorsPerGroupField);
 		controlPanel.add(new JLabel("Sessions per groups combination:"));
-		//battlesPerGroupField = new JTextField("battlesPerGroupField", "100", 4);
+		battlesPerGroupField = new JTextField("battlesPerGroupField", "100", 4);
 		//controlPanel.add(battlesPerGroupField);
 		seed = new JTextField("seed", null, 4);
 		seed.setText("guru");
@@ -195,6 +195,7 @@ public class CompetitionWindow extends JFrame
     }
     public void j_stopCompete()
     {
+        competition.setAbort();
     }
 
     public void j_triggerZeroSpeed() {
@@ -248,7 +249,8 @@ public class CompetitionWindow extends JFrame
                 seedValue = seed.getText().hashCode();
             }
             competition.setSeed(seedValue);
-            battlesPerGroup = 100; //TBD-SHY Integer.parseInt(battlesPerGroupField.getText().trim());
+            battlesPerGroup = 0; // in case parseInt fails
+            battlesPerGroup = Integer.parseInt(battlesPerGroupField.getText().trim());
           /*  final int warriorsPerGroup = Integer.parseInt(
                 warriorsPerGroupField.getText().trim());*/
         } catch (NumberFormatException e2) {
@@ -265,7 +267,7 @@ public class CompetitionWindow extends JFrame
         // having numItems and groupSize allows having 4 players and running competitions of just any 3 of them
         // this is hardly useful in reality so I just set it to the same size
 
-        if (battlesPerGroup == 0) {
+        if (battlesPerGroup <= 0) {
             Console.error("battles per session needs to be more than 0");
             return false;
         }
@@ -376,13 +378,20 @@ public class CompetitionWindow extends JFrame
 
     }
 
-    public void onWarEnd(int reason, String winners, boolean inDebug) { //###// SHY-TBD
+    public void onWarEnd(int reason, String winners, boolean inDebug) {
         warCounter++;
         seed.setText(SEED_PREFIX + competition.getSeed());
         warCounterDisplay.setText("Sessions so far:" + warCounter + " (out of " + totalWars + ")");
+        setBattlesRan(Integer.toString(warCounter) + "/" + Integer.toString(totalWars));
     }
 
-    public void onRound(int round) {}
+    public static native void setBattlesRan(String round) /*-{
+        $wnd.battlesRan.innerHTML = round
+    }-*/;
+
+
+    public void onRound(int round) {
+    }
     @Override
     public void onPaused() {}
     @Override
@@ -396,12 +405,18 @@ public class CompetitionWindow extends JFrame
 		//this.runWarButton.setEnabled(false);
     }
 
+    public static native void jsCompeteFinish() /*-{
+        $wnd.competeFinished();
+    }-*/;
+
+
     public void onCompetitionEnd() {
         warCounterDisplay.setText("The competition is over. " + warCounter + " sessions were run.");
         //warThread = null;
 		//this.runWarButton.setEnabled(true);
         //runWarButton.setEnabled(true);
 		competitionRunning = false;
+        jsCompeteFinish();
     }
     
 	@Override

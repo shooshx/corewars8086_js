@@ -42,12 +42,12 @@ public class RegisterField /*extends JPanel*/ {
 
 	public void editChanged() {
 		int setok = m_frame.regChanged_callback(m_name, textField.value);
-		if (setok != 1) {
+		if (setok < -999999) {
 			textField.classList.add("dbg_reg_err");
 			switch(setok) {
-				case -1: textField.title = "Failed to parse hex number"; break;
-				case -2: textField.title = "Failed to parse decimal number"; break;
-				case -3: textField.title = "Out of range"; break;
+				case -1000000: textField.title = "Failed to parse hex number"; break;
+				case -2000000: textField.title = "Failed to parse decimal number"; break;
+				case -3000000: textField.title = "Out of range"; break;
 			}
 			m_lastInputOk = false;
 		}
@@ -55,6 +55,7 @@ public class RegisterField /*extends JPanel*/ {
 			textField.classList.remove("dbg_reg_err");
 			textField.removeAttribute("title");
 			m_lastInputOk = true;
+			m_lastValue = (short)setok;
 		}
 	}
 

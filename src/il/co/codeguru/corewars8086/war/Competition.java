@@ -71,6 +71,14 @@ public class Competition {
         memoryEventListener = memoryEventCaster.debugProxy;
     }
 
+    private void doneCompetition() {
+        competitionEventListener.onCompetitionEnd();
+        long elapsed = System.currentTimeMillis() - compState.startTime;
+        Console.log("Total time=" + Double.toString(elapsed / 1000.0) );
+        warriorRepository.saveScoresToFile(SCORE_FILENAME);
+        compState = null;
+    }
+
     // return true if need to continue after
     public boolean continueRun(boolean stillAnimateRound) throws Exception
     {
@@ -79,6 +87,7 @@ public class Competition {
         if (compState.abort) {
             Console.log("Abort");
             doneWar();
+            doneCompetition();
             return false;
         }
         if (compState.state == CompState.State.RUN_WAR)
@@ -92,12 +101,7 @@ public class Competition {
                 return !wasStartPaused;
             }
             else {
-                // done competition
-                competitionEventListener.onCompetitionEnd();
-                long elapsed = System.currentTimeMillis() - compState.startTime;
-                Console.log("Total time=" + Double.toString(elapsed / 1000.0) );
-                warriorRepository.saveScoresToFile(SCORE_FILENAME);
-                compState = null;
+                doneCompetition();
                 return false;
             }
         }
@@ -276,12 +280,14 @@ public class Competition {
 
         if (numAlive == 1) { // we have a single winner!
             competitionEventListener.onWarEnd(CompetitionEventListener.SINGLE_WINNER, names, compState.isInDebugger);
+            currentWar.updateScores(warriorRepository);
         } else if (compState.round == MAX_ROUND) { // maximum round reached
             competitionEventListener.onWarEnd(CompetitionEventListener.MAX_ROUND_REACHED, names, compState.isInDebugger);
+            currentWar.updateScores(warriorRepository);
         } else { // user abort
             competitionEventListener.onWarEnd(CompetitionEventListener.ABORTED, names, compState.isInDebugger);
+            // don't update scores on abort since that would create fraction score
         }
-        currentWar.updateScores(warriorRepository);
         currentWar.setEnded();
         //currentWar = null; // keep war alive so it would be possible to get registers and memory state at the end
         ++compState.warIndex;

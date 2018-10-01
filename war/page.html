@@ -944,19 +944,30 @@ function graph_panel_anim_end() {
     else {
         graphs_panel.style.transition = "";
     }
+}
 
+function gray_out_anim_end() {
+    if (competeCheckbox.checked) {
+    }
+    else {
+        gray_out_debugger.style.visibility = "hidden";
+        //gray_out_debugger.style.transition = "";
+    }
 }
 
 function openCompete() {
     if (competeCheckbox.checked) {
         graphs_panel.style.width = "";
         graphs_panel.style.opacity = 1;
+        gray_out_debugger.style.visibility = "visible";
+        gray_out_debugger.style.opacity = 1;
         debugCheckbox.setAttribute("disabled", true);
         debugBtn.setAttribute("disabled", true);
     }
     else {
         graphs_panel.style.width = "0";
         graphs_panel.style.opacity = 0;
+        gray_out_debugger.style.opacity = 0;
         debugCheckbox.removeAttribute("disabled");
         debugBtn.removeAttribute("disabled");
     }
@@ -978,10 +989,13 @@ function triggerStartCompete()
     else {
         j_stopCompete()
 
-        competeRunBtnIn.style.backgroundImage = ""
-        competeRunBtnIn2.innerText = "Start!"
-
     }
+}
+function competeFinished()
+{
+    competeRunBtnIn.style.backgroundImage = ""
+    competeRunBtnIn2.innerText = "Start!"
+    competeRunCheckbox.checked = false
 }
 
 
@@ -1375,6 +1389,18 @@ input:disabled + .sc-btn:active,
 #action_rel {
   position: relative;
 }
+#gray_out_debugger {
+    position: absolute;
+    background: rgba(200,200,200,0.8);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    visibility: hidden;
+    left: 190px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
 
 #edit_panel {
   position: absolute;
@@ -1652,7 +1678,7 @@ input:disabled + .sc-btn:active,
 #competeRunBtn{
     width: 120px;
     text-align:left;
-    margin-left: 20px;
+    margin: 10px 0 0 20px;
     height: 35px;
     line-height: 35px;
 
@@ -2024,7 +2050,7 @@ input:disabled + .sc-btn:active,
     border: 1px solid;
     border-left: none;
     border-radius: 0 15px 15px 0;
-    bottom: 30px;
+   /* bottom: 30px;*/
     box-shadow: 2px 2px 14px -1px rgba(255, 255, 255, 1), 4px 4px 14px -1px rgba(0, 0, 0, 1);
 
     transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.32, 0.57, 0.15, 1);
@@ -2036,14 +2062,51 @@ input:disabled + .sc-btn:active,
     margin: 10px 10px 10px 20px;
 }
 
+#graphs_title {
+    border-bottom: 1px solid;
+    text-align: center;
+    padding: 5px;
+    font-size: 120%;
+    background: linear-gradient(to right, #c9c9c9 0%,#eeeeee 20px);
+
+}
+
+#battlesPerGroupField {
+    height: 30px;
+    width: 100px;
+    margin: 12px 0 0 0;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 0 0 0 10px;
+    border: 1px solid #000000;
+    vertical-align: top;
+}
+#battlesLabel {
+    display: inline-block;
+    vertical-align: top;
+    margin: 12px 0 0 20px;
+    line-height: 30px;
+}
+#battlesRan {
+    display: inline-block;
+    vertical-align: top;
+    margin: 12px 14px 0 0;
+    line-height: 30px;
+    position: absolute;
+    right: 0;
+}
+#graphs_control {
+    overflow: hidden;
+    position: relative;
+    width: 709px;
+}
+
 </style>
   </head>
   <body onload="start()">
 
     <div id="action_panel"><div id="action_rel">
       <div id="memory_panel">
-        <!--<input id="battlesPerGroupField" type="text">-->
-
         <input type="checkbox" id="warCanvasDummyInput" class="hidden">
         <canvas id="warCanvas"></canvas>
         <div id="hoverCellInfo"></div>
@@ -2200,6 +2263,7 @@ input:disabled + .sc-btn:active,
       </div>
 
     </div></div>
+    <div id="gray_out_debugger"  ontransitionend="gray_out_anim_end()" ></div>
 
     <div id="players_panel">
       <div id="players_rel">
@@ -2236,12 +2300,16 @@ input:disabled + .sc-btn:active,
     </div>
 
     <div id="graphs_panel" style="width:0; opacity:0;" ontransitionend="graph_panel_anim_end()">
+        <div id="graphs_title">Competition</div>
         <div id="graphs_control">
             <input id="competeRunCheckbox" class="hidden" onchange="triggerStartCompete()" type="checkbox">
             <label id="competeRunBtn" class="sc-btn" for="competeRunCheckbox">
                 <span id="competeRunBtnIn" class="sc-span"></span>
                 <span id="competeRunBtnIn2">Start!</span>
             </label>
+            <label id="battlesLabel">Battles to run:</label>
+            <input id="battlesPerGroupField" type="text" spellcheck="false">
+            <label id="battlesRan"></label>
             <canvas id="graphs_canvas" width="680" height="600"></canvas>
         </div>
 

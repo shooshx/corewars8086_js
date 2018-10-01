@@ -32,21 +32,16 @@ debugger
    show in red things that were just changed
    code with many comments
 
-CONCEPTUAL BUG:
-  Two identical - in debug, must be able to select each of them
-  their names in the output window is wrong
-  maybe it was a bad idea
 
 
 - what happens if the war ends while on Resume? - need to pause
 
 
 || 
-- hover on memory panel tells you what player it is
 - pressing the player button shows where it is in the memory panel
-- GUI-bug - there is no way to get to player 2 debug lines in the debugger
 
 - colors on players pane
+- colors of playes in messages in debugger
 
 - breakpoints in edit
    - disallow setting in comment, label lines?

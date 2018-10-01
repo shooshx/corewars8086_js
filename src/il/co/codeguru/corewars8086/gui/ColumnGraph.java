@@ -78,7 +78,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         if (columns[pos].values[0] > maxValue) {
             // reset graph factor by half to make more room
             maxValue = columns[pos].values[0];
-            if (maxValue * reduceFactor > m_element.height-10) {
+            if (maxValue * reduceFactor > m_element.height-15-BOTTOM_MARGIN) {
                 reduceFactor *= 0.5;
             }
         }
@@ -99,7 +99,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
      */
     protected void paintComponent() {
         int width = m_element.width, height = m_element.height;
-        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(Color.WHITE);
+        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of("#fdfdfd");
         ctx.fillRect(0, 0, width, height);
         ctx.font = "16px monospace";
 
@@ -115,14 +115,12 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
     private void paintColumn(int col, int width, int startHeight) {
         ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col1);
         int height1 = (int) (reduceFactor * columns[col].values[1]);
-        if (height1 > 0) {
-            ctx.fillRect(col * width, startHeight - height1, width - 5, height1);
-            ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col2);
-        }
+
+        ctx.fillRect(col * width, startHeight - height1, width - 5, height1);
+        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col2);
         int height2 = (int) (reduceFactor * columns[col].values[2]);
-        if (height2 > 0) {
-            ctx.fillRect(col * width, startHeight - height1 - height2, width - 5, height2);
-            ctx.fillText("" + columns[col].values[0], col * width + 5, startHeight - height1 - height2 - 5);
-        }
+        ctx.fillRect(col * width, startHeight - height1 - height2, width - 5, height2);
+        ctx.fillText("" + columns[col].values[0], col * width + 5, startHeight - height1 - height2 - 5);
+
     }
 }

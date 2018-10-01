@@ -31,12 +31,17 @@ Features include:
   - move the cursor using arrows and scroll around
 - it is possible to inspect the state of warriors in the debugger after
   a war is over and even continue running the war with just the winner running.
+- implementes all features of the original Java GUI
+
+tips and tricks
+- When debugging, you can always return to a warrior running point by clicking its name on the left pane
+- You can set value of any register manually by writing a value in its box. This includes IP and Flags registers.
+
   
 Coming up features:
 - data breakpoints
 - fixed randomization bug
 - online competition
-- all features of the original GUI
 
 
 references:  
@@ -46,6 +51,3 @@ https://github.com/YoavKa/corewars8086    (disassembler)
 https://github.com/kimwalisch/calculator  (watch language)   
 
 
-tips and tricks
-- When debugging, you can always return to a warrior running point by clicking its name on the left pane
-- You can set value of any register manually by writing a value in its box. This includes IP and Flags registers.

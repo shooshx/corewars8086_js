@@ -97,11 +97,11 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		}
 		catch(NumberFormatException e) {
 			m_mainwnd.errorPreventsStep(true, "Register value parse error");
-			return (m_base == 10) ? -2 : -1;
+			return (m_base == 10) ? -2000000 : -1000000;
 		}
 		if (v < 0 || v > 0xffff) {
 			m_mainwnd.errorPreventsStep(true, "Register value out out range");
-			return -3;
+			return -3000000;
 		}
 		m_mainwnd.errorPreventsStep(false, null);
 
@@ -134,7 +134,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 			entry.evalAndDisplay();
 		}
 
-		return 1;
+		return v;
 	}
 
 	public void changedCSIP() {
