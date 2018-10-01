@@ -120,9 +120,9 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
             ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[col].col2);
         }
         int height2 = (int) (reduceFactor * columns[col].values[2]);
-        //if (height2 > 0) {
+        if (height2 > 0) {
             ctx.fillRect(col * width, startHeight - height1 - height2, width - 5, height2);
             ctx.fillText("" + columns[col].values[0], col * width + 5, startHeight - height1 - height2 - 5);
-        //}
+        }
     }
 }
