@@ -14,9 +14,6 @@ disassembler bug
    hello db 10   - not enough bytes to parse, doesn't recognise it as db
 
 
-graph window
-
-
 nasm memory leak
    errors with dy 12, dz 12
 
@@ -24,6 +21,12 @@ check randomization similarity with real java
   https://github.com/tomer-schles/corewars8086-seed-bugfix/commits/master
 
 --------------------------------
+
+- fix colors to be consistant, IP pointer
+
+- colors on players pane
+- colors of playes in messages in debugger
+
 
 disassembler incorrect??
    do something automatic that checks all disassembler
@@ -39,9 +42,6 @@ debugger
 
 || 
 - pressing the player button shows where it is in the memory panel
-
-- colors on players pane
-- colors of playes in messages in debugger
 
 - breakpoints in edit
    - disallow setting in comment, label lines?
@@ -79,7 +79,7 @@ debugger
 - don't disassemble lines that were in the original text
 - export code to bin file
 
-- fix colors to be consistant, IP pointer
+
 - check timing of - main memory using an Int8Array from GWT
 
 
