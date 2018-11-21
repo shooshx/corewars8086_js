@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+  <script type="text/javascript" language="javascript" src="js_gas_riscv.js"></script>
+  <script>
+"use strict";
+
+var g_outputText = null
+function printConsole(line) {
+    console.log("*** " + line)
+    //g_outputText += line + '\n'
+}
+
+
+var run_gas = null
+function start()
+{
+    run_gas = Module.cwrap('run_gas', null, ['string'])
+    Module['print'] = printConsole
+    Module['printErr'] = printConsole
+    Module['quit'] = function(status, toThrow) {
+        console.log("**quit")
+    };
+    //Module['noExitRuntime'] = null // prevent exit() warning
+}
+
+function call_asm() {
+    var text = "lui	    a0,0x32\naddi	a0,a0,-1029\nslli	a0,a0,0xe\naddi	a0,a0,-1346\n"
+    var asmname = "input.s"
+
+    FS.writeFile(asmname, text, { encoding:'utf8' })
+    g_outputText = ''
+    var ret_code = run_gas(asmname)
+}
+</script>   
+</head>
+<body onload="start()">
+
+</body>
+</html>
+

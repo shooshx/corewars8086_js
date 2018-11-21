@@ -1,0 +1,1 @@
+configure --prefix=$HOME/riscv --target=riscv --disable-werror --disable-nls --disable-shared --disable-libdecnumber --disable-readline --disable-sim --disable-multilib --disable-tui --disable-gdbtk --disable-bootstrap --without-newlib
