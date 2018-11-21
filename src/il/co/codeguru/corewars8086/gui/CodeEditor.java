@@ -5,6 +5,8 @@ import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
 import elemental2.dom.EventListener;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.gui.asm_parsers.IListParser;
+import il.co.codeguru.corewars8086.gui.asm_parsers.NasmListParser;
 import il.co.codeguru.corewars8086.gui.widgets.ActionEvent;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.gui.widgets.JButton;
@@ -16,6 +18,7 @@ import il.co.codeguru.corewars8086.utils.Disassembler;
 import il.co.codeguru.corewars8086.war.*;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
+import il.co.codeguru.corewars8086.gui.asm_parsers.TextUtils;
 
 
 import java.util.*;
@@ -148,27 +151,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
     public static class LstLine {
-        int lineNum = -1;
-        int address = -1;
-        String addressStr = "";
-        String opcode = "";  // for display
-        String fullOpcode = ""; // for knowing the real length
-        String code = "";
-        int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
-        PlayersPanel.Breakpoint tmp_br = null; // used when initializing debug view (doesn't hold info when editing)
+        public int lineNum = -1;
+        public int address = -1;
+        public String addressStr = "";
+        public String opcode = "";  // for display
+        public String fullOpcode = ""; // for knowing the real length
+        public String code = "";
+        public int opcodesCount = 0; // number of bytes in my opcode, without brackets and spaces
+        public PlayersPanel.Breakpoint tmp_br = null; // used when initializing debug view (doesn't hold info when editing)
     }
-    enum Field {
-        START_SPACE,
-        INDEX,
-        SINGLE_SPACE_AFTER_INDEX,
-        SPACE_BEFORE_CODE,
-        ADDRESS,
-        SPACE_AFTER_ADDRESS,
-        OPCODE,
-        WARNING,
-        CODE,
-        PARSE_ERR
-    };
+
 
     public static final int FLAG_UNPARSED = 1;  // means this is a DbgLine of a value written by a warrior and not yet parsed by the disassembler
     public static final int FLAG_DEFINE_CODE = 2; // line that came from the user typed text that defines a number (db 123)
@@ -203,7 +195,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public PlayersPanel m_playersPanel = null;
     private Competition m_competition = null;
     private int PAGE_SIZE = _PAGE_SIZE();
+    private IListParser m_listParser;
 
+    // scrol hiding page
     private static native int _PAGE_SIZE() /*-{
         return $wnd.PAGE_SIZE
     }-*/;
@@ -243,6 +237,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         exportMethods();
 
+        m_listParser = new NasmListParser();
+
     }
 
     public native void exportMethods() /*-{
@@ -279,229 +275,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }-*/;
 
 
-    public static final char SPACE_FOR_HEX_CHAR = '\u202f';
-    public static final String SPACE_FOR_HEX = "&#x202f;";
-
-    // hex field in the opcode can have all sorts of brackets and -. need to know how many just digits
-    public int countDigits(String s) {
-        boolean doingDigits = s.length() > 0 && isHexDigit(s.charAt(0)); // see below 'nesb 4'
-        if (!doingDigits)
-            return 0; // not supported yet
-        int count = 0;
-        for(int i = 0; i < s.length(); ++i) {
-            char c = s.charAt(i);
-            if (isHexDigit(c)) {
-                ++count;
-            }
-        }
-        return count;
-    }
-
-    public String spacedHex(String s)
-    {
-        // find how many spaces from the end should be trimmed
-        // spaces appear at the end since we take everything in the code area of the lst
-        int upto = s.length() - 1;
-        for(; upto >= 0; --upto) {
-            if (s.charAt(upto) != ' ')
-                break;
-        }
-        StringBuilder bs = new StringBuilder();
-        int digitCount = 0;
-        boolean doingDigits = s.length() > 0 && isHexDigit(s.charAt(0)); // if it's not a hex number thing, don't do any spacing (resb 4)
-
-        for(int i = 0; i <= upto; ++i) {
-            char c = s.charAt(i);
-            if (digitCount == 7*2) {
-                // don't add more than 7 bytes of opcode to not overflow the field size
-                bs.append(SPACE_FOR_HEX); // ellipsis
-                break;
-            }
-            if (doingDigits && isHexDigit(c)) {
-                bs.append(c);
-                ++digitCount;
-                if ((digitCount % 2) == 0 && digitCount > 0)
-                    bs.append("&#x202f;"); // thin space
-                continue;
-            }
-            else if (c == '<') {
-                bs.append("&lt;");
-                continue;
-            }
-            else if (c == '>') {
-                bs.append("&gt;");
-                continue;
-            }
-            else if ( (c == ')' || c == ']') && bs.length() > 8 && bs.substring(bs.length()-8) == "&#x202f;") {
-                // if we see an end brace but we just added a space
-                // put the end brace before the space so it would look good
-                bs.insert(bs.length() - 8, c);
-                continue;
-            }
-            bs.append(c);
-        }
-        return bs.toString();
-    }
-
-    private static boolean isDigit(char c) {
-        return c >= '0' && c <= '9';
-    }
-    private static boolean isHexDigit(char c) {
-        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'); // lst output only has upcase hex digits
-    }
-
-    // runs a state machine that parses the .lst files
-    private boolean parseLst(String lsttext, StringBuilder opcodesText)
-    {
-        String[] lines = lsttext.split("\\n");
-        m_currentListing = new ArrayList<LstLine>();
-
-        int lineIndex = 1; // does not increment in warning lines that appear in the listing file
-        LstLine prevLine = null;
-        int totalOpcodeCount = 0;
-        for(int i = 0; i < lines.length; ++i)
-        {
-            String line = lines[i];
-            Field state = Field.START_SPACE;
-            LstLine l = new LstLine();
-
-            int indexStart = 0, addressStart = 0, opcodeStart = 0;
-            int charsBeforeCode = 0; // number of characters after the space after address and before the code. used fo not missing indentation
-            for(int j = 0; j < line.length(); ++j)
-            {
-                char c = line.charAt(j);
-                switch(state) {
-                    case START_SPACE:
-                        if (isDigit(c)) {
-                            indexStart = j;
-                            state = Field.INDEX;
-                        }
-                        else if (c != ' ')
-                            state = Field.PARSE_ERR;
-                        break;
-                    case INDEX:
-                        if (c == ' ') {
-                            state = Field.SINGLE_SPACE_AFTER_INDEX;
-                            l.lineNum = Integer.parseInt(line.substring(indexStart,j));
-                            // check the line number only at the end in order to sip warnings
-                        }
-                        else if (!isDigit(c))
-                            state = Field.PARSE_ERR;
-                        break;
-                    case SINGLE_SPACE_AFTER_INDEX:
-                        if (c == ' ') {
-                            state = Field.SPACE_BEFORE_CODE;
-                            charsBeforeCode = -9; // account for not having an address
-                        }
-                        else if (isHexDigit(c)) {
-                            addressStart = j;
-                            state = Field.ADDRESS;
-                        }
-                        else
-                            state = Field.PARSE_ERR;
-                        break;
-                    case ADDRESS:
-                        if (c == ' ') {
-                            state = Field.SPACE_AFTER_ADDRESS;
-                            l.addressStr = line.substring(addressStart, j);
-                            l.address = Integer.parseInt(l.addressStr, 16);
-                        }
-                        else if (!isHexDigit(c))
-                            state = Field.PARSE_ERR;
-                        break;
-                    case SPACE_AFTER_ADDRESS:
-                        //if (isHexDigit(c)) {
-                        state = Field.OPCODE;
-                        opcodeStart = j;
-                        //}
-                        //else
-                        //    state = Field.PARSE_ERR;
-                        break;
-                    case OPCODE:
-                        boolean islast = (j == line.length() - 1);
-                        if (c == '*') {
-                            state = Field.WARNING;
-                        }
-                        else if (!islast && charsBeforeCode < 22)
-                            ++charsBeforeCode; // take anything as long as its in the field size of the opcode. need this sinc resb adds spaces
-                        else if (c == ' ' || islast) { // continueation lines of a string definition end in the middle of the opcode field.
-                            //spacedHex(, l);
-                            l.fullOpcode = line.substring(opcodeStart, j);
-                            l.opcode = spacedHex(l.fullOpcode);
-                            l.opcodesCount = countDigits(l.fullOpcode) / 2;
-                            totalOpcodeCount += l.opcodesCount;
-                            if (totalOpcodeCount > WarriorRepository.MAX_WARRIOR_SIZE)
-                                return true; // is going to fail later in setText we check here just for not getting stuch in a long loop
-                            state = Field.SPACE_BEFORE_CODE;
-                            ++charsBeforeCode;
-                        }
-                        else
-                            ++charsBeforeCode;
-                        break;
-                    case SPACE_BEFORE_CODE:
-                        if (c == '*') {
-                            state = Field.WARNING;
-                        }
-                        else if (c != ' ' || charsBeforeCode == 23) {
-                            state = Field.CODE;
-                            l.code = line.substring(j);
-                        }
-                        else
-                            ++charsBeforeCode;
-                        break;
-                    case CODE:
-                        break; // don't care about the code part, we already have that from the input
-                    case PARSE_ERR:
-                        Console.log("ERROR: parsing list file!\n" + lsttext);
-                        return false;
-                } // switch
-                if (state == Field.WARNING)
-                    break; // stop parsing line
-            } // for j in line chars
-            if (state == Field.WARNING)
-                continue; // skip this line
-            if (l.lineNum > lineIndex)
-            {  // this can happen if there is a \ at the end of a line, extending it to the next line
-               // so the next line doesn't exist in the line count, we need to just skit it in the output
-                // this can happe for multiple consecutive lines
-                while (l.lineNum != lineIndex) {
-                    opcodesText.append("\n");
-                    ++lineIndex;
-                }
-            }
-            else if (prevLine != null && l.lineNum == prevLine.lineNum) {
-                // it's a continuation line of the previous line. we need to concatenate to get the full opcode in order to know its size
-                // happens with string definition db "abcdefgh"
-                prevLine.fullOpcode += l.fullOpcode;
-                prevLine.opcodesCount = countDigits(prevLine.fullOpcode) / 2;
-                // no need to update the display opcode because its already too long
-                continue;
-            }
-            else if (l.lineNum != lineIndex) {
-                Console.log("wrong line number " + Integer.toString(l.lineNum) + " at " + Integer.toString(lineIndex));
-                return false;
-            }
-
-            ++lineIndex;
-
-            m_currentListing.add(l);
-            opcodesText.append(l.opcode);
-            opcodesText.append("\n");
-
-            prevLine = l;
-        }
-
-        // if text doen't end with new line, delete the one added to opcodes
-        //if (asmtext.charAt(asmtext.length() - 1) != '\n')
-         //   opcodesText.deleteCharAt(opcodesText.length() - 1);
-
-        return true;
-    }
 
 
-    private static native Element DocumentFragment_getElementById(DocumentFragment df, String id) /*-{
-        return df.getElementById(id)
-    }-*/;
 
 
     // given a line number (starting 0), give the offset in the input text the line ends
@@ -513,82 +288,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     // referenced later when we add more warnings
     private char[] m_errLines = null;
 
-    // returns the input asm text, with added formatting for error and warning lines
-    private void parseStdout(String stdoutText, DocumentFragment asmElem, StringBuilder stdoutShorten)
-    {
-        String[] lines = stdoutText.split("\\n");
-        // warning come before errors so we can't assume the line numbers are ascending
-        // so we need to save all the line nums, sort and then go over from start to end of the text
 
-     /*   int countAllNL = 1; // +1 for the last line with no \n
-        for (int i = 0; i < asmText.length(); ++i) {
-            if (asmText.charAt(i) == '\n')
-                ++countAllNL;
-        }*/
-        int countAllNL = m_lineOffsets.size();
-
-        // have a potential char for every line in the asm text. this way there's no need to sort
-        // and there is only one entry per line, error trumps warning
-        // used for determining the color of a line
-        m_errLines = new char[countAllNL]; // for every line in the asmText, 0,'e' or 'w'
-
-        // go over stdout, find out which lines need marking
-        for(int i = 0; i < lines.length; ++i)
-        {
-            String line = lines[i];
-            int firstColon = -1;
-            int lineNum = -1; // this would be zero based
-            char lineType = 0;
-            // find first and second columns chars
-            for(int j = 0 ; j < line.length(); ++j) {
-                if (line.charAt(j) == ':') {
-                    if (firstColon == -1)
-                        firstColon = j;
-                    else {
-                        lineNum = Integer.parseInt(line.substring(firstColon + 1, j));
-                        lineNum -= 1; // read numbers are 1 based
-                        if (j + 2 < line.length()) { // sanity check on the line length
-                            assert lineNum < countAllNL : "unexpected lineNum";
-                            lineType = line.charAt(j + 2); // +2 for a space and then the first letter of 'error' or 'warning'
-                            if (!(lineType == 'w' && m_errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
-                                m_errLines[lineNum] = lineType;
-                        }
-                        break;
-                    }
-                }
-            }
-            if (lineNum == -1) {
-                Console.log("Failed parsing error stdout");
-                return;
-            }
-
-            stdoutShorten.append("<div class='stdout_line_" + lineType + "' ondblclick='asm_cursorToLine(" +
-                                   Integer.toString(m_lineOffsets.get(lineNum)) +")'>");
-            stdoutShorten.append(line.substring(firstColon + 1));
-            stdoutShorten.append("</div>");
-            //if (i < lines.length - 1)
-            //    stdoutShorten.append('\n');
-        }
-
-
-        for(int lineNum = 0; lineNum < m_errLines.length; ++lineNum)
-        {
-            char ec = m_errLines[lineNum];
-            if (ec == 0)
-                continue;
-
-            Element e = DocumentFragment_getElementById(asmElem, "mline_" + Integer.toString(lineNum+1));
-            if (e == null)
-                continue; // can happen with some strange case of dz... ? could not reproduce but it happened
-            if (ec == 'e')
-                e.classList.add("edit_error");
-            else
-                e.classList.add("edit_warning");
-
-        }
-
-
-    }
 
     static native int asm_edit_selectionStart() /*-{
         return $wnd.asm_edit.selectionStart
@@ -967,7 +667,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             StringBuilder stdoutShorten = new StringBuilder(); // removes the file name from the start of the lines
 
             df = htmlizeText(intext);
-            parseStdout(stdout, df, stdoutShorten);
+            m_errLines = m_listParser.parseStdout(stdout, df, stdoutShorten, m_lineOffsets);
 
             asm_show.innerHTML = "";
             asm_show.appendChild(df);
@@ -1003,7 +703,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
 
         StringBuilder opcodesText = new StringBuilder();
-        boolean ok = parseLst(output, opcodesText);
+
+        m_currentListing = new ArrayList<CodeEditor.LstLine>();
+        boolean ok = m_listParser.parseLst(output, opcodesText, m_currentListing);
         if (!ok) {
             opcodes_edit.innerHTML = "[listing parsing error]";
             Console.error("listing parsing error"); // should not happen
@@ -1518,7 +1220,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         StringBuilder bs = new StringBuilder();
         for(int i = 0; i < len; ++i) {
             bs.append( Format.hex2(m_mem.readByte(absaddr + i) & 0xff));
-            bs.append(SPACE_FOR_HEX);
+            bs.append(TextUtils.SPACE_FOR_HEX);
         }
 
         opline.text = "<span class='dbg_opcodes'>" + bs.toString() + "</span>" + text;
