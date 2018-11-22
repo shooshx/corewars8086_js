@@ -4,16 +4,21 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2231125-10"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-2231125-10');
+ // window.dataLayer = window.dataLayer || [];
+ // function gtag(){dataLayer.push(arguments);}
+ // gtag('js', new Date());
+ // gtag('config', 'UA-2231125-10');
 </script>
   
     <meta charset="UTF-8">
     <title>CodeWars8086</title>
-    <script type="text/javascript" language="javascript" src="asm_js_main.js"></script>
+    <script>
+
+    </script>
+
+    <!--<script type="text/javascript" language="javascript" src="asm_js_main.js"></script> that's a problem, need to unify them -->
+
+    <script type="text/javascript" language="javascript" src="gas_riscv_js.js"></script>
     <script type="text/javascript" language="javascript" src="codewars_js/codewars_js.nocache.js"></script>  
 <script>
 "use strict";
@@ -26,14 +31,25 @@ var did_start = false
 
 var selcount = 1
 
+
+// Java code comes to get and clear this variable to get the stdout of the nasm run
+//var g_outputText = null
+//function printConsole(line) {
+//    //console.log("*** " + line)
+//    g_outputText += line + '\n'
+//}
+// new ver of emscripten moved this to pre-js
+
+
 function start()
 {
     if (did_start)
         return;
     console.log("start()");
-    run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
-    Module['print'] = printConsole
-    Module['printErr'] = printConsole
+    //run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
+    run_gas = Module.cwrap('run_gas', null, ['string', 'string'])
+    //Module['print'] = printConsole
+    //Module['printErr'] = printConsole
 
     asm_edit.addEventListener("keydown", fixhscroll)
     asm_edit.addEventListener("keydown", fixTabKey) // want to capture the press since we want to prevent the default action
@@ -431,12 +447,6 @@ function triggerEraseZombie(buttonElem, elem, num) {
 }
 
 
-// Java code comes to get and clear this variable to get the stdout of the nasm run
-var g_outputText = null
-function printConsole(line) {
-    //console.log("*** " + line)
-    g_outputText += line + '\n'
-}
 
 
 // in case there is a long line, when returning to a new line, the text will be still scrolled to the left, fix that

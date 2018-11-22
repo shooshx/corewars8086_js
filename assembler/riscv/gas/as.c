@@ -1198,10 +1198,16 @@ void js_initialize_listing();
 void js_initialize_listing2();
 
 #ifdef EMSCRIPTEN
-int run_gas(const char* inname, const char* secarg)
+int run_gas(const char* inname, const char* outname)
 {
-    /* -a ../../rv_test.s -march=rv32g */
-    const char* args[] = { "as.exe", "-ahlsn", inname, "-march=rv32g", 0 };
+    /* -a ../../rv_test.s -march=rv32imc */
+    char aopt[25] = "-ahlsn=";
+    strcat(outname, aopt);
+    const char* args[] = { "as.exe", aopt, inname, "-march=rv32imc", 0 };
+    /* rv32imc : i-standard integer, 
+                 m-multiplication,division, 
+                 c-compressed opcodes
+                 */
     
     js_initialize_listing();
     js_initialize_listing2();
@@ -1426,7 +1432,7 @@ gas_main (int argc, char ** argv)
   /* Use xexit instead of return, because under VMS environments they
      may not place the same interpretation on the value given.  */
   if (had_errors () != 0)
-    xexit (EXIT_FAILURE);
+    return EXIT_FAILURE;
 
   /* Only generate dependency file if assembler was successful.  */
   print_dependencies ();

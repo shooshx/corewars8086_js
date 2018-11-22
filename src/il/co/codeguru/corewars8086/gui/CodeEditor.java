@@ -5,6 +5,7 @@ import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
 import elemental2.dom.EventListener;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.gui.asm_parsers.GasListParser;
 import il.co.codeguru.corewars8086.gui.asm_parsers.IListParser;
 import il.co.codeguru.corewars8086.gui.asm_parsers.NasmListParser;
 import il.co.codeguru.corewars8086.gui.widgets.ActionEvent;
@@ -237,9 +238,12 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
         exportMethods();
 
-        m_listParser = new NasmListParser();
+
+        //setPlatform("8086");
+        setPlatform("riscv");
 
     }
+
 
     public native void exportMethods() /*-{
         var that = this
@@ -248,10 +252,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         $wnd.j_asm_edit_changed = $entry(function() { that.@il.co.codeguru.corewars8086.gui.CodeEditor::asm_edit_changed()() });
     }-*/;
 
-    private static native int run_nasm(String asmname, String text, String lstname)     /*-{
+    private static native int run_assembler(String asmname, String text, String lstname)     /*-{
         $wnd.FS.writeFile(asmname, text, { encoding:'utf8' })
         $wnd.g_outputText = ''
-        var ret_code = $wnd.run_nasm(asmname, lstname)
+        var ret_code = $wnd.run_assembler(asmname, lstname)
         return ret_code
     }-*/;
     private static native String read_file(String name) /*-{
@@ -275,7 +279,25 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }-*/;
 
 
+    private static native String js_setPlatform(String plat) /*-{
+        if (plat == "8086") {
+            $wnd.run_assembler = $wnd.run_nasm
+        }
+        else if (plat == "riscv") {
+            $wnd.run_assembler = $wnd.run_gas
+        }
+    }-*/;
 
+    public void setPlatform(String plat) {
+        if (plat == "8086") {
+            m_listParser = new NasmListParser();
+        }
+        else if (plat == "riscv") {
+            m_listParser = new GasListParser();
+        }
+        js_setPlatform(plat);
+
+    }
 
 
 
@@ -651,7 +673,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 // we want the markes to appear in the html for debugging but not in the nasm input
         String nasm_intext = intext;
         // assemble
-        int retcode = run_nasm("player.asm", nasm_intext, "player.lst");
+        int retcode = run_assembler("player.asm", nasm_intext, "player.lst");
         String stdout = get_stdout();
 
 
