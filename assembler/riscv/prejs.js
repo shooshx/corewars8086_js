@@ -1,6 +1,6 @@
 var g_outputText = null
 function myPrintConsole(line) {
-    //console.log("*** " + line)
+    console.log("*** " + line)
     g_outputText += line + '\n'
 }
 

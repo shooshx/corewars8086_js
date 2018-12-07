@@ -129,6 +129,9 @@ public class CompetitionWindow extends JFrame
         m_codeEditor = new CodeEditor(competition);
         m_playersPanel = new PlayersPanel(this);
         m_codeEditor.m_playersPanel = m_playersPanel;
+
+        setPlatform("riscv");
+
         stepnum = (HTMLElement) DomGlobal.document.getElementById("stepnum");
 
         exportMethods();
@@ -152,6 +155,11 @@ public class CompetitionWindow extends JFrame
             public void windowActivated(WindowEvent e) {}
             public void windowDeactivated(WindowEvent e) {}
         });*/
+    }
+
+    public void setPlatform(String plat) {
+        m_codeEditor.setPlatform(plat);
+        m_playersPanel.setPlatform(plat);
     }
 
     public static native void call_gwtStart() /*-{

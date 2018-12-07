@@ -1,4 +1,11 @@
+RISC-V
 
+assembler warning, errors
+defining data?
+
+
+
+--------------------------------
   
 nasm assert:
   resb 3000000000  -memory

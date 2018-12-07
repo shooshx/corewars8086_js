@@ -240,7 +240,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
         //setPlatform("8086");
-        setPlatform("riscv");
+        //setPlatform("riscv"); // called from CompetitionWindow
 
     }
 
@@ -707,7 +707,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         if (retcode != 0) { // error
             // TBD- compile just till the error line? or just the last good result?
             opcodes_edit.innerHTML = linesAsInput(intext); // this is needed because x-scroll hiding relies on the opcode pane to be full
-            Console.error("~Assembler error");
+            Console.error("~Assembler error ret=" + Integer.toString(retcode));
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, null, null);
             //setBreakpoints(textBreakpoints); // there isn't going to be a new listing, make the breakpoints marking now
@@ -738,8 +738,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         //Console.log("~OK");
 
 
-
         byte[] buf = read_file_bin_arr("player");
+        Console.log("Bin len=" + Integer.toString(buf.length));
         if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
             String msg = "Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes";
             Console.error(msg);

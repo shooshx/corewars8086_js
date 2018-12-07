@@ -134,6 +134,31 @@ public class PlayersPanel
         $wnd.changedWType(label, v, true);
     }-*/;
 
+
+    private static class InitPlayers {
+        public InitPlayers(String shooter, String bimp) { shooterCode = shooter; bimpCode = bimp; }
+        String shooterCode;
+        String bimpCode;
+    }
+
+    public static InitPlayers m_initPlayers_x86 = new InitPlayers(
+            " PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n",
+            "PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n"
+    );
+    public static InitPlayers m_initPlayers_riscv = new InitPlayers(
+            "lui   a0,0x32\naddi  a0,a0,-1029\nslli  a0,a0,0xe\naddi  a0,a0,-1346\n",
+            "lui   a0,0x32\naddi  a0,a0,-1029\nslli  a0,a0,0xe\naddi  a0,a0,-1346\n"
+    );
+
+    public InitPlayers m_initPlayers = m_initPlayers_riscv;
+
+    public void setPlatform(String plat) {
+        if (plat == "8086")
+            m_initPlayers = m_initPlayers_x86;
+        else if (plat == "riscv")
+            m_initPlayers = m_initPlayers_riscv;
+    }
+
     private void demo_simple() {
         m_inEditor = m_players.get(1).code[0];
         m_inEditor.asmText = "start:\ninc cx\njmp start";
@@ -145,11 +170,12 @@ public class PlayersPanel
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
     }
 
+
     private void demo_like_original() {
         addPlayerPanel(); // this demo has 4 players. initialization of the page adds 2 panels
         addPlayerPanel();
 
-        String shooterCode = " PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n";
+        String shooterCode = m_initPlayers.shooterCode;
 
         m_inEditor = m_players.get(1).code[0];
         m_inEditor.asmText = shooterCode;
@@ -175,7 +201,7 @@ public class PlayersPanel
 
 
         // the one that is selected at the end
-        String bimpCode = "PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n";
+        String bimpCode = m_initPlayers.bimpCode;
         m_inEditor = m_players.get(0).code[0];
         updateTitle("bimp");
         m_inEditor.asmText = bimpCode;

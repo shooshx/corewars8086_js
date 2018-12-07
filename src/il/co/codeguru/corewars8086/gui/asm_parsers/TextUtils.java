@@ -73,7 +73,7 @@ public class TextUtils {
         return c >= '0' && c <= '9';
     }
     public static boolean isHexDigit(char c) {
-        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'); // lst output only has upcase hex digits
+        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
     }
 
 

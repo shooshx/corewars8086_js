@@ -136,7 +136,7 @@ public class NasmListParser implements IListParser{
                 continue; // skip this line
             if (l.lineNum > lineIndex)
             {  // this can happen if there is a \ at the end of a line, extending it to the next line
-                // so the next line doesn't exist in the line count, we need to just skit it in the output
+                // so the next line doesn't exist in the line count, we need to just skip it in the output
                 // this can happe for multiple consecutive lines
                 while (l.lineNum != lineIndex) {
                     opcodesText.append("\n");

@@ -1196,24 +1196,68 @@ perform_an_assembly_pass (int argc, char ** argv)
 int gas_main(int argc, char ** argv);
 void js_initialize_listing();
 void js_initialize_listing2();
+int parse_elf(char* buf, int len, int* bin_offset, int* bin_len);
 
 #ifdef EMSCRIPTEN
-int run_gas(const char* inname, const char* outname)
+int run_gas(char* inname, const char* outname)
 {
     /* -a ../../rv_test.s -march=rv32imc */
     char aopt[25] = "-ahlsn=";
-    strcat(outname, aopt);
+
+    strcat(aopt, outname);
     const char* args[] = { "as.exe", aopt, inname, "-march=rv32imc", 0 };
     /* rv32imc : i-standard integer, 
                  m-multiplication,division, 
                  c-compressed opcodes
                  */
-    
+
+    //printf("~~run_gas %s %s\n", inname, outname);
+
+                 
     js_initialize_listing();
     js_initialize_listing2();
     optind = 1;
 
     int ret = gas_main(4, args);
+    if (ret != 0)
+        return ret;
+    
+    FILE* outfile = fopen("a.out", "rb");
+    if (outfile == NULL) {
+        printf("didn't find a.out\n");
+        return -1;
+    }
+    fseek(outfile, 0, SEEK_END);
+    int size = ftell(outfile);
+    fseek(outfile, 0, SEEK_SET);
+    char* buf = (char*)malloc(size);
+    fread(buf, size, 1, outfile);
+    fclose(outfile);
+    
+    // parse the elf and output just the binary opcodes    
+    int bin_offs = 0, bin_len = 0;
+    ret = parse_elf(buf, size, &bin_offs, &bin_len);
+    if (ret == 0) {
+        // remove dot from file name
+        for(int i = 0; inname[i] != 0; ++i) {
+            if (inname[i] == '.') {
+                inname[i] = 0;
+                break;
+            }
+        }
+        // write the raw binary opcodes output
+        FILE* bin_out = fopen(inname, "wb");
+        if (bin_out != NULL) {
+            fwrite(buf + bin_offs, bin_len, 1, bin_out);
+            fclose(bin_out);
+        }
+        else {
+            printf("failed to open bin output\n");
+        }
+    }
+    
+    free(buf);
+    
     return ret;
 }
 #endif
