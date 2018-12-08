@@ -6,3 +6,5 @@ function myPrintConsole(line) {
 
 Module['print'] = myPrintConsole
 Module['printErr'] = myPrintConsole
+
+

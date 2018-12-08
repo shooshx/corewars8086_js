@@ -671,6 +671,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                        .replace("<", "&lt;")
                        .replace(">", "&gt;");
                 // we want the markes to appear in the html for debugging but not in the nasm input
+        if (intext.charAt(intext.length() - 1) != '\n')
+            intext += '\n'; // avoid the warning about last line not ending with newline
         String nasm_intext = intext;
         // assemble
         int retcode = run_assembler("player.asm", nasm_intext, "player.lst");
@@ -739,7 +741,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
         byte[] buf = read_file_bin_arr("player");
-        Console.log("Bin len=" + Integer.toString(buf.length));
+        //Console.log("Bin len=" + Integer.toString(buf.length));
         if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
             String msg = "Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes";
             Console.error(msg);
@@ -749,7 +751,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         }
 
-        df = checkDisasmLines(buf, m_currentListing, df, intext);
+        // TBD-SHY enable with new disassembler
+        //df = checkDisasmLines(buf, m_currentListing, df, intext);
 
 
         if (playersPanel != null)

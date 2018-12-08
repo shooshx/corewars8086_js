@@ -64,8 +64,6 @@ struct defsym_list
   char *name;
   valueT value;
 };
-
-
 /* True if a listing is wanted.  */
 int listing;
 
@@ -1196,32 +1194,14 @@ perform_an_assembly_pass (int argc, char ** argv)
 int gas_main(int argc, char ** argv);
 void js_initialize_listing();
 void js_initialize_listing2();
+void initialize_tc_riscv();
+void initialize_messages();
+void initialize_bfd_cache();
 int parse_elf(char* buf, int len, int* bin_offset, int* bin_len);
 
 #ifdef EMSCRIPTEN
-int run_gas(char* inname, const char* outname)
+int output_bin(char* inname) 
 {
-    /* -a ../../rv_test.s -march=rv32imc */
-    char aopt[25] = "-ahlsn=";
-
-    strcat(aopt, outname);
-    const char* args[] = { "as.exe", aopt, inname, "-march=rv32imc", 0 };
-    /* rv32imc : i-standard integer, 
-                 m-multiplication,division, 
-                 c-compressed opcodes
-                 */
-
-    //printf("~~run_gas %s %s\n", inname, outname);
-
-                 
-    js_initialize_listing();
-    js_initialize_listing2();
-    optind = 1;
-
-    int ret = gas_main(4, args);
-    if (ret != 0)
-        return ret;
-    
     FILE* outfile = fopen("a.out", "rb");
     if (outfile == NULL) {
         printf("didn't find a.out\n");
@@ -1236,7 +1216,7 @@ int run_gas(char* inname, const char* outname)
     
     // parse the elf and output just the binary opcodes    
     int bin_offs = 0, bin_len = 0;
-    ret = parse_elf(buf, size, &bin_offs, &bin_len);
+    int ret = parse_elf(buf, size, &bin_offs, &bin_len);
     if (ret == 0) {
         // remove dot from file name
         for(int i = 0; inname[i] != 0; ++i) {
@@ -1257,6 +1237,53 @@ int run_gas(char* inname, const char* outname)
     }
     
     free(buf);
+    return 0;
+}
+
+void malloc_stats(void);
+
+void malloc_init_global_state();
+
+void  free(void* p) {
+    
+}
+
+
+int run_gas(char* inname, const char* outname)
+{
+    int dsize = sbrk(0);
+
+    /* -a ../../rv_test.s -march=rv32imc */
+    char aopt[25] = "-ahlsn="; //"-ahl";
+    strcat(aopt, outname);
+    const char* args[] = { "as.exe", aopt, inname, "-march=rv32imc", 0 };
+    /* rv32imc : i-standard integer, 
+                 m-multiplication,division, 
+                 c-compressed opcodes
+                 */
+
+    //printf("~~run_gas %s %s  `%s`\n", inname, outname, aopt);
+        
+    js_initialize_listing();
+    js_initialize_listing2();
+    initialize_tc_riscv();
+    initialize_messages();
+    initialize_bfd_cache();
+    optind = 1;
+    int ret = gas_main(4, args);
+    if (ret == 0) {
+        ret = output_bin(inname);
+    }
+    
+    //malloc_stats();
+    
+    int asize = sbrk(0);
+    //printf("~~~~ end sbrk=%d inc=%d\n", asize, dsize - asize);
+    sbrk(dsize - asize);
+    //int ksize = sbrk(0);
+    //printf("~~~~ after sbrk=%d\n", ksize);
+    malloc_init_global_state();
+
     
     return ret;
 }

@@ -2,6 +2,7 @@ package il.co.codeguru.corewars8086.gui.asm_parsers;
 
 
 import elemental2.dom.DocumentFragment;
+import elemental2.dom.Element;
 import il.co.codeguru.corewars8086.gui.CodeEditor;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.war.WarriorRepository;
@@ -26,7 +27,7 @@ public class GasListParser implements IListParser {
     @Override
     public boolean parseLst(String lsttext, StringBuilder opcodesText, ArrayList<CodeEditor.LstLine> m_currentListing)
     {
-        Console.log(lsttext);
+        //Console.log(lsttext);
 
         String[] lines = lsttext.split("\\n");
 
@@ -173,6 +174,75 @@ public class GasListParser implements IListParser {
 
     @Override
     public char[] parseStdout(String stdoutText, DocumentFragment asmElem, StringBuilder stdoutShorten, ArrayList<Integer> m_lineOffsets) {
-        return new char[0];
+        Console.log(stdoutText);
+
+        String[] lines = stdoutText.split("\\n");
+        // warning come before errors so we can't assume the line numbers are ascending
+        // so we need to save all the line nums, sort and then go over from start to end of the text
+
+        int countAllNL = m_lineOffsets.size();
+
+        // have a potential char for every line in the asm text. this way there's no need to sort
+        // and there is only one entry per line, error trumps warning
+        // used for determining the color of a line
+        char[] m_errLines = new char[countAllNL]; // for every line in the asmText, 0,'e' or 'w'
+
+        // go over stdout, find out which lines need marking
+        for(int i = 0; i < lines.length; ++i)
+        {
+            String line = lines[i];
+            int firstColon = -1;
+            int lineNum = -1; // this would be zero based
+            char lineType = 0;
+            // find first and second columns chars
+            for(int j = 0 ; j < line.length(); ++j) {
+                if (line.charAt(j) == ':') {
+                    if (firstColon == -1)
+                        firstColon = j;
+                    else {
+                        lineNum = Integer.parseInt(line.substring(firstColon + 1, j));
+                        lineNum -= 1; // read numbers are 1 based
+                        if (j + 2 < line.length()) { // sanity check on the line length
+                            assert lineNum < countAllNL : "unexpected lineNum";
+                            lineType = Character.toLowerCase(line.charAt(j + 2)); // +2 for a space and then the first letter of 'Error' or 'Warning'
+                            if (!(lineType == 'w' && m_errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
+                                m_errLines[lineNum] = lineType;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (lineNum == -1) {
+                Console.log("Failed parsing error stdout");
+                return m_errLines;
+            }
+
+            stdoutShorten.append("<div class='stdout_line_" + lineType + "' ondblclick='asm_cursorToLine(" +
+                    Integer.toString(m_lineOffsets.get(lineNum)) +")'>");
+            stdoutShorten.append(line.substring(firstColon + 1));
+            stdoutShorten.append("</div>");
+            //if (i < lines.length - 1)
+            //    stdoutShorten.append('\n');
+        }
+
+
+        for(int lineNum = 0; lineNum < m_errLines.length; ++lineNum)
+        {
+            char ec = m_errLines[lineNum];
+            if (ec == 0)
+                continue;
+
+            Element e = TextUtils.DocumentFragment_getElementById(asmElem, "mline_" + Integer.toString(lineNum+1));
+            if (e == null)
+                continue; // can happen with some strange case of dz... ? could not reproduce but it happened
+            if (ec == 'e')
+                e.classList.add("edit_error");
+            else
+                e.classList.add("edit_warning");
+
+        }
+
+        return m_errLines;
+
     }
 }

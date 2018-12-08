@@ -74,7 +74,7 @@ static void signal_crash (int) ATTRIBUTE_NORETURN;
 static void
 identify (const char *file)
 {
-  static int identified;
+  static int identified = 1; // skip that message (SHY);
 
   if (identified)
     return;
@@ -104,6 +104,11 @@ had_warnings (void)
    and exit with a nonzero error code.  */
 
 static int error_count;
+
+void initialize_messages() {
+    error_count = 0;
+    warning_count = 0;
+}
 
 int
 had_errors (void)
@@ -282,6 +287,7 @@ as_bad_where (const char *file, unsigned int line, const char *format, ...)
 void
 as_fatal (const char *format, ...)
 {
+    printf("%s\n", format);
   va_list args;
 
   as_show_where ();

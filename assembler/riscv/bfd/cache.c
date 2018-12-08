@@ -124,6 +124,12 @@ static int open_files;
 
 static bfd *bfd_last_cache = NULL;
 
+void initialize_bfd_cache() {
+    open_files = 0;
+    bfd_last_cache = 0;
+    max_open_files = 0;
+}
+
 /* Insert a BFD into the cache.  */
 
 static void

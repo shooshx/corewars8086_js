@@ -180,11 +180,6 @@ public class NasmListParser implements IListParser{
         // warning come before errors so we can't assume the line numbers are ascending
         // so we need to save all the line nums, sort and then go over from start to end of the text
 
-     /*   int countAllNL = 1; // +1 for the last line with no \n
-        for (int i = 0; i < asmText.length(); ++i) {
-            if (asmText.charAt(i) == '\n')
-                ++countAllNL;
-        }*/
         int countAllNL = m_lineOffsets.size();
 
         // have a potential char for every line in the asm text. this way there's no need to sort

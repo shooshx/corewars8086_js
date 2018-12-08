@@ -112,6 +112,7 @@ struct riscv_subset
 
 static struct riscv_subset *riscv_subsets;
 
+
 static bfd_boolean
 riscv_subset_supports (const char *feature)
 {
@@ -3113,3 +3114,13 @@ riscv_pop_insert (void)
 
   pop_insert (riscv_pseudo_table);
 }
+
+void initialize_tc_riscv() {
+    riscv_subsets = NULL;
+    op_hash = NULL;
+    insn_type_hash = NULL;
+    opcode_names_hash = NULL;
+    reg_names_hash = NULL;
+    riscv_opts_stack = NULL;
+}
+
