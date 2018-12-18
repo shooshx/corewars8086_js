@@ -231,12 +231,23 @@ public class PlayersPanel
         m_players.add(p);
         Console.log("Added " + label + " " + Integer.toString(m_players.size()));
     }
+
+    public native void setPressedCodeBut(String label, int num) /*-{
+        var idd = "sel_code_w" + num + "_" + label
+        console.log("~~" + idd)
+        $wnd.document.getElementById(idd).checked = true;
+    }-*/;
+
     // from js
     public void j_removePlayer(String label) {
         for(PlayerInfo p : m_players) {
             if (label.equals(p.label)) {
                 m_players.remove(p);
                 Console.log("Removed " + label + " " + Integer.toString(m_players.size()));
+                if (m_inEditor.player == p) { // removing currently selected player
+                    setPressedCodeBut(m_players.get(0).label, 1);
+                    j_srcSelectionChanged(m_players.get(0).label, 1);
+                }
                 return;
             }
         }

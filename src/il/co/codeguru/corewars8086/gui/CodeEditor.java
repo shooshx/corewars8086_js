@@ -1011,16 +1011,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }
 
     public void j_setScrollAt(int p1, int p2) {
-        //Console.log("~~~~1 bf96 " + m_dbglines[0xbf96].text);
-        //Console.log("~~~~1 9f14 " + m_dbglines[0x9f14].text);
         j_renderIfDirty(p1);
         j_renderIfDirty(p2);
 
         m_atScrollP1 = p1;
         m_atScrollP2 = p2;
-
-        //Console.log("~~~~2 bf96 " + m_dbglines[0xbf96].text);
-        //Console.log("~~~~2 9f14 " + m_dbglines[0x9f14].text);
     }
 
 

@@ -747,9 +747,9 @@ public class RandomDataGenerator /*implements RandomData, Serializable*/ {
      * @since 3.2
      */
     public RandomGenerator getRandomGenerator() {
-        if (rand == null) {
+        /*if (rand == null) {
             initRan();
-        }
+        }*/
         return rand;
     }
 
@@ -757,8 +757,8 @@ public class RandomDataGenerator /*implements RandomData, Serializable*/ {
      * Sets the default generator to a {@link Well19937c} generator seeded with
      * {@code System.currentTimeMillis() + System.identityHashCode(this))}.
      */
-    private void initRan() {
-        rand = new Well19937c(System.currentTimeMillis()/* + System.identityHashCode(this)*/);
+    public void initRan(long seed) {
+        rand = new Well19937c(seed/* + System.identityHashCode(this)*/);
     }
 
     /**

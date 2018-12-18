@@ -169,7 +169,7 @@ public class Competition {
     public void runCompetition(int warsPerCombination, int warriorsPerGroup, boolean startPaused, boolean isInDebugger) throws Exception
     {
         this.warsPerCombination = warsPerCombination;
-        competitionIterator = new CompetitionIterator(warriorRepository.getNumberOfGroups(), warriorsPerGroup);
+        competitionIterator = new CompetitionIterator(warriorRepository.getNumberOfGroups(), warriorsPerGroup, seed);
 
         // run on every possible combination of warrior groups
         competitionEventListener.onCompetitionStart();
@@ -275,6 +275,8 @@ public class Competition {
         //Console.log("doneWar rounds=" + Integer.toString(compState.round));
         competitionEventListener.onRound(compState.round);
 
+        ++seed; // make sure the next war is differently randomized
+
         int numAlive = currentWar.getNumRemainingWarriors();
         String names = currentWar.getRemainingWarriorNames();
 
@@ -291,6 +293,7 @@ public class Competition {
         currentWar.setEnded();
         //currentWar = null; // keep war alive so it would be possible to get registers and memory state at the end
         ++compState.warIndex;
+
 
     }
 
