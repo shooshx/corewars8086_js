@@ -1008,6 +1008,20 @@ function competeFinished()
     competeRunCheckbox.checked = false
 }
 
+function eventStopProp(e) {
+    e.stopPropagation()
+}
+function triggerAbout(v, ev) {
+    aboutBtn.checked = v
+    if (v) {
+        aboutBack.style.display = "inline"
+    }
+    else {
+        aboutBack.style.display = "none"
+    }
+
+    aboutWin.onclick = eventStopProp
+}
 
 </script>    
 <style>
@@ -1623,6 +1637,7 @@ input:disabled + .sc-btn:active,
 }
 #seed {
     margin-left: 3px;
+    width: 160px;
 }
 
 #debug_goto {
@@ -2042,7 +2057,64 @@ input:disabled + .sc-btn:active,
 #uploadBinBut:active {
     background-position: 3px 4px;
     background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(upload_bin.png);
+    background-repeat: repeat, no-repeat; /* needed to avoid strange shadow when pressed */
+}
+
+#aboutBtn {
+    background-image: url(q_mark.png);
+    background-repeat: no-repeat;
+    background-position: 8px 3px;
+    height: 34px;
+    width: 33px;
+    position: absolute;
+    border-radius: 5px;
+    right: 0;
+}
+#aboutBtn:active {
+    background-position: 9px 4px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(q_mark.png);
     background-repeat: repeat, no-repeat;
+}
+.popupBack {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(20,20,20, 0.82);
+    top: 0;
+    left: 0;
+    z-index: 1; /* above the export button which is an appended child */
+}
+.popupWin {
+    position: absolute;
+    width: 600px;
+    height: 230px;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    background: #FFF;
+    border-radius: 15px;
+    padding: 20px;
+}
+h1, h2, h3 {
+    margin: 0;
+    font-family: Tahoma;
+}
+h1 {
+    font-size: 30px;
+    margin: 0 0 0 30px;
+    font-family: monospace;
+}
+h2 {
+    font-size: 18px;
+    font-weight: normal;
+}
+h3 {
+    font-size: 16px;
+    margin: 30px 0 0 0;
+    font-weight: normal;
 }
 
 #hoverCellInfo {
@@ -2127,6 +2199,8 @@ input:disabled + .sc-btn:active,
         <input type="text" id="editor_title" spellcheck="false">
         <input id="uploadBinInput" type="file" class="hidden" onchange="return triggerUploadBinChanged()">
         <label id="uploadBinBut" class="sc-btn" for="uploadBinInput" title="Upload binary file"></label>
+        <label id="aboutBtn" class="sc-btn" title=About" onclick="triggerAbout(true)"></label>
+
 
         <br>
         <div id="editor_boxes">
@@ -2324,6 +2398,17 @@ input:disabled + .sc-btn:active,
         </div>
 
     </div>
+
+    <div id="aboutBack" class="popupBack" onclick="triggerAbout(false)"><div id="aboutWin" class="popupWin">
+        <h1>codewars8086_js</h1><br>
+        <h2>Javascript GUI, integrated editor and debugger: Shy Shalom<br>
+        <h2>Original codeguru emulator: Danny Leshem<br>
+        <h3>If you find a bug open a new issue in:<br>
+            <a href="https://github.com/shooshx/corewars8086_js/issues" target="_blank">https://github.com/shooshx/corewars8086_js/issues</a><br>
+        Or email to:<br>
+            <a href="mailto:shooshx@gmail.com" target="_blank">shooshx@gmail.com</a><br>
+        <h3>
+    </div></div>
 
   </body>
 </html>

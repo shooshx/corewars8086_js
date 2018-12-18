@@ -11,13 +11,14 @@ public class CompetitionIterator implements Iterator<int[]> {
 	private int numItems;
 	private final int groupSize;
 
-    public CompetitionIterator(int numItems, int groupSize) {
+    public CompetitionIterator(int numItems, int groupSize, long seed) {
         assert numItems >= groupSize;
         this.numItems = numItems;
 		this.groupSize = groupSize;
         counters = new int[groupSize];
 
 		rnd = new RandomDataGenerator();
+		rnd.initRan(seed);
     }	
 
     /**
