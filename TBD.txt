@@ -30,6 +30,11 @@ check randomization similarity with real java
 
 --------------------------------
 
+Competition: 
+- reset button
+
+-----------
+
 - fix colors to be consistant, IP pointer
 
 - colors on players pane

@@ -38,7 +38,7 @@ public class CompetitionWindow extends JFrame
     //private Thread warThread;
 	private boolean competitionRunning;
 
-    private static final String SEED_PREFIX = "SEED!@#=";
+    private static final String SEED_PREFIX = "SEED#";
 	private JTextField seed;
 
     //private JCheckBox startPausedCheckBox;
@@ -388,6 +388,8 @@ public class CompetitionWindow extends JFrame
 
     public void onWarEnd(int reason, String winners, boolean inDebug) {
         warCounter++;
+        // this is needed so that we'll be able to recreate the war we just ran in the debugger
+        // and for the seed counter to advance beteen competitions
         seed.setText(SEED_PREFIX + competition.getSeed());
         warCounterDisplay.setText("Sessions so far:" + warCounter + " (out of " + totalWars + ")");
         setBattlesRan(Integer.toString(warCounter) + "/" + Integer.toString(totalWars));
