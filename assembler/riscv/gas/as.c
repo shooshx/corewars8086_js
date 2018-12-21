@@ -1264,12 +1264,13 @@ int run_gas(char* inname, const char* outname)
 
     //printf("~~run_gas %s %s  `%s`\n", inname, outname, aopt);
         
-    js_initialize_listing();
+    /*js_initialize_listing();
     js_initialize_listing2();
     initialize_tc_riscv();
     initialize_messages();
     initialize_bfd_cache();
     optind = 1;
+    */
     int ret = gas_main(4, args);
     if (ret == 0) {
         ret = output_bin(inname);
@@ -1282,7 +1283,7 @@ int run_gas(char* inname, const char* outname)
     sbrk(dsize - asize);
     //int ksize = sbrk(0);
     //printf("~~~~ after sbrk=%d\n", ksize);
-    malloc_init_global_state();
+    //malloc_init_global_state();
 
     
     return ret;

@@ -255,6 +255,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private static native int run_assembler(String asmname, String text, String lstname)     /*-{
         $wnd.FS.writeFile(asmname, text, { encoding:'utf8' })
         $wnd.g_outputText = ''
+        $wnd.reinitMem()
         var ret_code = $wnd.run_assembler(asmname, lstname)
         return ret_code
     }-*/;

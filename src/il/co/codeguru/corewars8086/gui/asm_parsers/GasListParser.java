@@ -51,7 +51,7 @@ public class GasListParser implements IListParser {
                             indexStart = j;
                             state = Field.INDEX;
                         }
-                        else if (line.equals("NO DEFINED SYMBOLS")) {
+                        else if (line.equals("NO DEFINED SYMBOLS") || line.equals("DEFINED SYMBOLS")) {
                             return true; // signifies the end of the actual opcode listing
                         }
                         else if (c != ' ')
@@ -69,7 +69,7 @@ public class GasListParser implements IListParser {
                     case SINGLE_SPACE_AFTER_INDEX:
                         if (c == ' ') {
                             state = Field.SPACE_BEFORE_CODE;
-                            charsBeforeCode = -9; // account for not having an address
+                            charsBeforeCode = -5; // account for not having an address
                         }
                         else if (TextUtils.isHexDigit(c)) {
                             addressStart = j;
@@ -200,10 +200,15 @@ public class GasListParser implements IListParser {
                     if (firstColon == -1)
                         firstColon = j;
                     else {
-                        lineNum = Integer.parseInt(line.substring(firstColon + 1, j));
-                        lineNum -= 1; // read numbers are 1 based
-                        if (j + 2 < line.length()) { // sanity check on the line length
+                        if (line.charAt(firstColon + 1) == ' ') { // number-less warning line
+                            lineNum = -2;
+                        }
+                        else {
+                            lineNum = Integer.parseInt(line.substring(firstColon + 1, j));
+                            lineNum -= 1; // read numbers are 1 based
                             assert lineNum < countAllNL : "unexpected lineNum";
+                        }
+                        if (j + 2 < line.length()) { // sanity check on the line length
                             lineType = Character.toLowerCase(line.charAt(j + 2)); // +2 for a space and then the first letter of 'Error' or 'Warning'
                             if (!(lineType == 'w' && m_errLines[lineNum] == 'e')) // not the case where an 'w' overwrites a 'e'
                                 m_errLines[lineNum] = lineType;
@@ -217,8 +222,11 @@ public class GasListParser implements IListParser {
                 return m_errLines;
             }
 
-            stdoutShorten.append("<div class='stdout_line_" + lineType + "' ondblclick='asm_cursorToLine(" +
-                    Integer.toString(m_lineOffsets.get(lineNum)) +")'>");
+
+            stdoutShorten.append("<div class='stdout_line_" + lineType + "'");
+            if (lineNum != -2)
+                stdoutShorten.append("ondblclick='asm_cursorToLine(" + Integer.toString(m_lineOffsets.get(lineNum)) +")'");
+            stdoutShorten.append(">");
             stdoutShorten.append(line.substring(firstColon + 1));
             stdoutShorten.append("</div>");
             //if (i < lines.length - 1)

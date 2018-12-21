@@ -40,6 +40,20 @@ var selcount = 1
 //}
 // new ver of emscripten moved this to pre-js
 
+// this is some emscripten voodoo that re-initialized the process memory
+// it works in conjunction with the sbrk saving and rewind in run_gas to reset the memory state in
+// each activation of the command line tool.
+// Notice that it undoes some memory allocation made on process initialization
+// building envars seem to be the only thing there and we don't care about that
+
+function reinitMem() {
+    // re-parse the base64 non-zero start value data segment. This assumes we don't have a separate mem file
+    var memoryInitializerBytes = tryParseAsDataURI(memoryInitializer);
+    HEAPU32.fill(0);
+    HEAPU8.set(memoryInitializerBytes, GLOBAL_BASE);
+    HEAP32[DYNAMICTOP_PTR>>2] = DYNAMIC_BASE; // basic memory allocation need this (done in global scope on the startup of the process)
+}
+
 
 function start()
 {
