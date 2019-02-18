@@ -18,8 +18,8 @@
 
     <!--<script type="text/javascript" language="javascript" src="asm_js_main.js"></script> that's a problem, need to unify them -->
 
-    <script type="text/javascript" language="javascript" src="gas_riscv_js.js"></script>
-    <script type="text/javascript" language="javascript" src="codewars_js/codewars_js.nocache.js"></script>  
+    <script type="text/javascript" language="javascript" src="static/gas_riscv_js.js"></script>
+    <script type="text/javascript" language="javascript" src="static/codewars_js/codewars_js.nocache.js"></script>  
 <script>
 "use strict";
 
@@ -92,6 +92,8 @@ function start()
     speedSlider.addEventListener("input", function() {
         //speedSliderVal.innerText = speedSlider.value
     })
+    
+    update_user_data(true); // don't show error (may be in static server)
 }
 
 
@@ -568,7 +570,7 @@ function triggerDebug() {
             return
         }
 
-        debugBtnIn.style.backgroundImage = "url(red_stop.png)"
+        debugBtnIn.style.backgroundImage = "url(static/red_stop.png)"
         debugBtnIn2.innerText = "Stop"
         competeCheckbox.setAttribute("disabled", true);
 
@@ -1017,7 +1019,7 @@ function triggerStartCompete()
             return
         }
 
-        competeRunBtnIn.style.backgroundImage = "url(red_stop.png)"
+        competeRunBtnIn.style.backgroundImage = "url(static/red_stop.png)"
         competeRunBtnIn2.innerText = "Stop"
     }
     else {
@@ -1046,6 +1048,175 @@ function triggerAbout(v, ev) {
 
     aboutWin.onclick = eventStopProp
 }
+
+// ----------------------------------- User and Channel panel --------------------------------------
+
+function show_tab_panel(v, elem, input_other, panel_other) {
+    if (v) {
+        elem.style.display = "initial"
+        if (input_other.checked) {
+            input_other.checked = false;
+            panel_other.style.display = "none"
+        }
+    }
+    else {
+        elem.style.display = "none"
+    }    
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function request(method, url, postdata, ondata, suppress_error) {
+    var req = new XMLHttpRequest()
+    req.addEventListener("load", function(evt) {
+        // console.log("TEXT=" + this.responseText)
+        if (this.status == 200) {
+            var d = JSON.parse(this.responseText);
+            ondata(d)
+        }
+        else {
+            if (!suppress_error) {
+                django_error.contentWindow.document.write(this.responseText)
+                django_error.style.display = "initial"
+            }
+            else {
+                console.error("failed request (" + this.status + ") " + url)
+            }
+            ondata({status:"err-failed-req"})
+        }
+    })
+    req.addEventListener("error", function(evt) {
+        console.log("failed request " + url)
+    })
+    req.open(method, url)
+    var p = undefined
+    if (postdata) {
+        var cookie = getCookie('csrftoken')
+        if (cookie === null) {
+            set_user_panel_msg("Missing token. page did not come from the right server")
+            return
+        }
+        req.setRequestHeader("X-CSRFToken", cookie);
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // https://docs.djangoproject.com/en/2.0/ref/csrf/
+        //str.push('csrfmiddlewaretoken=' + getCookie('csrftoken'));
+        var str = [];
+        for(var p in postdata)
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(postdata[p]));
+        p = str.join("&");        
+    }
+    req.send(p)
+}
+
+function set_user_panel_msg(text) {
+    user_panel_msg.style.display = "block"
+    user_panel_msg.innerText = text
+}
+function clear_user_panel_msg() {
+    user_panel_msg.style.display = "none"
+}
+
+function update_user_data(suppress_error) 
+{
+    request("GET", "/get_user_data/", null, function(d) {
+        console.log("status=" + d.status)
+        if (d.status.startsWith("err")) {
+            user_input.style.display = "initial"
+            user_data.style.display = "none"
+            show_user_name.innerHTML = "Login"
+        }
+        else {
+            user_input.style.display = "none"
+            user_data.style.display = "initial"
+            show_user_name.innerHTML = d.name
+            
+           /* var str = []
+            for(var i in d.warriors) {
+                var w = d.warriors[i]
+                var text = '<div>Title: TITLE<br>code1: CODE1<br>code2: CODE2<br>-----------------<br></div>'
+                text = text.replace('TITLE', w.title).replace('CODE1', w.code1).replace('CODE2', w.code2)
+                str.push(text)
+            }
+            warrior_defs.innerHTML = str.join('\n')
+            
+            str = []
+            for(var i in d.teams) {
+                var t = d.teams[i]
+                var text = '<div>Name: TEAM_NAME<br>&nbsp;&nbsp;Members: MEMBERS</div>'
+                text = text.replace('TEAM_NAME', t.name).replace('MEMBERS', t.members.join(','))
+                str.push(text)
+                for(var iw in t.warriors) {   
+                    var tw = t.warriors[iw]
+                    var text = '<div>&nbsp;&nbspTitle: TITLE<br>&nbsp;&nbspcode1: CODE1<br>&nbsp;&nbspcode2: CODE2<br>\
+                                &nbsp;&nbspupdater: UPDATER<br>&nbsp;&nbsp=========<br></div>'
+                    text = text.replace('TITLE', tw.title).replace('CODE1', tw.code1).replace('CODE2', tw.code2).replace('UPDATER', tw.updated_by_name)
+                    str.push(text)
+                }                
+            }
+            users_teams.innerHTML = str.join('\n')*/
+        }
+    }, suppress_error)
+
+}
+
+function check_status(d) {
+    console.log("status=" + d.status)
+    if (d.status.startsWith("ok-")) {
+        update_user_data()
+        clear_user_panel_msg()
+    }
+    else {
+        set_user_panel_msg("ERROR:" + d.text)
+    }   
+}
+
+
+function new_user_submit() {
+    clear_user_panel_msg()
+    var p = { "name":in_user_name.value, "pass":in_user_pass.value }
+    request("POST", "/create_user/", p, function(d) {
+        check_status(d)
+    })
+}
+
+function user_login() {
+    clear_user_panel_msg()
+    var p = { "name":in_user_name.value, "pass":in_user_pass.value }
+    request("POST", "/user_login/", p, function(d) {
+        check_status(d)   
+    })
+}
+
+function user_logout() {
+    clear_user_panel_msg()
+    request("GET", "/user_logout/", null, function(d) {
+        check_status(d)
+    });
+}
+
+function add_user_warrior() {
+    clear_user_panel_msg()
+    var d = {"title":title_edit.value, "code1": code1_edit.value, "code2": code2_edit.value, "wtype":2}
+    request("POST", "/add_warrior_def/", d, function(d) {
+        check_status(d)
+    })
+}
+
+
+
 
 </script>    
 <style>
@@ -1133,6 +1304,10 @@ input:disabled + .sc-btn:active,
 
 /* ---------------- asm ---------------------- */
 
+#warCanvas {
+    margin-top: 20px;
+}
+
 .codearea {
     font-size: 16px;
     font-family: courier;
@@ -1185,15 +1360,15 @@ input:disabled + .sc-btn:active,
 }
 
 .dbg_breakpoint:after {
-    content: url(breakpoint_light.png);
+    content: url(static/breakpoint_light.png);
     position: absolute;
     left: 31px;
 }
 
 .edit_breakpoint:after {
     /*background: #ff5555;*/
-    /*background: url(breakpoint_light.png) no-repeat right center;*/
-    content: url(breakpoint_light.png);
+    /*background: url(static/breakpoint_light.png) no-repeat right center;*/
+    content: url(static/breakpoint_light.png);
     position: absolute;
     right: 2px;
 }
@@ -1333,7 +1508,6 @@ input:disabled + .sc-btn:active,
 }
 
 
-
 .edit_error {
     background-color: #ffd7d7;
 }
@@ -1393,7 +1567,7 @@ input:disabled + .sc-btn:active,
     background-color: #ddddff;
 }
 .current_dbg_dead {
-    background-image: url("dbg_fail_red_ex.png");
+    background-image: url("static/dbg_fail_red_ex.png");
     background-color: #ffc7c7;
     background-repeat: no-repeat;
     background-position: calc( 100% - 5px) 1px;
@@ -1510,15 +1684,15 @@ input:disabled + .sc-btn:active,
 }
 
 .mycheck + .mycheck_label {
-    background-image: url(check_none.png);
+    background-image: url(static/check_none.png);
     background-repeat: no-repeat;
     display: inline-block;
 }
 .mycheck:checked + .mycheck_label {
-    background-image: url(check_checked.png);
+    background-image: url(static/check_checked.png);
 }
 .mycheck:indeterminate + .mycheck_label {
-    background-image: url(check_int.png);
+    background-image: url(static/check_int.png);
 }
 .mycheck[disabled="true"] + .mycheck_label {
     filter: brightness(90%);
@@ -1551,7 +1725,7 @@ input:disabled + .sc-btn:active,
 }
 
 .opt_single {
-    background: url(check_none.png) no-repeat;
+    background: url(static/check_none.png) no-repeat;
 }
 .src_sel_but {
     height: 30px;
@@ -1568,7 +1742,7 @@ input:disabled + .sc-btn:active,
     margin: 4px 7px 0px 11px;;
 }
 #addPlayerBtnIn {
-    background-image: url(plus.png);
+    background-image: url(static/plus.png);
     background-position: center;
     background-repeat: no-repeat;
     display: inline-block;
@@ -1577,17 +1751,17 @@ input:disabled + .sc-btn:active,
 }
 .sc-btn[disabled="true"] > #addPlayerBtnIn {
     box-shadow: initial;
-    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(plus.png);
+    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(static/plus.png);
 }
 .sc-btn[disabled="true"] > #addZombieBtnIn {
     box-shadow: initial;
-    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(plus.png);
+    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(static/plus.png);
 }
 
 .pl_close_icon {
     width: 15px;
     height: 15px;
-    background-image: url('reddish_ex.png');
+    background-image: url('static/reddish_ex.png');
     background-position: center;
     background-repeat: no-repeat;
     float: right;
@@ -1596,11 +1770,11 @@ input:disabled + .sc-btn:active,
     padding: 4px;
 }
 .pl_close_icon:hover {
-    background-image: url('red_ex.png');
+    background-image: url('static/red_ex.png');
     background-color: rgba(255,255,255,0.7);
 }
 .pl_close_icon[disabled="true"] {
-    background-image: url('gray_ex.png');
+    background-image: url('static/gray_ex.png');
     background-color: transparent;
 }
 
@@ -1614,7 +1788,7 @@ input:disabled + .sc-btn:active,
     margin: 4px 7px 7px 15px;
 }
 #addZombieBtnIn {
-    background: url(plus.png) 6px 5px no-repeat;
+    background: url(static/plus.png) 6px 5px no-repeat;
     display: inline-block;
     width: 28px;
     height: 28px;
@@ -1702,7 +1876,7 @@ input:disabled + .sc-btn:active,
     height: 30px;
     vertical-align: -8px;
     margin: 0 0px 0 9px;
-    background-image: url(green_play.png);
+    background-image: url(static/green_play.png);
 }
 #debugBtnIn2 {
     margin: 0 0 0 3px;
@@ -1734,7 +1908,7 @@ input:disabled + .sc-btn:active,
 }
 #competeRunBtnIn {
     display: inline-block;
-    background-image: url(green_play.png);
+    background-image: url(static/green_play.png);
     width: 30px;
     height: 30px;
     margin: 0 0px 0 9px;
@@ -1871,7 +2045,7 @@ input:disabled + .sc-btn:active,
     border: 1px solid #d2cfcf;
     display: inline-block;
     vertical-align: -4px;
-    background-image: url(zero_but.png);
+    background-image: url(static/zero_but.png);
     background-repeat: no-repeat;
     background-position: 3px 3px;
 }
@@ -2041,7 +2215,7 @@ input:disabled + .sc-btn:active,
 #add_watch_but {
     width: 19px;
     height: 19px;
-    background: url(small_plus.png) no-repeat;
+    background: url(static/small_plus.png) no-repeat;
     background-position: 3px 3px;
     background-color: #d5d5ff;
     line-height:18px;
@@ -2054,7 +2228,7 @@ input:disabled + .sc-btn:active,
 .watch_del_but {
     width: 19px;
     height: 19px;
-    background-image: url(small_ex.png) !important;
+    background-image: url(static/small_ex.png) !important;
     background-repeat: no-repeat;
     line-height:18px;
     border-radius:3px;
@@ -2070,7 +2244,7 @@ input:disabled + .sc-btn:active,
 }
 
 #uploadBinBut {
-    background-image: url(upload_bin.png);
+    background-image: url(static/upload_bin.png);
     background-repeat: no-repeat;
     background-position: 2px 3px;
     height: 34px;
@@ -2080,12 +2254,12 @@ input:disabled + .sc-btn:active,
 }
 #uploadBinBut:active {
     background-position: 3px 4px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(upload_bin.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(static/upload_bin.png);
     background-repeat: repeat, no-repeat; /* needed to avoid strange shadow when pressed */
 }
 
 #aboutBtn {
-    background-image: url(q_mark.png);
+    background-image: url(static/q_mark.png);
     background-repeat: no-repeat;
     background-position: 8px 3px;
     height: 34px;
@@ -2096,7 +2270,7 @@ input:disabled + .sc-btn:active,
 }
 #aboutBtn:active {
     background-position: 9px 4px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(q_mark.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(static/q_mark.png);
     background-repeat: repeat, no-repeat;
 }
 .popupBack {
@@ -2207,6 +2381,155 @@ h3 {
     width: 709px;
 }
 
+/* ------------------------- User,Team panel ----------------------------- */
+
+.top_tab {
+    position: absolute;
+    height: 35px;
+    width: 150px;
+    top: 0;
+    border-radius: 0 0 10px 10px;
+    text-align: center;
+    line-height: 34px;    
+    font-size: 20px;
+    font-weight: bold;    
+}
+.top_tab:hover {
+     filter: brightness(110%);
+}
+
+
+#user_tab {
+    right: 184px;
+    background-color: #b4b4ff;
+    border-left: solid 2px #d0d0ff;
+    border-right: solid 2px #d0d0ff;
+    border-bottom: solid 2px #d0d0ff;
+    border-top: hidden;
+    color: #0000a7;
+}
+#channel_tab {
+    right: 30px;
+    background-color: #fed997;
+    border-left: solid 2px #ffd0d0;
+    border-right: solid 2px #ffd0d0;
+    border-bottom: solid 2px #ffd0d0;   
+    border-top: hidden;    
+    color: #7c0000;
+}
+
+.tab_checkbox {
+    position: absolute;
+}
+
+.tab_checkbox:checked + #user_tab {
+    border-left: solid 2px #9393ff !important;
+    border-right: solid 2px #9393ff !important;
+    border-top: solid 2px #9393ff !important;   
+    border-bottom: hidden !important;
+    
+    border-radius: 10px 10px 0 0;
+    background-color: #e9e9ff !important;
+    filter: none;
+    height: 37px;
+}
+
+.tab_checkbox:checked + #channel_tab {
+    border-left: solid 2px #ff9393 !important;
+    border-right: solid 2px #ff9393 !important;
+    border-top: solid 2px #ff9393 !important;   
+    border-bottom: hidden !important;
+    
+    border-radius: 10px 10px 0 0;
+    background-color: #fff8e6 !important;
+    filter: none;
+    height: 37px;
+}
+
+.state_panel {
+    position: absolute;
+    top: 37px;
+    right: 0;
+    bottom: 0;
+    width: 350px;
+    border-radius: 10px;
+}
+#user_panel {
+    background-color: #e9e9ff;
+    border: solid 2px #9393ff;
+    display:none
+}
+#channel_panel {
+    background-color: #fff8e6;
+    border: solid 2px #ff9393;
+    display:none
+}
+
+#django_error {
+    position: absolute;
+    top: 10%;
+    width: 80%;
+    height: 500px;
+    display: none;
+    border: solid 5px red;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+    margin: auto    
+}
+
+#show_user_name {
+    display: inline-block;
+    margin: 0 3px 0 3px;
+    width: calc( 100% - 6px );
+    overflow: hidden;
+}
+
+#user_input {
+    margin-top:10px;
+}
+.in_user_label {
+    display: inline-block;
+    width: 100px;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 10px;
+}
+.in_user_input {
+    width: 150px;
+    height: 22px;
+    margin: 4px;
+    border-radius: 6px;
+    padding-left: 4px;
+    font-size: 16px;
+}
+
+.in_user_buttons {
+    height: 30px;
+    font-size: 100%;
+    line-height: 29px;
+    margin-left: 0;
+}
+#in_user_buttons_container {
+    margin-left:60px
+}
+#add_warrior_button {
+    width: 130px;
+}
+
+#user_panel_msg {
+    width: 100%;
+    display: none;
+    color: red;
+    margin: 0 10px 0 10px;
+}
+#user_data_buttons {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+
+
 </style>
   </head>
   <body onload="start()">
@@ -2223,7 +2546,7 @@ h3 {
         <input type="text" id="editor_title" spellcheck="false">
         <input id="uploadBinInput" type="file" class="hidden" onchange="return triggerUploadBinChanged()">
         <label id="uploadBinBut" class="sc-btn" for="uploadBinInput" title="Upload binary file"></label>
-        <label id="aboutBtn" class="sc-btn" title=About" onclick="triggerAbout(true)"></label>
+        <label id="aboutBtn" class="sc-btn" title="About" onclick="triggerAbout(true)"></label>
 
 
         <br>
@@ -2433,6 +2756,33 @@ h3 {
             <a href="mailto:shooshx@gmail.com" target="_blank">shooshx@gmail.com</a><br>
         <h3>
     </div></div>
+    
+    <div id="user_panel" class="state_panel">
+      <div id="user_input">
+          <form onsubmit="return false">
+          <span class="in_user_label">Username:</span><input class="in_user_input" id="in_user_name" type="text"><br>
+          <span class="in_user_label">Password:</span><input class="in_user_input" id="in_user_pass" type="password"><br>
+          <div id="in_user_buttons_container">
+            <label class="sc-btn in_user_buttons" onclick="new_user_submit()">Register</label>
+            <label class="sc-btn in_user_buttons" onclick="user_login()">Login</label>
+          </div>  
+          </form>
+      </div>
+      <div id="user_panel_msg"></div>
+      <div id="user_data">
+          <div id="user_data_buttons">
+            <label class="sc-btn in_user_buttons" onclick="user_logout()">Logout</label>
+            <label class="sc-btn in_user_buttons" id="add_warrior_button" onclick="add_user_warrior()">Add Warrior</label>          
+          </div>
+      </div>
+    </div>
+    <div id="channel_panel" class="state_panel"></div> 
+    <input class="tab_checkbox" id="user_tab_check" type="checkbox"  onchange="show_tab_panel(this.checked, user_panel, channel_tab_check, channel_panel)">
+    <label id="user_tab" for="user_tab_check" class="top_tab" ><span id="show_user_name">Login</span></label>
+    <input class="tab_checkbox" id="channel_tab_check" type="checkbox" onchange="show_tab_panel(this.checked, channel_panel, user_tab_check, user_panel)">
+    <label id="channel_tab" for="channel_tab_check" class="top_tab">Channel</label>
 
+    <iframe src="javascript:void(0);" id="django_error"></iframe>
+    {% csrf_token %}
   </body>
 </html>
