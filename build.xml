@@ -71,7 +71,7 @@
         <pathelement location="${gwt.sdk}/gwt-codeserver.jar"/>
       </classpath>
       <arg value="-startupUrl"/>
-      <arg value="page.html"/>
+      <arg value="../page/page.html"/>
       <arg line="-war"/>
       <arg value="war"/>
       <!-- Additional arguments like -style PRETTY, -logLevel DEBUG or -nosuperDevMode -->

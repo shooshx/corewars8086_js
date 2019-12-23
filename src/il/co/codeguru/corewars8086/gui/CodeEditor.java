@@ -281,12 +281,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
     private static native String js_setPlatform(String plat) /*-{
-        if (plat == "8086") {
-            $wnd.run_assembler = $wnd.run_nasm
-        }
-        else if (plat == "riscv") {
-            $wnd.run_assembler = $wnd.run_gas
-        }
+         // run_assembler is set from js start()
     }-*/;
 
     public void setPlatform(String plat) {

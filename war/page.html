@@ -56,12 +56,13 @@ function reinitMem() {
 
 
 function start()
-{
+{run_assembler
     if (did_start)
         return;
     console.log("start()");
     //run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
     run_gas = Module.cwrap('run_gas', null, ['string', 'string'])
+    run_assembler = run_gas
     //Module['print'] = printConsole
     //Module['printErr'] = printConsole
 
