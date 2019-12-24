@@ -74,7 +74,7 @@ public class PlayersPanel
             return (wtype == EWarriorType.SINGLE) ? 1:2;
         }
 
-        public boolean isEnabled = true; // the checkbox next to the player TBD
+        public boolean isEnabled = true; // the checkbox next to the player
         public String label;  // 'A', 'B' etc, the string on the elements of the player
         public String title;  // 'Player A'
         public Code[] code = new Code[2];
@@ -106,6 +106,7 @@ public class PlayersPanel
         $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
         $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
         $wnd.j_loadBinary      = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadBinary(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(b) });
+        $wnd.j_enablePlayer    = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_enablePlayer(Ljava/lang/String;Z)(a,b) });
     }-*/;
 
     public PlayerInfo findPlayer(String label) {
@@ -212,6 +213,12 @@ public class PlayersPanel
         $wnd.document.getElementById(idd).checked = true;
     }-*/;
 
+    public void setSelectedCode(String label, int code_num) {
+        setPressedCodeBut(label, code_num);
+        j_srcSelectionChanged(label, code_num);
+    }
+
+
     // from js
     public void j_removePlayer(String label) {
         for(PlayerInfo p : m_players) {
@@ -219,9 +226,18 @@ public class PlayersPanel
                 m_players.remove(p);
                 Console.log("Removed " + label + " " + Integer.toString(m_players.size()));
                 if (m_inEditor.player == p) { // removing currently selected player
-                    setPressedCodeBut(m_players.get(0).label, 1);
-                    j_srcSelectionChanged(m_players.get(0).label, 1);
+                    setSelectedCode(m_players.get(0).label, 1);
                 }
+                return;
+            }
+        }
+        throw new RuntimeException("player not found" + label);
+    }
+
+    public void j_enablePlayer(String label, boolean enable) {
+        for(PlayerInfo p : m_players) {
+            if (label.equals(p.label)) {
+                p.isEnabled = enable;
                 return;
             }
         }
@@ -393,8 +409,22 @@ public class PlayersPanel
         return true;
     }
 
-    public void setDebugMode(boolean v) {
 
+    private void ensureSelectedPlayerActive() {
+        if (m_inEditor.player.isEnabled)
+            return;
+        // there must be an enabled player since we tested that
+        for(int i = 0; i < m_players.size(); ++i) {
+            PlayerInfo p = m_players.get(i);
+            if (!p.isEnabled)
+                continue;
+            setSelectedCode(p.label, 1);
+            break;
+        }
+    }
+
+    public void setDebugMode(boolean v) {
+        ensureSelectedPlayerActive();
         m_isDebugMode = v;
     }
 

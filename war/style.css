@@ -1,0 +1,1157 @@
+body {
+    margin: 0;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+     user-select: none;
+    background: #ffffff;
+    font-family: Verdana;
+}
+
+.sc-btn {
+  display: inline-block;
+  /*position: absolute;*/
+
+  /*font-family: "Helvetica Neue", "Helvetica", sans-serif;*/
+
+  border-radius: 0.4em;
+
+  box-shadow: inset rgba(0, 0, 0, 0.1) 0px -0.15em 0px, inset rgba(255, 255, 255, 0.2) 0px 0.15em 0px, rgba(0, 0, 0, 0.3) 0px 0.1em 0.3em;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+
+  color: #222;
+  text-shadow: rgba(127, 127, 127, 0.4) 0 1px 0;
+  background-color: #ebebeb;
+  background-image: linear-gradient(to bottom, white, #ebebeb);
+
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  margin: 7px;
+  outline:none;  /* no focus outline */
+  font-size:110%;
+}
+
+.sc-btn:hover {
+  color: #222;
+  background-image: linear-gradient(to bottom, white, #d2d2d2);
+  background-color: #fdfdfd;
+}
+
+.sc-btn:active, .sc-check:checked+.sc-btn {
+    box-shadow: rgba(255, 255, 255, 0.2) 0 0.1em 0, inset rgba(0, 0, 0, 0.3) 0px 0.25em 1em;
+    color: #fff;
+    background-color: #dfdfdf;
+    background-image: linear-gradient(to bottom, #479ceb, #1067c1);
+}
+.sc-btn:checked  {
+
+  background-color: #dfdfdf;
+  background-image: linear-gradient(to bottom, #479ceb, #1067c1);
+}
+.sc-btn:disabled {
+   color: #ddd;
+}
+
+.sc-btn[disabled="true"] {
+    box-shadow: initial;
+    cursor: initial;
+}
+.sc-btn[disabled="true"] > .sc-span { /* comes after */
+    opacity: 0.3; /* for buttons with image*/
+}
+
+input[type="range"]:disabled {
+    opacity: 0.4;
+}
+
+input:disabled + .sc-btn,
+input:disabled + .sc-btn:hover,
+input:disabled + .sc-btn:active,
+.sc-btn[disabled="true"] {
+  color:#ddd;
+  background-image: linear-gradient(to bottom, white, #ebebeb);
+  box-shadow: initial;
+}
+.sc-btn:disabled + span {
+  opacity:0.6
+}
+
+/* ---------------- asm ---------------------- */
+
+.codearea {
+    font-size: 16px;
+    font-family: courier;
+    outline: none; /* don't show focus border */
+    overflow: auto;
+    /*border: 1px solid #000000;*/
+    /*border-radius: 4px;*/
+    display: inline-block;
+    padding: 9px 8px;
+    white-space: pre;  /* needed for multiple spaces */
+    box-sizing: border-box; /* size includes margins and border */
+}
+.codearea:disabled {
+    background-color: rgb(255,255,255);
+    color: rgb(0, 0, 0);
+}
+
+.allow_select {
+    -moz-user-select: text; /* user can select here, override body */
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+     user-select: text;
+}
+
+#opcodes_edit {
+    position: absolute;
+    left: 0;
+
+    width:200px;
+    overflow: hidden; /* remove scroll bar */
+    background: white;
+}
+#asm_linenums {
+    position: absolute;
+    left: 200px;
+
+    width: 40px;
+    border: none;
+    padding: 9px 3px 9px 9px;
+    text-align: right;
+    color: #888888;
+    overflow: hidden;
+    border-radius: 0;
+
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+
+    margin: 0 0 1px 0; /* without this the editor is off by 1 pixel in chrome. no idea */
+}
+
+.dbg_breakpoint:after {
+    content: url(breakpoint_light.png);
+    position: absolute;
+    left: 31px;
+}
+
+.edit_breakpoint:after {
+    /*background: #ff5555;*/
+    /*background: url(breakpoint_light.png) no-repeat right center;*/
+    content: url(breakpoint_light.png);
+    position: absolute;
+    right: 2px;
+}
+
+#edit_area {
+    display: inline-block;
+    position:relative;
+
+    width:600px;
+    height: 518px;
+    vertical-align: top; /* othewise the scroll bar hides the border */
+    overflow: hidden;
+}
+
+#debug_area {
+    position: relative; /* for the absolute positiond gray address bar */
+}
+#debug_text {
+    display: inline-block;
+    position:relative;
+
+    width:600px;
+    height: 518px;
+    vertical-align: top; /* othewise the scroll bar hides the border */
+    border: 1px solid black;
+    border-radius: 6px;
+    overflow: auto;
+    font-size: 16px;
+    font-family: courier;
+    margin: 0;
+    padding: 0 0 0 3px;
+    cursor: default;
+}
+.dplace { /* placeholdr for dlines */
+    height: 0;
+}
+#dbg_box_addr {
+    position: absolute;
+    top: 31px;
+    width: 50px;
+    height: calc( 100% - 31px);
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+}
+
+#asm_edit {
+    position: absolute;
+    top: 0;
+    left: 240px;
+    height: 100%;
+    width: calc(100% - 240px);
+    overflow-x: auto;
+    border:none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    margin: 0;
+    box-sizing: border-box;
+    /*opacity: 0.2;*/
+    color: transparent;
+    caret-color: black;
+}
+#asm_pre {
+    /*pointer-events: none;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border:none;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+
+}
+#asm_show {
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    font-family: courier;
+    vertical-align: top;
+    border: none;
+}
+
+#asm_show_rel {
+    position: relative;
+    left: 240px;
+
+    display: inline-block;
+    /*width: calc(600px - 240px);*/
+    /*height: 500px;*/
+    vertical-align: top;
+   /* overflow: hidden;*/
+}
+
+#asm_edit_and_lines {
+    border: 1px solid #000000;
+    border-radius: 4px;
+    display: inline-block;
+    height: 518px; /* 500 + padding of 9 */
+}
+
+
+#box_opcodes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 192px;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 6px;
+    pointer-events: none;  /* want these boxes to be transparent to the mouse */
+    box-sizing: border-box;
+}
+#box_edit {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    width: 400px;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 6px;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+#box_numbers {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    width: 39px;
+    height: 100%;
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+
+}
+
+
+
+.edit_error {
+    background-color: #ffd7d7;
+}
+.edit_warning {
+    background-color: #fff8ab;
+}
+#asm_output {
+    width:600px;
+    height:100px;
+    white-space: normal;
+    padding: 9px 0 9px 0;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    margin: 8px 0 0 0;
+}
+#asm_options {
+    margin: 8px 0 0 0;
+}
+
+.my_combo_box {
+    border-radius: 6px;
+    font-size: 14px;
+    height: 25px;
+}
+
+#asm_load_addr_type {
+}
+
+.edit_text_error {
+    background-color: rgb(255,140,140);
+}
+
+.stdout_line_w:nth-child(even) {
+    background: #ffeb8b;
+    cursor: pointer;
+}
+.stdout_line_w:nth-child(odd) {
+    background: #ffffaf;
+    cursor: pointer;
+}
+
+.stdout_line_e:nth-child(even) {
+    background: #ffcece;
+    cursor: pointer;
+}
+.stdout_line_e:nth-child(odd) {
+    background: #ffbcb4;
+    cursor: pointer;
+}
+
+
+.stdout_line_e, .stdout_line_w {
+    padding: 0 0 0 8px;
+}
+
+.current_dbg {
+    background-color: #ddddff;
+}
+.current_dbg_dead {
+    background-image: url("dbg_fail_red_ex.png");
+    background-color: #ffc7c7;
+    background-repeat: no-repeat;
+    background-position: calc( 100% - 5px) 1px;
+}
+.current_dbg_dead > .dbg_backfill {
+    color: #000000;
+}
+
+.dbg_comment_line {
+    /*background-color: white; no needed since if there's a comment first line will be in a dfXXXX div */
+}
+.dbg_opcodes {
+    display: inline-block;
+    width: 200px;
+}
+.dbg_backfill {
+    color: #c1c1c1;
+}
+
+/*--------------- side panel -----------------*/
+
+#players_panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #ececec;
+    width: 190px;
+    border-right: 1px solid #008800;
+    overflow: auto;
+}
+
+#action_panel {
+  position: absolute;
+  left: 200px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+}
+#action_rel {
+  position: relative;
+}
+#gray_out_debugger {
+    position: absolute;
+    background: rgba(200,200,200,0.8);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    visibility: hidden;
+    left: 190px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+#edit_panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 600px;
+  margin: 8px;
+}
+#memory_panel {
+  position: absolute;
+  left: 630px;
+  top: 0;
+
+}
+
+#players_rel {
+    position: relative;
+    width: 100%;
+    top: 10px;
+    /*bottom: 20px;*/
+}
+
+.hidden {
+    position: absolute;
+    z-index: -2;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from {opacity:0;}
+    to {opacity:1;}
+}
+@keyframes fadeOut {
+    from { opacity:1;  }
+    to {opacity:0; }
+}
+
+
+
+.toppic {
+    margin: 10px 11px 5px 10px;
+    background: #cfcfcf;
+    font-family: Verdana;
+    padding: 4px;
+    border-radius: 5px;
+    height: 142px;
+    transition: height 0.1s ease-in-out;
+    animation: fadeIn 200ms;
+    line-height: 26px;
+    overflow: hidden;
+}
+.removed_anim {
+    animation: fadeOut 100ms;
+}
+
+.famtitle {
+    height: 26px;
+    line-height: 26px;
+}
+
+.mycheck + .mycheck_label {
+    background-image: url(check_none.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+.mycheck:checked + .mycheck_label {
+    background-image: url(check_checked.png);
+}
+.mycheck:indeterminate + .mycheck_label {
+    background-image: url(check_int.png);
+}
+.mycheck[disabled="true"] + .mycheck_label {
+    filter: brightness(90%);
+}
+
+.fam_check {
+    width: 17px;
+    height: 17px;
+    margin: -4px 4px 0 2px;
+    vertical-align: middle;
+}
+.fam_label {
+    display: inline-block;
+    width: calc(100% - 60px);
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+    vertical-align: bottom; /* needed becaue overflow hidden changed the baseline https://stackoverflow.com/questions/22421782/css-overflow-hidden-increases-height-of-container */
+}
+.sel_wtype {
+    margin: 0 0 7px 3px;
+    width: calc(100% - 7px);
+}
+.wtype_label {
+    width: 200px;
+    text-indent: 20px;
+    line-height: 14px;
+    margin: 0 0 0 20px;
+    font-size: 85%;
+    background-size: 14px;
+}
+
+.opt_single {
+    background: url(check_none.png) no-repeat;
+}
+.src_sel_but {
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    margin: 3px 0 0 15px;
+    width: calc(100% - 20px);
+    transition: opacity 0.1s ease-in-out, height 0.1s ease-in-out, margin-top 0.1s ease-in-out;
+}
+
+#addPlayerBtn {
+    width: 34px;
+    height: 34px;
+    margin: 4px 7px 0px 11px;;
+}
+#addPlayerBtnIn {
+    background-image: url(plus.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 34px;
+    height: 33px;
+}
+.sc-btn[disabled="true"] > #addPlayerBtnIn {
+    box-shadow: initial;
+    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(plus.png);
+}
+.sc-btn[disabled="true"] > #addZombieBtnIn {
+    box-shadow: initial;
+    background-image: linear-gradient( rgba(255,255,255, 0.4),rgba(255,255,255, 0.4) ), url(plus.png);
+}
+
+.pl_close_icon {
+    width: 15px;
+    height: 15px;
+    background-image: url('reddish_ex.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    float: right;
+    /*border: #aa0000 solid 1px;*/
+    border-radius: 6px;
+    padding: 4px;
+}
+.pl_close_icon:hover {
+    background-image: url('red_ex.png');
+    background-color: rgba(255,255,255,0.7);
+}
+.pl_close_icon[disabled="true"] {
+    background-image: url('gray_ex.png');
+    background-color: transparent;
+}
+
+#pl_frame_zombies {
+    height:initial;
+    padding-bottom: 0px;
+}
+#addZombieBtn {
+    width: 28px;
+    height: 28px;
+    margin: 4px 7px 7px 15px;
+}
+#addZombieBtnIn {
+    background: url(plus.png) 6px 5px no-repeat;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+}
+
+.zomb_sel_but {
+    width: calc(100% - 40px);
+}
+.za_close_icon {
+    margin-top: 6px;
+}
+
+/* ------------------------------------------------------*/
+
+#editor_title {
+    height: 30px;
+    width: 300px;
+    margin: 6px 0 20px 0;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 0 0 0 10px;
+    border: 1px solid #000000;
+}
+#editor_boxes {
+}
+
+.small_editline {
+    height: 19px;
+    font-size: 16px;
+    font-family: courier;
+    border-radius: 6px;
+    border: 1px solid #000000;
+    padding: 2px;
+    vertical-align: 1px;
+    width: 100px;
+}
+#fixed_load_addr {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.12s ease-in-out;
+}
+#seed_edit {
+    float:right;
+}
+#seed {
+    margin-left: 3px;
+    width: 160px;
+}
+
+#debug_goto {
+    width: 100px;
+    margin: 0 0 6px 0;
+    height: 18px;
+    font-size: 16px;
+    font-family: courier;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    padding: 2px;
+}
+#btnGoTo {
+    height: 22px;
+    line-height: 18px;
+    vertical-align: -8px;
+    border: 1px solid;
+    width: 60px;
+    line-height: 20px;
+    margin: 0;
+    font-size: 14px;
+}
+#stepnum_cont {
+    float:right;
+    display:inline-block;
+    width: 8em;
+    margin: 5px;
+}
+
+#debugBtn{
+    width: 130px;
+    text-align:left;
+    margin-left: 20px;
+}
+#debugBtnIn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: -8px;
+    margin: 0 0px 0 9px;
+    background-image: url(green_play.png);
+}
+#debugBtnIn2 {
+    margin: 0 0 0 3px;
+}
+#competeBtn{
+    width: 130px;
+    text-align:left;
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+#competeBtnIn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: -8px;
+    margin: 0 0px 0 9px;
+}
+#competeBtnIn2 {
+    margin: 0 0 0 12px;
+}
+
+#competeRunBtn{
+    width: 120px;
+    text-align:left;
+    margin: 10px 0 0 20px;
+    height: 35px;
+    line-height: 35px;
+
+}
+#competeRunBtnIn {
+    display: inline-block;
+    background-image: url(green_play.png);
+    width: 30px;
+    height: 30px;
+    margin: 0 0px 0 9px;
+    vertical-align: -10px;
+    background-size: 80%;
+    background-repeat: no-repeat;
+
+}
+#competeRunBtnIn2 {
+    margin: 0 0 0 3px;
+}
+
+/* --------------------- cpuPanel --------------------- */
+
+#cpuPanel {
+    position: absolute;
+    left: 0;
+    top: 630px;
+}
+.reg_name {
+    display: inline-block;
+    text-align: right;
+    width: 37px;
+    font-family: courier;
+    font-weight: bold;
+}
+.reg_long_name {
+    width: 75px;
+}
+.reg_input {
+    width: 60px;
+    font-family: courier;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 2px solid #aaaaaa;
+    height: 17px;
+    margin: 2px 0 0 3px;
+    padding: 1px 0 1px 3px;
+    font-size: 16px;
+}
+#reg_flags_table {
+    border: 1px solid #000000;
+    /*border-collapse: collapse;*/
+    margin: 5px;
+    border-radius: 5px;
+}
+.flag_check {
+    width: 17px;
+    height: 17px;
+}
+
+#reg_flags_table td {
+    border-left: 1px solid #000;
+    width: 25px;
+    text-align: center;
+}
+#reg_flags_table td:first-child {
+    border-left: none;
+}
+#reg_flags_table .bytesep {
+    border-left: 2px solid #000000;
+}
+.flag_unsed {
+    background-color: #cccccc;
+}
+#reg_flags_table tr:first-child td:first-child {
+    border-top-left-radius: 5px;
+}
+#reg_flags_table tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+}
+
+.dbg_reg_err {
+    background-color: #ff9999;
+}
+
+
+#hex_dec {
+    float: right;
+    width: 70px;
+    height: 90px;
+}
+#hexBtn, #decBtn {
+    width: 45px;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 0 5px 20px;
+    border: 1px solid #cccccc;
+}
+
+.base-btn:active, .sc-check:checked+.base-btn {
+    background-image: linear-gradient(to bottom, #479ceb, #1067c1);
+    /*color: #000;*/
+}
+
+.title-buttons {
+    border: 1px solid;
+    width: 77px;
+    height: 30px;
+    line-height: 29px;
+    font-size: 17px;
+    margin: 0;
+}
+#dbgButtons {
+    margin: 0 0 6px 7px;
+}
+#btnPause {
+}
+#btnSingleRound {
+}
+#speedSliderCont {
+    vertical-align: 10px;
+    margin-left: 4px;
+    line-height: 29px;
+    border: 1px solid;
+    height: 30px;
+    display: inline-block;
+    border-radius: 0.4em;
+    padding: 0 5px 0 5px;
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0px -0.15em 0px, inset rgba(255, 255, 255, 0.2) 0px 0.15em 0px;
+}
+#speedSliderVal {
+    width: 2.5em;
+    display: inline-block;
+}
+#speedSlider {
+    vertical-align: 1px;
+}
+#speedZero {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border-radius: 3px;
+    border: 1px solid #d2cfcf;
+    display: inline-block;
+    vertical-align: -4px;
+    background-image: url(zero_but.png);
+    background-repeat: no-repeat;
+    background-position: 3px 3px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 170px;
+    height: 10px;
+    border-radius: 5px;
+    background: #afafaf;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #555555;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #555555;
+    cursor: pointer;
+}
+
+
+
+/* --------------------- cpuPanel bottom --------------------- */
+#messagesArea {
+    border: 1px solid #000000;
+    height: 140px;
+    display: inline-block;
+    width: 600px;
+    border-radius: 4px;
+    margin: 10px 0 0 0;
+}
+
+.submem_area {
+    border: 1px solid #000000;
+    border-radius: 4px;
+    display: inline-block;
+    height: 180px;
+    margin: 5px;
+    position: relative;
+}
+#stackArea {
+    width: 160px;
+}
+#sharedMemArea {
+    width: 160px;
+}
+
+#stackView {
+}
+#sharedMemView {
+}
+.submem_title {
+    background: #eaeaea;
+    border-radius: 6px 6px 0 0;;
+    border-bottom: 1px solid #000000;
+    padding: 3px;
+    text-align: center;
+}
+.submem_list {
+    overflow: auto;
+    height: calc( 100% - 28px );  /* minus header height */
+    font-family: courier;
+    font-size: 16px;
+    padding: 2px 0 0 4px;
+    white-space: pre;
+}
+.submem_box_addr {
+    position: absolute;
+    top: 26px;
+    width: 58px;
+    height: calc( 100% - 26px);
+    background: #eeeeee;
+    border-right: 1px solid #cccccc;
+    z-index: -1; /* don't know why */
+}
+
+.atStackLine {
+    background-color: #ddddff;
+}
+#watch_container {
+    display: inline-block;
+    height: 180px;
+    width: 243px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+}
+
+#watchArea {
+    overflow-x:hidden;
+    overflow-y:auto;
+    height: calc( 100% - 26px); /* needed so that the scrollbar would show at the bottom */
+    position: relative;
+}
+
+.watch_row {
+    white-space:nowrap;
+    height: 21px;
+    position: relative; /* for X placement */
+}
+
+.watch_expr, .watch_val  {
+    position: relative;
+    border: 1px solid #000000;
+    font-family: courier;
+    font-size: 16px;
+    height: 21px;
+    line-height: 21px;
+
+    display: inline-block;
+    white-space: normal;
+
+    border-top: none;
+    border-left: none;
+    padding: 0 0 0 3px;
+    box-sizing: border-box;
+}
+.watch_expr {
+
+}
+.watch_val {
+    border-right: none;
+    width: 200px;
+    overflow:hidden;
+}
+
+.watch_expr_edit {
+    visibility: hidden;
+    position: absolute;
+    width: calc( 100% - 8px);
+    top: 0;
+    left: 3px;
+    height: 100%;
+    font-family:courier;
+    font-size: 16px;
+    border: none;
+    padding: 0;
+
+}
+.watch_expr_content {
+    overflow:hidden;
+}
+
+.watch_grip {
+    position: absolute;
+    height: 21px;
+    width: 7px;
+    right: -4px;
+    top: 0;
+    cursor: col-resize;
+    z-index: 1;
+}
+
+
+#add_watch_but {
+    width: 19px;
+    height: 19px;
+    background: url(small_plus.png) no-repeat;
+    background-position: 3px 3px;
+    background-color: #d5d5ff;
+    line-height:18px;
+    border-radius:3px;
+    position: absolute;
+    /* position from top set in code */
+}
+
+
+.watch_del_but {
+    width: 19px;
+    height: 19px;
+    background-image: url(small_ex.png) !important;
+    background-repeat: no-repeat;
+    line-height:18px;
+    border-radius:3px;
+    position: absolute;
+    left: calc(100% - 21px);
+    margin: 0;
+    background-position: 4px;
+    background-color: #ffcdcd !important; /* override the sc-btn behaviour */
+    display: none;
+}
+.watch_row:hover > .watch_del_but {
+    display:initial;
+}
+
+#uploadBinBut {
+    background-image: url(upload_bin.png);
+    background-repeat: no-repeat;
+    background-position: 2px 3px;
+    height: 34px;
+    width: 46px;
+    position: absolute;
+    border-radius: 5px;
+}
+#uploadBinBut:active {
+    background-position: 3px 4px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(upload_bin.png);
+    background-repeat: repeat, no-repeat; /* needed to avoid strange shadow when pressed */
+}
+
+#aboutBtn {
+    background-image: url(q_mark.png);
+    background-repeat: no-repeat;
+    background-position: 8px 3px;
+    height: 34px;
+    width: 33px;
+    position: absolute;
+    border-radius: 5px;
+    right: 0;
+}
+#aboutBtn:active {
+    background-position: 9px 4px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(q_mark.png);
+    background-repeat: repeat, no-repeat;
+}
+.popupBack {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(20,20,20, 0.82);
+    top: 0;
+    left: 0;
+    z-index: 1; /* above the export button which is an appended child */
+}
+.popupWin {
+    position: absolute;
+    width: 600px;
+    height: 230px;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    background: #FFF;
+    border-radius: 15px;
+    padding: 20px;
+}
+h1, h2, h3 {
+    margin: 0;
+    font-family: Tahoma;
+}
+h1 {
+    font-size: 30px;
+    margin: 0 0 0 30px;
+    font-family: monospace;
+}
+h2 {
+    font-size: 18px;
+    font-weight: normal;
+}
+h3 {
+    font-size: 16px;
+    margin: 30px 0 0 0;
+    font-weight: normal;
+}
+
+#hoverCellInfo {
+    font: 14px monospace;
+}
+
+/*----------------------- graphs panel ---------------------------*/
+
+#graphs_panel {
+    position: absolute;
+    top: 10px;
+    left: 191px;
+    width: 710px;
+    background: linear-gradient(to right, #c9c9c9 0%,#fdfdfd 20px); /* http://www.colorzilla.com/gradient-editor/ */
+    border: 1px solid;
+    border-left: none;
+    border-radius: 0 15px 15px 0;
+   /* bottom: 30px;*/
+    box-shadow: 2px 2px 14px -1px rgba(255, 255, 255, 1), 4px 4px 14px -1px rgba(0, 0, 0, 1);
+
+    transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.32, 0.57, 0.15, 1);
+    box-sizing: border-box;
+    overflow: hidden; /* when the panel is hidden, hide its content */
+}
+
+#graphs_canvas {
+    margin: 10px 10px 10px 20px;
+}
+
+#graphs_title {
+    border-bottom: 1px solid;
+    text-align: center;
+    padding: 5px;
+    font-size: 120%;
+    background: linear-gradient(to right, #c9c9c9 0%,#eeeeee 20px);
+
+}
+
+#battlesPerGroupField {
+    height: 30px;
+    width: 100px;
+    margin: 12px 0 0 0;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 0 0 0 10px;
+    border: 1px solid #000000;
+    vertical-align: top;
+}
+#battlesLabel {
+    display: inline-block;
+    vertical-align: top;
+    margin: 12px 0 0 20px;
+    line-height: 30px;
+}
+#battlesRan {
+    display: inline-block;
+    vertical-align: top;
+    margin: 12px 14px 0 0;
+    line-height: 30px;
+    position: absolute;
+    right: 0;
+}
+#graphs_control {
+    overflow: hidden;
+    position: relative;
+    width: 709px;
+}

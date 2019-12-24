@@ -274,7 +274,10 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		if (currentWar == null)
 			return;
 		if (m_currentWarriorIndex == -1) {
-			m_currentWarriorIndex = currentWar.getWarriorByLabel(m_currentWarriorLabel).m_myIndex;
+			Warrior w = currentWar.getWarriorByLabel(m_currentWarriorLabel);
+			if (w == null) // warrior disabled
+				return;
+			m_currentWarriorIndex = w.m_myIndex;
 		}
 
 		//CpuState state = currentWar.getWarrior(dropMenu.getSelectedIndex()).getCpuState();
@@ -464,6 +467,8 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 			return;
 
 		Warrior warrior = currentWar.getWarriorByLabel(m_currentWarriorLabel);
+		if (warrior == null) // if currently selected warrior is disabled
+			return;
 
 		stackView.initMemRegion(warrior.m_stackWritableRegion, currentWar.getMemory(), force);
 		sharedMemView.initMemRegion(warrior.m_sharedWritableRegion, currentWar.getMemory(), force);

@@ -1,4 +1,12 @@
+important
+- checkboxes
+- errors to gui
+- colors
+- save
+- checkbox disable zombies
 
+
+-------
   
 nasm assert:
   resb 3000000000  -memory
