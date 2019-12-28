@@ -1,6 +1,5 @@
 important
 - errors to gui
-- save
 - checkbox disable zombies
 
 

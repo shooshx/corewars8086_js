@@ -581,7 +581,7 @@ input:disabled + .sc-btn:active,
 #editor_title {
     height: 30px;
     width: 300px;
-    margin: 6px 0 20px 0;
+    margin: 7px 0 19px 0;
     font-size: 20px;
     border-radius: 5px;
     padding: 0 0 0 10px;
@@ -1025,12 +1025,23 @@ input:disabled + .sc-btn:active,
     height: 34px;
     width: 46px;
     position: absolute;
+    left: 313px;
     border-radius: 5px;
 }
 #uploadBinBut:active {
     background-position: 3px 4px;
     background-image: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.1)), url(upload_bin.png);
     background-repeat: repeat, no-repeat; /* needed to avoid strange shadow when pressed */
+}
+#downloadBinBut {
+    background-image: url(download_bin.png);
+    background-repeat: no-repeat;
+    background-position: 2px 3px;
+    height: 34px;
+    width: 46px;
+    position: absolute;
+    left: 366px;
+    border-radius: 5px;
 }
 
 #aboutBtn {

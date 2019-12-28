@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.codewars_js;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.8.2";
-var $strongName = '1F726871F882C208A2478E61DF76815D';
+var $strongName = '816645A1621906A2D411FC4C77C592CA';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -7358,7 +7358,7 @@ function $runWar(this$static, isInDebug){
   }
    catch ($e0) {
     $e0 = toJava($e0);
-    if (instanceOf($e0, 14)) {
+    if (instanceOf($e0, 15)) {
       console.log('Error in configuration');
     }
      else 
@@ -7724,7 +7724,7 @@ function $regChanged_callback(this$static, name_0, value_0){
   }
    catch ($e0) {
     $e0 = toJava($e0);
-    if (instanceOf($e0, 14)) {
+    if (instanceOf($e0, 15)) {
       $errorPreventsStep(this$static.m_mainwnd, true);
       return this$static.m_base == 10?-2000000:-1000000;
     }
@@ -8784,7 +8784,7 @@ function $addCheck(this$static, startAddrStr, len, name_0){
   }
    catch ($e0) {
     $e0 = toJava($e0);
-    if (instanceOf($e0, 14)) {
+    if (instanceOf($e0, 15)) {
       console.error('Player ' + name_0 + ' fixed start address is not a valid hex number');
       return -2;
     }
@@ -8950,7 +8950,7 @@ function $checkPlayersReady(this$static){
   }
   countEnabled = 0;
   for (i = 0; i < this$static.m_players.array.length; ++i) {
-    p = castTo($get_4(this$static.m_players, i), 15);
+    p = castTo($get_4(this$static.m_players, i), 14);
     if (!p.isEnabled)
       continue;
     ++countEnabled;
@@ -8982,34 +8982,35 @@ $checkPlayersReady.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$
 function $demo_like_original(this$static){
   $wnd.addPlayersPanel();
   $wnd.addPlayersPanel();
-  this$static.m_inEditor = castTo($get_4(this$static.m_players, 1), 15).code_0[0];
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 1), 14).code_0[0];
   this$static.m_inEditor.asmText = ' PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n';
   $playerSelectionChanged(this$static.m_mainWnd.m_codeEditor, this$static.m_inEditor, this$static);
-  this$static.m_inEditor = castTo($get_4(this$static.m_players, 1), 15).code_0[1];
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 1), 14).code_0[1];
   this$static.m_inEditor.asmText = ' PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n';
   $playerSelectionChanged(this$static.m_mainWnd.m_codeEditor, this$static.m_inEditor, this$static);
   this$static.m_inEditor.player.wtype = ($clinit_PlayersPanel$EWarriorType() , TWO_DIFFERENT);
   $updateTitle(this$static, 'shooterA');
   $changedWType(this$static.m_inEditor.player.label_0, 'TWO_DIFFERENT');
-  this$static.m_inEditor = castTo($get_4(this$static.m_players, 2), 15).code_0[0];
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 2), 14).code_0[0];
   this$static.m_inEditor.asmText = ' PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n';
   this$static.m_inEditor.player.wtype = SINGLE;
   $updateTitle(this$static, 'shooterB');
   $playerSelectionChanged(this$static.m_mainWnd.m_codeEditor, this$static.m_inEditor, this$static);
-  this$static.m_inEditor = castTo($get_4(this$static.m_players, 3), 15).code_0[0];
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 3), 14).code_0[0];
   this$static.m_inEditor.asmText = ' PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n';
   this$static.m_inEditor.player.wtype = SINGLE;
   $updateTitle(this$static, 'shooterC');
   $playerSelectionChanged(this$static.m_mainWnd.m_codeEditor, this$static.m_inEditor, this$static);
-  this$static.m_inEditor = castTo($get_4(this$static.m_players, 0), 15).code_0[0];
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 0), 14).code_0[0];
   $updateTitle(this$static, 'bimp');
   this$static.m_inEditor.asmText = 'PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n';
   $playerSelectionChanged(this$static.m_mainWnd.m_codeEditor, this$static.m_inEditor, this$static);
-  this$static.m_inEditor = castTo($get_4(this$static.m_players, 0), 15).code_0[1];
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 0), 14).code_0[1];
   this$static.m_inEditor.asmText = 'PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n';
   $playerSelectionChanged(this$static.m_mainWnd.m_codeEditor, this$static.m_inEditor, this$static);
   this$static.m_inEditor.player.wtype = TWO_DIFFERENT;
   $changedWType(this$static.m_inEditor.player.label_0, 'TWO_DIFFERENT');
+  this$static.m_inEditor = castTo($get_4(this$static.m_players, 0), 14).code_0[0];
 }
 
 $demo_like_original.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$demo_like_original';
@@ -9018,7 +9019,7 @@ function $ensureSelectedPlayerActive(this$static){
   if (this$static.m_inEditor.player.isEnabled)
     return;
   for (i = 0; i < this$static.m_players.array.length; ++i) {
-    p = castTo($get_4(this$static.m_players, i), 15);
+    p = castTo($get_4(this$static.m_players, i), 14);
     if (!p.isEnabled)
       continue;
     $setSelectedCode(this$static, p.label_0);
@@ -9061,6 +9062,14 @@ function $exportMethods_3(this$static){
     that.j_enablePlayer_0(a, b);
   }
   );
+  $wnd.j_getCurrentName = $entry(function(){
+    return that.j_getCurrentName_0();
+  }
+  );
+  $wnd.j_getCurrentBin = $entry(function(){
+    return that.j_getCurrentBin_0();
+  }
+  );
 }
 
 $exportMethods_3.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$exportMethods';
@@ -9077,7 +9086,7 @@ $findCode.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$findCode'
 function $findPlayer(this$static, label_0){
   var p, p$iterator;
   for (p$iterator = new ArrayList$1(this$static.m_players); p$iterator.i < p$iterator.this$01.array.length;) {
-    p = castTo($next_5(p$iterator), 15);
+    p = castTo($next_5(p$iterator), 14);
     if ($equals_4(p.label_0, label_0))
       return p;
   }
@@ -9089,13 +9098,13 @@ function $getFiles(this$static, prefix){
   var c, count, i, p, p$iterator, p$iterator0;
   count = 0;
   for (p$iterator0 = new ArrayList$1(this$static.m_players); p$iterator0.i < p$iterator0.this$01.array.length;) {
-    p = castTo($next_5(p$iterator0), 15);
+    p = castTo($next_5(p$iterator0), 14);
     $charAt(p.label_0, 0) == prefix && (count += p.wtype == ($clinit_PlayersPanel$EWarriorType() , SINGLE)?1:2);
   }
   i = 0;
   c = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_PlayersPanel$Code_2_classLit, $intern_2, 47, count, 0, 1);
   for (p$iterator = new ArrayList$1(this$static.m_players); p$iterator.i < p$iterator.this$01.array.length;) {
-    p = castTo($next_5(p$iterator), 15);
+    p = castTo($next_5(p$iterator), 14);
     if ($charAt(p.label_0, 0) != prefix)
       continue;
     c[i++] = p.code_0[0];
@@ -9232,7 +9241,7 @@ _.j_demoDebugPlayers_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPan
 _.j_enablePlayer_0 = function j_enablePlayer(label_0, enable){
   var p, p$iterator;
   for (p$iterator = new ArrayList$1(this.m_players); p$iterator.i < p$iterator.this$01.array.length;) {
-    p = castTo($next_5(p$iterator), 15);
+    p = castTo($next_5(p$iterator), 14);
     if ($equals_4(label_0, p.label_0)) {
       p.isEnabled = enable;
       return;
@@ -9242,6 +9251,16 @@ _.j_enablePlayer_0 = function j_enablePlayer(label_0, enable){
 }
 ;
 _.j_enablePlayer_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.j_enablePlayer';
+_.j_getCurrentBin_0 = function j_getCurrentBin(){
+  return this.m_inEditor.bin;
+}
+;
+_.j_getCurrentBin_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.j_getCurrentBin';
+_.j_getCurrentName_0 = function j_getCurrentName(){
+  return this.m_inEditor.name_0;
+}
+;
+_.j_getCurrentName_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.j_getCurrentName';
 _.j_loadAddrChanged_0 = function j_loadAddrChanged(value_0, isRand){
   if (!this.m_inEditor)
     return;
@@ -9272,11 +9291,11 @@ _.j_loadBinary_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.j_l
 _.j_removePlayer_0 = function j_removePlayer(label_0){
   var p, p$iterator;
   for (p$iterator = new ArrayList$1(this.m_players); p$iterator.i < p$iterator.this$01.array.length;) {
-    p = castTo($next_5(p$iterator), 15);
+    p = castTo($next_5(p$iterator), 14);
     if ($equals_4(label_0, p.label_0)) {
       $remove_2(this.m_players, p);
       log_0('Removed ' + label_0 + ' ' + ('' + this.m_players.array.length));
-      this.m_inEditor.player == p && $setSelectedCode(this, castTo($get_4(this.m_players, 0), 15).label_0);
+      this.m_inEditor.player == p && $setSelectedCode(this, castTo($get_4(this.m_players, 0), 14).label_0);
       return;
     }
   }
@@ -9368,9 +9387,9 @@ function PlayersPanel$PlayerInfo(lbl, ttl){
 }
 
 PlayersPanel$PlayerInfo.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel$PlayerInfo.PlayersPanel$PlayerInfo';
-defineClass(15, 1, {15:1}, PlayersPanel$PlayerInfo);
+defineClass(14, 1, {14:1}, PlayersPanel$PlayerInfo);
 _.isEnabled = true;
-var Lil_co_codeguru_corewars8086_gui_PlayersPanel$PlayerInfo_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'PlayersPanel/PlayerInfo', 15);
+var Lil_co_codeguru_corewars8086_gui_PlayersPanel$PlayerInfo_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'PlayersPanel/PlayerInfo', 14);
 function $$init_17(this$static){
 }
 
@@ -13298,8 +13317,8 @@ function NumberFormatException(message){
 }
 
 NumberFormatException.displayName = 'java.lang.NumberFormatException.NumberFormatException';
-defineClass(14, 52, {3:1, 7:1, 14:1, 4:1, 8:1}, NumberFormatException);
-var Ljava_lang_NumberFormatException_2_classLit = createForClass('java.lang', 'NumberFormatException', 14);
+defineClass(15, 52, {3:1, 7:1, 15:1, 4:1, 8:1}, NumberFormatException);
+var Ljava_lang_NumberFormatException_2_classLit = createForClass('java.lang', 'NumberFormatException', 15);
 function StackTraceElement(methodName, fileName, lineNumber){
   this.className = 'Unknown';
   this.methodName = methodName;

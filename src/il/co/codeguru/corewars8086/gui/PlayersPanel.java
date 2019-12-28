@@ -107,6 +107,8 @@ public class PlayersPanel
         $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
         $wnd.j_loadBinary      = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadBinary(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(b) });
         $wnd.j_enablePlayer    = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_enablePlayer(Ljava/lang/String;Z)(a,b) });
+        $wnd.j_getCurrentName  = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_getCurrentName()() });
+        $wnd.j_getCurrentBin  = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_getCurrentBin()() });
     }-*/;
 
     public PlayerInfo findPlayer(String label) {
@@ -186,6 +188,7 @@ public class PlayersPanel
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
         m_inEditor.player.wtype = EWarriorType.TWO_DIFFERENT;
         changedWType(m_inEditor.player.label, "TWO_DIFFERENT");
+        m_inEditor = m_players.get(0).code[0];
     }
 
     public void j_demoDebugPlayers() {
@@ -450,5 +453,12 @@ public class PlayersPanel
 
     }
 
+    public String j_getCurrentName() {
+        return m_inEditor.getName();
+    }
+
+    public byte[] j_getCurrentBin() {
+        return m_inEditor.getBin();
+    }
 
 }

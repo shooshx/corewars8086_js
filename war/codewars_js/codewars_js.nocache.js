@@ -371,11 +371,11 @@ function codewars_js(){
     }
     var strongName;
     try {
-      unflattenKeylistIntoAnswers(['gecko1_8'], '1F726871F882C208A2478E61DF76815D');
-      unflattenKeylistIntoAnswers(['ie10'], '1F726871F882C208A2478E61DF76815D' + ':1');
-      unflattenKeylistIntoAnswers(['ie8'], '1F726871F882C208A2478E61DF76815D' + ':2');
-      unflattenKeylistIntoAnswers(['ie9'], '1F726871F882C208A2478E61DF76815D' + ':3');
-      unflattenKeylistIntoAnswers(['safari'], '1F726871F882C208A2478E61DF76815D' + ':4');
+      unflattenKeylistIntoAnswers(['gecko1_8'], '816645A1621906A2D411FC4C77C592CA');
+      unflattenKeylistIntoAnswers(['ie10'], '816645A1621906A2D411FC4C77C592CA' + ':1');
+      unflattenKeylistIntoAnswers(['ie8'], '816645A1621906A2D411FC4C77C592CA' + ':2');
+      unflattenKeylistIntoAnswers(['ie9'], '816645A1621906A2D411FC4C77C592CA' + ':3');
+      unflattenKeylistIntoAnswers(['safari'], '816645A1621906A2D411FC4C77C592CA' + ':4');
       strongName = answers[computePropValue('user.agent')];
       var idx = strongName.indexOf(':');
       if (idx != -1) {

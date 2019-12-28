@@ -776,9 +776,22 @@ function triggerUploadBinChanged()
         console.error(e)
     }
     reader.readAsArrayBuffer(file);
-
-
     return false
+}
+
+
+function saveFile(name, type, data) {
+    var url = window.URL.createObjectURL(new Blob([data], {type: type}));
+    downloadLink.setAttribute("href", url);
+    downloadLink.setAttribute("download", name);
+    downloadLink.click();
+    window.URL.revokeObjectURL(url);
+}
+function triggerDownloadBin()
+{
+    var name = j_getCurrentName()
+    var bin = new Uint8Array(j_getCurrentBin())
+    saveFile(name, "octet/stream", bin)
 }
 
 //-------------------------------- warCanvas wheel zoom -----------------
