@@ -720,7 +720,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         byte[] buf = read_file_bin_arr("player");
         if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
             String msg = "Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes";
-            Console.error(msg);
+            Console.err_box(msg);
             asm_output.innerHTML = "<div class='stdout_line_e'>" + msg + "</div>";
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, buf, null);

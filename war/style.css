@@ -1171,3 +1171,29 @@ h3 {
     width: 709px;
 }
 
+#error_box {
+position: absolute;
+    display: none;
+    width: 600px;
+    height: 80px;
+    bottom: 5%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ffdfdf;
+    border-radius: 10px;
+    padding: 10px;
+    border: solid 5px #ff0000;
+}
+#error_title {
+    text-align: center;
+    color: #cc0000;
+    font-size: 20px;
+    font-weight: bold;
+}
+#error_msg {
+    text-align: center;
+    font-size: 18px;
+    margin: 6px 0 0 0;
+}

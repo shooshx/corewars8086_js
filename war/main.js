@@ -202,11 +202,11 @@ function scrollToAddr(addr) {
 function triggerGoTo() {
     var addr = parseInt(debug_goto.value, 16)
     if (isNaN(addr)) {
-        console.error("failed to parse address");
+        err_box("failed to parse address");
         return
     }
     if (addr < 0  || addr > 0xffff) {
-        console.error("address out of range");
+        err_box("address out of range");
     }
     scrollToAddr(addr)
 }
@@ -573,6 +573,7 @@ function triggerDebug() {
             var uz = g_usedZnums[uzi]
             document.getElementById("player_erase_z" + uz).setAttribute("disabled", true)
         }
+        clear_error()
     }
     else {
         j_stopDebug()
@@ -1014,6 +1015,7 @@ function triggerStartCompete()
 
         competeRunBtnIn.style.backgroundImage = "url(red_stop.png)"
         competeRunBtnIn2.innerText = "Stop"
+        clear_error()
     }
     else {
         j_stopCompete()
@@ -1042,9 +1044,11 @@ function triggerAbout(v, ev) {
     aboutWin.onclick = eventStopProp
 }
 
-function show_error() {
-
+function show_error(msg) {
+    error_msg.innerHTML = msg
+    error_box.style.display = "initial"
 }
-function hide_error() {
-
+function clear_error() {
+    error_msg.innerHTML = ""
+    error_box.style.display = ""
 }

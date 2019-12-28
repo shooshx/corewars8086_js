@@ -1,5 +1,4 @@
 important
-- errors to gui
 - checkbox disable zombies
 - "killed by"
 
@@ -35,7 +34,7 @@ Competition:
 
 - fix colors to be consistant, IP pointer
 
-- colors on players pane
+
 - colors of playes in messages in debugger
 
 
@@ -51,7 +50,7 @@ debugger
 - what happens if the war ends while on Resume? - need to pause
 
 
-|| 
+
 - pressing the player button shows where it is in the memory panel
 
 - breakpoints in edit
@@ -60,7 +59,7 @@ debugger
 - data breakpoints
 
 - online live game?
-- enable/disable players with checkbox
+
 - code button should be red if code has errors
 
 
@@ -82,13 +81,11 @@ debugger
 - labels from code in watch?
 - check long pages of comments at the start of .asm and in the middle, in either the player above or in me
 
-- all console.error, Console.error to message boxes
+
 - disassembled asm does not compile 'MOV [SI], 0x7C6' missing 'byte' or 'word'
 
 
-
 - don't disassemble lines that were in the original text
-- export code to bin file
 
 
 - check timing of - main memory using an Int8Array from GWT
@@ -105,7 +102,6 @@ debugger
 - check what happens in debugger at 200,000 steps
 
 
-
 minor BUG - parsing an opcode out of memory boundary reads wrong number
 
 
@@ -113,8 +109,5 @@ minor BUG - parsing an opcode out of memory boundary reads wrong number
 - make it not possible to add breakpoints in comment lines?
 
 - registers, watch - display can be hex/signed/unsigned
-
-
-
 
 - save entire state of game

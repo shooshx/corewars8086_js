@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.codewars_js;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.8.2";
-var $strongName = '74DEB937A63FD97ED665B1DC2F0EA6AE';
+var $strongName = '0920343957A4F0840B0E22F58B8DD63F';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -6192,10 +6192,7 @@ function $checkDisasmLines(this$static, binbuf, listing, asmElem, intext){
         eptr = dis.pointer - 1;
         eptr >= 0 && eptr < binbuf.length && (msg += ', opcode = 0x' + hex2(binbuf[eptr] & 255));
       }
-       else if (instanceOf($e0, 4)) {
-        console.error('failed parsing binbuf RuntimeException');
-      }
-       else 
+       else if (!instanceOf($e0, 4))
         throw toJs($e0);
     }
     if (msg != null) {
@@ -6207,7 +6204,6 @@ function $checkDisasmLines(this$static, binbuf, listing, asmElem, intext){
         }
         e = ($clinit_DomGlobal() , document_0).getElementById('mline_' + ('' + (atLstLine + 1)));
         if (e == null) {
-          console.error('did not find line?');
           return asmElem;
         }
         e.classList.add('edit_warning');
@@ -6513,7 +6509,6 @@ function $loadedNewBinary(this$static, incode, callback){
   setbin = incode.bin;
   $setText_0(this$static, incode.asmText, callback);
   neq = $bin_equal(setbin, incode.bin);
-  neq != 0 && (console.error('Disassembled code is different from original code at ' + ('' + neq)) , undefined);
   this$static.m_breakpoints = incode.breakpoints;
 }
 
@@ -6661,7 +6656,6 @@ function $setText_0(this$static, intext, playersPanel){
   }
   if (retcode != 0) {
     this$static.opcodes_edit.innerHTML = $linesAsInput(intext);
-    console.error('~Assembler error');
     !!playersPanel && $updateAsmResult(playersPanel, false, null, null);
     return;
   }
@@ -6678,14 +6672,13 @@ function $setText_0(this$static, intext, playersPanel){
   ok = $parseLst(output, opcodesText, this$static.m_currentListing);
   if (!ok) {
     this$static.opcodes_edit.innerHTML = '[listing parsing error]';
-    console.error('listing parsing error');
     $updateAsmResult(this$static.m_playersPanel, false, null, null);
     return;
   }
   this$static.opcodes_edit.innerHTML = opcodesText.string;
   buf = read_file_bin_arr();
   if (buf.length > 512) {
-    console.error('Code is longer than the maximum allowed 512 bytes');
+    $wnd.show_error('Code is longer than the maximum allowed 512 bytes');
     this$static.asm_output.innerHTML = "<div class='stdout_line_e'>Code is longer than the maximum allowed 512 bytes<\/div>";
     !!playersPanel && $updateAsmResult(playersPanel, false, buf, null);
     return;
@@ -6733,7 +6726,6 @@ function $toggleBreakpointDbg(this$static, addr){
     }
      else {
       removed = $remove_2(codeObj.breakpoints, br);
-      removed || (console.error('removed a breakpoint that did not exist?') , undefined);
     }
     codeObj == this$static.m_playersPanel.m_inEditor && (e = ($clinit_DomGlobal() , document_0).getElementById('ln' + ('' + lsti)) , wasAdded?e.classList.add('edit_breakpoint'):e.classList.remove('edit_breakpoint'));
   }
@@ -6745,7 +6737,6 @@ function $toggleBreakpointEdit(this$static, atline){
   var atindex, b, b$iterator, e, found;
   atindex = atline - 1;
   if (atindex < 0 || atindex >= this$static.m_currentListing.array.length) {
-    console.error('addBreakpointEdit invalid line ' + ('' + atline));
     return;
   }
   found = null;
@@ -7376,7 +7367,7 @@ function $runWar(this$static, isInDebug){
       throw toJs($e0);
   }
   if (battlesPerGroup <= 0) {
-    console.error('battles per session needs to be more than 0');
+    $wnd.show_error('battles per session needs to be more than 0');
     return false;
   }
   repo = this$static.competition.warriorRepository;
@@ -7385,7 +7376,7 @@ function $runWar(this$static, isInDebug){
   this$static.inGraphs && $clear_0(this$static.columnGraph, repo.warriorGroups);
   numOfGroups = repo.warriorGroups.array.length;
   if (numOfGroups == 0) {
-    console.error("can't run without any warriors");
+    $wnd.show_error("can't run without any warriors");
     return false;
   }
   try {
@@ -8773,7 +8764,6 @@ function FlagFields(name_0, frame_0){
   this.m_frame = frame_0;
   ename = name_0 + '_fcheck';
   this.checkBox = castToNative(($clinit_DomGlobal() , document_0).getElementById(ename), $wnd.HTMLInputElement);
-  this.checkBox == null && (console.error('Did not find flag ' + name_0) , undefined);
   this.checkBox.addEventListener('change', new FlagFields$lambda$0$Type(this, name_0));
 }
 
@@ -8801,25 +8791,25 @@ function $addCheck(this$static, startAddrStr, len, name_0){
    catch ($e0) {
     $e0 = toJava($e0);
     if (instanceOf($e0, 15)) {
-      console.error('Player ' + name_0 + ' fixed start address is not a valid hex number');
+      $wnd.show_error('Player ' + name_0 + ' fixed start address is not a valid hex number');
       return -2;
     }
      else 
       throw toJs($e0);
   }
   if (startAddr < 0 || startAddr > $intern_0) {
-    console.error('Player ' + name_0 + ' fixed start address is out of 16 bit number range');
+    $wnd.show_error('Player ' + name_0 + ' fixed start address is out of 16 bit number range');
     return -2;
   }
   if (startAddr > $intern_0 - len + 1) {
-    console.error('Player ' + name_0 + ' fixed start address does not leave enough space for code (' + ('' + len) + ' bytes)');
+    $wnd.show_error('Player ' + name_0 + ' fixed start address does not leave enough space for code (' + ('' + len) + ' bytes)');
     return -2;
   }
   r = new LoadAddrChecker$AddrRange(name_0, startAddr, startAddr + len - 1);
   for (a$iterator = new ArrayList$1(this$static.fixedRanges); a$iterator.i < a$iterator.this$01.array.length;) {
     a = castTo($next_5(a$iterator), 65);
     if (a.start_0 <= r.end_0 && r.start_0 <= a.end_0) {
-      error_0('Player ' + name_0 + ' fixed start address overlaps with that of player ' + a.name_0);
+      err_box('Player ' + name_0 + ' fixed start address overlaps with that of player ' + a.name_0);
       return -2;
     }
   }
@@ -8961,7 +8951,7 @@ $changedWType.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$chang
 function $checkPlayersReady(this$static){
   var c, ci, countEnabled, i, p;
   if (this$static.m_players.array.length == 0) {
-    console.error('No players added');
+    $wnd.show_error('No players added');
     return false;
   }
   countEnabled = 0;
@@ -8978,17 +8968,17 @@ function $checkPlayersReady(this$static){
     for (ci = 0; ci < (p.wtype == SINGLE?1:2); ++ci) {
       c = p.code_0[ci];
       if (!c.lastCompileOk) {
-        error_0('Errors in code ' + c.name_0 + ' of player ' + p.title_0);
+        err_box('Errors in code ' + c.name_0 + ' of player ' + p.title_0);
         return false;
       }
       if (c.bin == null || c.bin.length == 0) {
-        error_0('No code in ' + c.name_0 + ' of player ' + p.title_0);
+        err_box('No code in ' + c.name_0 + ' of player ' + p.title_0);
         return false;
       }
     }
   }
   if (countEnabled == 0) {
-    console.error('No enabled players');
+    $wnd.show_error('No enabled players');
     return false;
   }
   return true;
@@ -9299,7 +9289,11 @@ _.j_loadBinary_0 = function j_loadBinary(buf){
   var arr, ba, i, len;
   len = buf.byteLength;
   if (len == 0) {
-    console.error('loaded file is empty, ignoring');
+    $wnd.show_error('loaded file is empty, ignoring');
+    return;
+  }
+  if (len > 512) {
+    $wnd.show_error('loaded file is bigger than the allowed 512 bytes, ignoring');
     return;
   }
   arr = new Int8Array(buf);
@@ -9464,7 +9458,6 @@ function RegisterField(name_0, frame_0){
   this.m_name = name_0;
   ename = 'reg_' + name_0;
   this.textField = castToNative(($clinit_DomGlobal() , document_0).getElementById(ename), $wnd.HTMLInputElement);
-  this.textField == null && (console.error('Not found register ' + name_0) , undefined);
   this.textField.addEventListener('input', new RegisterField$lambda$0$Type(this));
 }
 
@@ -10103,8 +10096,12 @@ function debug(text_0){
 }
 
 debug.displayName = 'il.co.codeguru.corewars8086.gui.widgets.Console.debug';
-function error_0(text_0){
-  console.error(text_0);
+function err_box(text_0){
+  $wnd.show_error(text_0);
+}
+
+err_box.displayName = 'il.co.codeguru.corewars8086.gui.widgets.Console.err_box';
+function error_0(){
 }
 
 error_0.displayName = 'il.co.codeguru.corewars8086.gui.widgets.Console.error';
@@ -11698,7 +11695,7 @@ function $opcodeEX_0(this$static, opcode){
     case -24:
       return 'CALL NEAR ' + ('0x' + (number4 = ($absFromRel16(this$static, $nextWord_0(this$static)) & $intern_0) >>> 0 , number4.toString(16)).toUpperCase());
     case -23:
-      return 'JMP NEAR ' + ('0x' + (number5 = ($absFromRel16(this$static, $nextWord_0(this$static)) & $intern_0) >>> 0 , number5.toString(16)).toUpperCase());
+      return 'JMP ' + ('0x' + (number5 = ($absFromRel16(this$static, $nextWord_0(this$static)) & $intern_0) >>> 0 , number5.toString(16)).toUpperCase());
     case -22:
       return 'JMP FAR ' + ('0x' + (number6 = ($nextWord_0(this$static) & $intern_0) >>> 0 , number6.toString(16)).toUpperCase()) + ':' + ('0x' + (number7 = ($nextWord_0(this$static) & $intern_0) >>> 0 , number7.toString(16)).toUpperCase());
     case -21:
@@ -11846,7 +11843,7 @@ function $opcodeFX_0(this$static, opcode){
           else 
             return 'CALL FAR ' + (this$static.mode_0 == 3?$getReg16_1(this$static.memIndex):$getMem8_0(this$static));
         case 4:
-          return 'JMP NEAR ' + (this$static.mode_0 == 3?$getReg16_1(this$static.memIndex):$getMem8_0(this$static));
+          return 'JMP ' + (this$static.mode_0 == 3?$getReg16_1(this$static.memIndex):$getMem8_0(this$static));
         case 5:
           if (this$static.mode_0 == 3)
             throw toJs(new Disassembler$DisassemblerException);
@@ -12642,16 +12639,16 @@ function $readWarriorFilesFromUI(this$static, files, zombies, isInDebug){
       continue;
     name_0 = c.name_0;
     if (name_0.length == 0) {
-      console.error('All players must have a name for starting a competition');
+      $wnd.show_error('All players must have a name for starting a competition');
       return false;
     }
     if (!c.lastCompileOk) {
-      console.error('Player ' + name_0 + " has assembly errors, can't start competition");
+      $wnd.show_error('Player ' + name_0 + " has assembly errors, can't start competition");
       return false;
     }
     bin = c.bin;
     if (bin == null) {
-      console.error('Player ' + name_0 + " does not have any code, can't start competition");
+      $wnd.show_error('Player ' + name_0 + " does not have any code, can't start competition");
       return false;
     }
     startAddr = -1;
@@ -12676,9 +12673,6 @@ function $readWarriorFilesFromUI(this$static, files, zombies, isInDebug){
         $add_0(this$static.warriorGroups, currentGroup);
         currentGroup = null;
       }
-       else {
-        console.error('Unexpected suffix for warrior name. expected 1 or 2: ' + name_0);
-      }
     }
      else {
       currentGroup = new WarriorGroup(name_0, c.player.label_0);
@@ -12690,7 +12684,7 @@ function $readWarriorFilesFromUI(this$static, files, zombies, isInDebug){
     }
   }
   if (this$static.warriorGroups.array.length == 0) {
-    console.error('no players to start a competition with');
+    $wnd.show_error('no players to start a competition with');
     return false;
   }
   if (!$readZombiesFromUI(this$static, zombies, m_loadAddrChecker))
@@ -12709,16 +12703,16 @@ function $readZombiesFromUI(this$static, zombieFiles, loadAddrChecker){
     c = zombieFiles[c$index];
     name_0 = c.name_0;
     if (name_0 == null) {
-      console.error('All zombies must have a name for starting a competition');
+      $wnd.show_error('All zombies must have a name for starting a competition');
       return false;
     }
     if (!c.lastCompileOk) {
-      console.error('Zombie ' + name_0 + " has assembly errors, can't start competition");
+      $wnd.show_error('Zombie ' + name_0 + " has assembly errors, can't start competition");
       return false;
     }
     bin = c.bin;
     if (bin == null) {
-      console.error('Zombie ' + name_0 + " does not have any code, can't start competition");
+      $wnd.show_error('Zombie ' + name_0 + " does not have any code, can't start competition");
       return false;
     }
     startAddr = -1;

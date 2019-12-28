@@ -97,16 +97,16 @@ public class WarriorRepository {
                 continue;
             String name = c.getName();
             if (name.isEmpty()) {
-                Console.error("All players must have a name for starting a competition");
+                Console.err_box("All players must have a name for starting a competition");
                 return false;
             }
             if (!c.lastCompileOk) {
-                Console.error("Player " + name + " has assembly errors, can't start competition");
+                Console.err_box("Player " + name + " has assembly errors, can't start competition");
                 return false;
             }
             byte[] bin = c.getBin();
             if (bin == null) {
-                Console.error("Player " + name + " does not have any code, can't start competition");
+                Console.err_box("Player " + name + " does not have any code, can't start competition");
                 return false;
             }
 
@@ -150,7 +150,7 @@ public class WarriorRepository {
         }
 
         if (warriorGroups.isEmpty()) {
-            Console.error("no players to start a competition with");
+            Console.err_box("no players to start a competition with");
             return false;
         }
 
@@ -243,17 +243,17 @@ public class WarriorRepository {
         for (PlayersPanel.Code c : zombieFiles) {
             String name = c.getName();
             if (name == null) {
-                Console.error("All zombies must have a name for starting a competition");
+                Console.err_box("All zombies must have a name for starting a competition");
                 return false;
             }
 
             if (!c.lastCompileOk) {
-                Console.error("Zombie " + name + " has assembly errors, can't start competition");
+                Console.err_box("Zombie " + name + " has assembly errors, can't start competition");
                 return false;
             }
             byte[] bin = c.getBin();
             if (bin == null) {
-                Console.error("Zombie " + name + " does not have any code, can't start competition");
+                Console.err_box("Zombie " + name + " does not have any code, can't start competition");
                 return false;
             }
 

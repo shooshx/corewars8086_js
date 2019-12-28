@@ -1159,7 +1159,7 @@ public abstract class Disassembler
             case (byte)0xE8: // CALL near imm16
                 return "CALL NEAR " + toString(absFromRel16(nextWord()));
             case (byte)0xE9: // JMP near imm16
-            	return "JMP NEAR " + toString(absFromRel16(nextWord()));
+            	return "JMP " + toString(absFromRel16(nextWord()));
             case (byte)0xEA: // JMP far imm16:imm16
                 return "JMP FAR " + toString(nextWord()) + ":" + toString(nextWord());				
             case (byte)0xEB: // JMP short rel8
@@ -1315,7 +1315,7 @@ public abstract class Disassembler
                         	 return "CALL FAR " + getMem16();
                     case 4: // JMP near
                         // FIXME: JMP SP bug ?
-                        return "JMP NEAR " + getMem16();
+                        return "JMP " + getMem16();
                     case 5: // JMP far
                         if (mode == 3)
                             throw new DisassemblerException();

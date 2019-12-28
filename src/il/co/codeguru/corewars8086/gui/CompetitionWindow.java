@@ -272,7 +272,7 @@ public class CompetitionWindow extends JFrame
         // this is hardly useful in reality so I just set it to the same size
 
         if (battlesPerGroup <= 0) {
-            Console.error("battles per session needs to be more than 0");
+            Console.err_box("battles per session needs to be more than 0");
             return false;
         }
 
@@ -284,7 +284,7 @@ public class CompetitionWindow extends JFrame
 
         int numOfGroups = repo.getNumberOfGroups();
         if (numOfGroups == 0) {
-            Console.error("can't run without any warriors"); // TBD-ERRMSG
+            Console.err_box("can't run without any warriors"); // TBD-ERRMSG
             return false;
         }
 

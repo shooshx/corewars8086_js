@@ -385,7 +385,7 @@ public class PlayersPanel
     public boolean checkPlayersReady()
     {
         if (m_players.size() == 0) {
-            Console.error("No players added");
+            Console.err_box("No players added");
             return false;
         }
 
@@ -405,17 +405,17 @@ public class PlayersPanel
             for(int ci = 0; ci < p.activeCodes(); ++ci) {
                 Code c = p.code[ci];
                 if (!c.lastCompileOk) {
-                    Console.error("Errors in code " + c.getName() + " of player " + p.getName());
+                    Console.err_box("Errors in code " + c.getName() + " of player " + p.getName());
                     return false;
                 }
                 if (c.getBin() == null || c.getBin().length == 0) {
-                    Console.error("No code in " + c.getName() + " of player " + p.getName());
+                    Console.err_box("No code in " + c.getName() + " of player " + p.getName());
                     return false;
                 }
             }
         }
         if (countEnabled == 0) {
-            Console.error("No enabled players");
+            Console.err_box("No enabled players");
             return false;
         }
 
@@ -444,7 +444,11 @@ public class PlayersPanel
     public void j_loadBinary(ArrayBuffer buf) {
         int len = buf.byteLength();
         if (len == 0) {
-            Console.error("loaded file is empty, ignoring");
+            Console.err_box("loaded file is empty, ignoring");
+            return;
+        }
+        if (len > 512) {
+            Console.err_box("loaded file is bigger than the allowed 512 bytes, ignoring");
             return;
         }
         //Console.log("~~~" + buf.byteLength());
