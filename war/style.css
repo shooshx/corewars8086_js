@@ -371,7 +371,7 @@ input:disabled + .sc-btn:active,
     bottom: 0;
     background: #ececec;
     width: 190px;
-    border-right: 1px solid #008800;
+    border-right: 1px solid #bbbbbb;
     overflow: auto;
 }
 
@@ -587,6 +587,10 @@ input:disabled + .sc-btn:active,
     padding: 0 0 0 10px;
     border: 1px solid #000000;
 }
+#editor_title:read-only {
+    outline-width: 0;
+}
+
 #editor_boxes {
 }
 

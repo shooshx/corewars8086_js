@@ -10,6 +10,7 @@ public class CoreWarsEngine
 	public static void main (String args[]) throws IOException
 	{
         CompetitionWindow c = new CompetitionWindow();
+        c.s_instance = c;
         c.setVisible(true);
         c.pack();
         

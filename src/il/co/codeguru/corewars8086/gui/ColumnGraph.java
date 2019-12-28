@@ -8,12 +8,15 @@ package il.co.codeguru.corewars8086.gui;
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.HTMLCanvasElement;
 import il.co.codeguru.corewars8086.gui.widgets.*;
+import il.co.codeguru.corewars8086.war.WarriorGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author BS
  */
 public class ColumnGraph extends JComponent<HTMLCanvasElement> {
-	private static final long serialVersionUID = 1L;
 
     static class PlayerColumn {
         public String name;
@@ -38,24 +41,33 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
 
     private CanvasRenderingContext2D ctx;
 
-    public ColumnGraph(String[] names) {
+    public ColumnGraph() {
         super("graphs_canvas");
-        clear(names);
+        clear(null);
 
         ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
     }
 
+    public native void js_clear_code_buttons_colors() /*-{
+        $wnd.clear_code_buttons_colors()
+    }-*/;
 
-    void clear(String[] names) {
+    void clear(ArrayList<WarriorGroup> groups) {
         maxValue = 0;
         reduceFactor = 5;
-
+        if (groups == null)
+            return;
+        js_clear_code_buttons_colors();
         ColorHolder colorHolder = ColorHolder.getInstance();
-        columns = new PlayerColumn[names.length];
-        for(int i = 0; i < names.length; ++i) {
+        columns = new PlayerColumn[groups.size()];
+        for(int i = 0; i < groups.size(); ++i) {
             Color c1 = colorHolder.getColor(i, false);
             Color c2 = colorHolder.getColor(i, true);
-            columns[i] = new PlayerColumn(names[i], c1.toString(), c2.toString());
+            columns[i] = new PlayerColumn(groups.get(i).getName(), c1.toString(), c2.toString());
+
+            PlayersPanel pp = CompetitionWindow.getInstance().m_playersPanel;
+            pp.setButtonColor(c1.toString(), groups.get(i).getLabel() + "0");
+            pp.setButtonColor(c2.toString(), groups.get(i).getLabel() + "1");
         }
     }
 

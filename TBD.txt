@@ -1,6 +1,7 @@
 important
 - errors to gui
 - checkbox disable zombies
+- "killed by"
 
 
 -------

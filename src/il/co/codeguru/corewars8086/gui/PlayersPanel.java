@@ -195,6 +195,16 @@ public class PlayersPanel
         demo_like_original();
     }
 
+    public native void setButtonColor(String color, String label) /*-{
+        // label looks like pC0
+        var player_letter = label[1]
+        var codenum = label[2]
+        var id = "sel_code_lbl_w" + (parseInt(codenum) + 1) + "_p" + (player_letter)
+        console.log("~~", label, id)
+        var e = $wnd.document.getElementById(id)
+        e.style.boxShadow = "inset " + color + " 0px -1px 5px, inset " + color + " 0px 1px 5px"
+    }-*/;
+
 
     // from js
     public void j_addPlayer(String label, String title) {

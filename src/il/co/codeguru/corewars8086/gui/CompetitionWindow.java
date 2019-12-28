@@ -19,7 +19,6 @@ import static il.co.codeguru.corewars8086.gui.CompetitionWindow.call_gwtStart;
  */
 public class CompetitionWindow extends JFrame
     implements ScoreEventListener, CompetitionEventListener {
-	private static final long serialVersionUID = 1L;
 	
 	private Competition competition;
     private ColumnGraph columnGraph;
@@ -36,7 +35,7 @@ public class CompetitionWindow extends JFrame
     private int warCounter;
     private int totalWars;
     //private Thread warThread;
-	private boolean competitionRunning;
+	private boolean inGraphs;
 
     private static final String SEED_PREFIX = "SEED#";
 	private JTextField seed;
@@ -48,6 +47,8 @@ public class CompetitionWindow extends JFrame
     public PlayersPanel m_playersPanel;
     private HTMLElement stepnum;
 
+    public static CompetitionWindow s_instance;
+    public static CompetitionWindow getInstance() { return s_instance; }
 
     public boolean isBattleShown() {
         return m_isBattleShown;
@@ -62,7 +63,7 @@ public class CompetitionWindow extends JFrame
         competition.addCompetitionEventListener(this);
         WarriorRepository warriorRepository = competition.getWarriorRepository();
         warriorRepository.addScoreEventListener(this);
-        columnGraph = new ColumnGraph(warriorRepository.getGroupNames());
+        columnGraph = new ColumnGraph();
         getContentPane().add(columnGraph, BorderLayout.CENTER);
         // -------------
         JPanel controlArea = new JPanel();
@@ -172,6 +173,7 @@ public class CompetitionWindow extends JFrame
 
     public boolean j_startDebug()
     {
+        inGraphs = false;
         if (!m_playersPanel.checkPlayersReady())
             return false;
         if (!gui_runWar(true, true))
@@ -181,12 +183,14 @@ public class CompetitionWindow extends JFrame
 
     public void j_stopDebug()
     {
+        inGraphs = false;
         competition.setAbort();
         setDebugMode(false);
     }
 
     public boolean j_startCompete()
     {
+        inGraphs = true;
         if (!m_playersPanel.checkPlayersReady())
             return false;
         if (!gui_runWar(false, false))
@@ -275,7 +279,8 @@ public class CompetitionWindow extends JFrame
         WarriorRepository repo = competition.getWarriorRepository();
         if (!repo.readWarriorFilesFromUI( m_playersPanel.getFiles(), m_playersPanel.getZombies(), isInDebug))
             return false;
-        columnGraph.clear(repo.getGroupNames());
+        if (inGraphs)
+            columnGraph.clear(repo.getWarriorGroups());
 
         int numOfGroups = repo.getNumberOfGroups();
         if (numOfGroups == 0) {
@@ -305,7 +310,8 @@ public class CompetitionWindow extends JFrame
     }
 
     public void scoreChanged(String name, float addedValue, int groupIndex, int subIndex) {
-        columnGraph.addToValue(groupIndex, subIndex, addedValue);
+        if (inGraphs)
+            columnGraph.addToValue(groupIndex, subIndex, addedValue);
     }
 
     /*public void actionPerformed(ActionEvent e) {
@@ -331,7 +337,6 @@ public class CompetitionWindow extends JFrame
         if (isStartPaused != null)
             m_isStartPaused = isStartPaused;
         if (runWar(isBattleShown)) {
-            competitionRunning = true;
             //runWarButton.setEnabled(false);
             if (isBattleShown)
                 setDebugMode(true);
@@ -417,7 +422,6 @@ public class CompetitionWindow extends JFrame
         //warThread = null;
 		//this.runWarButton.setEnabled(true);
         //runWarButton.setEnabled(true);
-		competitionRunning = false;
         jsCompeteFinish();
     }
     

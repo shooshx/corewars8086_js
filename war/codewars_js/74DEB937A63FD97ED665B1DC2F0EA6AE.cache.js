@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.codewars_js;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.8.2";
-var $strongName = '816645A1621906A2D411FC4C77C592CA';
+var $strongName = '74DEB937A63FD97ED665B1DC2F0EA6AE';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -22,7 +22,7 @@ var $stats = $wnd.__gwtStatsEvent ? function(a) {
 return $wnd.__gwtStatsEvent && $wnd.__gwtStatsEvent(a);
 } : null;
 var $sessionId = $wnd.__gwtStatsSessionId ? $wnd.__gwtStatsSessionId : null;
-var $intern_0 = 65535, $intern_1 = 2147483647, $intern_2 = {3:1, 6:1}, $intern_3 = {3:1, 8:1}, $intern_4 = {3:1, 7:1, 4:1, 8:1}, $intern_5 = {38:1}, $intern_6 = 4194303, $intern_7 = 1048575, $intern_8 = 524288, $intern_9 = 4194304, $intern_10 = 17592186044416, $intern_11 = -17592186044416, $intern_12 = {3:1, 6:1, 77:1}, $intern_13 = {69:1}, $intern_14 = {3:1}, $intern_15 = -65536, $intern_16 = 65280, $intern_17 = 1024, $intern_18 = 2048, $intern_19 = {26:1, 3:1, 7:1, 8:1}, $intern_20 = {50:1, 3:1}, $intern_21 = 65536, $intern_22 = 5.099999904632568, $intern_23 = {57:1, 12:1}, $intern_24 = 1048576, $intern_25 = 0.949999988079071, $intern_26 = 0.800000011920929, $intern_27 = -2147483648, $intern_28 = {l:4194303, m:4194303, h:524287}, $intern_29 = {32:1}, $intern_30 = {3:1, 68:1}, $intern_31 = 15525485, $intern_32 = 5.9604644775390625E-8, $intern_33 = 16777216, $intern_34 = 16777215, $intern_35 = 4294967295, $intern_36 = {l:0, m:0, h:524288};
+var $intern_0 = 65535, $intern_1 = 2147483647, $intern_2 = {3:1, 6:1}, $intern_3 = {3:1, 8:1}, $intern_4 = {3:1, 7:1, 4:1, 8:1}, $intern_5 = {38:1}, $intern_6 = 4194303, $intern_7 = 1048575, $intern_8 = 524288, $intern_9 = 4194304, $intern_10 = 17592186044416, $intern_11 = -17592186044416, $intern_12 = {69:1}, $intern_13 = {3:1}, $intern_14 = -65536, $intern_15 = 65280, $intern_16 = 1024, $intern_17 = 2048, $intern_18 = {26:1, 3:1, 7:1, 8:1}, $intern_19 = {50:1, 3:1}, $intern_20 = 65536, $intern_21 = 5.099999904632568, $intern_22 = {57:1, 12:1}, $intern_23 = 1048576, $intern_24 = 0.949999988079071, $intern_25 = 0.800000011920929, $intern_26 = -2147483648, $intern_27 = {l:4194303, m:4194303, h:524287}, $intern_28 = {33:1}, $intern_29 = {3:1, 68:1}, $intern_30 = 15525485, $intern_31 = 5.9604644775390625E-8, $intern_32 = 16777216, $intern_33 = 16777215, $intern_34 = 4294967295, $intern_35 = {l:0, m:0, h:524288};
 var _, prototypesByTypeId_0, initFnList_0, permutationId = -1;
 function create_com_google_gwt_useragent_client_UserAgent(){
   switch (permutationId) {
@@ -553,7 +553,7 @@ function maybeSetClassLiteral(typeId, clazz){
 }
 
 maybeSetClassLiteral.displayName = 'java.lang.Class.maybeSetClassLiteral';
-defineClass(93, 1, {}, Class);
+defineClass(92, 1, {}, Class);
 _.createClassLiteralForArray = function createClassLiteralForArray(dimensions){
   var clazz;
   clazz = new Class;
@@ -598,13 +598,14 @@ _.toString_0.displayName = 'java.lang.Class.toString';
 _.modifiers = 0;
 var nextSequentialId = 1;
 var Ljava_lang_Object_2_classLit = createForClass('java.lang', 'Object', 1);
-var Ljava_lang_Class_2_classLit = createForClass('java.lang', 'Class', 93);
+var Ljava_lang_Class_2_classLit = createForClass('java.lang', 'Class', 92);
 function $onModuleLoad(){
-  var e;
+  var c, e;
   console.log('onModuleLoad');
   setUncaughtExceptionHandler(new codewars_js$1);
   try {
-    new CompetitionWindow;
+    c = new CompetitionWindow;
+    s_instance = c;
   }
    catch ($e0) {
     $e0 = toJava($e0);
@@ -627,13 +628,13 @@ function codewars_js$1(){
 }
 
 codewars_js$1.displayName = 'com.client.codewars_js$1.codewars_js$1';
-defineClass(122, 1, {}, codewars_js$1);
-var Lcom_client_codewars_1js$1_2_classLit = createForClass('com.client', 'codewars_js/1', 122);
-defineClass(251, 1, {});
+defineClass(121, 1, {}, codewars_js$1);
+var Lcom_client_codewars_1js$1_2_classLit = createForClass('com.client', 'codewars_js/1', 121);
+defineClass(250, 1, {});
 var instance;
-var Lcom_google_gwt_animation_client_AnimationScheduler_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationScheduler', 251);
-defineClass(87, 1, {87:1});
-var Lcom_google_gwt_animation_client_AnimationScheduler$AnimationHandle_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationScheduler/AnimationHandle', 87);
+var Lcom_google_gwt_animation_client_AnimationScheduler_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationScheduler', 250);
+defineClass(86, 1, {86:1});
+var Lcom_google_gwt_animation_client_AnimationScheduler$AnimationHandle_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationScheduler/AnimationHandle', 86);
 function $isNativelySupported(){
   return !!$wnd.requestAnimationFrame && !!$wnd.cancelAnimationFrame;
 }
@@ -654,20 +655,20 @@ function requestImpl(cb, element){
 }
 
 requestImpl.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplStandard.requestImpl';
-defineClass(111, 251, {}, AnimationSchedulerImplStandard);
+defineClass(110, 250, {}, AnimationSchedulerImplStandard);
 _.requestAnimationFrame_0 = function requestAnimationFrame_0(callback, element){
   requestImpl(callback, element);
   return new AnimationSchedulerImplStandard$1;
 }
 ;
 _.requestAnimationFrame_0.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplStandard.requestAnimationFrame';
-var Lcom_google_gwt_animation_client_AnimationSchedulerImplStandard_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplStandard', 111);
+var Lcom_google_gwt_animation_client_AnimationSchedulerImplStandard_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplStandard', 110);
 function AnimationSchedulerImplStandard$1(){
 }
 
 AnimationSchedulerImplStandard$1.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplStandard$1.AnimationSchedulerImplStandard$1';
-defineClass(207, 87, {87:1}, AnimationSchedulerImplStandard$1);
-var Lcom_google_gwt_animation_client_AnimationSchedulerImplStandard$1_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplStandard/1', 207);
+defineClass(206, 86, {86:1}, AnimationSchedulerImplStandard$1);
+var Lcom_google_gwt_animation_client_AnimationSchedulerImplStandard$1_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplStandard/1', 206);
 function $$init(this$static){
   this$static.animationRequests = new ArrayList;
   this$static.timer = new AnimationSchedulerImplTimer$1(this$static);
@@ -676,8 +677,8 @@ function $$init(this$static){
 $$init.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplTimer.$$init';
 function $updateAnimations(this$static){
   var curAnimations, duration, requestId, requestId$index, requestId$max;
-  curAnimations = initUnidimensionalArray(Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer$AnimationHandleImpl_2_classLit, {230:1, 3:1, 6:1}, 88, this$static.animationRequests.array.length, 0, 1);
-  curAnimations = castTo($toArray_1(this$static.animationRequests, curAnimations), 230);
+  curAnimations = initUnidimensionalArray(Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer$AnimationHandleImpl_2_classLit, {229:1, 3:1, 6:1}, 87, this$static.animationRequests.array.length, 0, 1);
+  curAnimations = castTo($toArray_1(this$static.animationRequests, curAnimations), 229);
   duration = new Duration;
   for (requestId$index = 0 , requestId$max = curAnimations.length; requestId$index < requestId$max; ++requestId$index) {
     requestId = curAnimations[requestId$index];
@@ -694,7 +695,7 @@ function AnimationSchedulerImplTimer(){
 }
 
 AnimationSchedulerImplTimer.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplTimer.AnimationSchedulerImplTimer';
-defineClass(112, 251, {}, AnimationSchedulerImplTimer);
+defineClass(111, 250, {}, AnimationSchedulerImplTimer);
 _.requestAnimationFrame_0 = function requestAnimationFrame_1(callback, element){
   var requestId;
   requestId = new AnimationSchedulerImplTimer$AnimationHandleImpl(callback);
@@ -704,7 +705,7 @@ _.requestAnimationFrame_0 = function requestAnimationFrame_1(callback, element){
 }
 ;
 _.requestAnimationFrame_0.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplTimer.requestAnimationFrame';
-var Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplTimer', 112);
+var Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplTimer', 111);
 function $$init_0(this$static){
 }
 
@@ -756,7 +757,7 @@ function setTimeout_0(func, time){
 }
 
 setTimeout_0.displayName = 'com.google.gwt.user.client.Timer.setTimeout';
-defineClass(208, 1, {});
+defineClass(207, 1, {});
 _.fire = function fire(scheduleCancelCounter){
   if (scheduleCancelCounter != this.cancelCounter) {
     return;
@@ -769,21 +770,21 @@ _.fire.displayName = 'com.google.gwt.user.client.Timer.fire';
 _.cancelCounter = 0;
 _.isRepeating = false;
 _.timerId = null;
-var Lcom_google_gwt_user_client_Timer_2_classLit = createForClass('com.google.gwt.user.client', 'Timer', 208);
+var Lcom_google_gwt_user_client_Timer_2_classLit = createForClass('com.google.gwt.user.client', 'Timer', 207);
 function AnimationSchedulerImplTimer$1(this$0){
   this.this$01 = this$0;
 }
 
 AnimationSchedulerImplTimer$1.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplTimer$1.AnimationSchedulerImplTimer$1';
-defineClass(209, 208, {}, AnimationSchedulerImplTimer$1);
-var Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer$1_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplTimer/1', 209);
+defineClass(208, 207, {}, AnimationSchedulerImplTimer$1);
+var Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer$1_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplTimer/1', 208);
 function AnimationSchedulerImplTimer$AnimationHandleImpl(callback){
   this.callback = callback;
 }
 
 AnimationSchedulerImplTimer$AnimationHandleImpl.displayName = 'com.google.gwt.animation.client.AnimationSchedulerImplTimer$AnimationHandleImpl.AnimationSchedulerImplTimer$AnimationHandleImpl';
-defineClass(88, 87, {87:1, 88:1}, AnimationSchedulerImplTimer$AnimationHandleImpl);
-var Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer$AnimationHandleImpl_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplTimer/AnimationHandleImpl', 88);
+defineClass(87, 86, {86:1, 87:1}, AnimationSchedulerImplTimer$AnimationHandleImpl);
+var Lcom_google_gwt_animation_client_AnimationSchedulerImplTimer$AnimationHandleImpl_2_classLit = createForClass('com.google.gwt.animation.client', 'AnimationSchedulerImplTimer/AnimationHandleImpl', 87);
 function $$init_1(this$static){
   this$static.start_0 = now_1();
 }
@@ -804,9 +805,9 @@ function uncheckedConversion(elapsed){
 }
 
 uncheckedConversion.displayName = 'com.google.gwt.core.client.Duration.uncheckedConversion';
-defineClass(161, 1, {}, Duration);
+defineClass(160, 1, {}, Duration);
 _.start_0 = 0;
-var Lcom_google_gwt_core_client_Duration_2_classLit = createForClass('com.google.gwt.core.client', 'Duration', 161);
+var Lcom_google_gwt_core_client_Duration_2_classLit = createForClass('com.google.gwt.core.client', 'Duration', 160);
 function isScript(){
   return true;
 }
@@ -820,7 +821,7 @@ function setUncaughtExceptionHandler(handler){
 setUncaughtExceptionHandler.displayName = 'com.google.gwt.core.client.GWT.setUncaughtExceptionHandler';
 var uncaughtExceptionHandler = null;
 function $$init_2(this$static){
-  this$static.stackTrace = initUnidimensionalArray(Ljava_lang_StackTraceElement_2_classLit, $intern_2, 33, 0, 0, 1);
+  this$static.stackTrace = initUnidimensionalArray(Ljava_lang_StackTraceElement_2_classLit, $intern_2, 34, 0, 0, 1);
 }
 
 $$init_2.displayName = 'java.lang.Throwable.$$init';
@@ -1052,8 +1053,8 @@ function JavaScriptExceptionBase(e){
 }
 
 JavaScriptExceptionBase.displayName = 'com.google.gwt.core.client.impl.JavaScriptExceptionBase.JavaScriptExceptionBase';
-defineClass(128, 58, $intern_4);
-var Lcom_google_gwt_core_client_impl_JavaScriptExceptionBase_2_classLit = createForClass('com.google.gwt.core.client.impl', 'JavaScriptExceptionBase', 128);
+defineClass(127, 58, $intern_4);
+var Lcom_google_gwt_core_client_impl_JavaScriptExceptionBase_2_classLit = createForClass('com.google.gwt.core.client.impl', 'JavaScriptExceptionBase', 127);
 function $clinit_JavaScriptException(){
   $clinit_JavaScriptException = emptyMethod;
   NOT_SET = new Object_0;
@@ -1108,7 +1109,7 @@ function getExceptionName0(e){
 }
 
 getExceptionName0.displayName = 'com.google.gwt.core.client.JavaScriptException.getExceptionName0';
-defineClass(59, 128, {59:1, 3:1, 7:1, 4:1, 8:1}, JavaScriptException);
+defineClass(59, 127, {59:1, 3:1, 7:1, 4:1, 8:1}, JavaScriptException);
 _.getMessage = function getMessage_0(){
   $ensureInit(this);
   return this.message_0;
@@ -1206,8 +1207,8 @@ function now_1(){
 }
 
 now_1.displayName = 'com.google.gwt.core.client.JsDate.now';
-defineClass(231, 1, {});
-var Lcom_google_gwt_core_client_Scheduler_2_classLit = createForClass('com.google.gwt.core.client', 'Scheduler', 231);
+defineClass(230, 1, {});
+var Lcom_google_gwt_core_client_Scheduler_2_classLit = createForClass('com.google.gwt.core.client', 'Scheduler', 230);
 function $clinit_Impl(){
   $clinit_Impl = emptyMethod;
   !!($clinit_StackTraceCreator() , collector);
@@ -1460,9 +1461,9 @@ function runScheduledTasks(tasks, rescheduled){
 }
 
 runScheduledTasks.displayName = 'com.google.gwt.core.client.impl.SchedulerImpl.runScheduledTasks';
-defineClass(136, 231, {}, SchedulerImpl);
+defineClass(135, 230, {}, SchedulerImpl);
 var INSTANCE;
-var Lcom_google_gwt_core_client_impl_SchedulerImpl_2_classLit = createForClass('com.google.gwt.core.client.impl', 'SchedulerImpl', 136);
+var Lcom_google_gwt_core_client_impl_SchedulerImpl_2_classLit = createForClass('com.google.gwt.core.client.impl', 'SchedulerImpl', 135);
 function $getRepeating(this$static){
   return this$static[0];
 }
@@ -1558,13 +1559,13 @@ function supportsErrorStack(){
 
 supportsErrorStack.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator.supportsErrorStack';
 var ANONYMOUS = 'anonymous', LINE_NUMBER_UNKNOWN = -1, collector;
-defineClass(241, 1, {});
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$Collector_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/Collector', 241);
+defineClass(240, 1, {});
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$Collector_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/Collector', 240);
 function StackTraceCreator$CollectorLegacy(){
 }
 
 StackTraceCreator$CollectorLegacy.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$CollectorLegacy.StackTraceCreator$CollectorLegacy';
-defineClass(129, 241, {}, StackTraceCreator$CollectorLegacy);
+defineClass(128, 240, {}, StackTraceCreator$CollectorLegacy);
 _.collect = function collect(error){
   var seen = {}, name_1;
   var fnStack = [];
@@ -1593,7 +1594,7 @@ _.getStackTrace = function getStackTrace(t){
   var i, length_0, stack_0, stackTrace;
   stack_0 = ($clinit_StackTraceCreator() , t && t['fnStack']?t['fnStack']:[]);
   length_0 = stack_0.length;
-  stackTrace = initUnidimensionalArray(Ljava_lang_StackTraceElement_2_classLit, $intern_2, 33, length_0, 0, 1);
+  stackTrace = initUnidimensionalArray(Ljava_lang_StackTraceElement_2_classLit, $intern_2, 34, length_0, 0, 1);
   for (i = 0; i < length_0; i++) {
     stackTrace[i] = new StackTraceElement(stack_0[i], null, -1);
   }
@@ -1601,7 +1602,7 @@ _.getStackTrace = function getStackTrace(t){
 }
 ;
 _.getStackTrace.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$CollectorLegacy.getStackTrace';
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorLegacy_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorLegacy', 129);
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorLegacy_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorLegacy', 128);
 function $parse(this$static, stString){
   var closeParen, col, endFileUrlIndex, fileName, index_0, lastColonIndex, line, location_0, toReturn;
   if (stString.length == 0) {
@@ -1649,7 +1650,7 @@ function $stripSquareBrackets(toReturn){
 }
 
 $stripSquareBrackets.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$CollectorModern.$stripSquareBrackets';
-defineClass(242, 241, {});
+defineClass(241, 240, {});
 _.collect = function collect_0(error){
 }
 ;
@@ -1662,7 +1663,7 @@ _.createSte.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$Col
 _.getStackTrace = function getStackTrace_0(t){
   var addIndex, i, length_0, stack_0, stackTrace, ste, e;
   stack_0 = ($clinit_StackTraceCreator() , e = t.backingJsObject , e && e.stack?e.stack.split('\n'):[]);
-  stackTrace = initUnidimensionalArray(Ljava_lang_StackTraceElement_2_classLit, $intern_2, 33, 0, 0, 1);
+  stackTrace = initUnidimensionalArray(Ljava_lang_StackTraceElement_2_classLit, $intern_2, 34, 0, 0, 1);
   addIndex = 0;
   length_0 = stack_0.length;
   if (length_0 == 0) {
@@ -1677,18 +1678,18 @@ _.getStackTrace = function getStackTrace_0(t){
 }
 ;
 _.getStackTrace.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$CollectorModern.getStackTrace';
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModern_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModern', 242);
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModern_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModern', 241);
 function StackTraceCreator$CollectorModernNoSourceMap(){
 }
 
 StackTraceCreator$CollectorModernNoSourceMap.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$CollectorModernNoSourceMap.StackTraceCreator$CollectorModernNoSourceMap';
-defineClass(130, 242, {}, StackTraceCreator$CollectorModernNoSourceMap);
+defineClass(129, 241, {}, StackTraceCreator$CollectorModernNoSourceMap);
 _.createSte = function createSte_0(fileName, method, line, col){
   return new StackTraceElement(method, fileName, -1);
 }
 ;
 _.createSte.displayName = 'com.google.gwt.core.client.impl.StackTraceCreator$CollectorModernNoSourceMap.createSte';
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModernNoSourceMap_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModernNoSourceMap', 130);
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModernNoSourceMap_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModernNoSourceMap', 129);
 function $clinit_DOMImpl(){
   $clinit_DOMImpl = emptyMethod;
   castTo(create_com_google_gwt_dom_client_DOMImpl(), 38);
@@ -1697,40 +1698,40 @@ function $clinit_DOMImpl(){
 $clinit_DOMImpl.displayName = 'com.google.gwt.dom.client.DOMImpl.$clinit';
 defineClass(38, 1, $intern_5);
 var Lcom_google_gwt_dom_client_DOMImpl_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImpl', 38);
-defineClass(253, 38, $intern_5);
-var Lcom_google_gwt_dom_client_DOMImplTrident_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplTrident', 253);
+defineClass(252, 38, $intern_5);
+var Lcom_google_gwt_dom_client_DOMImplTrident_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplTrident', 252);
 function DOMImplIE8(){
   $clinit_DOMImpl();
 }
 
 DOMImplIE8.displayName = 'com.google.gwt.dom.client.DOMImplIE8.DOMImplIE8';
-defineClass(216, 253, $intern_5, DOMImplIE8);
-var Lcom_google_gwt_dom_client_DOMImplIE8_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplIE8', 216);
-defineClass(254, 38, $intern_5);
-var Lcom_google_gwt_dom_client_DOMImplStandard_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplStandard', 254);
-defineClass(255, 254, $intern_5);
-var Lcom_google_gwt_dom_client_DOMImplStandardBase_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplStandardBase', 255);
+defineClass(215, 252, $intern_5, DOMImplIE8);
+var Lcom_google_gwt_dom_client_DOMImplIE8_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplIE8', 215);
+defineClass(253, 38, $intern_5);
+var Lcom_google_gwt_dom_client_DOMImplStandard_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplStandard', 253);
+defineClass(254, 253, $intern_5);
+var Lcom_google_gwt_dom_client_DOMImplStandardBase_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplStandardBase', 254);
 function DOMImplIE9(){
   $clinit_DOMImpl();
 }
 
 DOMImplIE9.displayName = 'com.google.gwt.dom.client.DOMImplIE9.DOMImplIE9';
-defineClass(219, 255, $intern_5, DOMImplIE9);
-var Lcom_google_gwt_dom_client_DOMImplIE9_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplIE9', 219);
+defineClass(218, 254, $intern_5, DOMImplIE9);
+var Lcom_google_gwt_dom_client_DOMImplIE9_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplIE9', 218);
 function DOMImplMozilla(){
   $clinit_DOMImpl();
 }
 
 DOMImplMozilla.displayName = 'com.google.gwt.dom.client.DOMImplMozilla.DOMImplMozilla';
-defineClass(218, 254, $intern_5, DOMImplMozilla);
-var Lcom_google_gwt_dom_client_DOMImplMozilla_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplMozilla', 218);
+defineClass(217, 253, $intern_5, DOMImplMozilla);
+var Lcom_google_gwt_dom_client_DOMImplMozilla_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplMozilla', 217);
 function DOMImplWebkit(){
   $clinit_DOMImpl();
 }
 
 DOMImplWebkit.displayName = 'com.google.gwt.dom.client.DOMImplWebkit.DOMImplWebkit';
-defineClass(217, 255, $intern_5, DOMImplWebkit);
-var Lcom_google_gwt_dom_client_DOMImplWebkit_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplWebkit', 217);
+defineClass(216, 254, $intern_5, DOMImplWebkit);
+var Lcom_google_gwt_dom_client_DOMImplWebkit_2_classLit = createForClass('com.google.gwt.dom.client', 'DOMImplWebkit', 216);
 function $getCompatMode(this$static){
   return this$static.compatMode;
 }
@@ -2778,7 +2779,7 @@ $length_2.displayName = 'com.google.gwt.typedarrays.client.Uint8ArrayNative.$len
 function $onModuleLoad_0(){
   var allowedModes, currentMode, i;
   currentMode = $doc.compatMode;
-  allowedModes = stampJavaTypeInfo(getClassLiteralForArray(Ljava_lang_String_2_classLit, 1), $intern_12, 2, 6, ['CSS1Compat']);
+  allowedModes = stampJavaTypeInfo(getClassLiteralForArray(Ljava_lang_String_2_classLit, 1), $intern_2, 2, 6, ['CSS1Compat']);
   for (i = 0; i < allowedModes.length; i++) {
     if ($equals_4(allowedModes[i], currentMode)) {
       return;
@@ -2820,20 +2821,20 @@ function AssertionError(message){
 }
 
 AssertionError.displayName = 'java.lang.AssertionError.AssertionError';
-defineClass(18, 75, $intern_3);
-var Ljava_lang_AssertionError_2_classLit = createForClass('java.lang', 'AssertionError', 18);
+defineClass(17, 75, $intern_3);
+var Ljava_lang_AssertionError_2_classLit = createForClass('java.lang', 'AssertionError', 17);
 function UserAgentAsserter$UserAgentAssertionError(compileTimeValue, runtimeValue){
   Error_0.call(this, 'Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (' + compileTimeValue + ') ' + 'does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.' == null?'null':toString_5('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (' + compileTimeValue + ') ' + 'does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.'), instanceOf('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (' + compileTimeValue + ') ' + 'does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 8)?castTo('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (' + compileTimeValue + ') ' + 'does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 8):null);
 }
 
 UserAgentAsserter$UserAgentAssertionError.displayName = 'com.google.gwt.useragent.client.UserAgentAsserter$UserAgentAssertionError.UserAgentAsserter$UserAgentAssertionError';
-defineClass(120, 18, $intern_3, UserAgentAsserter$UserAgentAssertionError);
-var Lcom_google_gwt_useragent_client_UserAgentAsserter$UserAgentAssertionError_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentAsserter/UserAgentAssertionError', 120);
+defineClass(119, 17, $intern_3, UserAgentAsserter$UserAgentAssertionError);
+var Lcom_google_gwt_useragent_client_UserAgentAsserter$UserAgentAssertionError_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentAsserter/UserAgentAssertionError', 119);
 function UserAgentImplGecko1_8(){
 }
 
 UserAgentImplGecko1_8.displayName = 'com.google.gwt.useragent.client.UserAgentImplGecko1_8.UserAgentImplGecko1_8';
-defineClass(140, 1, $intern_13, UserAgentImplGecko1_8);
+defineClass(139, 1, $intern_12, UserAgentImplGecko1_8);
 _.getCompileTimeValue = function getCompileTimeValue(){
   return 'gecko1_8';
 }
@@ -2871,12 +2872,12 @@ _.getRuntimeValue = function getRuntimeValue(){
 }
 ;
 _.getRuntimeValue.displayName = 'com.google.gwt.useragent.client.UserAgentImplGecko1_8.getRuntimeValue';
-var Lcom_google_gwt_useragent_client_UserAgentImplGecko1_18_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplGecko1_8', 140);
+var Lcom_google_gwt_useragent_client_UserAgentImplGecko1_18_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplGecko1_8', 139);
 function UserAgentImplIe10(){
 }
 
 UserAgentImplIe10.displayName = 'com.google.gwt.useragent.client.UserAgentImplIe10.UserAgentImplIe10';
-defineClass(138, 1, $intern_13, UserAgentImplIe10);
+defineClass(137, 1, $intern_12, UserAgentImplIe10);
 _.getCompileTimeValue = function getCompileTimeValue_0(){
   return 'ie10';
 }
@@ -2914,12 +2915,12 @@ _.getRuntimeValue = function getRuntimeValue_0(){
 }
 ;
 _.getRuntimeValue.displayName = 'com.google.gwt.useragent.client.UserAgentImplIe10.getRuntimeValue';
-var Lcom_google_gwt_useragent_client_UserAgentImplIe10_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplIe10', 138);
+var Lcom_google_gwt_useragent_client_UserAgentImplIe10_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplIe10', 137);
 function UserAgentImplIe8(){
 }
 
 UserAgentImplIe8.displayName = 'com.google.gwt.useragent.client.UserAgentImplIe8.UserAgentImplIe8';
-defineClass(141, 1, $intern_13, UserAgentImplIe8);
+defineClass(140, 1, $intern_12, UserAgentImplIe8);
 _.getCompileTimeValue = function getCompileTimeValue_1(){
   return 'ie8';
 }
@@ -2957,12 +2958,12 @@ _.getRuntimeValue = function getRuntimeValue_1(){
 }
 ;
 _.getRuntimeValue.displayName = 'com.google.gwt.useragent.client.UserAgentImplIe8.getRuntimeValue';
-var Lcom_google_gwt_useragent_client_UserAgentImplIe8_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplIe8', 141);
+var Lcom_google_gwt_useragent_client_UserAgentImplIe8_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplIe8', 140);
 function UserAgentImplIe9(){
 }
 
 UserAgentImplIe9.displayName = 'com.google.gwt.useragent.client.UserAgentImplIe9.UserAgentImplIe9';
-defineClass(137, 1, $intern_13, UserAgentImplIe9);
+defineClass(136, 1, $intern_12, UserAgentImplIe9);
 _.getCompileTimeValue = function getCompileTimeValue_2(){
   return 'ie9';
 }
@@ -3000,12 +3001,12 @@ _.getRuntimeValue = function getRuntimeValue_2(){
 }
 ;
 _.getRuntimeValue.displayName = 'com.google.gwt.useragent.client.UserAgentImplIe9.getRuntimeValue';
-var Lcom_google_gwt_useragent_client_UserAgentImplIe9_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplIe9', 137);
+var Lcom_google_gwt_useragent_client_UserAgentImplIe9_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplIe9', 136);
 function UserAgentImplSafari(){
 }
 
 UserAgentImplSafari.displayName = 'com.google.gwt.useragent.client.UserAgentImplSafari.UserAgentImplSafari';
-defineClass(139, 1, $intern_13, UserAgentImplSafari);
+defineClass(138, 1, $intern_12, UserAgentImplSafari);
 _.getCompileTimeValue = function getCompileTimeValue_3(){
   return 'safari';
 }
@@ -3043,7 +3044,7 @@ _.getRuntimeValue = function getRuntimeValue_3(){
 }
 ;
 _.getRuntimeValue.displayName = 'com.google.gwt.useragent.client.UserAgentImplSafari.getRuntimeValue';
-var Lcom_google_gwt_useragent_client_UserAgentImplSafari_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplSafari', 139);
+var Lcom_google_gwt_useragent_client_UserAgentImplSafari_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentImplSafari', 138);
 function $clinit_DomGlobal(){
   $clinit_DomGlobal = emptyMethod;
   document_0 = $wnd.window.document;
@@ -3053,7 +3054,7 @@ $clinit_DomGlobal.displayName = 'elemental2.dom.DomGlobal.$clinit';
 var document_0;
 function $clinit_Cpu(){
   $clinit_Cpu = emptyMethod;
-  PARITY_TABLE = stampJavaTypeInfo(getClassLiteralForArray(Z_classLit, 1), $intern_14, 10, 16, [true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true]);
+  PARITY_TABLE = stampJavaTypeInfo(getClassLiteralForArray(Z_classLit, 1), $intern_13, 10, 16, [true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true]);
 }
 
 $clinit_Cpu.displayName = 'il.co.codeguru.corewars8086.cpu.Cpu.$clinit';
@@ -3062,7 +3063,7 @@ function $adc16(this$static, value1, value2){
   result32 = (value1 & $intern_0) + (value2 & $intern_0);
   (this$static.m_state.m_flags & 1) == 1 && ++result32;
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -3073,7 +3074,7 @@ function $adc8(this$static, value1, value2){
   result16 = ((value1 & 255) << 16 >> 16) + ((value2 & 255) << 16 >> 16) << 16 >> 16;
   (this$static.m_state.m_flags & 1) == 1 && ++result16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -3083,7 +3084,7 @@ function $add16(this$static, value1, value2){
   var result16, result32;
   result32 = (value1 & $intern_0) + (value2 & $intern_0);
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -3093,7 +3094,7 @@ function $add8(this$static, value1, value2){
   var result16, result8;
   result16 = ((value1 & 255) << 16 >> 16) + ((value2 & 255) << 16 >> 16) << 16 >> 16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -3103,7 +3104,7 @@ function $and16(this$static, value1, value2){
   var result16, result32;
   result32 = value1 & $intern_0 & value2 & $intern_0;
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -3113,7 +3114,7 @@ function $and8(this$static, value1, value2){
   var result16, result8;
   result16 = ((value1 & 255) << 16 >> 16 & (value2 & 255) << 16 >> 16) << 16 >> 16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -3138,7 +3139,7 @@ function $cmpsb(this$static){
   address1 = new RealModeAddress_0(this$static.m_state.m_ds, this$static.m_state.m_si);
   address2 = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $sub8(this$static, $readByte_1(this$static.m_memory, address1), $readByte_1(this$static.m_memory, address2));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-1:1;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-1:1;
   $setSI(this$static.m_state, this$static.m_state.m_si + diff << 16 >> 16);
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
@@ -3149,7 +3150,7 @@ function $cmpsw(this$static){
   address1 = new RealModeAddress_0(this$static.m_state.m_ds, this$static.m_state.m_si);
   address2 = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $sub16(this$static, $readWord(this$static.m_memory, address1), $readWord(this$static.m_memory, address2));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-2:2;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-2:2;
   $setSI(this$static.m_state, this$static.m_state.m_si + diff << 16 >> 16);
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
@@ -3201,7 +3202,7 @@ function $int86(this$static){
       $writeWord(this$static.m_memory, address1, this$static.m_state.m_ax);
       address2 = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di + 2 << 16 >> 16);
       $writeWord(this$static.m_memory, address2, this$static.m_state.m_dx);
-      diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-4:4;
+      diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-4:4;
       $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
     }
   }
@@ -3214,7 +3215,7 @@ function $int87(this$static){
   if (bombCount != 0) {
     $setBomb2Count(this$static.m_state, bombCount - 1 << 24 >> 24);
     for (i = 0; i <= $intern_0; ++i) {
-      diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-i:i;
+      diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-i:i;
       address1 = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di + diff << 16 >> 16);
       if ($readWord(this$static.m_memory, address1) == this$static.m_state.m_ax) {
         address2 = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di + diff + 2 << 16 >> 16);
@@ -3233,7 +3234,7 @@ function $lodsb(this$static){
   var address, diff;
   address = new RealModeAddress_0(this$static.m_state.m_ds, this$static.m_state.m_si);
   $setAL(this$static.m_state, $readByte_1(this$static.m_memory, address));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-1:1;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-1:1;
   $setSI(this$static.m_state, this$static.m_state.m_si + diff << 16 >> 16);
 }
 
@@ -3242,7 +3243,7 @@ function $lodsw(this$static){
   var address, diff;
   address = new RealModeAddress_0(this$static.m_state.m_ds, this$static.m_state.m_si);
   $setAX(this$static.m_state, $readWord(this$static.m_memory, address));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-2:2;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-2:2;
   $setSI(this$static.m_state, this$static.m_state.m_si + diff << 16 >> 16);
 }
 
@@ -3252,7 +3253,7 @@ function $movsb(this$static){
   src_0 = new RealModeAddress_0(this$static.m_state.m_ds, this$static.m_state.m_si);
   dst = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $writeByte_0(this$static.m_memory, dst, $readByte_1(this$static.m_memory, src_0));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-1:1;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-1:1;
   $setSI(this$static.m_state, this$static.m_state.m_si + diff << 16 >> 16);
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
@@ -3263,7 +3264,7 @@ function $movsw(this$static){
   src_0 = new RealModeAddress_0(this$static.m_state.m_ds, this$static.m_state.m_si);
   dst = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $writeWord(this$static.m_memory, dst, $readWord(this$static.m_memory, src_0));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-2:2;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-2:2;
   $setSI(this$static.m_state, this$static.m_state.m_si + diff << 16 >> 16);
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
@@ -3631,10 +3632,10 @@ function $opcode7X(this$static, opcode){
   branch = false;
   switch (opcode) {
     case 112:
-      branch = (this$static.m_state.m_flags & $intern_18) == $intern_18;
+      branch = (this$static.m_state.m_flags & $intern_17) == $intern_17;
       break;
     case 113:
-      branch = (this$static.m_state.m_flags & $intern_18) != $intern_18;
+      branch = (this$static.m_state.m_flags & $intern_17) != $intern_17;
       break;
     case 114:
       branch = (this$static.m_state.m_flags & 1) == 1;
@@ -3667,16 +3668,16 @@ function $opcode7X(this$static, opcode){
       branch = (this$static.m_state.m_flags & 4) != 4;
       break;
     case 124:
-      branch = (this$static.m_state.m_flags & 128) == 128 != ((this$static.m_state.m_flags & $intern_18) == $intern_18);
+      branch = (this$static.m_state.m_flags & 128) == 128 != ((this$static.m_state.m_flags & $intern_17) == $intern_17);
       break;
     case 125:
-      branch = (this$static.m_state.m_flags & 128) == 128 == ((this$static.m_state.m_flags & $intern_18) == $intern_18);
+      branch = (this$static.m_state.m_flags & 128) == 128 == ((this$static.m_state.m_flags & $intern_17) == $intern_17);
       break;
     case 126:
-      branch = (this$static.m_state.m_flags & 64) == 64 || (this$static.m_state.m_flags & 128) == 128 != ((this$static.m_state.m_flags & $intern_18) == $intern_18);
+      branch = (this$static.m_state.m_flags & 64) == 64 || (this$static.m_state.m_flags & 128) == 128 != ((this$static.m_state.m_flags & $intern_17) == $intern_17);
       break;
     case 127:
-      branch = (this$static.m_state.m_flags & 64) != 64 && (this$static.m_state.m_flags & 128) == 128 == ((this$static.m_state.m_flags & $intern_18) == $intern_18);
+      branch = (this$static.m_state.m_flags & 64) != 64 && (this$static.m_state.m_flags & 128) == 128 == ((this$static.m_state.m_flags & $intern_17) == $intern_17);
   }
   offset = $nextByte(this$static.m_fetcher);
   branch && $setIP(this$static.m_state, this$static.m_state.m_ip + offset << 16 >> 16);
@@ -3885,7 +3886,7 @@ function $opcode9X(this$static, opcode){
       break;
     case -98:
       flags = this$static.m_state.m_flags;
-      flags = (flags & $intern_16) << 16 >> 16;
+      flags = (flags & $intern_15) << 16 >> 16;
       flags = (flags | this$static.m_state.m_ax >> 8 << 24 >> 24) << 16 >> 16;
       $setFlags(this$static.m_state, flags);
       break;
@@ -4586,7 +4587,7 @@ function $or16(this$static, value1, value2){
   var result16, result32;
   result32 = value1 & $intern_0 | value2 & $intern_0;
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -4596,7 +4597,7 @@ function $or8(this$static, value1, value2){
   var result16, result8;
   result16 = ((value1 & 255) << 16 >> 16 | (value2 & 255) << 16 >> 16) << 16 >> 16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -4789,7 +4790,7 @@ function $sbb16(this$static, value1, value2){
   result32 = (value1 & $intern_0) - (value2 & $intern_0);
   (this$static.m_state.m_flags & 1) == 1 && --result32;
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -4800,7 +4801,7 @@ function $sbb8(this$static, value1, value2){
   result16 = ((value1 & 255) << 16 >> 16) - ((value2 & 255) << 16 >> 16) << 16 >> 16;
   (this$static.m_state.m_flags & 1) == 1 && --result16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -4810,7 +4811,7 @@ function $scasb(this$static){
   var address, diff;
   address = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $sub8(this$static, this$static.m_state.m_ax << 24 >> 24, $readByte_1(this$static.m_memory, address));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-1:1;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-1:1;
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
 
@@ -4819,7 +4820,7 @@ function $scasw(this$static){
   var address, diff;
   address = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $sub16(this$static, this$static.m_state.m_ax, $readWord(this$static.m_memory, address));
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-2:2;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-2:2;
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
 
@@ -4894,7 +4895,7 @@ function $stosb(this$static){
   var address, diff;
   address = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $writeByte_0(this$static.m_memory, address, this$static.m_state.m_ax << 24 >> 24);
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-1:1;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-1:1;
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
 
@@ -4905,7 +4906,7 @@ function $stosdw(this$static){
   $writeWord(this$static.m_memory, address1, this$static.m_state.m_ax);
   address2 = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di + 2 << 16 >> 16);
   $writeWord(this$static.m_memory, address2, this$static.m_state.m_dx);
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-4:4;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-4:4;
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
 
@@ -4914,7 +4915,7 @@ function $stosw(this$static){
   var address, diff;
   address = new RealModeAddress_0(this$static.m_state.m_es, this$static.m_state.m_di);
   $writeWord(this$static.m_memory, address, this$static.m_state.m_ax);
-  diff = (this$static.m_state.m_flags & $intern_17) == $intern_17?-2:2;
+  diff = (this$static.m_state.m_flags & $intern_16) == $intern_16?-2:2;
   $setDI(this$static.m_state, this$static.m_state.m_di + diff << 16 >> 16);
 }
 
@@ -4923,7 +4924,7 @@ function $sub16(this$static, value1, value2){
   var result16, result32;
   result32 = (value1 & $intern_0) - (value2 & $intern_0);
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -4933,7 +4934,7 @@ function $sub8(this$static, value1, value2){
   var result16, result8;
   result16 = ((value1 & 255) << 16 >> 16) - ((value2 & 255) << 16 >> 16) << 16 >> 16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -4959,7 +4960,7 @@ function $xor16(this$static, value1, value2){
   var result16, result32;
   result32 = value1 & $intern_0 ^ value2 & $intern_0;
   result16 = result32 << 16 >> 16;
-  $setCarryFlag(this$static.m_state, (result32 & $intern_15) != 0);
+  $setCarryFlag(this$static.m_state, (result32 & $intern_14) != 0);
   $updateFlagsNoCarryOverflow16(this$static, result32 << 16 >> 16);
   return result16;
 }
@@ -4969,7 +4970,7 @@ function $xor8(this$static, value1, value2){
   var result16, result8;
   result16 = ((value1 & 255) << 16 >> 16 ^ (value2 & 255) << 16 >> 16) << 16 >> 16;
   result8 = result16 << 24 >> 24;
-  $setCarryFlag(this$static.m_state, (result16 & $intern_16) != 0);
+  $setCarryFlag(this$static.m_state, (result16 & $intern_15) != 0);
   $updateFlagsNoCarryOverflow8(this$static, result16 << 24 >> 24);
   return result8;
 }
@@ -4985,15 +4986,15 @@ function Cpu(state, memory){
 }
 
 Cpu.displayName = 'il.co.codeguru.corewars8086.cpu.Cpu.Cpu';
-defineClass(220, 1, {}, Cpu);
+defineClass(219, 1, {}, Cpu);
 var PARITY_TABLE;
-var Lil_co_codeguru_corewars8086_cpu_Cpu_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'Cpu', 220);
+var Lil_co_codeguru_corewars8086_cpu_Cpu_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'Cpu', 219);
 function CpuException(){
   Exception.call(this);
 }
 
 CpuException.displayName = 'il.co.codeguru.corewars8086.cpu.CpuException.CpuException';
-defineClass(26, 7, $intern_19);
+defineClass(26, 7, $intern_18);
 var Lil_co_codeguru_corewars8086_cpu_CpuException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'CpuException', 26);
 function $setAH(this$static, value_0){
   this$static.m_ax = (this$static.m_ax & 255) << 16 >> 16;
@@ -5002,7 +5003,7 @@ function $setAH(this$static, value_0){
 
 $setAH.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setAH';
 function $setAL(this$static, value_0){
-  this$static.m_ax = (this$static.m_ax & $intern_16) << 16 >> 16;
+  this$static.m_ax = (this$static.m_ax & $intern_15) << 16 >> 16;
   this$static.m_ax = this$static.m_ax | (value_0 & 255) << 16 >> 16;
 }
 
@@ -5019,7 +5020,7 @@ function $setBH(this$static, value_0){
 
 $setBH.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setBH';
 function $setBL(this$static, value_0){
-  this$static.m_bx = (this$static.m_bx & $intern_16) << 16 >> 16;
+  this$static.m_bx = (this$static.m_bx & $intern_15) << 16 >> 16;
   this$static.m_bx = this$static.m_bx | (value_0 & 255) << 16 >> 16;
 }
 
@@ -5051,7 +5052,7 @@ function $setCH(this$static, value_0){
 
 $setCH.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setCH';
 function $setCL(this$static, value_0){
-  this$static.m_cx = (this$static.m_cx & $intern_16) << 16 >> 16;
+  this$static.m_cx = (this$static.m_cx & $intern_15) << 16 >> 16;
   this$static.m_cx = this$static.m_cx | (value_0 & 255) << 16 >> 16;
 }
 
@@ -5083,7 +5084,7 @@ function $setDI(this$static, value_0){
 
 $setDI.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setDI';
 function $setDL(this$static, value_0){
-  this$static.m_dx = (this$static.m_dx & $intern_16) << 16 >> 16;
+  this$static.m_dx = (this$static.m_dx & $intern_15) << 16 >> 16;
   this$static.m_dx = this$static.m_dx | (value_0 & 255) << 16 >> 16;
 }
 
@@ -5099,7 +5100,7 @@ function $setDX(this$static, value_0){
 
 $setDX.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setDX';
 function $setDirectionFlag(this$static, newValue){
-  newValue?(this$static.m_flags = (this$static.m_flags | $intern_17) << 16 >> 16):(this$static.m_flags = (this$static.m_flags & -1025) << 16 >> 16);
+  newValue?(this$static.m_flags = (this$static.m_flags | $intern_16) << 16 >> 16):(this$static.m_flags = (this$static.m_flags & -1025) << 16 >> 16);
 }
 
 $setDirectionFlag.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setDirectionFlag';
@@ -5129,7 +5130,7 @@ function $setInterruptFlag(this$static, newValue){
 
 $setInterruptFlag.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setInterruptFlag';
 function $setOverflowFlag(this$static, newValue){
-  newValue?(this$static.m_flags = (this$static.m_flags | $intern_18) << 16 >> 16):(this$static.m_flags = (this$static.m_flags & -2049) << 16 >> 16);
+  newValue?(this$static.m_flags = (this$static.m_flags | $intern_17) << 16 >> 16):(this$static.m_flags = (this$static.m_flags & -2049) << 16 >> 16);
 }
 
 $setOverflowFlag.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.$setOverflowFlag';
@@ -5167,7 +5168,7 @@ function CpuState(){
 }
 
 CpuState.displayName = 'il.co.codeguru.corewars8086.cpu.CpuState.CpuState';
-defineClass(196, 1, {}, CpuState);
+defineClass(195, 1, {}, CpuState);
 _.m_ax = 0;
 _.m_bomb1count = 0;
 _.m_bomb2count = 0;
@@ -5185,13 +5186,13 @@ _.m_ip = 0;
 _.m_si = 0;
 _.m_sp = 0;
 _.m_ss = 0;
-var Lil_co_codeguru_corewars8086_cpu_CpuState_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'CpuState', 196);
+var Lil_co_codeguru_corewars8086_cpu_CpuState_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'CpuState', 195);
 function DivisionException(){
   CpuException.call(this);
 }
 
 DivisionException.displayName = 'il.co.codeguru.corewars8086.cpu.DivisionException.DivisionException';
-defineClass(72, 26, $intern_19, DivisionException);
+defineClass(72, 26, $intern_18, DivisionException);
 var Lil_co_codeguru_corewars8086_cpu_DivisionException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'DivisionException', 72);
 function $getMem16(this$static){
   if (this$static.m_memAddress) {
@@ -5353,23 +5354,23 @@ function IndirectAddressingDecoder(state, memory, fetcher){
 }
 
 IndirectAddressingDecoder.displayName = 'il.co.codeguru.corewars8086.cpu.IndirectAddressingDecoder.IndirectAddressingDecoder';
-defineClass(226, 1, {}, IndirectAddressingDecoder);
+defineClass(225, 1, {}, IndirectAddressingDecoder);
 _.m_memIndex = 0;
 _.m_regIndex = 0;
-var Lil_co_codeguru_corewars8086_cpu_IndirectAddressingDecoder_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'IndirectAddressingDecoder', 226);
+var Lil_co_codeguru_corewars8086_cpu_IndirectAddressingDecoder_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'IndirectAddressingDecoder', 225);
 function IntOpcodeException(){
   CpuException.call(this);
 }
 
 IntOpcodeException.displayName = 'il.co.codeguru.corewars8086.cpu.IntOpcodeException.IntOpcodeException';
-defineClass(91, 26, $intern_19, IntOpcodeException);
-var Lil_co_codeguru_corewars8086_cpu_IntOpcodeException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'IntOpcodeException', 91);
+defineClass(90, 26, $intern_18, IntOpcodeException);
+var Lil_co_codeguru_corewars8086_cpu_IntOpcodeException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'IntOpcodeException', 90);
 function InvalidOpcodeException(){
   CpuException.call(this);
 }
 
 InvalidOpcodeException.displayName = 'il.co.codeguru.corewars8086.cpu.InvalidOpcodeException.InvalidOpcodeException';
-defineClass(11, 26, $intern_19, InvalidOpcodeException);
+defineClass(11, 26, $intern_18, InvalidOpcodeException);
 var Lil_co_codeguru_corewars8086_cpu_InvalidOpcodeException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'InvalidOpcodeException', 11);
 function $nextByte(this$static){
   var ip, linearAddress;
@@ -5394,8 +5395,8 @@ function OpcodeFetcher(state, memory){
 }
 
 OpcodeFetcher.displayName = 'il.co.codeguru.corewars8086.cpu.OpcodeFetcher.OpcodeFetcher';
-defineClass(225, 1, {}, OpcodeFetcher);
-var Lil_co_codeguru_corewars8086_cpu_OpcodeFetcher_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'OpcodeFetcher', 225);
+defineClass(224, 1, {}, OpcodeFetcher);
+var Lil_co_codeguru_corewars8086_cpu_OpcodeFetcher_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'OpcodeFetcher', 224);
 function $getReg16_0(this$static, index_0){
   switch (index_0) {
     case 0:
@@ -5551,21 +5552,21 @@ function RegisterIndexingDecoder(state){
 }
 
 RegisterIndexingDecoder.displayName = 'il.co.codeguru.corewars8086.cpu.RegisterIndexingDecoder.RegisterIndexingDecoder';
-defineClass(116, 1, {}, RegisterIndexingDecoder);
-var Lil_co_codeguru_corewars8086_cpu_RegisterIndexingDecoder_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'RegisterIndexingDecoder', 116);
+defineClass(115, 1, {}, RegisterIndexingDecoder);
+var Lil_co_codeguru_corewars8086_cpu_RegisterIndexingDecoder_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'RegisterIndexingDecoder', 115);
 function UnimplementedOpcodeException(){
   CpuException.call(this);
 }
 
 UnimplementedOpcodeException.displayName = 'il.co.codeguru.corewars8086.cpu.UnimplementedOpcodeException.UnimplementedOpcodeException';
-defineClass(39, 26, $intern_19, UnimplementedOpcodeException);
+defineClass(39, 26, $intern_18, UnimplementedOpcodeException);
 var Lil_co_codeguru_corewars8086_cpu_UnimplementedOpcodeException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'UnimplementedOpcodeException', 39);
 function UnsupportedOpcodeException(){
   CpuException.call(this);
 }
 
 UnsupportedOpcodeException.displayName = 'il.co.codeguru.corewars8086.cpu.UnsupportedOpcodeException.UnsupportedOpcodeException';
-defineClass(55, 26, $intern_19, UnsupportedOpcodeException);
+defineClass(55, 26, $intern_18, UnsupportedOpcodeException);
 var Lil_co_codeguru_corewars8086_cpu_UnsupportedOpcodeException_2_classLit = createForClass('il.co.codeguru.corewars8086.cpu', 'UnsupportedOpcodeException', 55);
 function $$init_4(this$static){
 }
@@ -5618,9 +5619,9 @@ function $$init_5(this$static){
 $$init_5.displayName = 'il.co.codeguru.corewars8086.gui.Canvas.$$init';
 function $clear(this$static){
   var i, j;
-  this$static.data_0 == null && (this$static.data_0 = initMultidimensionalArray(B_classLit, [$intern_2, $intern_20], [50, 10], 15, [256, 256], 2));
-  this$static.pointer == null && (this$static.pointer = initMultidimensionalArray(B_classLit, [$intern_2, $intern_20], [50, 10], 15, [256, 256], 2));
-  this$static.values_0 == null && (this$static.values_0 = initMultidimensionalArray(B_classLit, [$intern_2, $intern_20], [50, 10], 15, [256, 256], 2));
+  this$static.data_0 == null && (this$static.data_0 = initMultidimensionalArray(B_classLit, [$intern_2, $intern_19], [50, 10], 15, [256, 256], 2));
+  this$static.pointer == null && (this$static.pointer = initMultidimensionalArray(B_classLit, [$intern_2, $intern_19], [50, 10], 15, [256, 256], 2));
+  this$static.values_0 == null && (this$static.values_0 = initMultidimensionalArray(B_classLit, [$intern_2, $intern_19], [50, 10], 15, [256, 256], 2));
   for (i = 0; i < 256; i++)
     for (j = 0; j < 256; j++) {
       this$static.data_0[i][j] = -1;
@@ -5670,7 +5671,7 @@ function $initStartWar(this$static, war){
   this$static.m_mem = war.m_core;
   this$static.m_currentWar = war;
   this$static.m_indebug = true;
-  addr = $intern_21;
+  addr = $intern_20;
   for (y_0 = 0; y_0 < 256; y_0++) {
     for (x_0 = 0; x_0 < 256; x_0++) {
       this$static.values_0[x_0][y_0] = $readByte(this$static.m_mem, addr);
@@ -5737,19 +5738,19 @@ function $moveCursor(this$static, dx, dy){
   this$static.m_cursorX = $wnd.Math.max($wnd.Math.min(this$static.m_cursorX + dx, 255.5), 0);
   this$static.m_cursorY = $wnd.Math.max($wnd.Math.min(this$static.m_cursorY + dy, 255), 0);
   while (this$static.m_cursorY < this$static.m_contentVisibleRect.sy + 1 && this$static.m_cursorY > 0) {
-    this$static.m_zrY = this$static.m_zrY + $intern_22 * this$static.m_zrHscale * 3;
+    this$static.m_zrY = this$static.m_zrY + $intern_21 * this$static.m_zrHscale * 3;
     js_updateFromKeyScroll(this$static.m_zrX, this$static.m_zrY);
   }
   while (this$static.m_cursorY > this$static.m_contentVisibleRect.ey - 1 && this$static.m_cursorY <= 255) {
-    this$static.m_zrY = this$static.m_zrY - $intern_22 * this$static.m_zrHscale * 3;
+    this$static.m_zrY = this$static.m_zrY - $intern_21 * this$static.m_zrHscale * 3;
     js_updateFromKeyScroll(this$static.m_zrX, this$static.m_zrY);
   }
   while (this$static.m_cursorX < this$static.m_contentVisibleRect.sx + 1 && this$static.m_cursorX > 0) {
-    this$static.m_zrX = this$static.m_zrX + $intern_22 * this$static.m_zrVscale * 3;
+    this$static.m_zrX = this$static.m_zrX + $intern_21 * this$static.m_zrVscale * 3;
     js_updateFromKeyScroll(this$static.m_zrX, this$static.m_zrY);
   }
   while (this$static.m_cursorX > this$static.m_contentVisibleRect.ex - 0.5 && this$static.m_cursorX <= 255.5) {
-    this$static.m_zrX = this$static.m_zrX - $intern_22 * this$static.m_zrVscale * 3;
+    this$static.m_zrX = this$static.m_zrX - $intern_21 * this$static.m_zrVscale * 3;
     js_updateFromKeyScroll(this$static.m_zrX, this$static.m_zrY);
   }
   $paint(this$static);
@@ -5977,7 +5978,7 @@ function resetZoom(){
 }
 
 resetZoom.displayName = 'il.co.codeguru.corewars8086.gui.Canvas.resetZoom';
-defineClass(183, 24, {}, Canvas_0);
+defineClass(182, 24, {}, Canvas_0);
 _.j_warCanvas_click_0 = function j_warCanvas_click(x_0, y_0){
   var mx, my;
   if (!this.m_showContent || x_0 < 0 || y_0 < 0 || x_0 >= 768 || y_0 >= 768)
@@ -6025,7 +6026,7 @@ _.j_warCanvas_showCurrent_0 = function j_warCanvas_showCurrent(x_0, y_0){
   mx = round_int((x_0 - this.m_zrX) / 3 / this.m_zrHscale);
   my = round_int((y_0 - this.m_zrY) / 3 / this.m_zrVscale);
   addr = mx + my * 256 & $intern_0;
-  v = $readByte(this.m_mem, addr + $intern_21) & 255;
+  v = $readByte(this.m_mem, addr + $intern_20) & 255;
   sb = new StringBuilder;
   sb.string += '0x';
   $append_4(sb, hex4(addr));
@@ -6058,7 +6059,7 @@ _.m_zrHscale = 0;
 _.m_zrVscale = 0;
 _.m_zrX = 0;
 _.m_zrY = 0;
-var Lil_co_codeguru_corewars8086_gui_Canvas_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas', 183);
+var Lil_co_codeguru_corewars8086_gui_Canvas_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas', 182);
 function $isInside(this$static, x_0, y_0){
   return x_0 > this$static.sx && x_0 < this$static.ex && y_0 > this$static.sy && y_0 < this$static.ey;
 }
@@ -6068,12 +6069,12 @@ function Canvas$Rect(){
 }
 
 Canvas$Rect.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$Rect.Canvas$Rect';
-defineClass(185, 1, {}, Canvas$Rect);
+defineClass(184, 1, {}, Canvas$Rect);
 _.ex = 0;
 _.ey = 0;
 _.sx = 0;
 _.sy = 0;
-var Lil_co_codeguru_corewars8086_gui_Canvas$Rect_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/Rect', 185);
+var Lil_co_codeguru_corewars8086_gui_Canvas$Rect_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/Rect', 184);
 function $moveTo(this$static, _x, _y){
   this$static.x_0 = _x;
   this$static.y_0 = _y;
@@ -6086,10 +6087,10 @@ function Canvas$Turtle(_p){
 }
 
 Canvas$Turtle.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$Turtle.Canvas$Turtle';
-defineClass(184, 1, {}, Canvas$Turtle);
+defineClass(183, 1, {}, Canvas$Turtle);
 _.x_0 = 0;
 _.y_0 = 0;
-var Lil_co_codeguru_corewars8086_gui_Canvas$Turtle_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/Turtle', 184);
+var Lil_co_codeguru_corewars8086_gui_Canvas$Turtle_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/Turtle', 183);
 function $getClass_1(){
   return Lcom_google_gwt_core_client_JavaScriptObject_2_classLit;
 }
@@ -6100,7 +6101,7 @@ function Canvas$lambda$0$Type($$outer_0){
 }
 
 Canvas$lambda$0$Type.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$lambda$0$Type.Canvas$lambda$0$Type';
-defineClass(268, $wnd.Function, {}, Canvas$lambda$0$Type);
+defineClass(267, $wnd.Function, {}, Canvas$lambda$0$Type);
 _.onInvoke = function onInvoke(arg0){
   $lambda$0(this.$$outer_0);
 }
@@ -6111,25 +6112,25 @@ function Canvas$lambda$1$Type($$outer_0){
 }
 
 Canvas$lambda$1$Type.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$lambda$1$Type.Canvas$lambda$1$Type';
-defineClass(186, 1, {}, Canvas$lambda$1$Type);
+defineClass(185, 1, {}, Canvas$lambda$1$Type);
 _.handleEvent = function handleEvent(arg0){
   $lambda$1(this.$$outer_0);
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$lambda$1$Type.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_Canvas$lambda$1$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/lambda$1$Type', 186);
+var Lil_co_codeguru_corewars8086_gui_Canvas$lambda$1$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/lambda$1$Type', 185);
 function Canvas$lambda$2$Type($$outer_0){
   this.$$outer_0 = $$outer_0;
 }
 
 Canvas$lambda$2$Type.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$lambda$2$Type.Canvas$lambda$2$Type';
-defineClass(187, 1, {}, Canvas$lambda$2$Type);
+defineClass(186, 1, {}, Canvas$lambda$2$Type);
 _.handleEvent = function handleEvent_0(arg0){
   $lambda$2(this.$$outer_0, arg0);
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.Canvas$lambda$2$Type.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_Canvas$lambda$2$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/lambda$2$Type', 187);
+var Lil_co_codeguru_corewars8086_gui_Canvas$lambda$2$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'Canvas/lambda$2$Type', 186);
 function $$init_6(this$static){
   this$static.m_singleByte = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_CodeEditor$DbgLine_2_classLit, $intern_2, 36, 256, 0, 1);
   this$static.PAGE_SIZE_0 = $wnd.PAGE_SIZE;
@@ -6262,7 +6263,7 @@ function $eraseOpcode(this$static, addrInArea){
   (page == this$static.m_atScrollP1 || page == this$static.m_atScrollP2) && $renderLine(this$static, addrInArea, null);
   ++addrInArea;
   while (!this$static.m_dbglines[addrInArea]) {
-    value_0 = $readByte(this$static.m_mem, addrInArea + $intern_21);
+    value_0 = $readByte(this$static.m_mem, addrInArea + $intern_20);
     $setByte(this$static, addrInArea, (value_0 & 255) << 24 >> 24);
     ++addrInArea;
   }
@@ -6353,24 +6354,24 @@ function $initDebugAreaLines(this$static){
     this$static.m_fillCmd = new CodeEditor$DbgLine;
     this$static.m_fillCmd.text_0 = "<span class='dbg_backfill'><span class='dbg_opcodes'>CC<\/span>int 3<\/span>";
   }
-  for (addr = 0; addr < $intern_21; ++addr) {
+  for (addr = 0; addr < $intern_20; ++addr) {
     this$static.m_dbglines[addr] = this$static.m_fillCmd;
   }
   for (p$array = this$static.m_pages , p$index = 0 , p$max = p$array.length; p$index < p$max; ++p$index) {
     p = p$array[p$index];
     p.isDirty = true;
   }
-  this$static.m_dbgBreakpoints = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_PlayersPanel$Breakpoint_2_classLit, $intern_2, 31, $intern_21, 0, 1);
+  this$static.m_dbgBreakpoints = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_PlayersPanel$Breakpoint_2_classLit, $intern_2, 32, $intern_20, 0, 1);
   for (i = 0; i < war.m_numWarriors; ++i) {
     w = war.m_warriors[i];
-    playerLoadOffset = w.m_loadAddress.m_linearAddress - $intern_21;
+    playerLoadOffset = w.m_loadAddress.m_linearAddress - $intern_20;
     code_0 = $findCode(this$static.m_playersPanel, w.m_label);
     for (lstline$iterator = new ArrayList$1(code_0.lines); lstline$iterator.i < lstline$iterator.this$01.array.length;) {
       lstline = castTo($next_5(lstline$iterator), 46);
       lstline.tmp_br = null;
     }
     for (br$iterator = new ArrayList$1(code_0.breakpoints); br$iterator.i < br$iterator.this$01.array.length;) {
-      br = castTo($next_5(br$iterator), 31);
+      br = castTo($next_5(br$iterator), 32);
       castTo($get_4(code_0.lines, br.lineNum - 1), 46).tmp_br = br;
     }
     last_dbgline = null;
@@ -6551,7 +6552,7 @@ function $playerSelectionChanged(this$static, incode, callback){
   $setText_0(this$static, incode.asmText, callback);
   this$static.m_breakpoints = incode.breakpoints;
   for (b$iterator = new ArrayList$1(this$static.m_breakpoints); b$iterator.i < b$iterator.this$01.array.length;) {
-    b = castTo($next_5(b$iterator), 31);
+    b = castTo($next_5(b$iterator), 32);
     $setLineNumBreakpoint(b.lineNum, true);
   }
   this$static.m_isDebugMode && $updateDebugLine(this$static);
@@ -6562,7 +6563,7 @@ function $removeCurrentBreakpoints(this$static){
   var b, b$iterator;
   if (this$static.m_breakpoints)
     for (b$iterator = new ArrayList$1(this$static.m_breakpoints); b$iterator.i < b$iterator.this$01.array.length;) {
-      b = castTo($next_5(b$iterator), 31);
+      b = castTo($next_5(b$iterator), 32);
       $setLineNumBreakpoint(b.lineNum, false);
     }
 }
@@ -6697,7 +6698,7 @@ $setText_0.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor.$setText';
 function $shouldBreak(this$static, state){
   var absAddr, arenaAddr;
   absAddr = linearAddress_0(state.m_cs, state.m_ip);
-  arenaAddr = absAddr - $intern_21;
+  arenaAddr = absAddr - $intern_20;
   if (!this$static.m_dbgBreakpoints[arenaAddr])
     return false;
   return true;
@@ -6726,7 +6727,7 @@ function $toggleBreakpointDbg(this$static, addr){
     if (wasAdded) {
       br.lineNum = lsti;
       for (exist_br$iterator = new ArrayList$1(codeObj.breakpoints); exist_br$iterator.i < exist_br$iterator.this$01.array.length;) {
-        castTo($next_5(exist_br$iterator), 31);
+        castTo($next_5(exist_br$iterator), 32);
       }
       $add_0(codeObj.breakpoints, br);
     }
@@ -6749,7 +6750,7 @@ function $toggleBreakpointEdit(this$static, atline){
   }
   found = null;
   for (b$iterator = new ArrayList$1(this$static.m_breakpoints); b$iterator.i < b$iterator.this$01.array.length;) {
-    b = castTo($next_5(b$iterator), 31);
+    b = castTo($next_5(b$iterator), 32);
     if (b.lineNum == atline) {
       found = b;
       break;
@@ -6770,7 +6771,7 @@ function $updateBreakpoints(this$static, prevLineOffsets, prevLineCount, prevInT
   keydown = $wnd.saved_keydown;
   it = new AbstractList$ListIteratorImpl(this$static.m_breakpoints);
   while (it.i < it.this$01.size_1()) {
-    br = (checkCriticalElement(it.i < it.this$01.size_1()) , castTo(it.this$01.get_0(it.last = it.i++), 31));
+    br = (checkCriticalElement(it.i < it.this$01.size_1()) , castTo(it.this$01.get_0(it.last = it.i++), 32));
     lineStartIndex = 0;
     br.lineNum != 1 && (lineStartIndex = castTo($get_4(prevLineOffsets, br.lineNum - 1 - 1), 25).value_0 + 1);
     lineNLIndex = castTo($get_4(prevLineOffsets, br.lineNum - 1), 25).value_0;
@@ -6819,16 +6820,16 @@ function $updateDebugLine(this$static){
     while (!this$static.m_dbglines[opcodeAddr])
       --opcodeAddr;
     do {
-      value_0 = $readByte(this$static.m_mem, opcodeAddr + $intern_21);
+      value_0 = $readByte(this$static.m_mem, opcodeAddr + $intern_20);
       $setByte(this$static, opcodeAddr, (value_0 & 255) << 24 >> 24);
       ++opcodeAddr;
     }
      while (!this$static.m_dbglines[opcodeAddr]);
-    $disassembleAddr(this$static, ipInsideArena + $intern_21, ipInsideArena);
+    $disassembleAddr(this$static, ipInsideArena + $intern_20, ipInsideArena);
   }
    else {
     flags = this$static.m_dbglines[ipInsideArena].flags;
-    ((flags & 1) != 0 || (flags & 2) != 0) && $disassembleAddr(this$static, ipInsideArena + $intern_21, ipInsideArena);
+    ((flags & 1) != 0 || (flags & 2) != 0) && $disassembleAddr(this$static, ipInsideArena + $intern_20, ipInsideArena);
   }
   ider = 'd';
   (this$static.m_dbglines[ipInsideArena].flags & 4) != 0 && (ider = 'df');
@@ -6838,7 +6839,7 @@ function $updateDebugLine(this$static){
   this$static.m_lastDbgAddr = ipInsideArena;
   this$static.m_lastDbgAddrEnd = this$static.m_lastDbgAddr + 1;
   this$static.m_lastIsAlive = isAlive;
-  while (this$static.m_lastDbgAddrEnd < $intern_21 && !this$static.m_dbglines[this$static.m_lastDbgAddrEnd])
+  while (this$static.m_lastDbgAddrEnd < $intern_20 && !this$static.m_dbglines[this$static.m_lastDbgAddrEnd])
     ++this$static.m_lastDbgAddrEnd;
 }
 
@@ -6861,14 +6862,14 @@ function CodeEditor(competition){
   this.editor_title = castToNative(document_0.getElementById('editor_title'), $wnd.HTMLInputElement);
   this.asm_edit.addEventListener('input', new CodeEditor$lambda$0$Type(this));
   this.editor_title.addEventListener('input', new CodeEditor$lambda$1$Type(this));
-  this.m_dbglines = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_CodeEditor$DbgLine_2_classLit, $intern_2, 36, $intern_21, 0, 1);
-  this.m_pages = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_CodeEditor$PageInfo_2_classLit, $intern_2, 82, ($intern_21 / this.PAGE_SIZE_0 | 0) + 1, 0, 1);
+  this.m_dbglines = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_CodeEditor$DbgLine_2_classLit, $intern_2, 36, $intern_20, 0, 1);
+  this.m_pages = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_CodeEditor$PageInfo_2_classLit, $intern_2, 81, ($intern_20 / this.PAGE_SIZE_0 | 0) + 1, 0, 1);
   for (i = 0; i < this.m_pages.length; ++i) {
     pi = new CodeEditor$PageInfo;
     this.m_pages[i] = pi;
     pi.isDirty = true;
     pi.startAddr = i * this.PAGE_SIZE_0;
-    pi.endAddr = $wnd.Math.min((i + 1) * this.PAGE_SIZE_0, $intern_21);
+    pi.endAddr = $wnd.Math.min((i + 1) * this.PAGE_SIZE_0, $intern_20);
   }
   $exportMethods_0(this);
 }
@@ -6886,7 +6887,7 @@ function getWarrirorIp(w){
   state = w.m_state;
   ip = state.m_ip;
   cs = state.m_cs;
-  ipInsideArena = linearAddress_0(cs, ip) - $intern_21;
+  ipInsideArena = linearAddress_0(cs, ip) - $intern_20;
   return ipInsideArena;
 }
 
@@ -6909,7 +6910,7 @@ read_file_bin.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor.read_fil
 function read_file_bin_arr(){
   var arr, buf, i;
   arr = $wnd.FS.readFile('player', {encoding:'binary'});
-  buf = initUnidimensionalArray(B_classLit, $intern_20, 10, arr.length, 15, 1);
+  buf = initUnidimensionalArray(B_classLit, $intern_19, 10, arr.length, 15, 1);
   for (i = 0; i < arr.length; ++i)
     buf[i] = arr[i] << 24 >> 24;
   return buf;
@@ -6946,7 +6947,7 @@ function scrollToAddr(addr, defer_0){
 }
 
 scrollToAddr.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor.scrollToAddr';
-defineClass(149, 1, $intern_23, CodeEditor);
+defineClass(148, 1, $intern_22, CodeEditor);
 _.asm_edit_changed = function asm_edit_changed(){
   $asm_edit_changed(this);
 }
@@ -6983,9 +6984,9 @@ _.onMemoryWrite = function onMemoryWrite(address, value_0){
   if (this.m_memWriteState != 2)
     return;
   absAddr = address.m_linearAddress;
-  if (absAddr < $intern_21 || absAddr >= 131072)
+  if (absAddr < $intern_20 || absAddr >= 131072)
     return;
-  ipInsideArena = absAddr - $intern_21;
+  ipInsideArena = absAddr - $intern_20;
   cIpInsideArea = ipInsideArena;
   page = ipInsideArena / this.PAGE_SIZE_0 | 0;
   if (page < 0 || page >= this.m_pages.length)
@@ -6999,10 +7000,10 @@ _.onMemoryWrite = function onMemoryWrite(address, value_0){
     while (!this.m_dbglines[ipInsideArena])
       --ipInsideArena;
     do {
-      $setByte(this, ipInsideArena, $readByte(this.m_mem, ipInsideArena + $intern_21));
+      $setByte(this, ipInsideArena, $readByte(this.m_mem, ipInsideArena + $intern_20));
       ++ipInsideArena;
     }
-     while (ipInsideArena < $intern_21 && !this.m_dbglines[ipInsideArena]);
+     while (ipInsideArena < $intern_20 && !this.m_dbglines[ipInsideArena]);
   }
   if (cIpInsideArea >= this.m_lastDbgAddr && cIpInsideArea < this.m_lastDbgAddrEnd) {
     this.m_lastDbgAddr = -1;
@@ -7066,13 +7067,13 @@ _.m_mem = null;
 _.m_memWriteState = 0;
 _.m_playersPanel = null;
 _.m_prevInText = null;
-var Lil_co_codeguru_corewars8086_gui_CodeEditor_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor', 149);
+var Lil_co_codeguru_corewars8086_gui_CodeEditor_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor', 148);
 function CodeEditor$1(this$0){
   this.this$01 = this$0;
 }
 
 CodeEditor$1.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$1.CodeEditor$1';
-defineClass(150, 1, {}, CodeEditor$1);
+defineClass(149, 1, {}, CodeEditor$1);
 _.handleEvent = function handleEvent_1(event_0){
   var e;
   e = castToNative(event_0.target, $wnd.Element);
@@ -7080,13 +7081,13 @@ _.handleEvent = function handleEvent_1(event_0){
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$1.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_CodeEditor$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/1', 150);
+var Lil_co_codeguru_corewars8086_gui_CodeEditor$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/1', 149);
 function CodeEditor$2(this$0){
   this.this$01 = this$0;
 }
 
 CodeEditor$2.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$2.CodeEditor$2';
-defineClass(151, 1, {}, CodeEditor$2);
+defineClass(150, 1, {}, CodeEditor$2);
 _.handleEvent = function handleEvent_2(event_0){
   var e;
   e = castToNative(event_0.target, $wnd.Element);
@@ -7094,7 +7095,7 @@ _.handleEvent = function handleEvent_2(event_0){
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$2.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_CodeEditor$2_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/2', 151);
+var Lil_co_codeguru_corewars8086_gui_CodeEditor$2_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/2', 150);
 function $$init_7(this$static){
 }
 
@@ -7128,35 +7129,35 @@ function CodeEditor$PageInfo(){
 }
 
 CodeEditor$PageInfo.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$PageInfo.CodeEditor$PageInfo';
-defineClass(82, 1, {82:1}, CodeEditor$PageInfo);
+defineClass(81, 1, {81:1}, CodeEditor$PageInfo);
 _.endAddr = 0;
 _.isDirty = false;
 _.startAddr = 0;
-var Lil_co_codeguru_corewars8086_gui_CodeEditor$PageInfo_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/PageInfo', 82);
+var Lil_co_codeguru_corewars8086_gui_CodeEditor$PageInfo_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/PageInfo', 81);
 function CodeEditor$lambda$0$Type($$outer_0){
   this.$$outer_0 = $$outer_0;
 }
 
 CodeEditor$lambda$0$Type.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$lambda$0$Type.CodeEditor$lambda$0$Type';
-defineClass(152, 1, {}, CodeEditor$lambda$0$Type);
+defineClass(151, 1, {}, CodeEditor$lambda$0$Type);
 _.handleEvent = function handleEvent_3(arg0){
   $asm_edit_changed(this.$$outer_0);
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$lambda$0$Type.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_CodeEditor$lambda$0$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/lambda$0$Type', 152);
+var Lil_co_codeguru_corewars8086_gui_CodeEditor$lambda$0$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/lambda$0$Type', 151);
 function CodeEditor$lambda$1$Type($$outer_0){
   this.$$outer_0 = $$outer_0;
 }
 
 CodeEditor$lambda$1$Type.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$lambda$1$Type.CodeEditor$lambda$1$Type';
-defineClass(153, 1, {}, CodeEditor$lambda$1$Type);
+defineClass(152, 1, {}, CodeEditor$lambda$1$Type);
 _.handleEvent = function handleEvent_4(arg0){
   $lambda$1_0(this.$$outer_0);
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.CodeEditor$lambda$1$Type.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_CodeEditor$lambda$1$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/lambda$1$Type', 153);
+var Lil_co_codeguru_corewars8086_gui_CodeEditor$lambda$1$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CodeEditor/lambda$1$Type', 152);
 function $clinit_ColorHolder(){
   $clinit_ColorHolder = emptyMethod;
   ins = new ColorHolder;
@@ -7183,9 +7184,9 @@ function ColorHolder(){
 }
 
 ColorHolder.displayName = 'il.co.codeguru.corewars8086.gui.ColorHolder.ColorHolder';
-defineClass(182, 1, {}, ColorHolder);
+defineClass(181, 1, {}, ColorHolder);
 var ins;
-var Lil_co_codeguru_corewars8086_gui_ColorHolder_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ColorHolder', 182);
+var Lil_co_codeguru_corewars8086_gui_ColorHolder_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ColorHolder', 181);
 function $addToValue(this$static, pos, subIndex, value_0){
   var i, sb;
   this$static.columns[pos].values_0[0] += value_0;
@@ -7204,20 +7205,30 @@ function $addToValue(this$static, pos, subIndex, value_0){
 }
 
 $addToValue.displayName = 'il.co.codeguru.corewars8086.gui.ColumnGraph.$addToValue';
-function $clear_0(this$static, names){
+function $clear_0(this$static, groups){
   var c1, c2, colorHolder, i;
   this$static.maxValue = 0;
   this$static.reduceFactor = 5;
+  if (!groups)
+    return;
+  $wnd.clear_code_buttons_colors();
   colorHolder = ($clinit_ColorHolder() , $clinit_ColorHolder() , ins);
-  this$static.columns = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_ColumnGraph$PlayerColumn_2_classLit, $intern_2, 81, names.length, 0, 1);
-  for (i = 0; i < names.length; ++i) {
+  this$static.columns = initUnidimensionalArray(Lil_co_codeguru_corewars8086_gui_ColumnGraph$PlayerColumn_2_classLit, $intern_2, 80, groups.array.length, 0, 1);
+  for (i = 0; i < groups.array.length; ++i) {
     c1 = colorHolder.colors[i];
     c2 = colorHolder.darkColors[i];
-    this$static.columns[i] = new ColumnGraph$PlayerColumn(names[i], $toString_1(c1), $toString_1(c2));
+    this$static.columns[i] = new ColumnGraph$PlayerColumn((checkCriticalElementIndex(i, groups.array.length) , castTo(groups.array[i], 28)).name_0, $toString_1(c1), $toString_1(c2));
+    $setButtonColor($toString_1(c1), (checkCriticalElementIndex(i, groups.array.length) , castTo(groups.array[i], 28)).label_0 + '0');
+    $setButtonColor($toString_1(c2), (checkCriticalElementIndex(i, groups.array.length) , castTo(groups.array[i], 28)).label_0 + '1');
   }
 }
 
 $clear_0.displayName = 'il.co.codeguru.corewars8086.gui.ColumnGraph.$clear';
+function $js_clear_code_buttons_colors(){
+  $wnd.clear_code_buttons_colors();
+}
+
+$js_clear_code_buttons_colors.displayName = 'il.co.codeguru.corewars8086.gui.ColumnGraph.$js_clear_code_buttons_colors';
 function $paintColumn(this$static, col, width_0, startHeight){
   var height1, height2;
   this$static.ctx.fillStyle = this$static.columns[col].col1;
@@ -7253,34 +7264,34 @@ function $paintComponent(this$static){
 }
 
 $paintComponent.displayName = 'il.co.codeguru.corewars8086.gui.ColumnGraph.$paintComponent';
-function ColumnGraph(names){
+function ColumnGraph(){
   JComponent_0.call(this, 'graphs_canvas');
-  $clear_0(this, names);
+  $clear_0(this, null);
   this.ctx = castToNative(castToNative(this.m_element, $wnd.HTMLCanvasElement).getContext('2d'), $wnd.CanvasRenderingContext2D);
 }
 
 ColumnGraph.displayName = 'il.co.codeguru.corewars8086.gui.ColumnGraph.ColumnGraph';
-defineClass(148, 24, {}, ColumnGraph);
+defineClass(147, 24, {}, ColumnGraph);
 _.maxValue = 0;
 _.reduceFactor = 0;
-var Lil_co_codeguru_corewars8086_gui_ColumnGraph_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ColumnGraph', 148);
+var Lil_co_codeguru_corewars8086_gui_ColumnGraph_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ColumnGraph', 147);
 function ColumnGraph$PlayerColumn(nm, c1, c2){
   this.name_0 = nm;
   this.col1 = c1;
   this.col2 = c2;
-  this.values_0 = initUnidimensionalArray(F_classLit, $intern_14, 10, 3, 15, 1);
+  this.values_0 = initUnidimensionalArray(F_classLit, $intern_13, 10, 3, 15, 1);
 }
 
 ColumnGraph$PlayerColumn.displayName = 'il.co.codeguru.corewars8086.gui.ColumnGraph$PlayerColumn.ColumnGraph$PlayerColumn';
-defineClass(81, 1, {81:1}, ColumnGraph$PlayerColumn);
-var Lil_co_codeguru_corewars8086_gui_ColumnGraph$PlayerColumn_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ColumnGraph/PlayerColumn', 81);
+defineClass(80, 1, {80:1}, ColumnGraph$PlayerColumn);
+var Lil_co_codeguru_corewars8086_gui_ColumnGraph$PlayerColumn_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ColumnGraph/PlayerColumn', 80);
 function JFrame(){
   JComponent.call(this);
 }
 
 JFrame.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JFrame.JFrame';
-defineClass(98, 24, {});
-var Lil_co_codeguru_corewars8086_gui_widgets_JFrame_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JFrame', 98);
+defineClass(97, 24, {});
+var Lil_co_codeguru_corewars8086_gui_widgets_JFrame_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JFrame', 97);
 function $$init_9(this$static){
   this$static.animCallback = new CompetitionWindow$1(this$static);
 }
@@ -7371,7 +7382,7 @@ function $runWar(this$static, isInDebug){
   repo = this$static.competition.warriorRepository;
   if (!$readWarriorFilesFromUI(repo, $getFiles(this$static.m_playersPanel, 112), $getFiles(this$static.m_playersPanel, 122), isInDebug))
     return false;
-  $clear_0(this$static.columnGraph, $getGroupNames(repo));
+  this$static.inGraphs && $clear_0(this$static.columnGraph, repo.warriorGroups);
   numOfGroups = repo.warriorGroups.array.length;
   if (numOfGroups == 0) {
     console.error("can't run without any warriors");
@@ -7440,7 +7451,7 @@ function CompetitionWindow(){
   warriorRepository = this.competition.warriorRepository;
   $add(warriorRepository.scoreEventsCaster, this);
   $doneAdding(warriorRepository.scoreEventsCaster);
-  this.columnGraph = new ColumnGraph($getGroupNames(warriorRepository));
+  this.columnGraph = new ColumnGraph;
   new JPanel;
   new JPanel;
   new JPanel;
@@ -7486,13 +7497,14 @@ function setBattlesRan(round_0){
 }
 
 setBattlesRan.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.setBattlesRan';
-defineClass(123, 98, {12:1, 228:1}, CompetitionWindow);
+defineClass(122, 97, {12:1, 227:1}, CompetitionWindow);
 _.j_debugUiInited_0 = function j_debugUiInited(){
   this.competition.competitionEventListener.onEndRound();
 }
 ;
 _.j_debugUiInited_0.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.j_debugUiInited';
 _.j_startCompete_0 = function j_startCompete(){
+  this.inGraphs = true;
   if (!$checkPlayersReady(this.m_playersPanel))
     return false;
   if (!$gui_runWar(this, ($clinit_Boolean() , false), false))
@@ -7502,6 +7514,7 @@ _.j_startCompete_0 = function j_startCompete(){
 ;
 _.j_startCompete_0.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.j_startCompete';
 _.j_startDebug_0 = function j_startDebug(){
+  this.inGraphs = false;
   if (!$checkPlayersReady(this.m_playersPanel))
     return false;
   if (!$gui_runWar(this, ($clinit_Boolean() , true), true))
@@ -7516,6 +7529,7 @@ _.j_stopCompete_0 = function j_stopCompete(){
 ;
 _.j_stopCompete_0.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.j_stopCompete';
 _.j_stopDebug_0 = function j_stopDebug(){
+  this.inGraphs = false;
   $setAbort(this.competition);
   $setDebugMode_0(this, false);
 }
@@ -7581,15 +7595,17 @@ _.onWarriorDeath = function onWarriorDeath_0(warrior, reason){
 ;
 _.onWarriorDeath.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.onWarriorDeath';
 _.scoreChanged = function scoreChanged(name_0, addedValue, groupIndex, subIndex){
-  $addToValue(this.columnGraph, groupIndex, subIndex, addedValue);
+  this.inGraphs && $addToValue(this.columnGraph, groupIndex, subIndex, addedValue);
 }
 ;
 _.scoreChanged.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.scoreChanged';
+_.inGraphs = false;
 _.m_isBattleShown = false;
 _.m_isStartPaused = false;
 _.totalWars = 0;
 _.warCounter = 0;
-var Lil_co_codeguru_corewars8086_gui_CompetitionWindow_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CompetitionWindow', 123);
+var s_instance;
+var Lil_co_codeguru_corewars8086_gui_CompetitionWindow_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CompetitionWindow', 122);
 function $execute(this$static){
   var e;
   try {
@@ -7613,13 +7629,13 @@ function CompetitionWindow$1(this$0){
 }
 
 CompetitionWindow$1.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow$1.CompetitionWindow$1';
-defineClass(134, 1, {}, CompetitionWindow$1);
+defineClass(133, 1, {}, CompetitionWindow$1);
 _.execute = function execute(timestamp){
   $execute(this);
 }
 ;
 _.execute.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow$1.execute';
-var Lil_co_codeguru_corewars8086_gui_CompetitionWindow$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CompetitionWindow/1', 134);
+var Lil_co_codeguru_corewars8086_gui_CompetitionWindow$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CompetitionWindow/1', 133);
 function $$init_10(this$static){
   this$static.m_watches = new HashMap;
   this$static.m_stateAccess = new CpuFrame$StateAccess;
@@ -7656,10 +7672,10 @@ function $flagChanged_callback(this$static, name_0, v){
   state = $getWarriorByLabel(currentWar, this$static.m_currentWarriorLabel).m_state;
   switch (name_0) {
     case 'OF':
-      v?(state.m_flags = (state.m_flags | $intern_18) << 16 >> 16):(state.m_flags = (state.m_flags & -2049) << 16 >> 16);
+      v?(state.m_flags = (state.m_flags | $intern_17) << 16 >> 16):(state.m_flags = (state.m_flags & -2049) << 16 >> 16);
       break;
     case 'DF':
-      v?(state.m_flags = (state.m_flags | $intern_17) << 16 >> 16):(state.m_flags = (state.m_flags & -1025) << 16 >> 16);
+      v?(state.m_flags = (state.m_flags | $intern_16) << 16 >> 16):(state.m_flags = (state.m_flags & -1025) << 16 >> 16);
       break;
     case 'IF':
       v?(state.m_flags = (state.m_flags | 512) << 16 >> 16):(state.m_flags = (state.m_flags & -513) << 16 >> 16);
@@ -7852,8 +7868,8 @@ function $updateFields(this$static){
 
 $updateFields.displayName = 'il.co.codeguru.corewars8086.gui.CpuFrame.$updateFields';
 function $updateFlagBoxes(this$static, state){
-  $setValue(this$static.flagOF, (state.m_flags & $intern_18) == $intern_18);
-  $setValue(this$static.flagDF, (state.m_flags & $intern_17) == $intern_17);
+  $setValue(this$static.flagOF, (state.m_flags & $intern_17) == $intern_17);
+  $setValue(this$static.flagDF, (state.m_flags & $intern_16) == $intern_16);
   $setValue(this$static.flagIF, (state.m_flags & 512) == 512);
   $setValue(this$static.flagTF, (state.m_flags & 256) == 256);
   $setValue(this$static.flagSF, (state.m_flags & 128) == 128);
@@ -7902,7 +7918,7 @@ function CpuFrame(c, mainwnd){
 }
 
 CpuFrame.displayName = 'il.co.codeguru.corewars8086.gui.CpuFrame.CpuFrame';
-defineClass(170, 1, $intern_23, CpuFrame);
+defineClass(169, 1, $intern_22, CpuFrame);
 _.j_addWatch_0 = function j_addWatch(watchId){
   var entry;
   entry = new CpuFrame$WatchEntry;
@@ -8035,7 +8051,7 @@ _.onWriteState.displayName = 'il.co.codeguru.corewars8086.gui.CpuFrame.onWriteSt
 _.m_base = 16;
 _.m_currentWarriorIndex = -1;
 _.m_currentWarriorLabel = null;
-var Lil_co_codeguru_corewars8086_gui_CpuFrame_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CpuFrame', 170);
+var Lil_co_codeguru_corewars8086_gui_CpuFrame_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CpuFrame', 169);
 function $getIdentifierValue(name_0){
   throw toJs(new Exception_1('unknown identifier ' + name_0));
 }
@@ -8110,8 +8126,8 @@ function CpuFrame$StateAccess(){
 }
 
 CpuFrame$StateAccess.displayName = 'il.co.codeguru.corewars8086.gui.CpuFrame$StateAccess.CpuFrame$StateAccess';
-defineClass(171, 1, {}, CpuFrame$StateAccess);
-var Lil_co_codeguru_corewars8086_gui_CpuFrame$StateAccess_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CpuFrame/StateAccess', 171);
+defineClass(170, 1, {}, CpuFrame$StateAccess);
+var Lil_co_codeguru_corewars8086_gui_CpuFrame$StateAccess_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'CpuFrame/StateAccess', 170);
 function $$init_11(this$static){
 }
 
@@ -8433,7 +8449,7 @@ function $unexpected(this$static){
 $unexpected.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser.$unexpected';
 function ExpressionParser(){
   this.stack_ = new Stack;
-  !m_registers && (m_registers = new HashSet_0(new Arrays$ArrayList(stampJavaTypeInfo(getClassLiteralForArray(Ljava_lang_String_2_classLit, 1), $intern_12, 2, 6, ['AX', 'AL', 'AH', 'BX', 'BL', 'BH', 'CX', 'CL', 'CH', 'DX', 'DH', 'DL', 'SI', 'DI', 'BP', 'SP', 'IP', 'CS', 'DS', 'SS', 'ES', 'ENERGY', 'FLAGS']))));
+  !m_registers && (m_registers = new HashSet_0(new Arrays$ArrayList(stampJavaTypeInfo(getClassLiteralForArray(Ljava_lang_String_2_classLit, 1), $intern_2, 2, 6, ['AX', 'AL', 'AH', 'BX', 'BL', 'BH', 'CX', 'CL', 'CH', 'DX', 'DH', 'DL', 'SI', 'DI', 'BP', 'SP', 'IP', 'CS', 'DS', 'SS', 'ES', 'ENERGY', 'FLAGS']))));
 }
 
 ExpressionParser.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser.ExpressionParser';
@@ -8463,11 +8479,11 @@ function toInteger(c){
 }
 
 toInteger.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser.toInteger';
-defineClass(172, 1, {}, ExpressionParser);
+defineClass(171, 1, {}, ExpressionParser);
 _.index_ = 0;
 _.m_stateAccess = null;
 var m_registers = null;
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser', 172);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser', 171);
 function $checkZero(v){
   if (v == 0) {
     throw toJs(new Exception_1('Division by zero'));
@@ -8483,7 +8499,7 @@ function ExpressionParser$BinaryOpNode(l, r, _op){
 }
 
 ExpressionParser$BinaryOpNode.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$BinaryOpNode.ExpressionParser$BinaryOpNode';
-defineClass(173, 1, {}, ExpressionParser$BinaryOpNode);
+defineClass(172, 1, {}, ExpressionParser$BinaryOpNode);
 _.eval_0 = function eval_0(){
   var ret, v1, v2;
   v1 = this.left.eval_0() & $intern_0;
@@ -8531,7 +8547,7 @@ _.eval_0 = function eval_0(){
 }
 ;
 _.eval_0.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$BinaryOpNode.eval';
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$BinaryOpNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/BinaryOpNode', 173);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$BinaryOpNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/BinaryOpNode', 172);
 function $compareTo(this$static, other){
   return this$static.ordinal - other.ordinal;
 }
@@ -8573,7 +8589,7 @@ function valueOf(map_0, name_0){
 }
 
 valueOf.displayName = 'java.lang.Enum.valueOf';
-defineClass(51, 1, {3:1, 34:1, 51:1});
+defineClass(51, 1, {3:1, 35:1, 51:1});
 _.compareTo = function compareTo(other){
   return $compareTo(this, castTo(other, 51));
 }
@@ -8621,25 +8637,25 @@ function ExpressionParser$EOps(enum$name, enum$ordinal){
 ExpressionParser$EOps.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$EOps.ExpressionParser$EOps';
 function values(){
   $clinit_ExpressionParser$EOps();
-  return stampJavaTypeInfo(getClassLiteralForArray(Lil_co_codeguru_corewars8086_gui_ExpressionParser$EOps_2_classLit, 1), $intern_2, 20, 0, [OPERATOR_NULL, OPERATOR_BITWISE_OR, OPERATOR_BITWISE_XOR, OPERATOR_BITWISE_AND, OPERATOR_BITWISE_SHL, OPERATOR_BITWISE_SHR, OPERATOR_ADDITION, OPERATOR_SUBTRACTION, OPERATOR_MULTIPLICATION, OPERATOR_DIVISION, OPERATOR_MODULO, OPERATOR_POWER, OPERATOR_EXPONENT]);
+  return stampJavaTypeInfo(getClassLiteralForArray(Lil_co_codeguru_corewars8086_gui_ExpressionParser$EOps_2_classLit, 1), $intern_2, 19, 0, [OPERATOR_NULL, OPERATOR_BITWISE_OR, OPERATOR_BITWISE_XOR, OPERATOR_BITWISE_AND, OPERATOR_BITWISE_SHL, OPERATOR_BITWISE_SHR, OPERATOR_ADDITION, OPERATOR_SUBTRACTION, OPERATOR_MULTIPLICATION, OPERATOR_DIVISION, OPERATOR_MODULO, OPERATOR_POWER, OPERATOR_EXPONENT]);
 }
 
 values.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$EOps.values';
-defineClass(20, 51, {20:1, 3:1, 34:1, 51:1}, ExpressionParser$EOps);
+defineClass(19, 51, {19:1, 3:1, 35:1, 51:1}, ExpressionParser$EOps);
 var OPERATOR_ADDITION, OPERATOR_BITWISE_AND, OPERATOR_BITWISE_OR, OPERATOR_BITWISE_SHL, OPERATOR_BITWISE_SHR, OPERATOR_BITWISE_XOR, OPERATOR_DIVISION, OPERATOR_EXPONENT, OPERATOR_MODULO, OPERATOR_MULTIPLICATION, OPERATOR_NULL, OPERATOR_POWER, OPERATOR_SUBTRACTION;
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$EOps_2_classLit = createForEnum('il.co.codeguru.corewars8086.gui', 'ExpressionParser/EOps', 20, values);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$EOps_2_classLit = createForEnum('il.co.codeguru.corewars8086.gui', 'ExpressionParser/EOps', 19, values);
 function ExpressionParser$IdentifierNode(_name){
   this.name_0 = _name;
 }
 
 ExpressionParser$IdentifierNode.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$IdentifierNode.ExpressionParser$IdentifierNode';
-defineClass(177, 1, {}, ExpressionParser$IdentifierNode);
+defineClass(176, 1, {}, ExpressionParser$IdentifierNode);
 _.eval_0 = function eval_1(){
   return $getIdentifierValue(this.name_0) & $intern_0;
 }
 ;
 _.eval_0.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$IdentifierNode.eval';
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$IdentifierNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/IdentifierNode', 177);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$IdentifierNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/IdentifierNode', 176);
 function ExpressionParser$MemAccessNode(_vseg, _vaddr, _sz, _state){
   this.vseg = _vseg;
   this.vaddr = _vaddr;
@@ -8648,7 +8664,7 @@ function ExpressionParser$MemAccessNode(_vseg, _vaddr, _sz, _state){
 }
 
 ExpressionParser$MemAccessNode.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$MemAccessNode.ExpressionParser$MemAccessNode';
-defineClass(178, 1, {}, ExpressionParser$MemAccessNode);
+defineClass(177, 1, {}, ExpressionParser$MemAccessNode);
 _.eval_0 = function eval_2(){
   var addr, seg;
   addr = this.vaddr.eval_0() & $intern_0;
@@ -8659,7 +8675,7 @@ _.eval_0 = function eval_2(){
 ;
 _.eval_0.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$MemAccessNode.eval';
 _.sz = 0;
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$MemAccessNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/MemAccessNode', 178);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$MemAccessNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/MemAccessNode', 177);
 function ExpressionParser$NumNode(_v){
   this.v = _v;
 }
@@ -8680,10 +8696,10 @@ function ExpressionParser$Operator(opr, prec, assoc){
 }
 
 ExpressionParser$Operator.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$Operator.ExpressionParser$Operator';
-defineClass(21, 1, {}, ExpressionParser$Operator);
+defineClass(20, 1, {}, ExpressionParser$Operator);
 _.associativity = 0;
 _.precedence = 0;
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$Operator_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/Operator', 21);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$Operator_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/Operator', 20);
 function ExpressionParser$OperatorValue(opr, val){
   this.op = opr;
   this.value_0 = val;
@@ -8698,37 +8714,37 @@ function ExpressionParser$RegisterNode(_name, _state){
 }
 
 ExpressionParser$RegisterNode.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$RegisterNode.ExpressionParser$RegisterNode';
-defineClass(176, 1, {}, ExpressionParser$RegisterNode);
+defineClass(175, 1, {}, ExpressionParser$RegisterNode);
 _.eval_0 = function eval_4(){
   return $getRegisterValue(this.state, this.name_0) & $intern_0;
 }
 ;
 _.eval_0.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$RegisterNode.eval';
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$RegisterNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/RegisterNode', 176);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$RegisterNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/RegisterNode', 175);
 function ExpressionParser$UnaryNegNode(c){
   this.child = c;
 }
 
 ExpressionParser$UnaryNegNode.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$UnaryNegNode.ExpressionParser$UnaryNegNode';
-defineClass(174, 1, {}, ExpressionParser$UnaryNegNode);
+defineClass(173, 1, {}, ExpressionParser$UnaryNegNode);
 _.eval_0 = function eval_5(){
   return -(this.child.eval_0() & $intern_0) & $intern_0;
 }
 ;
 _.eval_0.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$UnaryNegNode.eval';
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$UnaryNegNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/UnaryNegNode', 174);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$UnaryNegNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/UnaryNegNode', 173);
 function ExpressionParser$UnaryNotNode(c){
   this.child = c;
 }
 
 ExpressionParser$UnaryNotNode.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$UnaryNotNode.ExpressionParser$UnaryNotNode';
-defineClass(175, 1, {}, ExpressionParser$UnaryNotNode);
+defineClass(174, 1, {}, ExpressionParser$UnaryNotNode);
 _.eval_0 = function eval_6(){
   return ~(this.child.eval_0() & $intern_0) & $intern_0;
 }
 ;
 _.eval_0.displayName = 'il.co.codeguru.corewars8086.gui.ExpressionParser$UnaryNotNode.eval';
-var Lil_co_codeguru_corewars8086_gui_ExpressionParser$UnaryNotNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/UnaryNotNode', 175);
+var Lil_co_codeguru_corewars8086_gui_ExpressionParser$UnaryNotNode_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'ExpressionParser/UnaryNotNode', 174);
 function JPanel(){
   JComponent.call(this);
 }
@@ -8770,13 +8786,13 @@ function FlagFields$lambda$0$Type($$outer_0, name_1){
 }
 
 FlagFields$lambda$0$Type.displayName = 'il.co.codeguru.corewars8086.gui.FlagFields$lambda$0$Type.FlagFields$lambda$0$Type';
-defineClass(195, 1, {}, FlagFields$lambda$0$Type);
+defineClass(194, 1, {}, FlagFields$lambda$0$Type);
 _.handleEvent = function handleEvent_5(arg0){
   $lambda$0_0(this.$$outer_0, this.name_1);
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.FlagFields$lambda$0$Type.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_FlagFields$lambda$0$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'FlagFields/lambda$0$Type', 195);
+var Lil_co_codeguru_corewars8086_gui_FlagFields$lambda$0$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'FlagFields/lambda$0$Type', 194);
 function $addCheck(this$static, startAddrStr, len, name_0){
   var a, a$iterator, r, startAddr;
   try {
@@ -8830,8 +8846,8 @@ function LoadAddrChecker(capacity){
 }
 
 LoadAddrChecker.displayName = 'il.co.codeguru.corewars8086.gui.LoadAddrChecker.LoadAddrChecker';
-defineClass(201, 1, {}, LoadAddrChecker);
-var Lil_co_codeguru_corewars8086_gui_LoadAddrChecker_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'LoadAddrChecker', 201);
+defineClass(200, 1, {}, LoadAddrChecker);
+var Lil_co_codeguru_corewars8086_gui_LoadAddrChecker_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'LoadAddrChecker', 200);
 function LoadAddrChecker$AddrRange(_name, _start, _end){
   this.name_0 = _name;
   this.start_0 = _start;
@@ -8859,9 +8875,9 @@ function $initMemRegion(this$static, region, memory, force){
     sb = new StringBuilder;
     $append_4(sb, hex5(addr));
     sb.string += '   ';
-    $append_4(sb, hex2((memory.m_data[addr % $intern_24] & 255) << 16 >> 16));
+    $append_4(sb, hex2((memory.m_data[addr % $intern_23] & 255) << 16 >> 16));
     sb.string += '\u202F';
-    $append_4(sb, hex2((memory.m_data[(addr + 1) % $intern_24] & 255) << 16 >> 16));
+    $append_4(sb, hex2((memory.m_data[(addr + 1) % $intern_23] & 255) << 16 >> 16));
     e.appendChild(document_0.createTextNode(sb.string));
     df.appendChild(e);
   }
@@ -8903,7 +8919,7 @@ function MemRegionView(id_0, innerPrefix){
 }
 
 MemRegionView.displayName = 'il.co.codeguru.corewars8086.gui.MemRegionView.MemRegionView';
-defineClass(100, 1, {57:1}, MemRegionView);
+defineClass(99, 1, {57:1}, MemRegionView);
 _.onMemoryWrite = function onMemoryWrite_1(address, value_0){
   var addr, elem, lineaddr, newtext, offsetInLine, text_0;
   addr = address.m_linearAddress;
@@ -8926,7 +8942,7 @@ _.onWriteState.displayName = 'il.co.codeguru.corewars8086.gui.MemRegionView.onWr
 _.m_lastMovedToElem = null;
 _.m_lastMovedToLine = -1;
 _.m_step = 0;
-var Lil_co_codeguru_corewars8086_gui_MemRegionView_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'MemRegionView', 100);
+var Lil_co_codeguru_corewars8086_gui_MemRegionView_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'MemRegionView', 99);
 function $$init_14(this$static){
   this$static.m_players = new ArrayList;
 }
@@ -9150,6 +9166,16 @@ function $reWriteButtonsLabels(p){
 }
 
 $reWriteButtonsLabels.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$reWriteButtonsLabels';
+function $setButtonColor(color_0, label_0){
+  var player_letter = label_0[1];
+  var codenum = label_0[2];
+  var id_0 = 'sel_code_lbl_w' + (parseInt(codenum) + 1) + '_p' + player_letter;
+  console.log('~~', label_0, id_0);
+  var e = $wnd.document.getElementById(id_0);
+  e.style.boxShadow = 'inset ' + color_0 + ' 0px -1px 5px, inset ' + color_0 + ' 0px 1px 5px';
+}
+
+$setButtonColor.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.$setButtonColor';
 function $setDebugMode_1(this$static, v){
   $ensureSelectedPlayerActive(this$static);
   this$static.m_isDebugMode = v;
@@ -9209,7 +9235,7 @@ function PlayersPanel(mainWnd){
 }
 
 PlayersPanel.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.PlayersPanel';
-defineClass(154, 1, {}, PlayersPanel);
+defineClass(153, 1, {}, PlayersPanel);
 _.j_addPlayer_0 = function j_addPlayer(label_0, title_0){
   var p, tu;
   if (label_0 == null)
@@ -9277,7 +9303,7 @@ _.j_loadBinary_0 = function j_loadBinary(buf){
     return;
   }
   arr = new Int8Array(buf);
-  ba = initUnidimensionalArray(B_classLit, $intern_20, 10, len, 15, 1);
+  ba = initUnidimensionalArray(B_classLit, $intern_19, 10, len, 15, 1);
   for (i = 0; i < len; ++i)
     ba[i] = arr[i];
   this.m_inEditor.bin = ba;
@@ -9310,15 +9336,15 @@ _.j_srcSelectionChanged_0 = function j_srcSelectionChanged(playerLabel, num){
 _.j_srcSelectionChanged_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel.j_srcSelectionChanged';
 _.m_inEditor = null;
 _.m_isDebugMode = false;
-var Lil_co_codeguru_corewars8086_gui_PlayersPanel_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'PlayersPanel', 154);
+var Lil_co_codeguru_corewars8086_gui_PlayersPanel_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'PlayersPanel', 153);
 function PlayersPanel$Breakpoint(_lineNum){
   this.lineNum = _lineNum;
 }
 
 PlayersPanel$Breakpoint.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel$Breakpoint.PlayersPanel$Breakpoint';
-defineClass(31, 1, {31:1}, PlayersPanel$Breakpoint);
+defineClass(32, 1, {32:1}, PlayersPanel$Breakpoint);
 _.lineNum = 0;
-var Lil_co_codeguru_corewars8086_gui_PlayersPanel$Breakpoint_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'PlayersPanel/Breakpoint', 31);
+var Lil_co_codeguru_corewars8086_gui_PlayersPanel$Breakpoint_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'PlayersPanel/Breakpoint', 32);
 function $$init_15(this$static){
 }
 
@@ -9356,7 +9382,7 @@ function values_0(){
 }
 
 values_0.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPanel$EWarriorType.values';
-defineClass(48, 51, {48:1, 3:1, 34:1, 51:1}, PlayersPanel$EWarriorType);
+defineClass(48, 51, {48:1, 3:1, 35:1, 51:1}, PlayersPanel$EWarriorType);
 var SINGLE, TWO_DIFFERENT, TWO_IDENTICAL;
 var Lil_co_codeguru_corewars8086_gui_PlayersPanel$EWarriorType_2_classLit = createForEnum('il.co.codeguru.corewars8086.gui', 'PlayersPanel/EWarriorType', 48, values_0);
 function $clinit_PlayersPanel$EWarriorType$Map(){
@@ -9443,23 +9469,23 @@ function RegisterField(name_0, frame_0){
 }
 
 RegisterField.displayName = 'il.co.codeguru.corewars8086.gui.RegisterField.RegisterField';
-defineClass(22, 1, {}, RegisterField);
+defineClass(21, 1, {}, RegisterField);
 _.m_base = 16;
 _.m_lastInputOk = true;
 _.m_lastValue = 0;
-var Lil_co_codeguru_corewars8086_gui_RegisterField_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'RegisterField', 22);
+var Lil_co_codeguru_corewars8086_gui_RegisterField_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'RegisterField', 21);
 function RegisterField$lambda$0$Type($$outer_0){
   this.$$outer_0 = $$outer_0;
 }
 
 RegisterField$lambda$0$Type.displayName = 'il.co.codeguru.corewars8086.gui.RegisterField$lambda$0$Type.RegisterField$lambda$0$Type';
-defineClass(194, 1, {}, RegisterField$lambda$0$Type);
+defineClass(193, 1, {}, RegisterField$lambda$0$Type);
 _.handleEvent = function handleEvent_6(arg0){
   $editChanged(this.$$outer_0);
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.RegisterField$lambda$0$Type.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_RegisterField$lambda$0$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'RegisterField/lambda$0$Type', 194);
+var Lil_co_codeguru_corewars8086_gui_RegisterField$lambda$0$Type_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'RegisterField/lambda$0$Type', 193);
 function $addMessage(this$static, round_0, message){
   $append(this$static.messagesArea, '[' + round_0 + '] ' + message + '\n');
   $scrollToBottom(this$static.messagesArea);
@@ -9477,7 +9503,7 @@ function $onEndRound_0(this$static){
       state = currentWar.m_warriors[i].m_state;
       ip = state.m_ip;
       cs = state.m_cs;
-      ipInsideArena = linearAddress_0(cs, ip) - $intern_21;
+      ipInsideArena = linearAddress_0(cs, ip) - $intern_20;
       $paintPointer(this$static.warCanvas, ipInsideArena & $intern_0, i << 24 >> 24);
     }
 }
@@ -9525,7 +9551,7 @@ function WarFrame(competition, mainWnd){
 }
 
 WarFrame.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame.WarFrame';
-defineClass(164, 98, $intern_23, WarFrame);
+defineClass(163, 97, $intern_22, WarFrame);
 _.onCompetitionEnd = function onCompetitionEnd_2(){
   $setEnabled(this.btnPause, false);
 }
@@ -9545,8 +9571,8 @@ _.onMemoryWrite = function onMemoryWrite_2(address, value_0){
   var ipInsideArena;
   if (!this.mainWnd.m_isBattleShown)
     return;
-  ipInsideArena = address.m_linearAddress - $intern_21;
-  address.m_linearAddress >= $intern_21 && address.m_linearAddress < 131072 && $paintPixel(this.warCanvas, ipInsideArena & $intern_0, $getCurrentWarrior_0(this.competition) << 24 >> 24, value_0);
+  ipInsideArena = address.m_linearAddress - $intern_20;
+  address.m_linearAddress >= $intern_20 && address.m_linearAddress < 131072 && $paintPixel(this.warCanvas, ipInsideArena & $intern_0, $getCurrentWarrior_0(this.competition) << 24 >> 24, value_0);
 }
 ;
 _.onMemoryWrite.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame.onMemoryWrite';
@@ -9626,14 +9652,14 @@ _.onWriteState = function onWriteState_2(state){
 ;
 _.onWriteState.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame.onWriteState';
 _.nRoundNumber = 0;
-var Lil_co_codeguru_corewars8086_gui_WarFrame_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame', 164);
+var Lil_co_codeguru_corewars8086_gui_WarFrame_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame', 163);
 function WarFrame$1(this$0, val$speedSliderVal){
   this.this$01 = this$0;
   this.val$speedSliderVal2 = val$speedSliderVal;
 }
 
 WarFrame$1.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$1.WarFrame$1';
-defineClass(167, 1, {}, WarFrame$1);
+defineClass(166, 1, {}, WarFrame$1);
 _.actionPerformed = function actionPerformed(e){
   var s;
   s = __parseAndValidateInt(castToNative(this.this$01.speedSlider.m_element, $wnd.HTMLInputElement).value, 10);
@@ -9643,7 +9669,7 @@ _.actionPerformed = function actionPerformed(e){
 }
 ;
 _.actionPerformed.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$1.actionPerformed';
-var Lil_co_codeguru_corewars8086_gui_WarFrame$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/1', 167);
+var Lil_co_codeguru_corewars8086_gui_WarFrame$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/1', 166);
 function WarFrame$2(this$0, val$competition, val$mainWnd){
   this.this$01 = this$0;
   this.val$competition2 = val$competition;
@@ -9651,7 +9677,7 @@ function WarFrame$2(this$0, val$competition, val$mainWnd){
 }
 
 WarFrame$2.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$2.WarFrame$2';
-defineClass(168, 1, {}, WarFrame$2);
+defineClass(167, 1, {}, WarFrame$2);
 _.actionPerformed = function actionPerformed_0(arg0){
   if (!this.val$competition2.currentWar) {
     if (this.val$competition2.globalPause) {
@@ -9682,14 +9708,14 @@ _.actionPerformed = function actionPerformed_0(arg0){
 }
 ;
 _.actionPerformed.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$2.actionPerformed';
-var Lil_co_codeguru_corewars8086_gui_WarFrame$2_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/2', 168);
+var Lil_co_codeguru_corewars8086_gui_WarFrame$2_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/2', 167);
 function WarFrame$3(val$competition, val$mainWnd){
   this.val$competition2 = val$competition;
   this.val$mainWnd3 = val$mainWnd;
 }
 
 WarFrame$3.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$3.WarFrame$3';
-defineClass(169, 1, {}, WarFrame$3);
+defineClass(168, 1, {}, WarFrame$3);
 _.actionPerformed = function actionPerformed_1(arg0){
   if (!this.val$competition2.currentWar) {
     console.log('no war');
@@ -9700,7 +9726,7 @@ _.actionPerformed = function actionPerformed_1(arg0){
 }
 ;
 _.actionPerformed.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$3.actionPerformed';
-var Lil_co_codeguru_corewars8086_gui_WarFrame$3_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/3', 169);
+var Lil_co_codeguru_corewars8086_gui_WarFrame$3_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/3', 168);
 function JLabel(){
   JComponent.call(this);
 }
@@ -9717,14 +9743,14 @@ function WarFrame$NameCellRenderer(){
 }
 
 WarFrame$NameCellRenderer.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$NameCellRenderer.WarFrame$NameCellRenderer';
-defineClass(165, 45, {}, WarFrame$NameCellRenderer);
-var Lil_co_codeguru_corewars8086_gui_WarFrame$NameCellRenderer_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/NameCellRenderer', 165);
+defineClass(164, 45, {}, WarFrame$NameCellRenderer);
+var Lil_co_codeguru_corewars8086_gui_WarFrame$NameCellRenderer_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/NameCellRenderer', 164);
 function WarFrame$WarriorInfo(name_0){
   this.name_0 = name_0;
 }
 
 WarFrame$WarriorInfo.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$WarriorInfo.WarFrame$WarriorInfo';
-defineClass(166, 1, {}, WarFrame$WarriorInfo);
+defineClass(165, 1, {}, WarFrame$WarriorInfo);
 _.equals_0 = function equals_1(obj){
   return obj != null && instanceOfString(obj) && $equals_4(castToString(obj), this.name_0);
 }
@@ -9735,7 +9761,7 @@ _.toString_0 = function toString_7(){
 }
 ;
 _.toString_0.displayName = 'il.co.codeguru.corewars8086.gui.WarFrame$WarriorInfo.toString';
-var Lil_co_codeguru_corewars8086_gui_WarFrame$WarriorInfo_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/WarriorInfo', 166);
+var Lil_co_codeguru_corewars8086_gui_WarFrame$WarriorInfo_2_classLit = createForClass('il.co.codeguru.corewars8086.gui', 'WarFrame/WarriorInfo', 165);
 function $parseLst(lsttext, opcodesText, m_currentListing){
   var addressStart, c, charsBeforeCode, i, indexStart, islast, j, l, line, lineIndex, lines, opcodeStart, prevLine, state, totalOpcodeCount;
   lines = $split(lsttext);
@@ -9863,7 +9889,7 @@ function $parseStdout(stdoutText, asmElem, stdoutShorten, m_lineOffsets){
   var countAllNL, e, ec, firstColon, i, j, line, lineNum, lineNum0, lineType, lines, m_errLines;
   lines = $split(stdoutText);
   countAllNL = m_lineOffsets.array.length;
-  m_errLines = initUnidimensionalArray(C_classLit, $intern_14, 10, countAllNL, 15, 1);
+  m_errLines = initUnidimensionalArray(C_classLit, $intern_13, 10, countAllNL, 15, 1);
   for (i = 0; i < lines.length; ++i) {
     line = lines[i];
     firstColon = -1;
@@ -9975,8 +10001,8 @@ function ActionEvent(){
 }
 
 ActionEvent.displayName = 'il.co.codeguru.corewars8086.gui.widgets.ActionEvent.ActionEvent';
-defineClass(107, 1, {}, ActionEvent);
-var Lil_co_codeguru_corewars8086_gui_widgets_ActionEvent_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'ActionEvent', 107);
+defineClass(106, 1, {}, ActionEvent);
+var Lil_co_codeguru_corewars8086_gui_widgets_ActionEvent_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'ActionEvent', 106);
 function $clinit_Color(){
   $clinit_Color = emptyMethod;
   new Color(0, 0, 0);
@@ -10022,8 +10048,8 @@ function HSBtoRGB(hue){
   b = 0;
   h = (hue - $wnd.Math.floor(hue)) * 6;
   f = h - $wnd.Math.floor(h);
-  q = $intern_25 * (1 - $intern_26 * f);
-  t = $intern_25 * (1 - $intern_26 * (1 - f));
+  q = $intern_24 * (1 - $intern_25 * f);
+  t = $intern_24 * (1 - $intern_25 * (1 - f));
   switch (round_int(h)) {
     case 0:
       r = 242;
@@ -10087,10 +10113,10 @@ function log_0(text_0){
 }
 
 log_0.displayName = 'il.co.codeguru.corewars8086.gui.widgets.Console.log';
-defineClass(243, 1, {});
-var Ljava_io_OutputStream_2_classLit = createForClass('java.io', 'OutputStream', 243);
-defineClass(244, 243, {});
-var Ljava_io_FilterOutputStream_2_classLit = createForClass('java.io', 'FilterOutputStream', 244);
+defineClass(242, 1, {});
+var Ljava_io_OutputStream_2_classLit = createForClass('java.io', 'OutputStream', 242);
+defineClass(243, 242, {});
+var Ljava_io_FilterOutputStream_2_classLit = createForClass('java.io', 'FilterOutputStream', 243);
 function $println(){
 }
 
@@ -10099,12 +10125,12 @@ function PrintStream(){
 }
 
 PrintStream.displayName = 'java.io.PrintStream.PrintStream';
-defineClass(96, 244, {}, PrintStream);
+defineClass(95, 243, {}, PrintStream);
 _.println = function println(s){
 }
 ;
 _.println.displayName = 'java.io.PrintStream.println';
-var Ljava_io_PrintStream_2_classLit = createForClass('java.io', 'PrintStream', 96);
+var Ljava_io_PrintStream_2_classLit = createForClass('java.io', 'PrintStream', 95);
 function $$init_18(this$static){
   this$static.buf = new StringBuilder;
 }
@@ -10127,7 +10153,7 @@ function ConsolePrintStream(){
 }
 
 ConsolePrintStream.displayName = 'il.co.codeguru.corewars8086.gui.widgets.ConsolePrintStream.ConsolePrintStream';
-defineClass(133, 96, {}, ConsolePrintStream);
+defineClass(132, 95, {}, ConsolePrintStream);
 _.println = function println_0(s){
   $append_4(this.buf, s);
   $consoleLog(this.buf.string);
@@ -10135,17 +10161,17 @@ _.println = function println_0(s){
 }
 ;
 _.println.displayName = 'il.co.codeguru.corewars8086.gui.widgets.ConsolePrintStream.println';
-var Lil_co_codeguru_corewars8086_gui_widgets_ConsolePrintStream_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'ConsolePrintStream', 133);
+var Lil_co_codeguru_corewars8086_gui_widgets_ConsolePrintStream_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'ConsolePrintStream', 132);
 function Dimension(w, h){
   this.width_0 = w;
   this.height_0 = h;
 }
 
 Dimension.displayName = 'il.co.codeguru.corewars8086.gui.widgets.Dimension.Dimension';
-defineClass(103, 1, {}, Dimension);
+defineClass(102, 1, {}, Dimension);
 _.height_0 = 0;
 _.width_0 = 0;
-var Lil_co_codeguru_corewars8086_gui_widgets_Dimension_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'Dimension', 103);
+var Lil_co_codeguru_corewars8086_gui_widgets_Dimension_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'Dimension', 102);
 function $$init_19(this$static){
   this$static.mListeners = new HashSet;
 }
@@ -10167,9 +10193,9 @@ function EventMulticasterBase(){
 }
 
 EventMulticasterBase.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterBase.EventMulticasterBase';
-defineClass(83, 1, {});
+defineClass(82, 1, {});
 _.mListenersArr = null;
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterBase_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterBase', 83);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterBase_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterBase', 82);
 function EventMulticasterCompetition(){
   EventMulticasterBase.call(this);
   this.debugProxy = new EventMulticasterCompetition$DebugHandler(this);
@@ -10177,14 +10203,14 @@ function EventMulticasterCompetition(){
 }
 
 EventMulticasterCompetition.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterCompetition.EventMulticasterCompetition';
-defineClass(155, 83, {}, EventMulticasterCompetition);
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterCompetition_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterCompetition', 155);
+defineClass(154, 82, {}, EventMulticasterCompetition);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterCompetition_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterCompetition', 154);
 function EventMulticasterCompetition$CompeteHandler(this$0){
   this.this$01 = this$0;
 }
 
 EventMulticasterCompetition$CompeteHandler.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterCompetition$CompeteHandler.EventMulticasterCompetition$CompeteHandler';
-defineClass(156, 1, {12:1}, EventMulticasterCompetition$CompeteHandler);
+defineClass(155, 1, {12:1}, EventMulticasterCompetition$CompeteHandler);
 _.onCompetitionEnd = function onCompetitionEnd_3(){
   var mListener, mListener$array, mListener$index, mListener$max;
   for (mListener$array = this.this$01.mListenersArr , mListener$index = 0 , mListener$max = mListener$array.length; mListener$index < mListener$max; ++mListener$index) {
@@ -10244,13 +10270,13 @@ _.onWarriorDeath = function onWarriorDeath_3(warrior, reason){
 }
 ;
 _.onWarriorDeath.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterCompetition$CompeteHandler.onWarriorDeath';
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterCompetition$CompeteHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterCompetition/CompeteHandler', 156);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterCompetition$CompeteHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterCompetition/CompeteHandler', 155);
 function EventMulticasterCompetition$DebugHandler(this$0){
   this.this$01 = this$0;
 }
 
 EventMulticasterCompetition$DebugHandler.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterCompetition$DebugHandler.EventMulticasterCompetition$DebugHandler';
-defineClass(157, 1, {12:1}, EventMulticasterCompetition$DebugHandler);
+defineClass(156, 1, {12:1}, EventMulticasterCompetition$DebugHandler);
 _.onCompetitionEnd = function onCompetitionEnd_4(){
   var mListener, mListener$array, mListener$index, mListener$max;
   for (mListener$array = this.this$01.mListenersArr , mListener$index = 0 , mListener$max = mListener$array.length; mListener$index < mListener$max; ++mListener$index) {
@@ -10350,7 +10376,7 @@ _.onWarriorDeath = function onWarriorDeath_4(warrior, reason){
 }
 ;
 _.onWarriorDeath.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterCompetition$DebugHandler.onWarriorDeath';
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterCompetition$DebugHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterCompetition/DebugHandler', 157);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterCompetition$DebugHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterCompetition/DebugHandler', 156);
 function EventMulticasterMemory(){
   EventMulticasterBase.call(this);
   this.debugProxy = new EventMulticasterMemory$DebugHandler(this);
@@ -10358,13 +10384,13 @@ function EventMulticasterMemory(){
 }
 
 EventMulticasterMemory.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterMemory.EventMulticasterMemory';
-defineClass(158, 83, {}, EventMulticasterMemory);
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterMemory_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterMemory', 158);
+defineClass(157, 82, {}, EventMulticasterMemory);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterMemory_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterMemory', 157);
 function EventMulticasterMemory$CompeteHandler(){
 }
 
 EventMulticasterMemory$CompeteHandler.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterMemory$CompeteHandler.EventMulticasterMemory$CompeteHandler';
-defineClass(159, 1, {57:1}, EventMulticasterMemory$CompeteHandler);
+defineClass(158, 1, {57:1}, EventMulticasterMemory$CompeteHandler);
 _.onMemoryWrite = function onMemoryWrite_3(address, value_0){
 }
 ;
@@ -10373,13 +10399,13 @@ _.onWriteState = function onWriteState_3(state){
 }
 ;
 _.onWriteState.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterMemory$CompeteHandler.onWriteState';
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterMemory$CompeteHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterMemory/CompeteHandler', 159);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterMemory$CompeteHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterMemory/CompeteHandler', 158);
 function EventMulticasterMemory$DebugHandler(this$0){
   this.this$01 = this$0;
 }
 
 EventMulticasterMemory$DebugHandler.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterMemory$DebugHandler.EventMulticasterMemory$DebugHandler';
-defineClass(160, 1, {57:1}, EventMulticasterMemory$DebugHandler);
+defineClass(159, 1, {57:1}, EventMulticasterMemory$DebugHandler);
 _.onMemoryWrite = function onMemoryWrite_4(address, value_0){
   var mListener, mListener$array, mListener$index, mListener$max;
   for (mListener$array = this.this$01.mListenersArr , mListener$index = 0 , mListener$max = mListener$array.length; mListener$index < mListener$max; ++mListener$index) {
@@ -10398,20 +10424,20 @@ _.onWriteState = function onWriteState_4(state){
 }
 ;
 _.onWriteState.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterMemory$DebugHandler.onWriteState';
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterMemory$DebugHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterMemory/DebugHandler', 160);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterMemory$DebugHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterMemory/DebugHandler', 159);
 function EventMulticasterScore(){
   EventMulticasterBase.call(this);
   this.proxy = new EventMulticasterScore$MulticasterHandler(this);
 }
 
 EventMulticasterScore.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterScore.EventMulticasterScore';
-defineClass(162, 83, {}, EventMulticasterScore);
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterScore_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterScore', 162);
+defineClass(161, 82, {}, EventMulticasterScore);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterScore_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterScore', 161);
 function $scoreChanged(this$static, name_0, addedValue, groupIndex, subIndex){
   var mListener, mListener$array, mListener$index, mListener$max;
   for (mListener$array = this$static.this$01.mListenersArr , mListener$index = 0 , mListener$max = mListener$array.length; mListener$index < mListener$max; ++mListener$index) {
     mListener = mListener$array[mListener$index];
-    castTo(mListener, 228).scoreChanged(name_0, addedValue, groupIndex, subIndex);
+    castTo(mListener, 227).scoreChanged(name_0, addedValue, groupIndex, subIndex);
   }
 }
 
@@ -10421,13 +10447,13 @@ function EventMulticasterScore$MulticasterHandler(this$0){
 }
 
 EventMulticasterScore$MulticasterHandler.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterScore$MulticasterHandler.EventMulticasterScore$MulticasterHandler';
-defineClass(163, 1, {228:1}, EventMulticasterScore$MulticasterHandler);
+defineClass(162, 1, {227:1}, EventMulticasterScore$MulticasterHandler);
 _.scoreChanged = function scoreChanged_0(name_0, addedValue, groupIndex, subIndex){
   $scoreChanged(this, name_0, addedValue, groupIndex, subIndex);
 }
 ;
 _.scoreChanged.displayName = 'il.co.codeguru.corewars8086.gui.widgets.EventMulticasterScore$MulticasterHandler.scoreChanged';
-var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterScore$MulticasterHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterScore/MulticasterHandler', 163);
+var Lil_co_codeguru_corewars8086_gui_widgets_EventMulticasterScore$MulticasterHandler_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'EventMulticasterScore/MulticasterHandler', 162);
 function $clinit_JButton(){
   $clinit_JButton = emptyMethod;
   m_buts = new HashMap;
@@ -10445,15 +10471,15 @@ function JButton(id_0){
 }
 
 JButton.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JButton.JButton';
-defineClass(102, 24, {}, JButton);
+defineClass(101, 24, {}, JButton);
 var m_buts;
-var Lil_co_codeguru_corewars8086_gui_widgets_JButton_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JButton', 102);
+var Lil_co_codeguru_corewars8086_gui_widgets_JButton_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JButton', 101);
 function JButton$1(this$0){
   this.this$01 = this$0;
 }
 
 JButton$1.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JButton$1.JButton$1';
-defineClass(191, 1, {}, JButton$1);
+defineClass(190, 1, {}, JButton$1);
 _.handleEvent = function handleEvent_7(event_0){
   if (!this.this$01.m_listener || !this.this$01.m_enabled)
     return;
@@ -10461,13 +10487,13 @@ _.handleEvent = function handleEvent_7(event_0){
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JButton$1.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_widgets_JButton$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JButton/1', 191);
+var Lil_co_codeguru_corewars8086_gui_widgets_JButton$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JButton/1', 190);
 function JComponent$1(this$0){
   this.this$01 = this$0;
 }
 
 JComponent$1.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JComponent$1.JComponent$1';
-defineClass(135, 1, {}, JComponent$1);
+defineClass(134, 1, {}, JComponent$1);
 _.handleEvent = function handleEvent_8(event_0){
   if (!this.this$01.m_listener)
     return;
@@ -10475,21 +10501,21 @@ _.handleEvent = function handleEvent_8(event_0){
 }
 ;
 _.handleEvent.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JComponent$1.handleEvent';
-var Lil_co_codeguru_corewars8086_gui_widgets_JComponent$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JComponent/1', 135);
+var Lil_co_codeguru_corewars8086_gui_widgets_JComponent$1_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JComponent/1', 134);
 function JList(){
   JComponent.call(this);
 }
 
 JList.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JList.JList';
-defineClass(192, 24, {}, JList);
-var Lil_co_codeguru_corewars8086_gui_widgets_JList_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JList', 192);
+defineClass(191, 24, {}, JList);
+var Lil_co_codeguru_corewars8086_gui_widgets_JList_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JList', 191);
 function JScrollPane(){
   JComponent.call(this);
 }
 
 JScrollPane.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JScrollPane.JScrollPane';
-defineClass(189, 24, {}, JScrollPane);
-var Lil_co_codeguru_corewars8086_gui_widgets_JScrollPane_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JScrollPane', 189);
+defineClass(188, 24, {}, JScrollPane);
+var Lil_co_codeguru_corewars8086_gui_widgets_JScrollPane_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JScrollPane', 188);
 function $$init_20(this$static){
 }
 
@@ -10507,9 +10533,9 @@ function JSlider(){
 }
 
 JSlider.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JSlider.JSlider';
-defineClass(190, 24, {}, JSlider);
+defineClass(189, 24, {}, JSlider);
 _.m_valueElem = null;
-var Lil_co_codeguru_corewars8086_gui_widgets_JSlider_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JSlider', 190);
+var Lil_co_codeguru_corewars8086_gui_widgets_JSlider_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JSlider', 189);
 function $append(this$static, s){
   castToNative(this$static.m_element, $wnd.HTMLElement).innerHTML = castToNative(this$static.m_element, $wnd.HTMLElement).innerHTML + s;
 }
@@ -10525,8 +10551,8 @@ function JTextArea(){
 }
 
 JTextArea.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JTextArea.JTextArea';
-defineClass(188, 24, {}, JTextArea);
-var Lil_co_codeguru_corewars8086_gui_widgets_JTextArea_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JTextArea', 188);
+defineClass(187, 24, {}, JTextArea);
+var Lil_co_codeguru_corewars8086_gui_widgets_JTextArea_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JTextArea', 187);
 function $setText_1(this$static, v){
   castToNative(this$static.m_element, $wnd.HTMLInputElement).value = v;
 }
@@ -10538,8 +10564,8 @@ function JTextField(id_0, text_0){
 }
 
 JTextField.displayName = 'il.co.codeguru.corewars8086.gui.widgets.JTextField.JTextField';
-defineClass(99, 24, {}, JTextField);
-var Lil_co_codeguru_corewars8086_gui_widgets_JTextField_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JTextField', 99);
+defineClass(98, 24, {}, JTextField);
+var Lil_co_codeguru_corewars8086_gui_widgets_JTextField_2_classLit = createForClass('il.co.codeguru.corewars8086.gui.widgets', 'JTextField', 98);
 function hex2(num){
   var number, s;
   s = (number = num >>> 0 , number.toString(16)).toUpperCase();
@@ -10623,8 +10649,8 @@ function $writeWord(this$static, address, value_0){
 }
 
 $writeWord.displayName = 'il.co.codeguru.corewars8086.memory.AbstractRealModeMemory.$writeWord';
-defineClass(249, 1, {});
-var Lil_co_codeguru_corewars8086_memory_AbstractRealModeMemory_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'AbstractRealModeMemory', 249);
+defineClass(248, 1, {});
+var Lil_co_codeguru_corewars8086_memory_AbstractRealModeMemory_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'AbstractRealModeMemory', 248);
 function MemoryException(msg){
   Exception_1.call(this, msg);
 }
@@ -10634,7 +10660,7 @@ defineClass(54, 7, {54:1, 3:1, 7:1, 8:1}, MemoryException);
 var Lil_co_codeguru_corewars8086_memory_MemoryException_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'MemoryException', 54);
 function RealModeAddress(linearAddress){
   var unsignedOffset, unsignedSegment;
-  linearAddress %= $intern_24;
+  linearAddress %= $intern_23;
   unsignedSegment = (linearAddress / 16 | 0) & $intern_0;
   unsignedOffset = linearAddress - unsignedSegment * 16 & $intern_0;
   this.m_segment = unsignedSegment << 16 >> 16;
@@ -10650,7 +10676,7 @@ function RealModeAddress_0(segment, offset){
   unsignedSegment = this.m_segment & $intern_0;
   unsignedOffset = this.m_offset & $intern_0;
   linearAddressFull = unsignedSegment * 16 + unsignedOffset;
-  this.m_linearAddress = linearAddressFull % $intern_24;
+  this.m_linearAddress = linearAddressFull % $intern_23;
 }
 
 RealModeAddress_0.displayName = 'il.co.codeguru.corewars8086.memory.RealModeAddress.RealModeAddress';
@@ -10659,7 +10685,7 @@ function linearAddress_0(segment, offset){
   unsignedSegment = segment & $intern_0;
   unsignedOffset = offset & $intern_0;
   linearAddressFull = unsignedSegment * 16 + unsignedOffset;
-  linearAddress = linearAddressFull % $intern_24;
+  linearAddress = linearAddressFull % $intern_23;
   return linearAddress;
 }
 
@@ -10670,7 +10696,7 @@ _.m_offset = 0;
 _.m_segment = 0;
 var Lil_co_codeguru_corewars8086_memory_RealModeAddress_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'RealModeAddress', 5);
 function $readByte(this$static, linearAddress){
-  return this$static.m_data[linearAddress % $intern_24];
+  return this$static.m_data[linearAddress % $intern_23];
 }
 
 $readByte.displayName = 'il.co.codeguru.corewars8086.memory.RealModeMemoryImpl.$readByte';
@@ -10701,17 +10727,17 @@ function $writeByte(this$static, address, value_0){
 
 $writeByte.displayName = 'il.co.codeguru.corewars8086.memory.RealModeMemoryImpl.$writeByte';
 function RealModeMemoryImpl(){
-  this.m_data = new Int8Array($intern_24);
+  this.m_data = new Int8Array($intern_23);
 }
 
 RealModeMemoryImpl.displayName = 'il.co.codeguru.corewars8086.memory.RealModeMemoryImpl.RealModeMemoryImpl';
-defineClass(193, 249, {}, RealModeMemoryImpl);
+defineClass(192, 248, {}, RealModeMemoryImpl);
 _.readByte = function readByte(address){
   return $readByte_0(this, address);
 }
 ;
 _.readByte.displayName = 'il.co.codeguru.corewars8086.memory.RealModeMemoryImpl.readByte';
-var Lil_co_codeguru_corewars8086_memory_RealModeMemoryImpl_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'RealModeMemoryImpl', 193);
+var Lil_co_codeguru_corewars8086_memory_RealModeMemoryImpl_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'RealModeMemoryImpl', 192);
 function $equals_1(this$static, a){
   return this$static.m_start == a.m_start && this$static.m_end == a.m_end;
 }
@@ -10795,13 +10821,13 @@ function RestrictedAccessRealModeMemory(memory, readAccessRegions, writeAccessRe
 }
 
 RestrictedAccessRealModeMemory.displayName = 'il.co.codeguru.corewars8086.memory.RestrictedAccessRealModeMemory.RestrictedAccessRealModeMemory';
-defineClass(224, 249, {}, RestrictedAccessRealModeMemory);
+defineClass(223, 248, {}, RestrictedAccessRealModeMemory);
 _.readByte = function readByte_0(address){
   return $readByte_1(this, address);
 }
 ;
 _.readByte.displayName = 'il.co.codeguru.corewars8086.memory.RestrictedAccessRealModeMemory.readByte';
-var Lil_co_codeguru_corewars8086_memory_RestrictedAccessRealModeMemory_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'RestrictedAccessRealModeMemory', 224);
+var Lil_co_codeguru_corewars8086_memory_RestrictedAccessRealModeMemory_2_classLit = createForClass('il.co.codeguru.corewars8086.memory', 'RestrictedAccessRealModeMemory', 223);
 function $absFromRel(this$static, rel8){
   var startOfProgram;
   startOfProgram = this$static.pointer - this$static.progStartOffset;
@@ -11869,7 +11895,7 @@ function Disassembler(offset, endOffset){
 }
 
 Disassembler.displayName = 'il.co.codeguru.corewars8086.utils.Disassembler.Disassembler';
-defineClass(108, 1, {});
+defineClass(107, 1, {});
 _.endOffset = 0;
 _.memIndex = 0;
 _.mode_0 = 0;
@@ -11877,14 +11903,14 @@ _.pointer = 0;
 _.progStartOffset = 0;
 _.regIndex = 0;
 _.startOffset = 0;
-var Lil_co_codeguru_corewars8086_utils_Disassembler_2_classLit = createForClass('il.co.codeguru.corewars8086.utils', 'Disassembler', 108);
+var Lil_co_codeguru_corewars8086_utils_Disassembler_2_classLit = createForClass('il.co.codeguru.corewars8086.utils', 'Disassembler', 107);
 function Disassembler$ArrDisassembler(memory, endOffset){
   Disassembler.call(this, 0, endOffset);
   this.bytes = memory;
 }
 
 Disassembler$ArrDisassembler.displayName = 'il.co.codeguru.corewars8086.utils.Disassembler$ArrDisassembler.Disassembler$ArrDisassembler';
-defineClass(109, 108, {}, Disassembler$ArrDisassembler);
+defineClass(108, 107, {}, Disassembler$ArrDisassembler);
 _.getByte = function getByte(){
   if (this.pointer >= this.endOffset)
     throw toJs(new Disassembler$DisassemblerLengthException);
@@ -11900,7 +11926,7 @@ _.nextByte = function nextByte(){
 }
 ;
 _.nextByte.displayName = 'il.co.codeguru.corewars8086.utils.Disassembler$ArrDisassembler.nextByte';
-var Lil_co_codeguru_corewars8086_utils_Disassembler$ArrDisassembler_2_classLit = createForClass('il.co.codeguru.corewars8086.utils', 'Disassembler/ArrDisassembler', 109);
+var Lil_co_codeguru_corewars8086_utils_Disassembler$ArrDisassembler_2_classLit = createForClass('il.co.codeguru.corewars8086.utils', 'Disassembler/ArrDisassembler', 108);
 function Disassembler$DisassemblerException(){
   Exception.call(this);
 }
@@ -11921,7 +11947,7 @@ function Disassembler$NArrDisassembler(memory, offset, endOffset){
 }
 
 Disassembler$NArrDisassembler.displayName = 'il.co.codeguru.corewars8086.utils.Disassembler$NArrDisassembler.Disassembler$NArrDisassembler';
-defineClass(200, 108, {}, Disassembler$NArrDisassembler);
+defineClass(199, 107, {}, Disassembler$NArrDisassembler);
 _.getByte = function getByte_0(){
   if (this.pointer >= this.endOffset)
     throw toJs(new Disassembler$DisassemblerLengthException);
@@ -11937,7 +11963,7 @@ _.nextByte = function nextByte_0(){
 }
 ;
 _.nextByte.displayName = 'il.co.codeguru.corewars8086.utils.Disassembler$NArrDisassembler.nextByte';
-var Lil_co_codeguru_corewars8086_utils_Disassembler$NArrDisassembler_2_classLit = createForClass('il.co.codeguru.corewars8086.utils', 'Disassembler/NArrDisassembler', 200);
+var Lil_co_codeguru_corewars8086_utils_Disassembler$NArrDisassembler_2_classLit = createForClass('il.co.codeguru.corewars8086.utils', 'Disassembler/NArrDisassembler', 199);
 function $$init_21(this$static){
 }
 
@@ -12150,12 +12176,12 @@ function Competition(){
 }
 
 Competition.displayName = 'il.co.codeguru.corewars8086.war.Competition.Competition';
-defineClass(146, 1, {}, Competition);
+defineClass(145, 1, {}, Competition);
 _.globalPause = false;
 _.seed = 0;
 _.speed_0 = 0;
 _.warsPerCombination = 20;
-var Lil_co_codeguru_corewars8086_war_Competition_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'Competition', 146);
+var Lil_co_codeguru_corewars8086_war_Competition_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'Competition', 145);
 function $$init_22(this$static){
 }
 
@@ -12164,7 +12190,7 @@ function Competition$CompState(){
 }
 
 Competition$CompState.displayName = 'il.co.codeguru.corewars8086.war.Competition$CompState.Competition$CompState';
-defineClass(147, 1, {}, Competition$CompState);
+defineClass(146, 1, {}, Competition$CompState);
 _.abort = false;
 _.isInDebugger = false;
 _.round_0 = 0;
@@ -12173,7 +12199,7 @@ _.startTime = 0;
 _.state = 0;
 _.waitedFrames = 0;
 _.warIndex = 0;
-var Lil_co_codeguru_corewars8086_war_Competition$CompState_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'Competition/CompState', 147);
+var Lil_co_codeguru_corewars8086_war_Competition$CompState_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'Competition/CompState', 146);
 function $getNumberOfItems(this$static){
   return binomialCoefficient(this$static.numItems, this$static.counters.length);
 }
@@ -12187,13 +12213,13 @@ $next.displayName = 'il.co.codeguru.corewars8086.war.CompetitionIterator.$next';
 function CompetitionIterator(numItems, groupSize, seed){
   this.numItems = numItems;
   this.groupSize = groupSize;
-  this.counters = initUnidimensionalArray(I_classLit, $intern_14, 10, groupSize, 15, 1);
+  this.counters = initUnidimensionalArray(I_classLit, $intern_13, 10, groupSize, 15, 1);
   this.rnd = new RandomDataGenerator;
   $initRan(this.rnd, seed);
 }
 
 CompetitionIterator.displayName = 'il.co.codeguru.corewars8086.war.CompetitionIterator.CompetitionIterator';
-defineClass(202, 1, {}, CompetitionIterator);
+defineClass(201, 1, {}, CompetitionIterator);
 _.next_0 = function next(){
   return $nextPermutation(this.rnd, this.numItems, this.groupSize);
 }
@@ -12206,7 +12232,7 @@ _.hasNext_0 = function hasNext(){
 _.hasNext_0.displayName = 'il.co.codeguru.corewars8086.war.CompetitionIterator.hasNext';
 _.groupSize = 0;
 _.numItems = 0;
-var Lil_co_codeguru_corewars8086_war_CompetitionIterator_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'CompetitionIterator', 202);
+var Lil_co_codeguru_corewars8086_war_CompetitionIterator_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'CompetitionIterator', 201);
 function $$init_23(this$static){
   this$static.rand = new Random;
 }
@@ -12230,9 +12256,9 @@ function $getLoadOffset(this$static, warriorSize){
   numTries = 0;
   while (!found && numTries < 100) {
     ++numTries;
-    loadAddress = $nextInt(this$static.rand, $intern_21);
+    loadAddress = $nextInt(this$static.rand, $intern_20);
     found = true;
-    loadAddress < $intern_17 && (found = false);
+    loadAddress < $intern_16 && (found = false);
     loadAddress + warriorSize > 64512 && (found = false);
     if (m_loadAddrChecker) {
       if (!$checkOverlap(m_loadAddrChecker, loadAddress, warriorSize)) {
@@ -12244,8 +12270,8 @@ function $getLoadOffset(this$static, warriorSize){
     for (i = 0; i < this$static.m_numWarriors; ++i) {
       otherLoadAddress = this$static.m_warriors[i].m_loadAddress.m_offset & $intern_0;
       otherSize = this$static.m_warriors[i].m_codeSize;
-      otherStart = otherLoadAddress - $intern_17;
-      otherEnd = otherLoadAddress + otherSize + $intern_17;
+      otherStart = otherLoadAddress - $intern_16;
+      otherEnd = otherLoadAddress + otherSize + $intern_16;
       if (loadAddress + warriorSize >= otherStart && loadAddress < otherEnd) {
         found = false;
         console.log('overlap with loaded!');
@@ -12291,15 +12317,15 @@ $getWarriorByLabel.displayName = 'il.co.codeguru.corewars8086.war.War.$getWarrio
 function $loadWarriorGroup(this$static, warriorGroup){
   var col, groupSharedMemory, i, initialStack, loadAddress, loadOffset, offset, stackMemory, tmp, w, warrior, warriorData, warriorName, warriors;
   warriors = warriorGroup.warriorData;
-  groupSharedMemory = $allocateCoreMemory(this$static, $intern_17);
+  groupSharedMemory = $allocateCoreMemory(this$static, $intern_16);
   for (i = 0; i < warriors.array.length; ++i) {
     warrior = (checkCriticalElementIndex(i, warriors.array.length) , castTo(warriors.array[i], 64));
     warriorName = warrior.m_name;
     warriorData = warrior.m_code;
     warrior.m_debugFixedLoadAddress < 0?(loadOffset = $getLoadOffset(this$static, warriorData.length)):(loadOffset = warrior.m_debugFixedLoadAddress << 16 >> 16);
     loadAddress = new RealModeAddress_0(4096, loadOffset);
-    stackMemory = $allocateCoreMemory(this$static, $intern_18);
-    initialStack = new RealModeAddress_0(stackMemory.m_segment, $intern_18);
+    stackMemory = $allocateCoreMemory(this$static, $intern_17);
+    initialStack = new RealModeAddress_0(stackMemory.m_segment, $intern_17);
     w = new Warrior(warriorName, warrior.m_label, warriorData.length, this$static.m_core, loadAddress, initialStack, groupSharedMemory, this$static.m_numWarriors);
     this$static.m_warriors[this$static.m_numWarriors++] = w;
     this$static.m_core.listener.onWriteState(1);
@@ -12307,8 +12333,10 @@ function $loadWarriorGroup(this$static, warriorGroup){
       tmp = new RealModeAddress_0(4096, loadOffset + offset << 16 >> 16);
       $writeByte(this$static.m_core, tmp, warriorData[offset]);
     }
-    col = $toString_1($getColor(($clinit_ColorHolder() , $clinit_ColorHolder() , ins), this$static.m_currentWarrior, false));
-    $setButtonColor(col, warrior.m_label);
+    if (s_instance.m_isBattleShown) {
+      col = $toString_1($getColor(($clinit_ColorHolder() , $clinit_ColorHolder() , ins), this$static.m_currentWarrior, false));
+      $setButtonColor(col, warrior.m_label);
+    }
     this$static.m_core.listener.onWriteState(2);
     ++this$static.m_numWarriorsAlive;
     ++this$static.m_currentWarrior;
@@ -12325,7 +12353,7 @@ function $loadWarriorGroups(this$static, warriorGroups){
     $add_0(groupsLeftToLoad, warriorGroups[i]);
   while (groupsLeftToLoad.array.length > 0) {
     randomInt = $nextInt(this$static.rand, groupsLeftToLoad.array.length);
-    $loadWarriorGroup(this$static, (checkCriticalElementIndex(randomInt, groupsLeftToLoad.array.length) , castTo(groupsLeftToLoad.array[randomInt], 35)));
+    $loadWarriorGroup(this$static, (checkCriticalElementIndex(randomInt, groupsLeftToLoad.array.length) , castTo(groupsLeftToLoad.array[randomInt], 28)));
     checkCriticalElementIndex(randomInt, groupsLeftToLoad.array.length);
     removeFrom(groupsLeftToLoad.array, randomInt);
   }
@@ -12392,16 +12420,6 @@ function $setBreakpointCheck(this$static, brc){
 }
 
 $setBreakpointCheck.displayName = 'il.co.codeguru.corewars8086.war.War.$setBreakpointCheck';
-function $setButtonColor(color_0, label_0){
-  var player_letter = label_0[1];
-  var codenum = label_0[2];
-  var id_0 = 'sel_code_lbl_w' + (parseInt(codenum) + 1) + '_p' + player_letter;
-  console.log('~~', label_0, id_0);
-  var e = $wnd.document.getElementById(id_0);
-  e.style.boxShadow = 'inset ' + color_0 + ' 0px -1px 5px, inset ' + color_0 + ' 0px 1px 5px';
-}
-
-$setButtonColor.displayName = 'il.co.codeguru.corewars8086.war.War.$setButtonColor';
 function $setSeed_0(this$static, seed){
   $setSeed_2(this$static.rand, seed);
 }
@@ -12442,12 +12460,12 @@ function War(memoryListener, warListener, startPaused){
   this.rand = new Random;
   this.isPaused = startPaused;
   this.m_warListener = warListener;
-  this.m_warriors = initUnidimensionalArray(Lil_co_codeguru_corewars8086_war_Warrior_2_classLit, $intern_2, 84, 20, 0, 1);
+  this.m_warriors = initUnidimensionalArray(Lil_co_codeguru_corewars8086_war_Warrior_2_classLit, $intern_2, 83, 20, 0, 1);
   this.m_numWarriors = 0;
   this.m_numWarriorsAlive = 0;
   this.m_core = new RealModeMemoryImpl;
   this.m_nextFreeAddress = 131072;
-  for (offset = 0; offset < $intern_21; ++offset) {
+  for (offset = 0; offset < $intern_20; ++offset) {
     tmp = new RealModeAddress_0(4096, offset << 16 >> 16);
     $writeByte(this.m_core, tmp, -52);
   }
@@ -12456,7 +12474,7 @@ function War(memoryListener, warListener, startPaused){
 }
 
 War.displayName = 'il.co.codeguru.corewars8086.war.War.War';
-defineClass(179, 1, {}, War);
+defineClass(178, 1, {}, War);
 _.isPaused = false;
 _.isSingleRound = false;
 _.m_breakpointCheck = null;
@@ -12466,7 +12484,7 @@ _.m_nextFreeAddress = 0;
 _.m_numWarriors = 0;
 _.m_numWarriorsAlive = 0;
 _.m_uiWarriorIndex = -1;
-var Lil_co_codeguru_corewars8086_war_War_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'War', 179);
+var Lil_co_codeguru_corewars8086_war_War_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'War', 178);
 function $initializeCpuState(this$static, loadAddress, initialStack, groupSharedMemory){
   $setAX(this$static.m_state, loadAddress.m_offset);
   $setBX(this$static.m_state, 0);
@@ -12534,11 +12552,11 @@ function Warrior(name_0, label_0, codeSize, core, loadAddress, initialStack, gro
 }
 
 Warrior.displayName = 'il.co.codeguru.corewars8086.war.Warrior.Warrior';
-defineClass(84, 1, {84:1}, Warrior);
+defineClass(83, 1, {83:1}, Warrior);
 _.m_codeSize = 0;
 _.m_isAlive = false;
 _.m_myIndex = 0;
-var Lil_co_codeguru_corewars8086_war_Warrior_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'Warrior', 84);
+var Lil_co_codeguru_corewars8086_war_Warrior_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'Warrior', 83);
 function WarriorData(name_0, code_0, label_0, debugLoadAddr){
   this.m_name = name_0;
   this.m_code = code_0;
@@ -12559,7 +12577,7 @@ function $addScoreToWarrior(this$static, name_0, value_0){
   var i;
   for (i = 0; i < this$static.warriorData.array.length; i++) {
     if ($equals_4(castTo($get_4(this$static.warriorData, i), 64).m_name, name_0)) {
-      $set_0(this$static.scores, i, new Float(castTo($get_4(this$static.scores, i), 30).value_0 + value_0));
+      $set_0(this$static.scores, i, new Float(castTo($get_4(this$static.scores, i), 31).value_0 + value_0));
       break;
     }
   }
@@ -12574,23 +12592,24 @@ function $addWarrior(this$static, data_0){
 }
 
 $addWarrior.displayName = 'il.co.codeguru.corewars8086.war.WarriorGroup.$addWarrior';
-function WarriorGroup(name_0){
+function WarriorGroup(name_0, label_0){
   this.name_0 = name_0;
+  this.label_0 = label_0;
   this.warriorData = new ArrayList;
   this.scores = new ArrayList;
 }
 
 WarriorGroup.displayName = 'il.co.codeguru.corewars8086.war.WarriorGroup.WarriorGroup';
-defineClass(35, 1, {35:1}, WarriorGroup);
+defineClass(28, 1, {28:1}, WarriorGroup);
 _.groupScore = 0;
-var Lil_co_codeguru_corewars8086_war_WarriorGroup_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'WarriorGroup', 35);
+var Lil_co_codeguru_corewars8086_war_WarriorGroup_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'WarriorGroup', 28);
 function $addScore(this$static, name_0, value_0){
   var group, groupIndex, subIndex;
   groupIndex = castTo($getStringValue(this$static.warriorNameToGroup, name_0), 25);
   if (!groupIndex) {
     return;
   }
-  group = castTo($get_4(this$static.warriorGroups, groupIndex.value_0), 35);
+  group = castTo($get_4(this$static.warriorGroups, groupIndex.value_0), 28);
   subIndex = $addScoreToWarrior(group, name_0, value_0);
   $scoreChanged(this$static.scoreListener, name_0, value_0, groupIndex.value_0, subIndex);
 }
@@ -12600,26 +12619,15 @@ function $createGroupList(this$static, groupIndices){
   var groups, groupsList, i;
   groupsList = new ArrayList;
   for (i = 0; i < groupIndices.length; ++i) {
-    $add_0(groupsList, castTo($get_4(this$static.warriorGroups, groupIndices[i]), 35));
+    $add_0(groupsList, castTo($get_4(this$static.warriorGroups, groupIndices[i]), 28));
   }
   !!this$static.zombieGroup && $add_0(groupsList, this$static.zombieGroup);
-  groups = initUnidimensionalArray(Lil_co_codeguru_corewars8086_war_WarriorGroup_2_classLit, $intern_2, 35, groupsList.array.length, 0, 1);
+  groups = initUnidimensionalArray(Lil_co_codeguru_corewars8086_war_WarriorGroup_2_classLit, $intern_2, 28, groupsList.array.length, 0, 1);
   $toArray_1(groupsList, groups);
   return groups;
 }
 
 $createGroupList.displayName = 'il.co.codeguru.corewars8086.war.WarriorRepository.$createGroupList';
-function $getGroupNames(this$static){
-  var group, group$iterator, names;
-  names = new ArrayList;
-  for (group$iterator = new ArrayList$1(this$static.warriorGroups); group$iterator.i < group$iterator.this$01.array.length;) {
-    group = castTo($next_5(group$iterator), 35);
-    $add_0(names, group.name_0);
-  }
-  return castTo($toArray_1(names, initUnidimensionalArray(Ljava_lang_String_2_classLit, $intern_12, 2, 0, 6, 1)), 77);
-}
-
-$getGroupNames.displayName = 'il.co.codeguru.corewars8086.war.WarriorRepository.$getGroupNames';
 function $readWarriorFilesFromUI(this$static, files, zombies, isInDebug){
   var bin, c, c$index, c$max, currentGroup, data_0, name_0, startAddr;
   $reset_1(this$static.warriorNameToGroup);
@@ -12656,7 +12664,7 @@ function $readWarriorFilesFromUI(this$static, files, zombies, isInDebug){
     data_0 = new WarriorData(name_0, $truncToSize(bin), c.label_0, startAddr);
     if (c.player.wtype != ($clinit_PlayersPanel$EWarriorType() , SINGLE)) {
       if ($endsWith(c.label_0, '0')) {
-        currentGroup = new WarriorGroup($substring_1(name_0, 0, name_0.length - 1));
+        currentGroup = new WarriorGroup($substring_1(name_0, 0, name_0.length - 1), c.player.label_0);
         $add_0(currentGroup.warriorData, data_0);
         $add_0(currentGroup.scores, new Float(0));
         $putStringValue(this$static.warriorNameToGroup, name_0, valueOf_0(this$static.warriorGroups.array.length));
@@ -12673,7 +12681,7 @@ function $readWarriorFilesFromUI(this$static, files, zombies, isInDebug){
       }
     }
      else {
-      currentGroup = new WarriorGroup(name_0);
+      currentGroup = new WarriorGroup(name_0, c.player.label_0);
       $add_0(currentGroup.warriorData, data_0);
       $add_0(currentGroup.scores, new Float(0));
       $putStringValue(this$static.warriorNameToGroup, name_0, valueOf_0(this$static.warriorGroups.array.length));
@@ -12696,7 +12704,7 @@ function $readZombiesFromUI(this$static, zombieFiles, loadAddrChecker){
   this$static.zombieGroup = null;
   if (zombieFiles.length == 0)
     return true;
-  this$static.zombieGroup = new WarriorGroup('ZoMbIeS');
+  this$static.zombieGroup = new WarriorGroup('ZoMbIeS', '');
   for (c$index = 0 , c$max = zombieFiles.length; c$index < c$max; ++c$index) {
     c = zombieFiles[c$index];
     name_0 = c.name_0;
@@ -12728,7 +12736,7 @@ function $readZombiesFromUI(this$static, zombieFiles, loadAddrChecker){
 $readZombiesFromUI.displayName = 'il.co.codeguru.corewars8086.war.WarriorRepository.$readZombiesFromUI';
 function $truncToSize(arr){
   if (arr.length > 512)
-    return copyPrimitiveArray(arr, initUnidimensionalArray(B_classLit, $intern_20, 10, 512, 15, 1));
+    return copyPrimitiveArray(arr, initUnidimensionalArray(B_classLit, $intern_19, 10, 512, 15, 1));
   return arr;
 }
 
@@ -12741,9 +12749,9 @@ function WarriorRepository(){
 }
 
 WarriorRepository.displayName = 'il.co.codeguru.corewars8086.war.WarriorRepository.WarriorRepository';
-defineClass(144, 1, {}, WarriorRepository);
+defineClass(143, 1, {}, WarriorRepository);
 var m_loadAddrChecker;
-var Lil_co_codeguru_corewars8086_war_WarriorRepository_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'WarriorRepository', 144);
+var Lil_co_codeguru_corewars8086_war_WarriorRepository_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'WarriorRepository', 143);
 function $compare(o1, o2){
   return $compareToIgnoreCase(o1.name_0, o2.name_0);
 }
@@ -12753,7 +12761,7 @@ function WarriorRepository$1(){
 }
 
 WarriorRepository$1.displayName = 'il.co.codeguru.corewars8086.war.WarriorRepository$1.WarriorRepository$1';
-defineClass(145, 1, {}, WarriorRepository$1);
+defineClass(144, 1, {}, WarriorRepository$1);
 _.compare = function compare_1(o1, o2){
   return $compare(castTo(o1, 47), castTo(o2, 47));
 }
@@ -12764,11 +12772,11 @@ _.equals_0 = function equals_2(other){
 }
 ;
 _.equals_0.displayName = 'il.co.codeguru.corewars8086.war.WarriorRepository$1.equals';
-var Lil_co_codeguru_corewars8086_war_WarriorRepository$1_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'WarriorRepository/1', 145);
+var Lil_co_codeguru_corewars8086_war_WarriorRepository$1_2_classLit = createForClass('il.co.codeguru.corewars8086.war', 'WarriorRepository/1', 144);
 function $setLength(this$static){
   var oldLength;
   oldLength = this$static.string.length;
-  0 < oldLength?(this$static.string = this$static.string.substr(0, 0)):0 > oldLength && (this$static.string += valueOf_2(initUnidimensionalArray(C_classLit, $intern_14, 10, -oldLength, 15, 1)));
+  0 < oldLength?(this$static.string = this$static.string.substr(0, 0)):0 > oldLength && (this$static.string += valueOf_2(initUnidimensionalArray(C_classLit, $intern_13, 10, -oldLength, 15, 1)));
 }
 
 $setLength.displayName = 'java.lang.AbstractStringBuilder.$setLength';
@@ -12787,13 +12795,13 @@ function AbstractStringBuilder(string){
 }
 
 AbstractStringBuilder.displayName = 'java.lang.AbstractStringBuilder.AbstractStringBuilder';
-defineClass(78, 1, {121:1});
+defineClass(77, 1, {120:1});
 _.toString_0 = function toString_10(){
   return this.string;
 }
 ;
 _.toString_0.displayName = 'java.lang.AbstractStringBuilder.toString';
-var Ljava_lang_AbstractStringBuilder_2_classLit = createForClass('java.lang', 'AbstractStringBuilder', 78);
+var Ljava_lang_AbstractStringBuilder_2_classLit = createForClass('java.lang', 'AbstractStringBuilder', 77);
 function ArithmeticException(){
   RuntimeException.call(this);
 }
@@ -12804,8 +12812,8 @@ function ArithmeticException_0(){
 }
 
 ArithmeticException_0.displayName = 'java.lang.ArithmeticException.ArithmeticException';
-defineClass(79, 4, $intern_4, ArithmeticException_0);
-var Ljava_lang_ArithmeticException_2_classLit = createForClass('java.lang', 'ArithmeticException', 79);
+defineClass(78, 4, $intern_4, ArithmeticException_0);
+var Ljava_lang_ArithmeticException_2_classLit = createForClass('java.lang', 'ArithmeticException', 78);
 function IndexOutOfBoundsException(){
   RuntimeException.call(this);
 }
@@ -12823,8 +12831,8 @@ function ArrayIndexOutOfBoundsException(){
 }
 
 ArrayIndexOutOfBoundsException.displayName = 'java.lang.ArrayIndexOutOfBoundsException.ArrayIndexOutOfBoundsException';
-defineClass(215, 61, $intern_4, ArrayIndexOutOfBoundsException);
-var Ljava_lang_ArrayIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'ArrayIndexOutOfBoundsException', 215);
+defineClass(214, 61, $intern_4, ArrayIndexOutOfBoundsException);
+var Ljava_lang_ArrayIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'ArrayIndexOutOfBoundsException', 214);
 function ArrayStoreException(){
   RuntimeException.call(this);
 }
@@ -12835,8 +12843,8 @@ function ArrayStoreException_0(message){
 }
 
 ArrayStoreException_0.displayName = 'java.lang.ArrayStoreException.ArrayStoreException';
-defineClass(97, 4, $intern_4, ArrayStoreException, ArrayStoreException_0);
-var Ljava_lang_ArrayStoreException_2_classLit = createForClass('java.lang', 'ArrayStoreException', 97);
+defineClass(96, 4, $intern_4, ArrayStoreException, ArrayStoreException_0);
+var Ljava_lang_ArrayStoreException_2_classLit = createForClass('java.lang', 'ArrayStoreException', 96);
 function $clinit_Boolean(){
   $clinit_Boolean = emptyMethod;
 }
@@ -12879,8 +12887,8 @@ function compareTo_Ljava_lang_Object__I__devirtual$(this$static, other){
 }
 
 compareTo_Ljava_lang_Object__I__devirtual$.displayName = 'java.lang.Boolean.compareTo_Ljava_lang_Object__I__devirtual$';
-booleanCastMap = {3:1, 124:1, 34:1};
-var Ljava_lang_Boolean_2_classLit = createForClass('java.lang', 'Boolean', 124);
+booleanCastMap = {3:1, 123:1, 35:1};
+var Ljava_lang_Boolean_2_classLit = createForClass('java.lang', 'Boolean', 123);
 function digit(c, radix){
   if (radix < 2 || radix > 36) {
     return -1;
@@ -12903,8 +12911,8 @@ function ClassCastException(){
 }
 
 ClassCastException.displayName = 'java.lang.ClassCastException.ClassCastException';
-defineClass(126, 4, $intern_4, ClassCastException);
-var Ljava_lang_ClassCastException_2_classLit = createForClass('java.lang', 'ClassCastException', 126);
+defineClass(125, 4, $intern_4, ClassCastException);
+var Ljava_lang_ClassCastException_2_classLit = createForClass('java.lang', 'ClassCastException', 125);
 function __parseAndValidateInt(s, radix){
   var i, isTooLow, length_0, startIndex, toReturn;
   if (s == null) {
@@ -12921,7 +12929,7 @@ function __parseAndValidateInt(s, radix){
     }
   }
   toReturn = parseInt(s, radix);
-  isTooLow = toReturn < $intern_27;
+  isTooLow = toReturn < $intern_26;
   if (isNaN(toReturn)) {
     throw toJs(new NumberFormatException('For input string: "' + s + '"'));
   }
@@ -13049,8 +13057,8 @@ function compare_3(x_0, y_0){
 }
 
 compare_3.displayName = 'java.lang.Double.compare';
-doubleCastMap = {3:1, 34:1, 125:1, 60:1};
-var Ljava_lang_Double_2_classLit = createForClass('java.lang', 'Double', 125);
+doubleCastMap = {3:1, 35:1, 124:1, 60:1};
+var Ljava_lang_Double_2_classLit = createForClass('java.lang', 'Double', 124);
 function $compareTo_4(this$static, b){
   return compare_3(this$static.value_0, b.value_0);
 }
@@ -13061,14 +13069,14 @@ function Float(value_0){
 }
 
 Float.displayName = 'java.lang.Float.Float';
-defineClass(30, 60, {3:1, 34:1, 30:1, 60:1}, Float);
+defineClass(31, 60, {3:1, 35:1, 31:1, 60:1}, Float);
 _.compareTo = function compareTo_0(b){
-  return $compareTo_4(this, castTo(b, 30));
+  return $compareTo_4(this, castTo(b, 31));
 }
 ;
 _.compareTo.displayName = 'java.lang.Float.compareTo';
 _.equals_0 = function equals_3(o){
-  return instanceOf(o, 30) && castTo(o, 30).value_0 == this.value_0;
+  return instanceOf(o, 31) && castTo(o, 31).value_0 == this.value_0;
 }
 ;
 _.equals_0.displayName = 'java.lang.Float.equals';
@@ -13083,7 +13091,7 @@ _.toString_0 = function toString_12(){
 ;
 _.toString_0.displayName = 'java.lang.Float.toString';
 _.value_0 = 0;
-var Ljava_lang_Float_2_classLit = createForClass('java.lang', 'Float', 30);
+var Ljava_lang_Float_2_classLit = createForClass('java.lang', 'Float', 31);
 function IllegalArgumentException(){
   RuntimeException.call(this);
 }
@@ -13101,8 +13109,8 @@ function IllegalStateException(){
 }
 
 IllegalStateException.displayName = 'java.lang.IllegalStateException.IllegalStateException';
-defineClass(131, 4, $intern_4, IllegalStateException);
-var Ljava_lang_IllegalStateException_2_classLit = createForClass('java.lang', 'IllegalStateException', 131);
+defineClass(130, 4, $intern_4, IllegalStateException);
+var Ljava_lang_IllegalStateException_2_classLit = createForClass('java.lang', 'IllegalStateException', 130);
 function $compareTo_5(this$static, b){
   return compare_4(this$static.value_0, b.value_0);
 }
@@ -13187,7 +13195,7 @@ function valueOf_0(i){
 }
 
 valueOf_0.displayName = 'java.lang.Integer.valueOf';
-defineClass(25, 60, {3:1, 34:1, 25:1, 60:1}, Integer);
+defineClass(25, 60, {3:1, 35:1, 25:1, 60:1}, Integer);
 _.compareTo = function compareTo_1(b){
   return $compareTo_5(this, castTo(b, 25));
 }
@@ -13244,7 +13252,7 @@ function valueOf_1(i){
 }
 
 valueOf_1.displayName = 'java.lang.Long.valueOf';
-defineClass(44, 60, {3:1, 34:1, 44:1, 60:1}, Long);
+defineClass(44, 60, {3:1, 35:1, 44:1, 60:1}, Long);
 _.compareTo = function compareTo_2(b){
   return $compareTo_6(this, castTo(b, 44));
 }
@@ -13274,7 +13282,7 @@ function $clinit_Long$BoxedValues(){
 
 $clinit_Long$BoxedValues.displayName = 'java.lang.Long$BoxedValues.$clinit';
 var boxedValues_0;
-defineClass(293, 1, {});
+defineClass(292, 1, {});
 function NullPointerException(){
   RuntimeException.call(this);
 }
@@ -13300,13 +13308,13 @@ var Ljava_lang_NullPointerException_2_classLit = createForClass('java.lang', 'Nu
 function $clinit_Number$__ParseLong(){
   $clinit_Number$__ParseLong = emptyMethod;
   var i;
-  maxDigitsForRadix = stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_14, 10, 15, [-1, -1, 30, 19, 15, 13, 11, 11, 10, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5]);
-  maxDigitsRadixPower = initUnidimensionalArray(I_classLit, $intern_14, 10, 37, 15, 1);
-  maxLengthForRadix = stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_14, 10, 15, [-1, -1, 63, 40, 32, 28, 25, 23, 21, 20, 19, 19, 18, 18, 17, 17, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 13, 13, 13, 13, 13, 13, 13, 13]);
-  maxValueForRadix = initUnidimensionalArray(J_classLit, $intern_14, 10, 37, 14, 1);
+  maxDigitsForRadix = stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_13, 10, 15, [-1, -1, 30, 19, 15, 13, 11, 11, 10, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5]);
+  maxDigitsRadixPower = initUnidimensionalArray(I_classLit, $intern_13, 10, 37, 15, 1);
+  maxLengthForRadix = stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_13, 10, 15, [-1, -1, 63, 40, 32, 28, 25, 23, 21, 20, 19, 19, 18, 18, 17, 17, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 13, 13, 13, 13, 13, 13, 13, 13]);
+  maxValueForRadix = initUnidimensionalArray(J_classLit, $intern_13, 10, 37, 14, 1);
   for (i = 2; i <= 36; i++) {
     maxDigitsRadixPower[i] = round_int($wnd.Math.pow(i, maxDigitsForRadix[i]));
-    maxValueForRadix[i] = div($intern_28, maxDigitsRadixPower[i]);
+    maxValueForRadix[i] = div($intern_27, maxDigitsRadixPower[i]);
   }
 }
 
@@ -13327,11 +13335,11 @@ function StackTraceElement(methodName, fileName, lineNumber){
 }
 
 StackTraceElement.displayName = 'java.lang.StackTraceElement.StackTraceElement';
-defineClass(33, 1, {3:1, 33:1}, StackTraceElement);
+defineClass(34, 1, {3:1, 34:1}, StackTraceElement);
 _.equals_0 = function equals_6(other){
   var st;
-  if (instanceOf(other, 33)) {
-    st = castTo(other, 33);
+  if (instanceOf(other, 34)) {
+    st = castTo(other, 34);
     return this.lineNumber == st.lineNumber && this.methodName == st.methodName && this.className == st.className && this.fileName == st.fileName;
   }
   return false;
@@ -13349,7 +13357,7 @@ _.toString_0 = function toString_15(){
 ;
 _.toString_0.displayName = 'java.lang.StackTraceElement.toString';
 _.lineNumber = 0;
-var Ljava_lang_StackTraceElement_2_classLit = createForClass('java.lang', 'StackTraceElement', 33);
+var Ljava_lang_StackTraceElement_2_classLit = createForClass('java.lang', 'StackTraceElement', 34);
 function $charAt(this$static, index_0){
   checkCriticalStringElementIndex(index_0, this$static.length);
   return this$static.charCodeAt(index_0);
@@ -13457,7 +13465,7 @@ $replaceAll.displayName = 'java.lang.String.$replaceAll';
 function $split(this$static){
   var compiled, count, lastNonEmpty, lastTrail, matchIndex, matchObj, out, trail;
   compiled = new RegExp('\\n', 'g');
-  out = initUnidimensionalArray(Ljava_lang_String_2_classLit, $intern_12, 2, 0, 6, 1);
+  out = initUnidimensionalArray(Ljava_lang_String_2_classLit, $intern_2, 2, 0, 6, 1);
   count = 0;
   trail = this$static;
   lastTrail = null;
@@ -13523,9 +13531,9 @@ function fromCharCode(array){
 fromCharCode.displayName = 'java.lang.String.fromCharCode';
 function fromCodePoint(codePoint){
   var hiSurrogate, loSurrogate;
-  if (codePoint >= $intern_21) {
-    hiSurrogate = 55296 + (codePoint - $intern_21 >> 10 & 1023) & $intern_0;
-    loSurrogate = 56320 + (codePoint - $intern_21 & 1023) & $intern_0;
+  if (codePoint >= $intern_20) {
+    hiSurrogate = 55296 + (codePoint - $intern_20 >> 10 & 1023) & $intern_0;
+    loSurrogate = 56320 + (codePoint - $intern_20 & 1023) & $intern_0;
     return String.fromCharCode(hiSurrogate) + ('' + String.fromCharCode(loSurrogate));
   }
    else {
@@ -13563,7 +13571,7 @@ function valueOf_3(x_0, count){
 }
 
 valueOf_3.displayName = 'java.lang.String.valueOf';
-stringCastMap = {3:1, 121:1, 34:1, 2:1};
+stringCastMap = {3:1, 120:1, 35:1, 2:1};
 var Ljava_lang_String_2_classLit = createForClass('java.lang', 'String', 2);
 function $append_0(this$static, x_0){
   this$static.string += x_0;
@@ -13616,15 +13624,15 @@ function StringBuilder_1(s){
 }
 
 StringBuilder_1.displayName = 'java.lang.StringBuilder.StringBuilder';
-defineClass(23, 78, {121:1}, StringBuilder, StringBuilder_0, StringBuilder_1);
-var Ljava_lang_StringBuilder_2_classLit = createForClass('java.lang', 'StringBuilder', 23);
+defineClass(22, 77, {120:1}, StringBuilder, StringBuilder_0, StringBuilder_1);
+var Ljava_lang_StringBuilder_2_classLit = createForClass('java.lang', 'StringBuilder', 22);
 function StringIndexOutOfBoundsException(message){
   IndexOutOfBoundsException_0.call(this, message);
 }
 
 StringIndexOutOfBoundsException.displayName = 'java.lang.StringIndexOutOfBoundsException.StringIndexOutOfBoundsException';
-defineClass(95, 61, $intern_4, StringIndexOutOfBoundsException);
-var Ljava_lang_StringIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'StringIndexOutOfBoundsException', 95);
+defineClass(94, 61, $intern_4, StringIndexOutOfBoundsException);
+var Ljava_lang_StringIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'StringIndexOutOfBoundsException', 94);
 function $clinit_System(){
   $clinit_System = emptyMethod;
   err = new PrintStream;
@@ -13669,15 +13677,15 @@ function arraycopy(src_0, srcOfs, dest, destOfs, len){
 }
 
 arraycopy.displayName = 'java.lang.System.arraycopy';
-defineClass(297, 1, {});
+defineClass(296, 1, {});
 var err;
 function UnsupportedOperationException(){
   RuntimeException_1.call(this, 'Remove not supported on this list');
 }
 
 UnsupportedOperationException.displayName = 'java.lang.UnsupportedOperationException.UnsupportedOperationException';
-defineClass(132, 4, $intern_4, UnsupportedOperationException);
-var Ljava_lang_UnsupportedOperationException_2_classLit = createForClass('java.lang', 'UnsupportedOperationException', 132);
+defineClass(131, 4, $intern_4, UnsupportedOperationException);
+var Ljava_lang_UnsupportedOperationException_2_classLit = createForClass('java.lang', 'UnsupportedOperationException', 131);
 function $addAll(this$static, c){
   var changed, e, e$iterator, old;
   checkCriticalNotNull(c);
@@ -13744,7 +13752,7 @@ function $toString_3(this$static){
 }
 
 $toString_3.displayName = 'java.util.AbstractCollection.$toString';
-defineClass(245, 1, {});
+defineClass(244, 1, {});
 _.contains_0 = function contains(o){
   return $advanceToFind(this, o);
 }
@@ -13755,7 +13763,7 @@ _.toString_0 = function toString_16(){
 }
 ;
 _.toString_0.displayName = 'java.util.AbstractCollection.toString';
-var Ljava_util_AbstractCollection_2_classLit = createForClass('java.util', 'AbstractCollection', 245);
+var Ljava_util_AbstractCollection_2_classLit = createForClass('java.util', 'AbstractCollection', 244);
 function $containsEntry(this$static, entry){
   var key, ourValue, value_0;
   key = entry.getKey();
@@ -13781,7 +13789,7 @@ function getEntryValueOrNull(entry){
 }
 
 getEntryValueOrNull.displayName = 'java.util.AbstractMap.getEntryValueOrNull';
-defineClass(247, 1, {119:1});
+defineClass(246, 1, {118:1});
 _.equals_0 = function equals_7(obj){
   var entry, entry$iterator, otherMap;
   if (obj === this) {
@@ -13790,7 +13798,7 @@ _.equals_0 = function equals_7(obj){
   if (!instanceOf(obj, 41)) {
     return false;
   }
-  otherMap = castTo(obj, 119);
+  otherMap = castTo(obj, 118);
   if (this.hashCodeMap.size_0 + this.stringMap.size_0 != otherMap.hashCodeMap.size_0 + otherMap.stringMap.size_0) {
     return false;
   }
@@ -13820,7 +13828,7 @@ _.toString_0 = function toString_17(){
 }
 ;
 _.toString_0.displayName = 'java.util.AbstractMap.toString';
-var Ljava_util_AbstractMap_2_classLit = createForClass('java.util', 'AbstractMap', 247);
+var Ljava_util_AbstractMap_2_classLit = createForClass('java.util', 'AbstractMap', 246);
 function $containsKey(this$static, key){
   return instanceOfString(key)?$hasStringValue(this$static, key):!!$getEntry(this$static.hashCodeMap, key);
 }
@@ -13834,7 +13842,7 @@ $containsValue.displayName = 'java.util.AbstractHashMap.$containsValue';
 function $containsValue_0(value_0, entries){
   var entry, entry$iterator;
   for (entry$iterator = entries.iterator(); entry$iterator.hasNext_0();) {
-    entry = castTo(entry$iterator.next_0(), 32);
+    entry = castTo(entry$iterator.next_0(), 33);
     if ($equals_5(value_0, entry.getValue())) {
       return true;
     }
@@ -13904,9 +13912,9 @@ function AbstractHashMap_1(ignored){
 }
 
 AbstractHashMap_1.displayName = 'java.util.AbstractHashMap.AbstractHashMap';
-defineClass(85, 247, {119:1});
-var Ljava_util_AbstractHashMap_2_classLit = createForClass('java.util', 'AbstractHashMap', 85);
-defineClass(248, 245, {74:1});
+defineClass(84, 246, {118:1});
+var Ljava_util_AbstractHashMap_2_classLit = createForClass('java.util', 'AbstractHashMap', 84);
+defineClass(247, 244, {74:1});
 _.equals_0 = function equals_8(o){
   var other;
   if (o === this) {
@@ -13928,10 +13936,10 @@ _.hashCode_0 = function hashCode_7(){
 }
 ;
 _.hashCode_0.displayName = 'java.util.AbstractSet.hashCode';
-var Ljava_util_AbstractSet_2_classLit = createForClass('java.util', 'AbstractSet', 248);
+var Ljava_util_AbstractSet_2_classLit = createForClass('java.util', 'AbstractSet', 247);
 function $contains(this$static, o){
-  if (instanceOf(o, 32)) {
-    return $containsEntry(this$static.this$01, castTo(o, 32));
+  if (instanceOf(o, 33)) {
+    return $containsEntry(this$static.this$01, castTo(o, 33));
   }
   return false;
 }
@@ -13947,7 +13955,7 @@ function AbstractHashMap$EntrySet(this$0){
 }
 
 AbstractHashMap$EntrySet.displayName = 'java.util.AbstractHashMap$EntrySet.AbstractHashMap$EntrySet';
-defineClass(28, 248, {74:1}, AbstractHashMap$EntrySet);
+defineClass(29, 247, {74:1}, AbstractHashMap$EntrySet);
 _.contains_0 = function contains_0(o){
   return $contains(this, o);
 }
@@ -13963,7 +13971,7 @@ _.size_1 = function size_1(){
 }
 ;
 _.size_1.displayName = 'java.util.AbstractHashMap$EntrySet.size';
-var Ljava_util_AbstractHashMap$EntrySet_2_classLit = createForClass('java.util', 'AbstractHashMap/EntrySet', 28);
+var Ljava_util_AbstractHashMap$EntrySet_2_classLit = createForClass('java.util', 'AbstractHashMap/EntrySet', 29);
 function $$init_24(this$static){
   this$static.stringMapEntries = new InternalStringMap$1(this$static.this$01.stringMap);
   this$static.current = this$static.stringMapEntries;
@@ -13997,7 +14005,7 @@ function $next_1(this$static){
   var rv;
   checkStructuralChange(this$static.this$01, this$static);
   checkCriticalElement(this$static.hasNext);
-  rv = castTo(this$static.current.next_0(), 32);
+  rv = castTo(this$static.current.next_0(), 33);
   this$static.hasNext = $computeHasNext(this$static);
   return rv;
 }
@@ -14012,7 +14020,7 @@ function AbstractHashMap$EntrySetIterator(this$0){
 }
 
 AbstractHashMap$EntrySetIterator.displayName = 'java.util.AbstractHashMap$EntrySetIterator.AbstractHashMap$EntrySetIterator';
-defineClass(29, 1, {}, AbstractHashMap$EntrySetIterator);
+defineClass(30, 1, {}, AbstractHashMap$EntrySetIterator);
 _.next_0 = function next_0(){
   return $next_1(this);
 }
@@ -14024,7 +14032,7 @@ _.hasNext_0 = function hasNext_0(){
 ;
 _.hasNext_0.displayName = 'java.util.AbstractHashMap$EntrySetIterator.hasNext';
 _.hasNext = false;
-var Ljava_util_AbstractHashMap$EntrySetIterator_2_classLit = createForClass('java.util', 'AbstractHashMap/EntrySetIterator', 29);
+var Ljava_util_AbstractHashMap$EntrySetIterator_2_classLit = createForClass('java.util', 'AbstractHashMap/EntrySetIterator', 30);
 function $indexOf_1(this$static, toFind){
   var i, n;
   for (i = 0 , n = this$static.size_1(); i < n; ++i) {
@@ -14041,7 +14049,7 @@ function $iterator_0(this$static){
 }
 
 $iterator_0.displayName = 'java.util.AbstractList.$iterator';
-defineClass(246, 245, {68:1});
+defineClass(245, 244, {68:1});
 _.equals_0 = function equals_9(o){
   var elem, elem$iterator, elemOther, iterOther, other;
   if (o === this) {
@@ -14081,7 +14089,7 @@ _.remove_0 = function remove(index_0){
 }
 ;
 _.remove_0.displayName = 'java.util.AbstractList.remove';
-var Ljava_util_AbstractList_2_classLit = createForClass('java.util', 'AbstractList', 246);
+var Ljava_util_AbstractList_2_classLit = createForClass('java.util', 'AbstractList', 245);
 function $$init_25(this$static){
 }
 
@@ -14110,7 +14118,7 @@ function AbstractList$IteratorImpl(this$0){
 }
 
 AbstractList$IteratorImpl.displayName = 'java.util.AbstractList$IteratorImpl.AbstractList$IteratorImpl';
-defineClass(80, 1, {}, AbstractList$IteratorImpl);
+defineClass(79, 1, {}, AbstractList$IteratorImpl);
 _.hasNext_0 = function hasNext_1(){
   return this.i < this.this$01.size_1();
 }
@@ -14123,7 +14131,7 @@ _.next_0 = function next_1(){
 _.next_0.displayName = 'java.util.AbstractList$IteratorImpl.next';
 _.i = 0;
 _.last = -1;
-var Ljava_util_AbstractList$IteratorImpl_2_classLit = createForClass('java.util', 'AbstractList/IteratorImpl', 80);
+var Ljava_util_AbstractList$IteratorImpl_2_classLit = createForClass('java.util', 'AbstractList/IteratorImpl', 79);
 function AbstractList$ListIteratorImpl(this$0){
   this.this$01 = this$0;
   checkCriticalPositionIndex(this$0.array.length);
@@ -14131,8 +14139,8 @@ function AbstractList$ListIteratorImpl(this$0){
 }
 
 AbstractList$ListIteratorImpl.displayName = 'java.util.AbstractList$ListIteratorImpl.AbstractList$ListIteratorImpl';
-defineClass(143, 80, {}, AbstractList$ListIteratorImpl);
-var Ljava_util_AbstractList$ListIteratorImpl_2_classLit = createForClass('java.util', 'AbstractList/ListIteratorImpl', 143);
+defineClass(142, 79, {}, AbstractList$ListIteratorImpl);
+var Ljava_util_AbstractList$ListIteratorImpl_2_classLit = createForClass('java.util', 'AbstractList/ListIteratorImpl', 142);
 function $iterator_1(this$static){
   var outerIter;
   outerIter = new AbstractHashMap$EntrySetIterator((new AbstractHashMap$EntrySet(this$static.this$01)).this$01);
@@ -14145,7 +14153,7 @@ function AbstractMap$1(this$0){
 }
 
 AbstractMap$1.displayName = 'java.util.AbstractMap$1.AbstractMap$1';
-defineClass(101, 248, {74:1}, AbstractMap$1);
+defineClass(100, 247, {74:1}, AbstractMap$1);
 _.contains_0 = function contains_1(key){
   return $containsKey(this.this$01, key);
 }
@@ -14162,7 +14170,7 @@ _.size_1 = function size_2(){
 }
 ;
 _.size_1.displayName = 'java.util.AbstractMap$1.size';
-var Ljava_util_AbstractMap$1_2_classLit = createForClass('java.util', 'AbstractMap/1', 101);
+var Ljava_util_AbstractMap$1_2_classLit = createForClass('java.util', 'AbstractMap/1', 100);
 function $next_3(this$static){
   var entry;
   entry = $next_1(this$static.val$outerIter2);
@@ -14175,7 +14183,7 @@ function AbstractMap$1$1(val$outerIter){
 }
 
 AbstractMap$1$1.displayName = 'java.util.AbstractMap$1$1.AbstractMap$1$1';
-defineClass(86, 1, {}, AbstractMap$1$1);
+defineClass(85, 1, {}, AbstractMap$1$1);
 _.hasNext_0 = function hasNext_2(){
   return this.val$outerIter2.hasNext;
 }
@@ -14187,7 +14195,7 @@ _.next_0 = function next_2(){
 }
 ;
 _.next_0.displayName = 'java.util.AbstractMap$1$1.next';
-var Ljava_util_AbstractMap$1$1_2_classLit = createForClass('java.util', 'AbstractMap/1/1', 86);
+var Ljava_util_AbstractMap$1$1_2_classLit = createForClass('java.util', 'AbstractMap/1/1', 85);
 function $iterator_2(this$static){
   var outerIter;
   outerIter = new AbstractHashMap$EntrySetIterator((new AbstractHashMap$EntrySet(this$static.this$01)).this$01);
@@ -14200,7 +14208,7 @@ function AbstractMap$2(this$0){
 }
 
 AbstractMap$2.displayName = 'java.util.AbstractMap$2.AbstractMap$2';
-defineClass(70, 245, {}, AbstractMap$2);
+defineClass(70, 244, {}, AbstractMap$2);
 _.contains_0 = function contains_2(value_0){
   return $containsValue(this.this$01, value_0);
 }
@@ -14254,13 +14262,13 @@ function AbstractMap$AbstractEntry(key, value_0){
 }
 
 AbstractMap$AbstractEntry.displayName = 'java.util.AbstractMap$AbstractEntry.AbstractMap$AbstractEntry';
-defineClass(180, 1, $intern_29);
+defineClass(179, 1, $intern_28);
 _.equals_0 = function equals_10(other){
   var entry;
-  if (!instanceOf(other, 32)) {
+  if (!instanceOf(other, 33)) {
     return false;
   }
-  entry = castTo(other, 32);
+  entry = castTo(other, 33);
   return equals_13(this.key_0, entry.getKey()) && equals_13(this.value_0, entry.getValue());
 }
 ;
@@ -14293,22 +14301,22 @@ _.toString_0 = function toString_18(){
 }
 ;
 _.toString_0.displayName = 'java.util.AbstractMap$AbstractEntry.toString';
-var Ljava_util_AbstractMap$AbstractEntry_2_classLit = createForClass('java.util', 'AbstractMap/AbstractEntry', 180);
+var Ljava_util_AbstractMap$AbstractEntry_2_classLit = createForClass('java.util', 'AbstractMap/AbstractEntry', 179);
 function AbstractMap$SimpleEntry(key, value_0){
   this.key_0 = key;
   this.value_0 = value_0;
 }
 
 AbstractMap$SimpleEntry.displayName = 'java.util.AbstractMap$SimpleEntry.AbstractMap$SimpleEntry';
-defineClass(181, 180, $intern_29, AbstractMap$SimpleEntry);
-var Ljava_util_AbstractMap$SimpleEntry_2_classLit = createForClass('java.util', 'AbstractMap/SimpleEntry', 181);
-defineClass(250, 1, $intern_29);
+defineClass(180, 179, $intern_28, AbstractMap$SimpleEntry);
+var Ljava_util_AbstractMap$SimpleEntry_2_classLit = createForClass('java.util', 'AbstractMap/SimpleEntry', 180);
+defineClass(249, 1, $intern_28);
 _.equals_0 = function equals_11(other){
   var entry;
-  if (!instanceOf(other, 32)) {
+  if (!instanceOf(other, 33)) {
     return false;
   }
-  entry = castTo(other, 32);
+  entry = castTo(other, 33);
   return equals_13(this.val$entry2.value[0], entry.getKey()) && equals_13($getValue(this), entry.getValue());
 }
 ;
@@ -14323,7 +14331,7 @@ _.toString_0 = function toString_19(){
 }
 ;
 _.toString_0.displayName = 'java.util.AbstractMapEntry.toString';
-var Ljava_util_AbstractMapEntry_2_classLit = createForClass('java.util', 'AbstractMapEntry', 250);
+var Ljava_util_AbstractMapEntry_2_classLit = createForClass('java.util', 'AbstractMapEntry', 249);
 function $$init_26(this$static){
   this$static.array = initUnidimensionalArray(Ljava_lang_Object_2_classLit, $intern_2, 1, 0, 5, 1);
 }
@@ -14417,7 +14425,7 @@ function ArrayList_0(initialCapacity){
 }
 
 ArrayList_0.displayName = 'java.util.ArrayList.ArrayList';
-defineClass(19, 246, $intern_30, ArrayList, ArrayList_0);
+defineClass(23, 245, $intern_29, ArrayList, ArrayList_0);
 _.contains_0 = function contains_3(o){
   return $indexOf_2(this, o, 0) != -1;
 }
@@ -14443,7 +14451,7 @@ _.size_1 = function size_4(){
 }
 ;
 _.size_1.displayName = 'java.util.ArrayList.size';
-var Ljava_util_ArrayList_2_classLit = createForClass('java.util', 'ArrayList', 19);
+var Ljava_util_ArrayList_2_classLit = createForClass('java.util', 'ArrayList', 23);
 function $$init_27(this$static){
 }
 
@@ -14465,7 +14473,7 @@ function ArrayList$1(this$0){
 }
 
 ArrayList$1.displayName = 'java.util.ArrayList$1.ArrayList$1';
-defineClass(16, 1, {}, ArrayList$1);
+defineClass(18, 1, {}, ArrayList$1);
 _.hasNext_0 = function hasNext_4(){
   return this.i < this.this$01.array.length;
 }
@@ -14478,7 +14486,7 @@ _.next_0 = function next_4(){
 _.next_0.displayName = 'java.util.ArrayList$1.next';
 _.i = 0;
 _.last = -1;
-var Ljava_util_ArrayList$1_2_classLit = createForClass('java.util', 'ArrayList/1', 16);
+var Ljava_util_ArrayList$1_2_classLit = createForClass('java.util', 'ArrayList/1', 18);
 function copyPrimitiveArray(original, copy){
   var copyLen, len;
   len = original.length;
@@ -14573,7 +14581,7 @@ function Arrays$ArrayList(array){
 }
 
 Arrays$ArrayList.displayName = 'java.util.Arrays$ArrayList.Arrays$ArrayList';
-defineClass(142, 246, $intern_30, Arrays$ArrayList);
+defineClass(141, 245, $intern_29, Arrays$ArrayList);
 _.contains_0 = function contains_4(o){
   return $indexOf_1(this, o) != -1;
 }
@@ -14589,7 +14597,7 @@ _.size_1 = function size_5(){
 }
 ;
 _.size_1.displayName = 'java.util.Arrays$ArrayList.size';
-var Ljava_util_Arrays$ArrayList_2_classLit = createForClass('java.util', 'Arrays/ArrayList', 142);
+var Ljava_util_Arrays$ArrayList_2_classLit = createForClass('java.util', 'Arrays/ArrayList', 141);
 function hashCode_12(collection){
   var e, e$iterator, hashCode;
   hashCode = 0;
@@ -14630,9 +14638,9 @@ function Comparators$NaturalOrderComparator(){
 }
 
 Comparators$NaturalOrderComparator.displayName = 'java.util.Comparators$NaturalOrderComparator.Comparators$NaturalOrderComparator';
-defineClass(210, 1, $intern_14, Comparators$NaturalOrderComparator);
+defineClass(209, 1, $intern_13, Comparators$NaturalOrderComparator);
 _.compare = function compare_6(a, b){
-  return $compare_0(castTo(a, 34), castTo(b, 34));
+  return $compare_0(castTo(a, 35), castTo(b, 35));
 }
 ;
 _.compare.displayName = 'java.util.Comparators$NaturalOrderComparator.compare';
@@ -14641,7 +14649,7 @@ _.equals_0 = function equals_12(other){
 }
 ;
 _.equals_0.displayName = 'java.util.Comparators$NaturalOrderComparator.equals';
-var Ljava_util_Comparators$NaturalOrderComparator_2_classLit = createForClass('java.util', 'Comparators/NaturalOrderComparator', 210);
+var Ljava_util_Comparators$NaturalOrderComparator_2_classLit = createForClass('java.util', 'Comparators/NaturalOrderComparator', 209);
 function checkStructuralChange(host, iterator){
   if (iterator.$modCount != host.$modCount) {
     throw toJs(new ConcurrentModificationException);
@@ -14662,15 +14670,15 @@ function ConcurrentModificationException(){
 }
 
 ConcurrentModificationException.displayName = 'java.util.ConcurrentModificationException.ConcurrentModificationException';
-defineClass(221, 4, $intern_4, ConcurrentModificationException);
-var Ljava_util_ConcurrentModificationException_2_classLit = createForClass('java.util', 'ConcurrentModificationException', 221);
+defineClass(220, 4, $intern_4, ConcurrentModificationException);
+var Ljava_util_ConcurrentModificationException_2_classLit = createForClass('java.util', 'ConcurrentModificationException', 220);
 function EmptyStackException(){
   RuntimeException.call(this);
 }
 
 EmptyStackException.displayName = 'java.util.EmptyStackException.EmptyStackException';
-defineClass(110, 4, $intern_4, EmptyStackException);
-var Ljava_util_EmptyStackException_2_classLit = createForClass('java.util', 'EmptyStackException', 110);
+defineClass(109, 4, $intern_4, EmptyStackException);
+var Ljava_util_EmptyStackException_2_classLit = createForClass('java.util', 'EmptyStackException', 109);
 function $equals_5(value1, value2){
   return maskUndefined(value1) === maskUndefined(value2) || value1 != null && equals_Ljava_lang_Object__Z__devirtual$(value1, value2);
 }
@@ -14688,7 +14696,7 @@ function HashMap_0(ignored){
 }
 
 HashMap_0.displayName = 'java.util.HashMap.HashMap';
-defineClass(41, 85, {3:1, 41:1, 119:1}, HashMap, HashMap_0);
+defineClass(41, 84, {3:1, 41:1, 118:1}, HashMap, HashMap_0);
 var Ljava_util_HashMap_2_classLit = createForClass('java.util', 'HashMap', 41);
 function $add_1(this$static, o){
   var old;
@@ -14724,7 +14732,7 @@ function HashSet_0(c){
 }
 
 HashSet_0.displayName = 'java.util.HashSet.HashSet';
-defineClass(106, 248, {3:1, 74:1}, HashSet, HashSet_0);
+defineClass(105, 247, {3:1, 74:1}, HashSet, HashSet_0);
 _.contains_0 = function contains_5(o){
   return $contains_1(this, o);
 }
@@ -14741,7 +14749,7 @@ _.size_1 = function size_6(){
 }
 ;
 _.size_1.displayName = 'java.util.HashSet.size';
-var Ljava_util_HashSet_2_classLit = createForClass('java.util', 'HashSet', 106);
+var Ljava_util_HashSet_2_classLit = createForClass('java.util', 'HashSet', 105);
 function $$init_28(this$static){
   this$static.backingMap = newJsMap();
 }
@@ -14826,14 +14834,14 @@ function InternalHashCodeMap(host){
 }
 
 InternalHashCodeMap.displayName = 'java.util.InternalHashCodeMap.InternalHashCodeMap';
-defineClass(197, 1, {}, InternalHashCodeMap);
+defineClass(196, 1, {}, InternalHashCodeMap);
 _.iterator = function iterator_6(){
   return new InternalHashCodeMap$1(this);
 }
 ;
 _.iterator.displayName = 'java.util.InternalHashCodeMap.iterator';
 _.size_0 = 0;
-var Ljava_util_InternalHashCodeMap_2_classLit = createForClass('java.util', 'InternalHashCodeMap', 197);
+var Ljava_util_InternalHashCodeMap_2_classLit = createForClass('java.util', 'InternalHashCodeMap', 196);
 function $$init_29(this$static){
   this$static.chains = this$static.this$01.backingMap.entries();
   this$static.chain = new Array;
@@ -14847,7 +14855,7 @@ function InternalHashCodeMap$1(this$0){
 }
 
 InternalHashCodeMap$1.displayName = 'java.util.InternalHashCodeMap$1.InternalHashCodeMap$1';
-defineClass(104, 1, {}, InternalHashCodeMap$1);
+defineClass(103, 1, {}, InternalHashCodeMap$1);
 _.next_0 = function next_5(){
   return this.lastEntry = this.chain[this.itemIndex++] , this.lastEntry;
 }
@@ -14870,7 +14878,7 @@ _.hasNext_0 = function hasNext_5(){
 _.hasNext_0.displayName = 'java.util.InternalHashCodeMap$1.hasNext';
 _.itemIndex = 0;
 _.lastEntry = null;
-var Ljava_util_InternalHashCodeMap$1_2_classLit = createForClass('java.util', 'InternalHashCodeMap/1', 104);
+var Ljava_util_InternalHashCodeMap$1_2_classLit = createForClass('java.util', 'InternalHashCodeMap/1', 103);
 function $delete(this$static, key){
   var fn;
   fn = this$static['delete'];
@@ -15044,7 +15052,7 @@ function InternalStringMap(host){
 }
 
 InternalStringMap.displayName = 'java.util.InternalStringMap.InternalStringMap';
-defineClass(198, 1, {}, InternalStringMap);
+defineClass(197, 1, {}, InternalStringMap);
 _.iterator = function iterator_7(){
   return new InternalStringMap$1(this);
 }
@@ -15052,7 +15060,7 @@ _.iterator = function iterator_7(){
 _.iterator.displayName = 'java.util.InternalStringMap.iterator';
 _.size_0 = 0;
 _.valueMod = 0;
-var Ljava_util_InternalStringMap_2_classLit = createForClass('java.util', 'InternalStringMap', 198);
+var Ljava_util_InternalStringMap_2_classLit = createForClass('java.util', 'InternalStringMap', 197);
 function $$init_31(this$static){
   this$static.entries_0 = this$static.this$01.backingMap.entries();
   this$static.current = this$static.entries_0.next();
@@ -15073,7 +15081,7 @@ function InternalStringMap$1(this$0){
 }
 
 InternalStringMap$1.displayName = 'java.util.InternalStringMap$1.InternalStringMap$1';
-defineClass(105, 1, {}, InternalStringMap$1);
+defineClass(104, 1, {}, InternalStringMap$1);
 _.next_0 = function next_6(){
   return this.last = this.current , this.current = this.entries_0.next() , new InternalStringMap$2(this.this$01, this.last, this.this$01.valueMod);
 }
@@ -15084,7 +15092,7 @@ _.hasNext_0 = function hasNext_6(){
 }
 ;
 _.hasNext_0.displayName = 'java.util.InternalStringMap$1.hasNext';
-var Ljava_util_InternalStringMap$1_2_classLit = createForClass('java.util', 'InternalStringMap/1', 105);
+var Ljava_util_InternalStringMap$1_2_classLit = createForClass('java.util', 'InternalStringMap/1', 104);
 function $getKey(this$static){
   return this$static.val$entry2.value[0];
 }
@@ -15105,7 +15113,7 @@ function InternalStringMap$2(this$0, val$entry, val$lastValueMod){
 }
 
 InternalStringMap$2.displayName = 'java.util.InternalStringMap$2.InternalStringMap$2';
-defineClass(199, 250, $intern_29, InternalStringMap$2);
+defineClass(198, 249, $intern_28, InternalStringMap$2);
 _.getKey = function getKey_0(){
   return this.val$entry2.value[0];
 }
@@ -15122,14 +15130,14 @@ _.setValue = function setValue_0(object){
 ;
 _.setValue.displayName = 'java.util.InternalStringMap$2.setValue';
 _.val$lastValueMod3 = 0;
-var Ljava_util_InternalStringMap$2_2_classLit = createForClass('java.util', 'InternalStringMap/2', 199);
+var Ljava_util_InternalStringMap$2_2_classLit = createForClass('java.util', 'InternalStringMap/2', 198);
 function NoSuchElementException(){
   RuntimeException.call(this);
 }
 
 NoSuchElementException.displayName = 'java.util.NoSuchElementException.NoSuchElementException';
-defineClass(206, 4, $intern_4, NoSuchElementException);
-var Ljava_util_NoSuchElementException_2_classLit = createForClass('java.util', 'NoSuchElementException', 206);
+defineClass(205, 4, $intern_4, NoSuchElementException);
+var Ljava_util_NoSuchElementException_2_classLit = createForClass('java.util', 'NoSuchElementException', 205);
 function equals_13(a, b){
   return maskUndefined(a) === maskUndefined(b) || a != null && equals_Ljava_lang_Object__Z__devirtual$(a, b);
 }
@@ -15143,8 +15151,8 @@ hashCode_14.displayName = 'java.util.Objects.hashCode';
 function $clinit_Random(){
   $clinit_Random = emptyMethod;
   var i, i0, twoToTheXMinus24Tmp, twoToTheXMinus48Tmp;
-  twoToTheXMinus24 = initUnidimensionalArray(D_classLit, $intern_14, 10, 25, 15, 1);
-  twoToTheXMinus48 = initUnidimensionalArray(D_classLit, $intern_14, 10, 33, 15, 1);
+  twoToTheXMinus24 = initUnidimensionalArray(D_classLit, $intern_13, 10, 25, 15, 1);
+  twoToTheXMinus48 = initUnidimensionalArray(D_classLit, $intern_13, 10, 33, 15, 1);
   twoToTheXMinus48Tmp = 1.52587890625E-5;
   for (i0 = 32; i0 >= 0; i0--) {
     twoToTheXMinus48[i0] = twoToTheXMinus48Tmp;
@@ -15175,12 +15183,12 @@ function $nextInt(this$static, n){
 $nextInt.displayName = 'java.util.Random.$nextInt';
 function $nextInternal(this$static){
   var carry, dval, h, hi, l, lo;
-  hi = this$static.seedhi * $intern_31 + this$static.seedlo * 1502;
-  lo = this$static.seedlo * $intern_31 + 11;
-  carry = $wnd.Math.floor(lo * $intern_32);
+  hi = this$static.seedhi * $intern_30 + this$static.seedlo * 1502;
+  lo = this$static.seedlo * $intern_30 + 11;
+  carry = $wnd.Math.floor(lo * $intern_31);
   hi += carry;
-  lo -= carry * $intern_33;
-  hi %= $intern_33;
+  lo -= carry * $intern_32;
+  hi %= $intern_32;
   this$static.seedhi = hi;
   this$static.seedlo = lo;
   h = this$static.seedhi * 128;
@@ -15193,12 +15201,12 @@ function $nextInternal(this$static){
 $nextInternal.displayName = 'java.util.Random.$nextInternal';
 function $setSeed_1(this$static, seedhi, seedlo){
   this$static.seedhi = seedhi ^ 1502;
-  this$static.seedlo = seedlo ^ $intern_31;
+  this$static.seedlo = seedlo ^ $intern_30;
 }
 
 $setSeed_1.displayName = 'java.util.Random.$setSeed';
 function $setSeed_2(this$static, seed){
-  $setSeed_1(this$static, toInt_0(and_0(shr_0(seed, 24), $intern_34)), toInt_0(and_0(seed, $intern_34)));
+  $setSeed_1(this$static, toInt_0(and_0(shr_0(seed, 24), $intern_33)), toInt_0(and_0(seed, $intern_33)));
 }
 
 $setSeed_2.displayName = 'java.util.Random.$setSeed';
@@ -15206,18 +15214,18 @@ function Random(){
   $clinit_Random();
   var hi, lo, seed;
   seed = uniqueSeed++ + Date.now();
-  hi = round_int($wnd.Math.floor(seed * $intern_32)) & $intern_34;
-  lo = round_int(seed - hi * $intern_33);
+  hi = round_int($wnd.Math.floor(seed * $intern_31)) & $intern_33;
+  lo = round_int(seed - hi * $intern_32);
   this.seedhi = hi ^ 1502;
-  this.seedlo = lo ^ $intern_31;
+  this.seedlo = lo ^ $intern_30;
 }
 
 Random.displayName = 'java.util.Random.Random';
-defineClass(214, 1, {}, Random);
+defineClass(213, 1, {}, Random);
 _.seedhi = 0;
 _.seedlo = 0;
 var twoToTheXMinus24, twoToTheXMinus48, uniqueSeed = 0;
-var Ljava_util_Random_2_classLit = createForClass('java.util', 'Random', 214);
+var Ljava_util_Random_2_classLit = createForClass('java.util', 'Random', 213);
 function $get_7(this$static, index_0){
   checkArrayElementIndex(index_0, this$static.arrayList.array.length);
   return $get_4(this$static.arrayList, index_0);
@@ -15247,7 +15255,7 @@ function checkArrayElementIndex(index_0, size_0){
 }
 
 checkArrayElementIndex.displayName = 'java.util.Vector.checkArrayElementIndex';
-defineClass(203, 246, $intern_30);
+defineClass(202, 245, $intern_29);
 _.contains_0 = function contains_6(elem){
   return $indexOf_2(this.arrayList, elem, 0) != -1;
 }
@@ -15278,7 +15286,7 @@ _.toString_0 = function toString_20(){
 }
 ;
 _.toString_0.displayName = 'java.util.Vector.toString';
-var Ljava_util_Vector_2_classLit = createForClass('java.util', 'Vector', 203);
+var Ljava_util_Vector_2_classLit = createForClass('java.util', 'Vector', 202);
 function $peek(this$static){
   var sz;
   sz = this$static.arrayList.array.length;
@@ -15314,8 +15322,8 @@ function Stack(){
 }
 
 Stack.displayName = 'java.util.Stack.Stack';
-defineClass(204, 203, $intern_30, Stack);
-var Ljava_util_Stack_2_classLit = createForClass('java.util', 'Stack', 204);
+defineClass(203, 202, $intern_29, Stack);
+var Ljava_util_Stack_2_classLit = createForClass('java.util', 'Stack', 203);
 function $add_2(this$static, newElement){
   !this$static.builder?(this$static.builder = new StringBuilder_1(this$static.prefix)):$append_4(this$static.builder, this$static.delimiter);
   $append_2(this$static.builder, newElement);
@@ -15336,13 +15344,13 @@ function StringJoiner(prefix, suffix){
 }
 
 StringJoiner.displayName = 'java.util.StringJoiner.StringJoiner';
-defineClass(94, 1, {}, StringJoiner);
+defineClass(93, 1, {}, StringJoiner);
 _.toString_0 = function toString_21(){
   return !this.builder?this.emptyValue:this.suffix.length == 0?this.builder.string:this.builder.string + ('' + this.suffix);
 }
 ;
 _.toString_0.displayName = 'java.util.StringJoiner.toString';
-var Ljava_util_StringJoiner_2_classLit = createForClass('java.util', 'StringJoiner', 94);
+var Ljava_util_StringJoiner_2_classLit = createForClass('java.util', 'StringJoiner', 93);
 function copy_0(src_0, srcOfs, dest, destOfs, len){
   var batchEnd, batchStart, destArray, end, spliceArgs;
   if (maskUndefined(src_0) === maskUndefined(dest)) {
@@ -15367,7 +15375,7 @@ function removeFrom(array, index_0){
 }
 
 removeFrom.displayName = 'javaemul.internal.ArrayHelper.removeFrom';
-defineClass(295, 1, {});
+defineClass(294, 1, {});
 function stampJavaTypeInfo_1(array, referenceType){
   return getElementTypeCategory(referenceType) != 10 && stampJavaTypeInfo(getClass__Ljava_lang_Class___devirtual$(referenceType), referenceType.castableTypeMap, referenceType.__elementTypeId$, getElementTypeCategory(referenceType), array) , array;
 }
@@ -15540,7 +15548,7 @@ function unsafeCastToDouble(number){
 }
 
 unsafeCastToDouble.displayName = 'javaemul.internal.JsUtils.unsafeCastToDouble';
-defineClass(292, 1, {});
+defineClass(291, 1, {});
 function getHashCode(o){
   return o.$H || (o.$H = ++nextHashId);
 }
@@ -15605,14 +15613,14 @@ function increment(){
 
 increment.displayName = 'javaemul.internal.StringHashCache.increment';
 var back_0, count_0 = 0, front;
-defineClass(675, 1, {});
+defineClass(674, 1, {});
 function AbstractIntegerDistribution(rng){
   this.random = rng;
 }
 
 AbstractIntegerDistribution.displayName = 'org.apache.commons.math3.distribution.AbstractIntegerDistribution.AbstractIntegerDistribution';
-defineClass(222, 1, {});
-var Lorg_apache_commons_math3_distribution_AbstractIntegerDistribution_2_classLit = createForClass('org.apache.commons.math3.distribution', 'AbstractIntegerDistribution', 222);
+defineClass(221, 1, {});
+var Lorg_apache_commons_math3_distribution_AbstractIntegerDistribution_2_classLit = createForClass('org.apache.commons.math3.distribution', 'AbstractIntegerDistribution', 221);
 function $sample(this$static){
   var max_0, r;
   max_0 = this$static.upper - this$static.lower + 1;
@@ -15640,10 +15648,10 @@ function UniformIntegerDistribution(rng, upper){
 }
 
 UniformIntegerDistribution.displayName = 'org.apache.commons.math3.distribution.UniformIntegerDistribution.UniformIntegerDistribution';
-defineClass(223, 222, {}, UniformIntegerDistribution);
+defineClass(222, 221, {}, UniformIntegerDistribution);
 _.lower = 0;
 _.upper = 0;
-var Lorg_apache_commons_math3_distribution_UniformIntegerDistribution_2_classLit = createForClass('org.apache.commons.math3.distribution', 'UniformIntegerDistribution', 223);
+var Lorg_apache_commons_math3_distribution_UniformIntegerDistribution_2_classLit = createForClass('org.apache.commons.math3.distribution', 'UniformIntegerDistribution', 222);
 function MathArithmeticException(){
   ArithmeticException.call(this);
   new ExceptionContext;
@@ -15656,7 +15664,7 @@ function MathArithmeticException_0(){
 }
 
 MathArithmeticException_0.displayName = 'org.apache.commons.math3.exception.MathArithmeticException.MathArithmeticException';
-defineClass(66, 79, $intern_4, MathArithmeticException, MathArithmeticException_0);
+defineClass(66, 78, $intern_4, MathArithmeticException, MathArithmeticException_0);
 _.getLocalizedMessage = function getLocalizedMessage_0(){
   return null;
 }
@@ -15674,7 +15682,7 @@ function MathIllegalArgumentException(){
 }
 
 MathIllegalArgumentException.displayName = 'org.apache.commons.math3.exception.MathIllegalArgumentException.MathIllegalArgumentException';
-defineClass(212, 52, $intern_4);
+defineClass(211, 52, $intern_4);
 _.getLocalizedMessage = function getLocalizedMessage_1(){
   return null;
 }
@@ -15685,7 +15693,7 @@ _.getMessage = function getMessage_2(){
 }
 ;
 _.getMessage.displayName = 'org.apache.commons.math3.exception.MathIllegalArgumentException.getMessage';
-var Lorg_apache_commons_math3_exception_MathIllegalArgumentException_2_classLit = createForClass('org.apache.commons.math3.exception', 'MathIllegalArgumentException', 212);
+var Lorg_apache_commons_math3_exception_MathIllegalArgumentException_2_classLit = createForClass('org.apache.commons.math3.exception', 'MathIllegalArgumentException', 211);
 function $clinit_MathIllegalNumberException(){
   $clinit_MathIllegalNumberException = emptyMethod;
   valueOf_0(0);
@@ -15698,8 +15706,8 @@ function MathIllegalNumberException(){
 }
 
 MathIllegalNumberException.displayName = 'org.apache.commons.math3.exception.MathIllegalNumberException.MathIllegalNumberException';
-defineClass(114, 212, $intern_4);
-var Lorg_apache_commons_math3_exception_MathIllegalNumberException_2_classLit = createForClass('org.apache.commons.math3.exception', 'MathIllegalNumberException', 114);
+defineClass(113, 211, $intern_4);
+var Lorg_apache_commons_math3_exception_MathIllegalNumberException_2_classLit = createForClass('org.apache.commons.math3.exception', 'MathIllegalNumberException', 113);
 function NumberIsTooSmallException(){
   NumberIsTooSmallException_0.call(this);
 }
@@ -15710,7 +15718,7 @@ function NumberIsTooSmallException_0(){
 }
 
 NumberIsTooSmallException_0.displayName = 'org.apache.commons.math3.exception.NumberIsTooSmallException.NumberIsTooSmallException';
-defineClass(71, 114, $intern_4);
+defineClass(71, 113, $intern_4);
 var Lorg_apache_commons_math3_exception_NumberIsTooSmallException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NumberIsTooSmallException', 71);
 function NotPositiveException(){
   $clinit_MathIllegalNumberException();
@@ -15718,8 +15726,8 @@ function NotPositiveException(){
 }
 
 NotPositiveException.displayName = 'org.apache.commons.math3.exception.NotPositiveException.NotPositiveException';
-defineClass(213, 71, $intern_4, NotPositiveException);
-var Lorg_apache_commons_math3_exception_NotPositiveException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NotPositiveException', 213);
+defineClass(212, 71, $intern_4, NotPositiveException);
+var Lorg_apache_commons_math3_exception_NotPositiveException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NotPositiveException', 212);
 function NotStrictlyPositiveException(){
   $clinit_MathIllegalNumberException();
   NumberIsTooSmallException_0.call(this);
@@ -15732,16 +15740,16 @@ function NotStrictlyPositiveException_0(){
 }
 
 NotStrictlyPositiveException_0.displayName = 'org.apache.commons.math3.exception.NotStrictlyPositiveException.NotStrictlyPositiveException';
-defineClass(115, 71, $intern_4, NotStrictlyPositiveException, NotStrictlyPositiveException_0);
-var Lorg_apache_commons_math3_exception_NotStrictlyPositiveException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NotStrictlyPositiveException', 115);
+defineClass(114, 71, $intern_4, NotStrictlyPositiveException, NotStrictlyPositiveException_0);
+var Lorg_apache_commons_math3_exception_NotStrictlyPositiveException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NotStrictlyPositiveException', 114);
 function NumberIsTooLargeException(){
   $clinit_MathIllegalNumberException();
   MathIllegalNumberException.call(this);
 }
 
 NumberIsTooLargeException.displayName = 'org.apache.commons.math3.exception.NumberIsTooLargeException.NumberIsTooLargeException';
-defineClass(89, 114, $intern_4, NumberIsTooLargeException);
-var Lorg_apache_commons_math3_exception_NumberIsTooLargeException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NumberIsTooLargeException', 89);
+defineClass(88, 113, $intern_4, NumberIsTooLargeException);
+var Lorg_apache_commons_math3_exception_NumberIsTooLargeException_2_classLit = createForClass('org.apache.commons.math3.exception', 'NumberIsTooLargeException', 88);
 function ExceptionContext(){
   new ArrayList;
   new ArrayList;
@@ -15749,8 +15757,8 @@ function ExceptionContext(){
 }
 
 ExceptionContext.displayName = 'org.apache.commons.math3.exception.util.ExceptionContext.ExceptionContext';
-defineClass(90, 1, {}, ExceptionContext);
-var Lorg_apache_commons_math3_exception_util_ExceptionContext_2_classLit = createForClass('org.apache.commons.math3.exception.util', 'ExceptionContext', 90);
+defineClass(89, 1, {}, ExceptionContext);
+var Lorg_apache_commons_math3_exception_util_ExceptionContext_2_classLit = createForClass('org.apache.commons.math3.exception.util', 'ExceptionContext', 89);
 function $nextInt_0(this$static, n){
   var bits, val;
   if (n > 0) {
@@ -15768,15 +15776,15 @@ function $nextInt_0(this$static, n){
 }
 
 $nextInt_0.displayName = 'org.apache.commons.math3.random.BitsStreamGenerator.$nextInt';
-defineClass(252, 1, {});
-var Lorg_apache_commons_math3_random_BitsStreamGenerator_2_classLit = createForClass('org.apache.commons.math3.random', 'BitsStreamGenerator', 252);
+defineClass(251, 1, {});
+var Lorg_apache_commons_math3_random_BitsStreamGenerator_2_classLit = createForClass('org.apache.commons.math3.random', 'BitsStreamGenerator', 251);
 function $setSeed_3(this$static, seed){
   var i, l;
   arraycopy(seed, 0, this$static.v, 0, $wnd.Math.min(seed.length, this$static.v.length));
   if (seed.length < this$static.v.length) {
     for (i = seed.length; i < this$static.v.length; ++i) {
       l = this$static.v[i - seed.length];
-      this$static.v[i] = toInt_0(and_0(add_1(mul_0(1812433253, xor_0(l, shr_0(l, 30))), i), $intern_35));
+      this$static.v[i] = toInt_0(and_0(add_1(mul_0(1812433253, xor_0(l, shr_0(l, 30))), i), $intern_34));
     }
   }
   this$static.index_0 = 0;
@@ -15784,19 +15792,19 @@ function $setSeed_3(this$static, seed){
 
 $setSeed_3.displayName = 'org.apache.commons.math3.random.AbstractWell.$setSeed';
 function AbstractWell(seed){
-  AbstractWell_0.call(this, stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_14, 10, 15, [toInt_0(createLongEmul(shru(isSmallLong0(seed)?toBigLong(seed):seed, 32))), toInt_0(and_0(seed, $intern_35))]));
+  AbstractWell_0.call(this, stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_13, 10, 15, [toInt_0(createLongEmul(shru(isSmallLong0(seed)?toBigLong(seed):seed, 32))), toInt_0(and_0(seed, $intern_34))]));
 }
 
 AbstractWell.displayName = 'org.apache.commons.math3.random.AbstractWell.AbstractWell';
 function AbstractWell_0(seed){
   var j;
-  this.v = initUnidimensionalArray(I_classLit, $intern_14, 10, 624, 15, 1);
+  this.v = initUnidimensionalArray(I_classLit, $intern_13, 10, 624, 15, 1);
   this.index_0 = 0;
-  this.iRm1 = initUnidimensionalArray(I_classLit, $intern_14, 10, 624, 15, 1);
-  this.iRm2 = initUnidimensionalArray(I_classLit, $intern_14, 10, 624, 15, 1);
-  this.i1 = initUnidimensionalArray(I_classLit, $intern_14, 10, 624, 15, 1);
-  this.i2 = initUnidimensionalArray(I_classLit, $intern_14, 10, 624, 15, 1);
-  this.i3 = initUnidimensionalArray(I_classLit, $intern_14, 10, 624, 15, 1);
+  this.iRm1 = initUnidimensionalArray(I_classLit, $intern_13, 10, 624, 15, 1);
+  this.iRm2 = initUnidimensionalArray(I_classLit, $intern_13, 10, 624, 15, 1);
+  this.i1 = initUnidimensionalArray(I_classLit, $intern_13, 10, 624, 15, 1);
+  this.i2 = initUnidimensionalArray(I_classLit, $intern_13, 10, 624, 15, 1);
+  this.i3 = initUnidimensionalArray(I_classLit, $intern_13, 10, 624, 15, 1);
   for (j = 0; j < 624; ++j) {
     this.iRm1[j] = (j + 624 - 1) % 624;
     this.iRm2[j] = (j + 624 - 2) % 624;
@@ -15808,9 +15816,9 @@ function AbstractWell_0(seed){
 }
 
 AbstractWell_0.displayName = 'org.apache.commons.math3.random.AbstractWell.AbstractWell';
-defineClass(113, 252, {});
+defineClass(112, 251, {});
 _.index_0 = 0;
-var Lorg_apache_commons_math3_random_AbstractWell_2_classLit = createForClass('org.apache.commons.math3.random', 'AbstractWell', 113);
+var Lorg_apache_commons_math3_random_AbstractWell_2_classLit = createForClass('org.apache.commons.math3.random', 'AbstractWell', 112);
 function $$init_32(this$static){
 }
 
@@ -15830,7 +15838,7 @@ function $nextPermutation(this$static, n, k){
   }
   index_0 = sequence(n);
   shuffle(index_0, this$static.rand);
-  return output = initUnidimensionalArray(I_classLit, $intern_14, 10, k, 15, 1) , arraycopy(index_0, 0, output, 0, $wnd.Math.min(k, index_0.length)) , output;
+  return output = initUnidimensionalArray(I_classLit, $intern_13, 10, k, 15, 1) , arraycopy(index_0, 0, output, 0, $wnd.Math.min(k, index_0.length)) , output;
 }
 
 $nextPermutation.displayName = 'org.apache.commons.math3.random.RandomDataGenerator.$nextPermutation';
@@ -15838,9 +15846,9 @@ function RandomDataGenerator(){
 }
 
 RandomDataGenerator.displayName = 'org.apache.commons.math3.random.RandomDataGenerator.RandomDataGenerator';
-defineClass(205, 1, {}, RandomDataGenerator);
+defineClass(204, 1, {}, RandomDataGenerator);
 _.rand = null;
-var Lorg_apache_commons_math3_random_RandomDataGenerator_2_classLit = createForClass('org.apache.commons.math3.random', 'RandomDataGenerator', 205);
+var Lorg_apache_commons_math3_random_RandomDataGenerator_2_classLit = createForClass('org.apache.commons.math3.random', 'RandomDataGenerator', 204);
 function $next_7(this$static, bits){
   var indexRm1, indexRm2, v0, vM1, vM2, vM3, z0, z1, z2, z3, z4;
   indexRm1 = this$static.iRm1[this$static.index_0];
@@ -15849,14 +15857,14 @@ function $next_7(this$static, bits){
   vM1 = this$static.v[this$static.i1[this$static.index_0]];
   vM2 = this$static.v[this$static.i2[this$static.index_0]];
   vM3 = this$static.v[this$static.i3[this$static.index_0]];
-  z0 = $intern_27 & this$static.v[indexRm1] ^ $intern_1 & this$static.v[indexRm2];
+  z0 = $intern_26 & this$static.v[indexRm1] ^ $intern_1 & this$static.v[indexRm2];
   z1 = v0 ^ v0 << 25 ^ (vM1 ^ vM1 >>> 27);
   z2 = vM2 >>> 9 ^ (vM3 ^ vM3 >>> 1);
   z3 = z1 ^ z2;
   z4 = z0 ^ (z1 ^ z1 << 9) ^ (z2 ^ z2 << 21) ^ (z3 ^ z3 >>> 21);
   this$static.v[this$static.index_0] = z3;
   this$static.v[indexRm1] = z4;
-  this$static.v[indexRm2] &= $intern_27;
+  this$static.v[indexRm2] &= $intern_26;
   this$static.index_0 = indexRm1;
   z4 ^= z4 << 7 & -462547200;
   z4 ^= z4 << 15 & -1685684224;
@@ -15865,18 +15873,18 @@ function $next_7(this$static, bits){
 
 $next_7.displayName = 'org.apache.commons.math3.random.Well19937c.$next';
 function Well19937c(seed){
-  AbstractWell_0.call(this, stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_14, 10, 15, [toInt_0(createLongEmul(shru(isSmallLong0(seed)?toBigLong(seed):seed, 32))), toInt_0(and_0(seed, $intern_35))]));
+  AbstractWell_0.call(this, stampJavaTypeInfo(getClassLiteralForArray(I_classLit, 1), $intern_13, 10, 15, [toInt_0(createLongEmul(shru(isSmallLong0(seed)?toBigLong(seed):seed, 32))), toInt_0(and_0(seed, $intern_34))]));
 }
 
 Well19937c.displayName = 'org.apache.commons.math3.random.Well19937c.Well19937c';
-defineClass(211, 113, {}, Well19937c);
-var Lorg_apache_commons_math3_random_Well19937c_2_classLit = createForClass('org.apache.commons.math3.random', 'Well19937c', 211);
+defineClass(210, 112, {}, Well19937c);
+var Lorg_apache_commons_math3_random_Well19937c_2_classLit = createForClass('org.apache.commons.math3.random', 'Well19937c', 210);
 function gcd(p, q){
   var k, t, u, v;
   u = p;
   v = q;
   if (compare_0(p, 0) == 0 || compare_0(q, 0) == 0) {
-    if (eq(p, $intern_36) || eq(q, $intern_36)) {
+    if (eq(p, $intern_35) || eq(q, $intern_35)) {
       throw toJs((stampJavaTypeInfo(getClassLiteralForArray(Ljava_lang_Object_2_classLit, 1), $intern_2, 1, 5, [valueOf_1(p), valueOf_1(q)]) , new MathArithmeticException_0));
     }
     return add_1(compare_0(p, 0) < 0?neg_0(p):p, compare_0(q, 0) < 0?neg_0(q):q);
@@ -15913,7 +15921,7 @@ function mulAndCheck(a, b){
    else {
     if (compare_0(a, 0) < 0) {
       if (compare_0(b, 0) < 0) {
-        if (gte_0(a, div($intern_28, b))) {
+        if (gte_0(a, div($intern_27, b))) {
           ret = mul_0(a, b);
         }
          else {
@@ -15921,7 +15929,7 @@ function mulAndCheck(a, b){
         }
       }
        else if (compare_0(b, 0) > 0) {
-        if (lte(div($intern_36, b), a)) {
+        if (lte(div($intern_35, b), a)) {
           ret = mul_0(a, b);
         }
          else {
@@ -15933,7 +15941,7 @@ function mulAndCheck(a, b){
       }
     }
      else if (compare_0(a, 0) > 0) {
-      if (lte(a, div($intern_28, b))) {
+      if (lte(a, div($intern_27, b))) {
         ret = mul_0(a, b);
       }
        else {
@@ -16000,7 +16008,7 @@ function checkBinomial(n, k){
 checkBinomial.displayName = 'org.apache.commons.math3.util.CombinatoricsUtils.checkBinomial';
 function copyOf(source, len){
   var output;
-  output = initUnidimensionalArray(I_classLit, $intern_14, 10, len, 15, 1);
+  output = initUnidimensionalArray(I_classLit, $intern_13, 10, len, 15, 1);
   arraycopy(source, 0, output, 0, $wnd.Math.min(len, source.length));
   return output;
 }
@@ -16008,7 +16016,7 @@ function copyOf(source, len){
 copyOf.displayName = 'org.apache.commons.math3.util.MathArrays.copyOf';
 function sequence(size_0){
   var a, i;
-  a = initUnidimensionalArray(I_classLit, $intern_14, 10, size_0, 15, 1);
+  a = initUnidimensionalArray(I_classLit, $intern_13, 10, size_0, 15, 1);
   for (i = 0; i < size_0; i++) {
     a[i] = i;
   }

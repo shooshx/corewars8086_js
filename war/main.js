@@ -601,11 +601,14 @@ function triggerDebug() {
             var uz = g_usedZnums[uzi]
             document.getElementById("player_erase_z" + uz).removeAttribute("disabled")
         }
-        for(var clbl in g_codeButtonLabels) {
-            var lbl = g_codeButtonLabels[clbl]
-            document.getElementById(lbl).style.boxShadow = ''
-        }
+        clear_code_buttons_colors()
+    }
+}
 
+function clear_code_buttons_colors() {
+    for(var clbl in g_codeButtonLabels) {
+        var lbl = g_codeButtonLabels[clbl]
+        document.getElementById(lbl).style.boxShadow = ''
     }
 }
 
@@ -995,6 +998,7 @@ function openCompete() {
         gray_out_debugger.style.opacity = 0;
         debugCheckbox.removeAttribute("disabled");
         debugBtn.removeAttribute("disabled");
+        clear_code_buttons_colors()
     }
 }
 
@@ -1036,4 +1040,11 @@ function triggerAbout(v, ev) {
     }
 
     aboutWin.onclick = eventStopProp
+}
+
+function show_error() {
+
+}
+function hide_error() {
+
 }
