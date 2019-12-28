@@ -45,7 +45,7 @@ body {
     box-shadow: rgba(255, 255, 255, 0.2) 0 0.1em 0, inset rgba(0, 0, 0, 0.3) 0px 0.25em 1em;
     color: #fff;
     background-color: #dfdfdf;
-    background-image: linear-gradient(to bottom, #479ceb, #1067c1);
+    background-image: linear-gradient(to bottom, #aba8a8, #676565);
 }
 .sc-btn:checked  {
 
@@ -1155,3 +1155,4 @@ h3 {
     position: relative;
     width: 709px;
 }
+

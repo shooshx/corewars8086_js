@@ -209,7 +209,7 @@ public class PlayersPanel
 
     public native void setPressedCodeBut(String label, int num) /*-{
         var idd = "sel_code_w" + num + "_" + label
-        console.log("~~" + idd)
+        //console.log("~~" + idd)
         $wnd.document.getElementById(idd).checked = true;
     }-*/;
 

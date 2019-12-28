@@ -1,7 +1,5 @@
 important
-- checkboxes
 - errors to gui
-- colors
 - save
 - checkbox disable zombies
 

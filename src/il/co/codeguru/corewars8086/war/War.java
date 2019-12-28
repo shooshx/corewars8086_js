@@ -1,6 +1,7 @@
 package il.co.codeguru.corewars8086.war;
 
 import il.co.codeguru.corewars8086.cpu.CpuException;
+import il.co.codeguru.corewars8086.gui.ColorHolder;
 import il.co.codeguru.corewars8086.gui.IBreakpointCheck;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
@@ -247,6 +248,16 @@ public class War {
             return Math.min(MAX_SPEED, 1 + (int)(Math.log(energy) / Math.log(2)));
         }
     }
+
+    private native void setButtonColor(String color, String label) /*-{
+        // label looks like pC0
+        var player_letter = label[1]
+        var codenum = label[2]
+        var id = "sel_code_lbl_w" + (parseInt(codenum) + 1) + "_p" + (player_letter)
+        console.log("~~", label, id)
+        var e = $wnd.document.getElementById(id)
+        e.style.boxShadow = "inset " + color + " 0px -1px 5px, inset " + color + " 0px 1px 5px"
+    }-*/;
 	
     private void loadWarriorGroup(WarriorGroup warriorGroup) throws Exception {
         List<WarriorData> warriors = warriorGroup.getWarriors();
@@ -291,9 +302,13 @@ public class War {
                 m_core.writeByte(tmp, warriorData[offset]);			
             }
 
+            String col = ColorHolder.getInstance().getColor(m_currentWarrior, false).toString();
+            setButtonColor(col, warrior.getLabel());
+
             m_core.listener.onWriteState(MemoryEventListener.EWriteState.RUN);
             ++m_numWarriorsAlive;
 			++m_currentWarrior;
+
 
             // notify listener
             m_warListener.onWarriorBirth(w);

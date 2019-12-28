@@ -250,6 +250,7 @@ function addTextChild(elem, txt) {
 var g_nextLetter = 'A'
 var g_usedLetters = []
 var g_srcButtons = []  // ids of elements that are checkboxes that select a source file to be displayer
+var g_codeButtonLabels = []
 var g_usedZnums = []
 
 function asciiAdd(letter, val) {
@@ -290,6 +291,8 @@ function addPlayersPanel() {
     var letter = g_nextLetter
     g_srcButtons.push('sel_code_w1_p' + letter)
     g_srcButtons.push('sel_code_w2_p' + letter)
+    g_codeButtonLabels.push('sel_code_lbl_w1_p' + letter)
+    g_codeButtonLabels.push('sel_code_lbl_w2_p' + letter)
 
     j_addPlayer('p'+letter, "Player " + letter)
     changedWType('p'+letter, false) // do update label
@@ -352,6 +355,8 @@ function triggerErasePlayer(buttonElem, elem, letter)
     arrayRemove(g_usedLetters, letter);
     arrayRemove(g_srcButtons, 'sel_code_w1_p' + letter)
     arrayRemove(g_srcButtons, 'sel_code_w2_p' + letter)
+    arrayRemove(g_codeButtonLabels, 'sel_code_lbl_w1_p' + letter)
+    arrayRemove(g_codeButtonLabels, 'sel_code_lbl_w2_p' + letter)
 
     j_removePlayer('p'+letter)
 
@@ -595,6 +600,10 @@ function triggerDebug() {
         for(var uzi in g_usedZnums) {
             var uz = g_usedZnums[uzi]
             document.getElementById("player_erase_z" + uz).removeAttribute("disabled")
+        }
+        for(var clbl in g_codeButtonLabels) {
+            var lbl = g_codeButtonLabels[clbl]
+            document.getElementById(lbl).style.boxShadow = ''
         }
 
     }
