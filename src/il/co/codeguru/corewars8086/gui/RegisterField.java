@@ -66,20 +66,30 @@ public class RegisterField /*extends JPanel*/ {
 			editChanged();
 		}
 		else {
-			setValue(m_lastValue);
+			if (m_base == 16)
+				textField.value = Format.hex4((int)m_lastValue & 0xffff);
+			else
+				textField.value = Integer.toString((int)m_lastValue & 0xffff);
 		}
 	}
 
 	public void setValue(short value) {
+		boolean changed = (m_lastValue != value);
 		m_lastValue = value;
 		if (m_base == 16)
 			textField.value = Format.hex4((int)value & 0xffff);
 		else
 			textField.value = Integer.toString((int)value & 0xffff);
+
+		textField.classList.toggle("reg_input_changed", changed);
 	}
 
 	public short getValue() throws Exception {
 		return (short) Integer.parseInt(textField.value, 16);
+	}
+
+	public void resetChanged() {
+		textField.classList.toggle("reg_input_changed", false);
 	}
 
 }

@@ -353,6 +353,7 @@ public class CompetitionWindow extends JFrame
         // this is because if the first line has a comment, dfXXXX is only going to exist once the line is rendered
         competition.competitionEventListener.onEndRound(); // it's like round -1, show the state at the start of the game
 
+        battleFrame.cpuframe.resetChanged();
     }
 
     @Override

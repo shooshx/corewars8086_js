@@ -30,36 +30,36 @@ import java.util.HashMap;
 
 
 public class CpuFrame  implements CompetitionEventListener, MemoryEventListener {
-	
+
 	//private War currentWar;
 	private CompetitionWindow m_mainwnd;
 	private String m_currentWarriorLabel = null;
 	private int m_currentWarriorIndex = -1; // faster to use index than label during debug
-	
+
 	private Competition competition;
 	private int m_base = 16;
-	
 
-	private RegisterField regAX,regBX,regCX,regDX,
-						regSI,regDI,regBP,regSP,
-						 regIP,regCS,regDS,regSS,
-						 regES,regE, regF;
-	
-	private FlagFields flagOF,flagDF,flagIF,flagTF,
-						flagSF,flagZF,flagAF,flagPF,
-						flagCF;
 
-    private HTMLElement cpuPanel;
+	private RegisterField regAX, regBX, regCX, regDX,
+			regSI, regDI, regBP, regSP,
+			regIP, regCS, regDS, regSS,
+			regES, regE, regF;
 
-    public MemRegionView stackView;
+	private FlagFields flagOF, flagDF, flagIF, flagTF,
+			flagSF, flagZF, flagAF, flagPF,
+			flagCF;
+
+	private HTMLElement cpuPanel;
+
+	public MemRegionView stackView;
 	public MemRegionView sharedMemView;
 
-    public void setVisible(boolean v) {
-        if (v)
-            cpuPanel.style.display = "";
-        else
-            cpuPanel.style.display = "none";
-    }
+	public void setVisible(boolean v) {
+		if (v)
+			cpuPanel.style.display = "";
+		else
+			cpuPanel.style.display = "none";
+	}
 
 	public void setSelectedPlayer(String playerLabel, boolean isDebugMode) {
 		m_currentWarriorLabel = playerLabel;
@@ -69,14 +69,12 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 			// need to do this first so that reading the registers would put this ss:sp in the right place
 			initMemRegions(false);
 			updateFields();
+			resetChanged();
 		}
 	}
 
 
-
-
-	public int regChanged_callback(String name, String value)
-	{
+	public int regChanged_callback(String name, String value) {
 		War currentWar = competition.getCurrentWar();
 		if (currentWar == null)
 			return 1;
@@ -94,8 +92,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 				v = Integer.parseInt(value, 10);
 			else
 				v = Integer.parseInt(value, 16);
-		}
-		catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			m_mainwnd.errorPreventsStep(true, "Register value parse error");
 			return (m_base == 10) ? -2000000 : -1000000;
 		}
@@ -105,27 +102,62 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		}
 		m_mainwnd.errorPreventsStep(false, null);
 
-		short sv = (short)v;
+		short sv = (short) v;
 
-		switch(name) {
-			case "AX": state.setAX(sv); break;
-			case "BX": state.setBX(sv); break;
-			case "CX": state.setCX(sv); break;
-			case "DX": state.setDX(sv); break;
+		switch (name) {
+			case "AX":
+				state.setAX(sv);
+				break;
+			case "BX":
+				state.setBX(sv);
+				break;
+			case "CX":
+				state.setCX(sv);
+				break;
+			case "DX":
+				state.setDX(sv);
+				break;
 
-			case "SI": state.setSI(sv); break;
-			case "DI": state.setDI(sv); break;
-			case "BP": state.setBP(sv); break;
-			case "SP": state.setSP(sv); stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), sv)); break;
+			case "SI":
+				state.setSI(sv);
+				break;
+			case "DI":
+				state.setDI(sv);
+				break;
+			case "BP":
+				state.setBP(sv);
+				break;
+			case "SP":
+				state.setSP(sv);
+				stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), sv));
+				break;
 
-			case "IP": state.setIP(sv); changedCSIP(); break;
-			case "CS": state.setCS(sv); changedCSIP(); break;
-			case "DS": state.setDS(sv); break;
-			case "SS": state.setSS(sv); stackView.moveToLine(RealModeAddress.linearAddress(sv, state.getSP())); break;
-			case "ES": state.setES(sv); break;
+			case "IP":
+				state.setIP(sv);
+				changedCSIP();
+				break;
+			case "CS":
+				state.setCS(sv);
+				changedCSIP();
+				break;
+			case "DS":
+				state.setDS(sv);
+				break;
+			case "SS":
+				state.setSS(sv);
+				stackView.moveToLine(RealModeAddress.linearAddress(sv, state.getSP()));
+				break;
+			case "ES":
+				state.setES(sv);
+				break;
 
-			case "Energy": state.setEnergy(sv); break;
-			case "Flags": state.setFlags(sv); updateFlagBoxes(state); break;
+			case "Energy":
+				state.setEnergy(sv);
+				break;
+			case "Flags":
+				state.setFlags(sv);
+				updateFlagBoxes(state);
+				break;
 		}
 
 		// reeval watch - might change depending on the register that just changed
@@ -144,59 +176,75 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 
 	}
 
-	public void onMemoryWrite(RealModeAddress address, byte value){
+	public void onMemoryWrite(RealModeAddress address, byte value) {
 		for (WatchEntry entry : m_watches.values()) {
 			entry.evalAndDisplay();
 		}
 	}
 
-	public void onWriteState(MemoryEventListener.EWriteState state)
-	{}
-
-	public void updateFlagBoxes(CpuState state) {
-		flagOF.setValue( state.getOverflowFlag());
-		flagDF.setValue( state.getDirectionFlag() );
-		flagIF.setValue( state.getInterruptFlag() );
-		flagTF.setValue( state.getTrapFlag() );
-		flagSF.setValue( state.getSignFlag() );
-		flagZF.setValue( state.getZeroFlag() );
-		flagAF.setValue( state.getAuxFlag() );
-		flagPF.setValue( state.getParityFlag() );
-		flagCF.setValue( state.getCarryFlag() );
+	public void onWriteState(MemoryEventListener.EWriteState state) {
 	}
 
-	public void flagChanged_callback(String name, boolean v)
-	{
+	public void updateFlagBoxes(CpuState state) {
+		flagOF.setValue(state.getOverflowFlag());
+		flagDF.setValue(state.getDirectionFlag());
+		flagIF.setValue(state.getInterruptFlag());
+		flagTF.setValue(state.getTrapFlag());
+		flagSF.setValue(state.getSignFlag());
+		flagZF.setValue(state.getZeroFlag());
+		flagAF.setValue(state.getAuxFlag());
+		flagPF.setValue(state.getParityFlag());
+		flagCF.setValue(state.getCarryFlag());
+	}
+
+	public void flagChanged_callback(String name, boolean v) {
 		War currentWar = competition.getCurrentWar();
 		if (currentWar == null)
 			return;
 
 		CpuState state = currentWar.getWarriorByLabel(m_currentWarriorLabel).getCpuState();
 
-		switch(name) {
-		case "OF": state.setOverflowFlag(v); break;
-		case "DF": state.setDirectionFlag(v); break;
-		case "IF": state.setInterruptFlag(v); break;
-		case "TF": state.setTrapFlag(v); break;
-		case "SF": state.setSignFlag(v); break;
-		case "ZF": state.setZeroFlag(v); break;
-		case "AF": state.setAuxFlag(v); break;
-		case "PF": state.setParityFlag(v); break;
-		case "CF": state.setCarryFlag(v); break;
+		switch (name) {
+			case "OF":
+				state.setOverflowFlag(v);
+				break;
+			case "DF":
+				state.setDirectionFlag(v);
+				break;
+			case "IF":
+				state.setInterruptFlag(v);
+				break;
+			case "TF":
+				state.setTrapFlag(v);
+				break;
+			case "SF":
+				state.setSignFlag(v);
+				break;
+			case "ZF":
+				state.setZeroFlag(v);
+				break;
+			case "AF":
+				state.setAuxFlag(v);
+				break;
+			case "PF":
+				state.setParityFlag(v);
+				break;
+			case "CF":
+				state.setCarryFlag(v);
+				break;
 		}
-		regF.setValue( state.getFlags());
+		regF.setValue(state.getFlags());
 	}
 
-	public CpuFrame(Competition c, CompetitionWindow mainwnd)
-	{
+	public CpuFrame(Competition c, CompetitionWindow mainwnd) {
 		exportMethods();
 		m_mainwnd = mainwnd;
 
 		this.competition = c;
 
-        cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
+		cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
 
-		
+
 		regAX = new RegisterField("AX", this);
 		regBX = new RegisterField("BX", this);
 		regCX = new RegisterField("CX", this);
@@ -214,9 +262,9 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		regES = new RegisterField("ES", this);
 		regE = new RegisterField("Energy", this);
 		regF = new RegisterField("Flags", this);
-		
+
 		//Flags
-		
+
 		flagOF = new FlagFields("OF", this);
 		flagDF = new FlagFields("DF", this);
 		flagIF = new FlagFields("IF", this);
@@ -261,12 +309,39 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		regF.setBase(base);
 		// setBase already updates the value if that's ok
 
-        for (WatchEntry entry : m_watches.values()) {
-            entry.base = base;
-            entry.evalAndDisplay();
-        }
+		for (WatchEntry entry : m_watches.values()) {
+			entry.base = base;
+			entry.evalAndDisplay();
+		}
 	}
 
+	public void resetChanged() {
+		regAX.resetChanged();
+		regBX.resetChanged();
+		regCX.resetChanged();
+		regDX.resetChanged();
+		regSI.resetChanged();
+		regDI.resetChanged();
+		regBP.resetChanged();
+		regSP.resetChanged();
+		regIP.resetChanged();
+		regCS.resetChanged();
+		regDS.resetChanged();
+		regSS.resetChanged();
+		regES.resetChanged();
+		regE.resetChanged();
+		regF.resetChanged();
+
+		flagOF.resetChanged();
+		flagDF.resetChanged();
+		flagIF.resetChanged();
+		flagTF.resetChanged();
+		flagSF.resetChanged();
+		flagZF.resetChanged();
+		flagAF.resetChanged();
+		flagPF.resetChanged();
+		flagCF.resetChanged();
+	}
 
 	
 	public void updateFields(){

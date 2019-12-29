@@ -728,6 +728,10 @@ input:disabled + .sc-btn:active,
     padding: 1px 0 1px 3px;
     font-size: 16px;
 }
+.reg_input_changed {
+    background-color: #ffcccc;
+}
+
 #reg_flags_table {
     border: 1px solid #000000;
     /*border-collapse: collapse;*/
@@ -758,6 +762,9 @@ input:disabled + .sc-btn:active,
 }
 #reg_flags_table tr:last-child td:first-child {
     border-bottom-left-radius: 5px;
+}
+.reg_flags_changed {
+    background-color: #ffcccc;
 }
 
 .dbg_reg_err {

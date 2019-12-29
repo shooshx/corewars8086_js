@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.codewars_js;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.8.2";
-var $strongName = '0920343957A4F0840B0E22F58B8DD63F';
+var $strongName = '9AA902C890CE9A4CE8A691D59159FA6E';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -7491,6 +7491,7 @@ setBattlesRan.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.s
 defineClass(122, 97, {12:1, 227:1}, CompetitionWindow);
 _.j_debugUiInited_0 = function j_debugUiInited(){
   this.competition.competitionEventListener.onEndRound();
+  $resetChanged(this.battleFrame.cpuframe);
 }
 ;
 _.j_debugUiInited_0.displayName = 'il.co.codeguru.corewars8086.gui.CompetitionWindow.j_debugUiInited';
@@ -7806,12 +7807,41 @@ function $regChanged_callback(this$static, name_0, value_0){
 }
 
 $regChanged_callback.displayName = 'il.co.codeguru.corewars8086.gui.CpuFrame.$regChanged_callback';
+function $resetChanged(this$static){
+  this$static.regAX.textField.classList.toggle('reg_input_changed', false);
+  this$static.regBX.textField.classList.toggle('reg_input_changed', false);
+  this$static.regCX.textField.classList.toggle('reg_input_changed', false);
+  this$static.regDX.textField.classList.toggle('reg_input_changed', false);
+  this$static.regSI.textField.classList.toggle('reg_input_changed', false);
+  this$static.regDI.textField.classList.toggle('reg_input_changed', false);
+  this$static.regBP.textField.classList.toggle('reg_input_changed', false);
+  this$static.regSP.textField.classList.toggle('reg_input_changed', false);
+  this$static.regIP.textField.classList.toggle('reg_input_changed', false);
+  this$static.regCS.textField.classList.toggle('reg_input_changed', false);
+  this$static.regDS.textField.classList.toggle('reg_input_changed', false);
+  this$static.regSS.textField.classList.toggle('reg_input_changed', false);
+  this$static.regES.textField.classList.toggle('reg_input_changed', false);
+  this$static.regE.textField.classList.toggle('reg_input_changed', false);
+  this$static.regF.textField.classList.toggle('reg_input_changed', false);
+  $resetChanged_0(this$static.flagOF);
+  $resetChanged_0(this$static.flagDF);
+  $resetChanged_0(this$static.flagIF);
+  $resetChanged_0(this$static.flagTF);
+  $resetChanged_0(this$static.flagSF);
+  $resetChanged_0(this$static.flagZF);
+  $resetChanged_0(this$static.flagAF);
+  $resetChanged_0(this$static.flagPF);
+  $resetChanged_0(this$static.flagCF);
+}
+
+$resetChanged.displayName = 'il.co.codeguru.corewars8086.gui.CpuFrame.$resetChanged';
 function $setSelectedPlayer(this$static, playerLabel, isDebugMode){
   this$static.m_currentWarriorLabel = playerLabel;
   this$static.m_currentWarriorIndex = -1;
   if (isDebugMode) {
     $initMemRegions(this$static, false);
     $updateFields(this$static);
+    $resetChanged(this$static);
   }
 }
 
@@ -8753,7 +8783,17 @@ function $lambda$0_0(this$static, name_1){
 }
 
 $lambda$0_0.displayName = 'il.co.codeguru.corewars8086.gui.FlagFields.$lambda$0';
+function $resetChanged_0(this$static){
+  this$static.bk1.classList.toggle('reg_flags_changed', false);
+  this$static.bk2.classList.toggle('reg_flags_changed', false);
+}
+
+$resetChanged_0.displayName = 'il.co.codeguru.corewars8086.gui.FlagFields.$resetChanged';
 function $setValue(this$static, value_0){
+  var changed;
+  changed = this$static.checkBox.checked != value_0;
+  this$static.bk1.classList.toggle('reg_flags_changed', changed);
+  this$static.bk2.classList.toggle('reg_flags_changed', changed);
   this$static.checkBox.checked = value_0;
 }
 
@@ -8764,6 +8804,8 @@ function FlagFields(name_0, frame_0){
   this.m_frame = frame_0;
   ename = name_0 + '_fcheck';
   this.checkBox = castToNative(($clinit_DomGlobal() , document_0).getElementById(ename), $wnd.HTMLInputElement);
+  this.bk1 = castToNative(document_0.getElementById(name_0 + '_bk1'), $wnd.HTMLElement);
+  this.bk2 = castToNative(document_0.getElementById(name_0 + '_bk2'), $wnd.HTMLElement);
   this.checkBox.addEventListener('change', new FlagFields$lambda$0$Type(this, name_0));
 }
 
@@ -9160,7 +9202,6 @@ function $setButtonColor(color_0, label_0){
   var player_letter = label_0[1];
   var codenum = label_0[2];
   var id_0 = 'sel_code_lbl_w' + (parseInt(codenum) + 1) + '_p' + player_letter;
-  console.log('~~', label_0, id_0);
   var e = $wnd.document.getElementById(id_0);
   e.style.boxShadow = 'inset ' + color_0 + ' 0px -1px 5px, inset ' + color_0 + ' 0px 1px 5px';
 }
@@ -9442,13 +9483,16 @@ function $editChanged(this$static){
 $editChanged.displayName = 'il.co.codeguru.corewars8086.gui.RegisterField.$editChanged';
 function $setBase(this$static, base){
   this$static.m_base = base;
-  this$static.m_lastInputOk?$setValue_0(this$static, this$static.m_lastValue):$editChanged(this$static);
+  this$static.m_lastInputOk?this$static.m_base == 16?(this$static.textField.value = hex4(this$static.m_lastValue & $intern_0)):(this$static.textField.value = '' + (this$static.m_lastValue & $intern_0)):$editChanged(this$static);
 }
 
 $setBase.displayName = 'il.co.codeguru.corewars8086.gui.RegisterField.$setBase';
 function $setValue_0(this$static, value_0){
+  var changed;
+  changed = this$static.m_lastValue != value_0;
   this$static.m_lastValue = value_0;
   this$static.m_base == 16?(this$static.textField.value = hex4(value_0 & $intern_0)):(this$static.textField.value = '' + (value_0 & $intern_0));
+  this$static.textField.classList.toggle('reg_input_changed', changed);
 }
 
 $setValue_0.displayName = 'il.co.codeguru.corewars8086.gui.RegisterField.$setValue';
