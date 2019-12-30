@@ -199,9 +199,17 @@ public class PlayersPanel
         // label looks like pC0
         var player_letter = label[1]
         var codenum = label[2]
-        var id = "sel_code_lbl_w" + (parseInt(codenum) + 1) + "_p" + (player_letter)
+        var id = ""
+        if (label[0] == 'p')
+            id = "sel_code_lbl_w" + (parseInt(codenum) + 1) + "_p" + player_letter
+        else if (label[0] == 'z')
+            id = "player_name_lbl_z" + player_letter
         //console.log("~~", label, id)
         var e = $wnd.document.getElementById(id)
+        if (e === null) {
+            console.error("did not find element", id, label)
+            return
+        }
         e.style.boxShadow = "inset " + color + " 0px -1px 5px, inset " + color + " 0px 1px 5px"
     }-*/;
 

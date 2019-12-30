@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.codewars_js;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.8.2";
-var $strongName = '9AA902C890CE9A4CE8A691D59159FA6E';
+var $strongName = 'A2699FE0EAADD10672821678043F8430';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -9201,8 +9201,13 @@ $reWriteButtonsLabels.displayName = 'il.co.codeguru.corewars8086.gui.PlayersPane
 function $setButtonColor(color_0, label_0){
   var player_letter = label_0[1];
   var codenum = label_0[2];
-  var id_0 = 'sel_code_lbl_w' + (parseInt(codenum) + 1) + '_p' + player_letter;
+  var id_0 = '';
+  label_0[0] == 'p'?(id_0 = 'sel_code_lbl_w' + (parseInt(codenum) + 1) + '_p' + player_letter):label_0[0] == 'z' && (id_0 = 'player_name_lbl_z' + player_letter);
   var e = $wnd.document.getElementById(id_0);
+  if (e === null) {
+    console.error('did not find element', id_0, label_0);
+    return;
+  }
   e.style.boxShadow = 'inset ' + color_0 + ' 0px -1px 5px, inset ' + color_0 + ' 0px 1px 5px';
 }
 
