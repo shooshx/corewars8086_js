@@ -13,10 +13,10 @@
   
     <meta charset="UTF-8">
     <title>CodeWars8086</title>
-    <script type="text/javascript" language="javascript" src="asm_js_main.js"></script>
-    <script type="text/javascript" language="javascript" src="codewars_js/codewars_js.nocache.js"></script>  
-    <script type="text/javascript" language="javascript" src="main.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" language="javascript" src="static/asm_js_main.js"></script>
+    <script type="text/javascript" language="javascript" src="static/codewars_js/codewars_js.nocache.js"></script>
+    <script type="text/javascript" language="javascript" src="static/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
 </head>
   <body onload="start()">
 
@@ -251,6 +251,34 @@
         <div id="error_title">Error</div>
         <div id="error_msg"></div>
     </div>
+
+    <div id="user_panel" class="state_panel">
+        <div id="user_input">
+            <form onsubmit="return false">
+                <span class="in_user_label">Username:</span><input class="in_user_input" id="in_user_name" type="text"><br>
+                <span class="in_user_label">Password:</span><input class="in_user_input" id="in_user_pass" type="password"><br>
+                <div id="in_user_buttons_container">
+                    <label class="sc-btn in_user_buttons" onclick="new_user_submit()">Register</label>
+                    <label class="sc-btn in_user_buttons" onclick="user_login()">Login</label>
+                </div>
+            </form>
+        </div>
+        <div id="user_panel_msg"></div>
+        <div id="user_data">
+            <div id="user_data_buttons">
+                <label class="sc-btn in_user_buttons" onclick="user_logout()">Logout</label>
+                <label class="sc-btn in_user_buttons" id="add_warrior_button" onclick="add_user_warrior()">Add Warrior</label>
+            </div>
+        </div>
+    </div>
+    <div id="channel_panel" class="state_panel"></div>
+    <input class="tab_checkbox hidden" id="user_tab_check" type="checkbox"  onchange="show_tab_panel(this.checked, user_panel, channel_tab_check, channel_panel)">
+    <label id="user_tab" for="user_tab_check" class="top_tab" ><span id="show_user_name">Login</span></label>
+    <input class="tab_checkbox hidden" id="channel_tab_check" type="checkbox" onchange="show_tab_panel(this.checked, channel_panel, user_tab_check, user_panel)">
+    <label id="channel_tab" for="channel_tab_check" class="top_tab">Channel</label>
+
+    <iframe src="javascript:void(0);" id="django_error"></iframe>
+    {% csrf_token %}
 
   </body>
 </html>

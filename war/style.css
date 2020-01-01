@@ -81,6 +81,9 @@ input:disabled + .sc-btn:active,
 }
 
 /* ---------------- asm ---------------------- */
+#warCanvas {
+    margin-top: 20px;
+}
 
 .codearea {
     font-size: 16px;
@@ -1203,4 +1206,152 @@ position: absolute;
     text-align: center;
     font-size: 18px;
     margin: 6px 0 0 0;
+}
+
+
+/* ------------------------- User,Team panel ----------------------------- */
+
+.top_tab {
+    position: absolute;
+    height: 35px;
+    width: 150px;
+    top: 0;
+    border-radius: 0 0 10px 10px;
+    text-align: center;
+    line-height: 34px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.top_tab:hover {
+     filter: brightness(110%);
+}
+
+
+#user_tab {
+    right: 184px;
+    background-color: #b4b4ff;
+    border-left: solid 2px #d0d0ff;
+    border-right: solid 2px #d0d0ff;
+    border-bottom: solid 2px #d0d0ff;
+    border-top: hidden;
+    color: #0000a7;
+}
+#channel_tab {
+    right: 30px;
+    background-color: #fed997;
+    border-left: solid 2px #ffd0d0;
+    border-right: solid 2px #ffd0d0;
+    border-bottom: solid 2px #ffd0d0;
+    border-top: hidden;
+    color: #7c0000;
+}
+
+.tab_checkbox {
+    position: absolute;
+}
+
+.tab_checkbox:checked + #user_tab {
+    border-left: solid 2px #9393ff !important;
+    border-right: solid 2px #9393ff !important;
+    border-top: solid 2px #9393ff !important;
+    border-bottom: hidden !important;
+
+    border-radius: 10px 10px 0 0;
+    background-color: #e9e9ff !important;
+    filter: none;
+    height: 37px;
+}
+
+.tab_checkbox:checked + #channel_tab {
+    border-left: solid 2px #ff9393 !important;
+    border-right: solid 2px #ff9393 !important;
+    border-top: solid 2px #ff9393 !important;
+    border-bottom: hidden !important;
+
+    border-radius: 10px 10px 0 0;
+    background-color: #fff8e6 !important;
+    filter: none;
+    height: 37px;
+}
+
+.state_panel {
+    position: absolute;
+    top: 37px;
+    right: 0;
+    bottom: 0;
+    width: 350px;
+    border-radius: 10px;
+}
+#user_panel {
+    background-color: #e9e9ff;
+    border: solid 2px #9393ff;
+    display:none
+}
+#channel_panel {
+    background-color: #fff8e6;
+    border: solid 2px #ff9393;
+    display:none
+}
+
+#django_error {
+    position: absolute;
+    top: 10%;
+    width: 80%;
+    height: 500px;
+    display: none;
+    border: solid 5px red;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+    margin: auto
+}
+
+#show_user_name {
+    display: inline-block;
+    margin: 0 3px 0 3px;
+    width: calc( 100% - 6px );
+    overflow: hidden;
+}
+
+#user_input {
+    margin-top:10px;
+}
+.in_user_label {
+    display: inline-block;
+    width: 100px;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 10px;
+}
+.in_user_input {
+    width: 150px;
+    height: 22px;
+    margin: 4px;
+    border-radius: 6px;
+    padding-left: 4px;
+    font-size: 16px;
+}
+
+.in_user_buttons {
+    height: 30px;
+    font-size: 100%;
+    line-height: 29px;
+    margin-left: 0;
+}
+#in_user_buttons_container {
+    margin-left:60px
+}
+#add_warrior_button {
+    width: 130px;
+}
+
+#user_panel_msg {
+    width: 100%;
+    display: none;
+    color: red;
+    margin: 0 10px 0 10px;
+}
+#user_data_buttons {
+    margin-left: 20px;
+    margin-top: 5px;
 }

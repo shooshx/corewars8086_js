@@ -1052,3 +1052,170 @@ function clear_error() {
     error_msg.innerHTML = ""
     error_box.style.display = ""
 }
+
+
+// ----------------------------------- User and Channel panel --------------------------------------
+
+function show_tab_panel(v, elem, input_other, panel_other) {
+    if (v) {
+        elem.style.display = "initial"
+        if (input_other.checked) {
+            input_other.checked = false;
+            panel_other.style.display = "none"
+        }
+    }
+    else {
+        elem.style.display = "none"
+    }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function request(method, url, postdata, ondata, suppress_error) {
+    var req = new XMLHttpRequest()
+    req.addEventListener("load", function(evt) {
+        // console.log("TEXT=" + this.responseText)
+        if (this.status == 200) {
+            var d = JSON.parse(this.responseText);
+            ondata(d)
+        }
+        else {
+            if (!suppress_error) {
+                django_error.contentWindow.document.write(this.responseText)
+                django_error.style.display = "initial"
+            }
+            else {
+                console.error("failed request (" + this.status + ") " + url)
+            }
+            ondata({status:"err-failed-req"})
+        }
+    })
+    req.addEventListener("error", function(evt) {
+        console.log("failed request " + url)
+    })
+    req.open(method, url)
+    var p = undefined
+    if (postdata) {
+        var cookie = getCookie('csrftoken')
+        if (cookie === null) {
+            set_user_panel_msg("Missing token. page did not come from the right server")
+            return
+        }
+        req.setRequestHeader("X-CSRFToken", cookie);
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // https://docs.djangoproject.com/en/2.0/ref/csrf/
+        //str.push('csrfmiddlewaretoken=' + getCookie('csrftoken'));
+        var str = [];
+        for(var p in postdata)
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(postdata[p]));
+        p = str.join("&");
+    }
+    req.send(p)
+}
+
+function set_user_panel_msg(text) {
+    user_panel_msg.style.display = "block"
+    user_panel_msg.innerText = text
+}
+function clear_user_panel_msg() {
+    user_panel_msg.style.display = "none"
+}
+
+function update_user_data(suppress_error)
+{
+    request("GET", "/get_user_data/", null, function(d) {
+        console.log("status=" + d.status)
+        if (d.status.startsWith("err")) {
+            user_input.style.display = "initial"
+            user_data.style.display = "none"
+            show_user_name.innerHTML = "Login"
+        }
+        else {
+            user_input.style.display = "none"
+            user_data.style.display = "initial"
+            show_user_name.innerHTML = d.name
+
+           /* var str = []
+            for(var i in d.warriors) {
+                var w = d.warriors[i]
+                var text = '<div>Title: TITLE<br>code1: CODE1<br>code2: CODE2<br>-----------------<br></div>'
+                text = text.replace('TITLE', w.title).replace('CODE1', w.code1).replace('CODE2', w.code2)
+                str.push(text)
+            }
+            warrior_defs.innerHTML = str.join('\n')
+
+            str = []
+            for(var i in d.teams) {
+                var t = d.teams[i]
+                var text = '<div>Name: TEAM_NAME<br>&nbsp;&nbsp;Members: MEMBERS</div>'
+                text = text.replace('TEAM_NAME', t.name).replace('MEMBERS', t.members.join(','))
+                str.push(text)
+                for(var iw in t.warriors) {
+                    var tw = t.warriors[iw]
+                    var text = '<div>&nbsp;&nbspTitle: TITLE<br>&nbsp;&nbspcode1: CODE1<br>&nbsp;&nbspcode2: CODE2<br>\
+                                &nbsp;&nbspupdater: UPDATER<br>&nbsp;&nbsp=========<br></div>'
+                    text = text.replace('TITLE', tw.title).replace('CODE1', tw.code1).replace('CODE2', tw.code2).replace('UPDATER', tw.updated_by_name)
+                    str.push(text)
+                }
+            }
+            users_teams.innerHTML = str.join('\n')*/
+        }
+    }, suppress_error)
+
+}
+
+function check_status(d) {
+    console.log("status=" + d.status)
+    if (d.status.startsWith("ok-")) {
+        update_user_data()
+        clear_user_panel_msg()
+    }
+    else {
+        set_user_panel_msg("ERROR:" + d.text)
+    }
+}
+
+
+function new_user_submit() {
+    clear_user_panel_msg()
+    var p = { "name":in_user_name.value, "pass":in_user_pass.value }
+    request("POST", "/create_user/", p, function(d) {
+        check_status(d)
+    })
+}
+
+function user_login() {
+    clear_user_panel_msg()
+    var p = { "name":in_user_name.value, "pass":in_user_pass.value }
+    request("POST", "/user_login/", p, function(d) {
+        check_status(d)
+    })
+}
+
+function user_logout() {
+    clear_user_panel_msg()
+    request("GET", "/user_logout/", null, function(d) {
+        check_status(d)
+    });
+}
+
+function add_user_warrior() {
+    clear_user_panel_msg()
+    var d = {"title":title_edit.value, "code1": code1_edit.value, "code2": code2_edit.value, "wtype":2}
+    request("POST", "/add_warrior_def/", d, function(d) {
+        check_status(d)
+    })
+}
