@@ -103,6 +103,7 @@ public class PlayersPanel
         $wnd.j_addPlayer =    $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_addPlayer(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_removePlayer(Ljava/lang/String;)(s) });
         $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
+        $wnd.j_updateTitle = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_updateTitle(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
         $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
         $wnd.j_loadBinary      = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadBinary(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(b) });
@@ -246,7 +247,7 @@ public class PlayersPanel
             if (label.equals(p.label)) {
                 m_players.remove(p);
                 Console.log("Removed " + label + " " + Integer.toString(m_players.size()));
-                if (m_inEditor.player == p) { // removing currently selected player
+                if (m_inEditor.player == p && m_players.size() > 0) { // removing currently selected player
                     setSelectedCode(m_players.get(0).label, 1);
                 }
                 return;
@@ -379,6 +380,16 @@ public class PlayersPanel
 
         reWriteButtonsLabels(m_inEditor.player);
     }
+
+    
+    public void j_updateTitle(String label, String v) {
+        PlayerInfo p = findPlayer(label);
+        p.title = v;
+
+        reWriteButtonsLabels(p);
+    }
+
+
 
     public void updateAsmResult(boolean compileOk, byte[] binbuffer, ArrayList<CodeEditor.LstLine> lines)
     {

@@ -270,11 +270,16 @@ function addPlayersPanel() {
     if (g_usedLetters.length >= 20)
         return; // max players
 
+    addPlayerPanel_as("Player " + g_nextLetter, false)
+}
+
+function addPlayerPanel_as(name, wtype)
+{
     var text = '<div id="pl_frame_pLETTER" class="toppic">\
           <div class="famtitle">\
             <input class="fam_check_box hidden mycheck" id="player_check_pLETTER" type="checkbox" checked onchange="changedPlayerCheck(\'LETTER\', this.checked)" >\
             <label class="fam_check mycheck_label" for="player_check_pLETTER"></label>\
-            <label id="player_name_lbl_pLETTER" class="fam_label">Player LETTER</label>\
+            <label id="player_name_lbl_pLETTER" class="fam_label">NAME</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
           </div>\
           <input class="fam_check_box hidden mycheck" id="wtype_pLETTER" type="checkbox" onchange="changedWType(\'pLETTER\', this.checked)" >\
@@ -286,21 +291,21 @@ function addPlayersPanel() {
           <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
         </div>'
 
-    addTextChild(players_contaier, text.replace(/LETTER/g, g_nextLetter))
+    const letter = g_nextLetter
+    addTextChild(players_contaier, text.replace(/LETTER/g, letter).replace(/NAME/g, name))
 
-    var letter = g_nextLetter
     g_srcButtons.push('sel_code_w1_p' + letter)
     g_srcButtons.push('sel_code_w2_p' + letter)
     g_codeButtonLabels.push('sel_code_lbl_w1_p' + letter)
     g_codeButtonLabels.push('sel_code_lbl_w2_p' + letter)
 
-    j_addPlayer('p'+letter, "Player " + letter)
-    changedWType('p'+letter, false) // do update label
+    const label = 'p'+letter
+    j_addPlayer(label, name)
+    changedWType(label, wtype, true) // do update label
 
     g_usedLetters.push(letter)
     g_nextLetter = asciiAdd(g_nextLetter, 1)
-
-
+    return label
 }
 
 function changedWType(label, v, move_ui)
@@ -311,7 +316,7 @@ function changedWType(label, v, move_ui)
         v = 'SINGLE'
 
     if (move_ui) {
-        var checked = (v = 'TWO_DIFFERENT')
+        var checked = (v == 'TWO_DIFFERENT')
         document.getElementById('wtype_' + label).checked = checked
     }
 
@@ -342,15 +347,20 @@ function triggerSrc(label, index)
     j_srcSelectionChanged(label, index)
 }
 
-function triggerErasePlayer(buttonElem, elem, letter)
+function triggerErasePlayer(buttonElem, elem, letter, immediate=false)
 {
-    if (buttonElem.getAttribute("disabled") == "true")
+    if (buttonElem !== null && buttonElem.getAttribute("disabled") == "true")
         return;
     //elem.parentNode.removeChild(elem);
-    elem.addEventListener('animationend', function() {
+    if (immediate) {
         elem.parentNode.removeChild(elem);
-    })
-    elem.classList.add('removed_anim')
+    }
+    else { // animation
+        elem.addEventListener('animationend', function() {
+            elem.parentNode.removeChild(elem);
+        })
+        elem.classList.add('removed_anim')
+    }
 
     arrayRemove(g_usedLetters, letter);
     arrayRemove(g_srcButtons, 'sel_code_w1_p' + letter)
@@ -385,6 +395,16 @@ function triggerErasePlayer(buttonElem, elem, letter)
         }
     }
 }
+
+function removeAllPlayers()
+{
+    const used_letters_copy = g_usedLetters.slice(0)
+    for(let letter of used_letters_copy) {
+        // remove without animation since we don't want to have more than one element with the same "pA" ID
+        triggerErasePlayer(null, document.getElementById("pl_frame_p" + letter), letter, true)
+    }
+}
+
 
 function changedPlayerCheck(letter, v)
 {
@@ -765,12 +785,67 @@ function addWatchLine() {
 
 }
 
+async function loadWarriorsZip(f)
+{
+    const zip = await JSZip.loadAsync(f)
+    const survivors = []
+    const by_name = {}
+    let has_error = false
+    const entries = []
+    zip.forEach(function (relativePath, zipEntry) {  
+        entries.push(zipEntry)
+    })
+    for(let zipEntry of entries) {
+        const name = zipEntry.name
+        if (name.toLocaleLowerCase().startsWith("survivors/")) {
+            let filename = name.substr(10)
+            let index = 1
+            if (filename.endsWith("1") || filename.endsWith("2")) {
+                index = parseInt(filename[filename.length - 1])
+                filename = filename.substr(0, filename.length - 1)
+            }
+            const buf = await zipEntry.async('arraybuffer')
+            const fname_lower = filename.toLocaleLowerCase()
+            let obj = by_name[fname_lower]
+            if (obj === undefined) {
+                obj = { name: filename}
+                by_name[fname_lower] = obj
+                survivors.push(obj)
+            }
+            if (obj[index] !== undefined) {
+                show_error("Zip error: two survivors with the same name " + filename)
+                has_error = true
+                return
+            }
+            obj[index] = buf
+        }
+    }
+    removeAllPlayers()
+    for(let obj of survivors) {
+        console.log(obj.name, obj[1], obj[2])
+        const label = addPlayerPanel_as(obj.name, obj[2] !== undefined)
+
+        j_srcSelectionChanged(label, 1)
+        j_loadBinary(obj[1])
+        if (obj[2] !== undefined) {
+            j_srcSelectionChanged(label, 2)
+            j_loadBinary(obj[2])   
+        }
+
+    }
+}
+
 function triggerUploadBinChanged()
 {
     if (uploadBinInput.files.length == 0)
         return
     var file = uploadBinInput.files[0]
     uploadBinInput.value = ""  // reset it so that next time we could upload the same filename again
+
+    if (file.name.toLocaleLowerCase().endsWith(".zip")) {
+        loadWarriorsZip(file)
+        return
+    }
 
     var reader = new FileReader();
     reader.onload = function(e) {
@@ -1045,6 +1120,7 @@ function triggerAbout(v, ev) {
 }
 
 function show_error(msg) {
+    console.error(msg)
     error_msg.innerHTML = msg
     error_box.style.display = "initial"
 }
