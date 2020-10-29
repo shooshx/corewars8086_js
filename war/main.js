@@ -785,6 +785,12 @@ function addWatchLine() {
 
 }
 
+function doLoadBinary(arrbuf) {
+    if (arrbuf.byteLength > 512)
+        arrbuf = arrbuf.slice(0, 512) // this is what the original engine does
+    j_loadBinary(arrbuf)
+}
+
 async function loadWarriorsZip(f)
 {
     const zip = await JSZip.loadAsync(f)
@@ -822,14 +828,14 @@ async function loadWarriorsZip(f)
     }
     removeAllPlayers()
     for(let obj of survivors) {
-        console.log(obj.name, obj[1], obj[2])
+        //console.log(obj.name, obj[1], obj[2])
         const label = addPlayerPanel_as(obj.name, obj[2] !== undefined)
 
         j_srcSelectionChanged(label, 1)
-        j_loadBinary(obj[1])
+        doLoadBinary(obj[1])
         if (obj[2] !== undefined) {
             j_srcSelectionChanged(label, 2)
-            j_loadBinary(obj[2])   
+            doLoadBinary(obj[2])   
         }
 
     }
@@ -849,7 +855,7 @@ function triggerUploadBinChanged()
 
     var reader = new FileReader();
     reader.onload = function(e) {
-        j_loadBinary(e.target.result)
+        doLoadBinary(e.target.result)
     }
     reader.onerror = function(e) {
         console.error(e)

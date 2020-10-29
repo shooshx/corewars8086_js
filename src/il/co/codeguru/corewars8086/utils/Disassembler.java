@@ -767,21 +767,21 @@ public abstract class Disassembler
                 switch (regIndex)
                 {
                     case 0: // ADD
-                    	return "ADD " + getMem16() + ", " + toString(nextWord());
+                    	return "ADD WORD " + getMem16() + ", " + toString(nextWord());
                     case 1: // OR
-                    	return "OR " + getMem16() + ", " + toString(nextWord());
+                    	return "OR WORD " + getMem16() + ", " + toString(nextWord());
                     case 2: // ADC
-                    	return "ADC " + getMem16() + ", " + toString(nextWord());
+                    	return "ADC WORD " + getMem16() + ", " + toString(nextWord());
                     case 3: // SBB
-                    	return "SBB " + getMem16() + ", " + toString(nextWord());
+                    	return "SBB WORD " + getMem16() + ", " + toString(nextWord());
                     case 4: // AND
-                    	return "AND " + getMem16() + ", " + toString(nextWord());
+                    	return "AND WORD " + getMem16() + ", " + toString(nextWord());
                     case 5: // SUB
-                    	return "SUB " + getMem16() + ", " + toString(nextWord());
+                    	return "SUB WORD " + getMem16() + ", " + toString(nextWord());
                     case 6: // XOR
-                    	return "XOR " + getMem16() + ", " + toString(nextWord());
+                    	return "XOR WORD " + getMem16() + ", " + toString(nextWord());
                     case 7: // CMP
-                    	return "CMP " + getMem16() + ", " + toString(nextWord());
+                    	return "CMP WORD " + getMem16() + ", " + toString(nextWord());
                     default:
                         throw new RuntimeException();
                 }
@@ -813,7 +813,9 @@ public abstract class Disassembler
                 return "TEST " + getReg8() + ", " + getMem8();			
             case (byte)0x85: // TEST reg16, [X]
                 resetIndirect();
-            	return "TEST " + getReg16() + ", " + getMem16();				
+                String a = getReg16();
+                String b = getMem16();
+            	return "TEST " + b + ", " + a;				
             case (byte)0x86: // XCHG reg8, [X]
                 resetIndirect();
             	return "XCHG " + getReg8() + ", " + getMem8();
@@ -848,7 +850,7 @@ public abstract class Disassembler
                 // Note: since Reg index bits are ignored, there are 8 different
                 // machine-code representations for this opcode :-)
                 resetIndirect();
-                return "POP " + getMem16();
+                return "POP WORD " + getMem16();
             default:
                 throw new RuntimeException();
         }
@@ -874,15 +876,16 @@ public abstract class Disassembler
             case (byte)0x9A: // CALL far imm16:imm16
                 return "CALL FAR " + toString(nextWord()) + ":" + toString(nextWord());
             case (byte)0x9B: // original: WAIT, modified: virtual opcode NRG
+                return "WAIT"; // need to output to compile with nasm
                 // The virtual NRG opcode is made up of 4 consecutive WAIT opcodes
-                for (int i = 0; i < 3; ++i)
+               /* for (int i = 0; i < 3; ++i)
                 {
                     if (getByte() != (byte)0x9B)
                         throw new DisassemblerException();
                     else
                     	nextByte(); //wastes the byte, inorder to make the disassembler work with NRG opcodes
                 }
-                return "NRG";
+                return "NRG";*/
             case (byte)0x9C: // PUSHF
                 return "PUSHF";
             case (byte)0x9D: // POPF
@@ -990,12 +993,12 @@ public abstract class Disassembler
                 // Note: since Reg index bits are ignored, there are 8 different
                 // machine-code representations for this opcode :-)
                 resetIndirect();
-            	return "MOV " + getMem8() + ", " + toString(nextByte());
+            	return "MOV BYTE " + getMem8() + ", " + toString(nextByte());
             case (byte)0xC7: // MOV [X], imm16
                 // Note: since Reg index bits are ignored, there are 8 different
                 // machine-code representations for this opcode :-)
                 resetIndirect();
-                return "MOV " + getMem16() + ", " + toString(nextWord());
+                return "MOV WORD " + getMem16() + ", " + toString(nextWord());
             case (byte)0xC8:
             case (byte)0xC9:
                 // 0xC8.. 0xC9 - invalid opcodes
@@ -1030,21 +1033,21 @@ public abstract class Disassembler
                 switch (regIndex)
                 {
                     case (byte)0x00: // ROL
-                        return "ROL " + getMem8() + ", 1";
+                        return "ROL BYTE " + getMem8() + ", 1";
                     case (byte)0x01: // ROR
-                    	return "ROR " + getMem8() + ", 1";
+                    	return "ROR BYTE " + getMem8() + ", 1";
                     case (byte)0x02: // RCL
-                    	return "RCL " + getMem8() + ", 1";
+                    	return "RCL BYTE " + getMem8() + ", 1";
                     case (byte)0x03: // RCR
-                    	return "RCR " + getMem8() + ", 1";
+                    	return "RCR BYTE " + getMem8() + ", 1";
                     case (byte)0x04: // SHL
-                    	return "SHL " + getMem8() + ", 1";
+                    	return "SHL BYTE " + getMem8() + ", 1";
                     case (byte)0x05: // SHR
-                    	return "SHR " + getMem8() + ", 1";
+                    	return "SHR BYTE " + getMem8() + ", 1";
                     case (byte)0x06: // invalid opcode
                         throw new DisassemblerException();
                     case (byte)0x07: // SAR
-                    	return "SAR " + getMem8() + ", 1";
+                    	return "SAR BYTE " + getMem8() + ", 1";
                     default:
                         throw new RuntimeException();
                 }
@@ -1053,21 +1056,21 @@ public abstract class Disassembler
 	            switch (regIndex)
 	            {
 	                case (byte)0x00: // ROL
-	                    return "ROL " + getMem16() + ", 1";
+	                    return "ROL WORD " + getMem16() + ", 1";
 	                case (byte)0x01: // ROR
-	                	return "ROR " + getMem16() + ", 1";
+	                	return "ROR WORD " + getMem16() + ", 1";
 	                case (byte)0x02: // RCL
-	                	return "RCL " + getMem16() + ", 1";
+	                	return "RCL WORD " + getMem16() + ", 1";
 	                case (byte)0x03: // RCR
-	                	return "RCR " + getMem16() + ", 1";
+	                	return "RCR WORD " + getMem16() + ", 1";
 	                case (byte)0x04: // SHL
-	                	return "SHL " + getMem16() + ", 1";
+	                	return "SHL WORD " + getMem16() + ", 1";
 	                case (byte)0x05: // SHR
-	                	return "SHR " + getMem16() + ", 1";
+	                	return "SHR WORD " + getMem16() + ", 1";
 	                case (byte)0x06: // invalid opcode
 	                    throw new DisassemblerException();
 	                case (byte)0x07: // SAR
-	                	return "SAR " + getMem16() + ", 1";
+	                	return "SAR WORD " + getMem16() + ", 1";
 	                default:
 	                    throw new RuntimeException();
 	            }
@@ -1076,21 +1079,21 @@ public abstract class Disassembler
 	            switch (regIndex)
 	            {
 	                case (byte)0x00: // ROL
-	                    return "ROL " + getMem8() + ", CL";
+	                    return "ROL BYTE " + getMem8() + ", CL";
 	                case (byte)0x01: // ROR
-	                	return "ROR " + getMem8() + ", CL";
+	                	return "ROR BYTE " + getMem8() + ", CL";
 	                case (byte)0x02: // RCL
-	                	return "RCL " + getMem8() + ", CL";
+	                	return "RCL BYTE " + getMem8() + ", CL";
 	                case (byte)0x03: // RCR
-	                	return "RCR " + getMem8() + ", CL";
+	                	return "RCR BYTE " + getMem8() + ", CL";
 	                case (byte)0x04: // SHL
-	                	return "SHL " + getMem8() + ", CL";
+	                	return "SHL BYTE " + getMem8() + ", CL";
 	                case (byte)0x05: // SHR
-	                	return "SHR " + getMem8() + ", CL";
+	                	return "SHR BYTE " + getMem8() + ", CL";
 	                case (byte)0x06: // invalid opcode
 	                    throw new DisassemblerException();
 	                case (byte)0x07: // SAR
-	                	return "SAR " + getMem8() + ", CL";
+	                	return "SAR BYTE " + getMem8() + ", CL";
 	                default:
 	                    throw new RuntimeException();
 	            }
@@ -1099,21 +1102,21 @@ public abstract class Disassembler
 	            switch (regIndex)
 	            {
 	                case (byte)0x00: // ROL
-	                    return "ROL " + getMem16() + ", CL";
+	                    return "ROL WORD " + getMem16() + ", CL";
 	                case (byte)0x01: // ROR
-	                	return "ROR " + getMem16() + ", CL";
+	                	return "ROR WORD " + getMem16() + ", CL";
 	                case (byte)0x02: // RCL
-	                	return "RCL " + getMem16() + ", CL";
+	                	return "RCL WORD " + getMem16() + ", CL";
 	                case (byte)0x03: // RCR
-	                	return "RCR " + getMem16() + ", CL";
+	                	return "RCR WORD " + getMem16() + ", CL";
 	                case (byte)0x04: // SHL
-	                	return "SHL " + getMem16() + ", CL";
+	                	return "SHL WORD " + getMem16() + ", CL";
 	                case (byte)0x05: // SHR
-	                	return "SHR " + getMem16() + ", CL";
+	                	return "SHR WORD " + getMem16() + ", CL";
 	                case (byte)0x06: // invalid opcode
 	                    throw new DisassemblerException();
 	                case (byte)0x07: // SAR
-	                	return "SAR " + getMem16() + ", CL";
+	                	return "SAR WORD " + getMem16() + ", CL";
 	                default:
 	                    throw new RuntimeException();
 	            }
@@ -1233,13 +1236,13 @@ public abstract class Disassembler
                     case 0: // TEST imm8
                         return "TEST " + getMem8() + ", " + toString(nextByte());						
                     case 2: // NOT						
-                        return "NOT " + getMem8();
+                        return "NOT BYTE " + getMem8();
                     case 3: // NEG
-                    	return "NEG " + getMem8();
+                    	return "NEG BYTE " + getMem8();
                     case 4: // MUL
-                    	return "MUL " + getMem8();
+                    	return "MUL BYTE " + getMem8();
                     case 6: // DIV
-                        return "DIV " + getMem8();
+                        return "DIV BYTE " + getMem8();
                     case 1:
                     case 5: // TODO: IMUL
                     case 7: // TODO: IDIV
@@ -1254,13 +1257,13 @@ public abstract class Disassembler
 	                case 0: // TEST imm16
 	                    return "TEST " + getMem16() + ", " + toString(nextWord());						
 	                case 2: // NOT						
-	                    return "NOT " + getMem16();
+	                    return "NOT WORD " + getMem16();
 	                case 3: // NEG
-	                	return "NEG " + getMem16();
+	                	return "NEG WORD " + getMem16();
 	                case 4: // MUL
-	                	return "MUL " + getMem16();
+	                	return "MUL WORD " + getMem16();
 	                case 6: // DIV
-	                    return "DIV " + getMem16();
+	                    return "DIV WORD " + getMem16();
 	                case 1:
 	                case 5: // TODO: IMUL
 	                case 7: // TODO: IDIV
@@ -1285,9 +1288,9 @@ public abstract class Disassembler
                 switch (regIndex)
                 {
                     case 0: // INC
-                        return "INC " + getMem8();
+                        return "INC BYTE " + getMem8();
                     case 1: // DEC
-                    	return "DEC " + getMem8();
+                    	return "DEC BYTE " + getMem8();
                     case 2:
                     case 3:
                     case 4:
@@ -1303,9 +1306,9 @@ public abstract class Disassembler
                 switch (regIndex)
                 {
                     case 0: // INC
-                    	return "INC " + getMem16();
+                    	return "INC WORD " + getMem16();
                     case 1: // DEC
-                    	return "DEC " + getMem16();
+                    	return "DEC WORD " + getMem16();
                     case 2: // CALL near
                     	return "CALL NEAR " + getMem16();
                     case 3: // CALL far
@@ -1322,7 +1325,7 @@ public abstract class Disassembler
                         else
                         	return "JMP FAR " + getMem16();
                     case 6: // PUSH
-                        return "PUSH " + getMem16();
+                        return "PUSH WORD " + getMem16();
                     case 7: // invalid opcode
                         throw new DisassemblerException();
                     default:

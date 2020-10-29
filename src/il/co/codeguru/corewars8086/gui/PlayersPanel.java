@@ -6,6 +6,7 @@ import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
+import il.co.codeguru.corewars8086.war.*;
 import org.eclipse.jdt.internal.compiler.codegen.IntegerCache;
 
 import java.util.ArrayList;
@@ -466,8 +467,10 @@ public class PlayersPanel
             Console.err_box("loaded file is empty, ignoring");
             return;
         }
-        if (len > 512) {
+        if (len > WarriorRepository.MAX_WARRIOR_SIZE) {
             Console.err_box("loaded file is bigger than the allowed 512 bytes, ignoring");
+            //buf = buf.slice(0, WarriorRepository.MAX_WARRIOR_SIZE);
+            //len = buf.byteLength();
             return;
         }
         //Console.log("~~~" + buf.byteLength());

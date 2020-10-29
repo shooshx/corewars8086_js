@@ -264,8 +264,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     private static byte[] read_file_bin_arr(String name) {
         Uint8ArrayNative arr = read_file_bin(name);
-        byte[] buf = new byte[arr.length()];
-        for(int i = 0; i < arr.length(); ++i)
+        int len = arr.length();
+        if (len > WarriorRepository.MAX_WARRIOR_SIZE) // anything longer than 512, trim to 512. this is what the original engine does
+            len = WarriorRepository.MAX_WARRIOR_SIZE;
+        byte[] buf = new byte[len];
+        for(int i = 0; i < len; ++i)
             buf[i] = (byte)arr.get(i);
         return buf;
     }
@@ -695,7 +698,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         String output = read_file("player.lst");
         if (output.isEmpty()) {
             m_currentListing.clear();
-            opcodes_edit.innerHTML = linesAsInput(intext);;
+            opcodes_edit.innerHTML = linesAsInput(intext);
             Console.log("~Empty output");
             if (playersPanel != null)
                 playersPanel.updateAsmResult(true, null, null);
@@ -717,15 +720,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
 
 
-        byte[] buf = read_file_bin_arr("player");
-        if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {
+        byte[] buf = read_file_bin_arr("player"); 
+       /* if (buf.length > WarriorRepository.MAX_WARRIOR_SIZE) {  removed since reading is trimmed
             String msg = "Code is longer than the maximum allowed " + Integer.toString(WarriorRepository.MAX_WARRIOR_SIZE) + " bytes";
             Console.err_box(msg);
             asm_output.innerHTML = "<div class='stdout_line_e'>" + msg + "</div>";
             if (playersPanel != null)
                 playersPanel.updateAsmResult(false, buf, null);
             return;
-        }
+        }*/
 
         df = checkDisasmLines(buf, m_currentListing, df, intext);
 

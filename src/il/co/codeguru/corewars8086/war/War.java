@@ -390,7 +390,7 @@ public class War {
         }
 
         if (!found) {
-            throw new Exception();
+            throw new Exception("Could not find space for loading warrior of, too many warriors, maybe try a different seed");
         }
 
         return (short)loadAddress;
