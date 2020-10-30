@@ -435,6 +435,7 @@ function addZombieCode_as(name) {
     g_nextZombNum += 1
 
     g_usedZnums.push(num)
+    g_codeButtonLabels.push("player_name_lbl_z" + num)
 
     const label = 'z'+num
     j_addPlayer(label, name) // players are identified by a letter, zombies by a number
@@ -449,6 +450,7 @@ function triggerEraseZombie(buttonElem, elem, num) {
 
     elem.parentNode.removeChild(elem);
     arrayRemove(g_usedZnums, num)
+    arrayRemove(g_codeButtonLabels, "player_name_lbl_z" + num)
 
     j_removePlayer('z'+num)
 }
