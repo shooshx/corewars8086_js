@@ -403,6 +403,10 @@ function removeAllPlayers()
         // remove without animation since we don't want to have more than one element with the same "pA" ID
         triggerErasePlayer(null, document.getElementById("pl_frame_p" + letter), letter, true)
     }
+    const used_znums = g_usedZnums.slice(0)
+    for(let num of used_znums) {
+        triggerEraseZombie(null, document.getElementById("zomb_line_z" + num), num)
+    }
 }
 
 
@@ -416,24 +420,31 @@ var g_nextZombNum = 1
 function addZombieCode() {
     if (addZombieBtn.getAttribute("disabled") == "true")
         return;
-    var text = '<div id="zomb_line_zNUM">\
+    addZombieCode_as("Zombie " + g_nextZombNum)
+}
+
+function addZombieCode_as(name) {
+    const text = '<div id="zomb_line_zNUM">\
         <input id="sel_code_w1_zNUM" class="hidden sc-check" onclick="triggerSrc(\'zNUM\', 1)" type="radio" name="src_select">\
-        <label id="player_name_lbl_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >Zombie NUM</label>\
+        <label id="player_name_lbl_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >NAME</label>\
         <label id="player_erase_zNUM" class="pl_close_icon za_close_icon" onclick="triggerEraseZombie(this, zomb_line_zNUM, \'NUM\')"></label>\
         </div>'
 
-    addTextChild(zombies_container, text.replace(/NUM/g, g_nextZombNum))
-    var num = '' + g_nextZombNum  // turn to a string
+    addTextChild(zombies_container, text.replace(/NUM/g, g_nextZombNum).replace(/NAME/g, name))
+    const num = '' + g_nextZombNum  // turn to a string
     g_nextZombNum += 1
 
     g_usedZnums.push(num)
 
-    j_addPlayer('z'+num, "Zombie " + num) // players are identified by a letter, zombies by a number
-
+    const label = 'z'+num
+    j_addPlayer(label, name) // players are identified by a letter, zombies by a number
+    return label
 }
 
+
+
 function triggerEraseZombie(buttonElem, elem, num) {
-    if (buttonElem.getAttribute("disabled") == "true")
+    if (buttonElem !== null && buttonElem.getAttribute("disabled") == "true")
         return;
 
     elem.parentNode.removeChild(elem);
@@ -794,16 +805,16 @@ function doLoadBinary(arrbuf) {
 async function loadWarriorsZip(f)
 {
     const zip = await JSZip.loadAsync(f)
-    const survivors = []
+    const survivors = [], zombies=[]
     const by_name = {}
-    let has_error = false
     const entries = []
     zip.forEach(function (relativePath, zipEntry) {  
         entries.push(zipEntry)
     })
     for(let zipEntry of entries) {
         const name = zipEntry.name
-        if (name.toLocaleLowerCase().startsWith("survivors/")) {
+        const lowname = name.toLocaleLowerCase()
+        if (lowname.startsWith("survivors/")) {
             let filename = name.substr(10)
             let index = 1
             if (filename.endsWith("1") || filename.endsWith("2")) {
@@ -820,11 +831,25 @@ async function loadWarriorsZip(f)
             }
             if (obj[index] !== undefined) {
                 show_error("Zip error: two survivors with the same name " + filename)
-                has_error = true
                 return
             }
             obj[index] = buf
         }
+        else if (lowname.startsWith("zombies/")) {
+            const filename = name.substr(8)
+            const fname_lower = filename.toLocaleLowerCase()
+            const buf = await zipEntry.async('arraybuffer')
+            if (by_name[fname_lower] !== undefined) {
+                show_error("Zip error: zombie with already used name " + filename)
+                return                
+            }
+            zombies.push( { name: filename, 1:buf })
+        }
+        else {
+            console.error("Don't know what to do with file ", name)
+            continue
+        }
+
     }
     removeAllPlayers()
     for(let obj of survivors) {
@@ -837,7 +862,11 @@ async function loadWarriorsZip(f)
             j_srcSelectionChanged(label, 2)
             doLoadBinary(obj[2])   
         }
-
+    }
+    for(let obj of zombies) {
+        const label = addZombieCode_as(obj.name)
+        j_srcSelectionChanged(label, 1)
+        doLoadBinary(obj[1])
     }
 }
 
