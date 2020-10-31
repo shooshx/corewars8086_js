@@ -403,12 +403,16 @@ function removeAllPlayers()
         // remove without animation since we don't want to have more than one element with the same "pA" ID
         triggerErasePlayer(null, document.getElementById("pl_frame_p" + letter), letter, true)
     }
+}
+
+function removeAllZombies() 
+{
     const used_znums = g_usedZnums.slice(0)
     for(let num of used_znums) {
         triggerEraseZombie(null, document.getElementById("zomb_line_z" + num), num)
     }
+    g_nextZombNum = 1
 }
-
 
 function changedPlayerCheck(letter, v)
 {
@@ -804,55 +808,56 @@ function doLoadBinary(arrbuf) {
     j_loadBinary(arrbuf)
 }
 
-async function loadWarriorsZip(f)
-{
-    const zip = await JSZip.loadAsync(f)
-    const survivors = [], zombies=[]
-    const by_name = {}
+async function read_zip(input_elem) {
+    if (input_elem.files.length == 0)
+        return null
+    const file = input_elem.files[0]
+    input_elem.value = ""  // reset it so that next time we could upload the same filename again
+
+    const zip = await JSZip.loadAsync(file)
     const entries = []
     zip.forEach(function (relativePath, zipEntry) {  
+        let name = zipEntry.name
+        const lastSlash = name.lastIndexOf("/")
+        if (lastSlash !== -1)
+            name = name.substr(lastSlash + 1)
+        zipEntry.base_name = name
         entries.push(zipEntry)
     })
     for(let zipEntry of entries) {
-        const name = zipEntry.name
-        const lowname = name.toLocaleLowerCase()
-        if (lowname.startsWith("survivors/")) {
-            let filename = name.substr(10)
-            let index = 1
-            if (filename.endsWith("1") || filename.endsWith("2")) {
-                index = parseInt(filename[filename.length - 1])
-                filename = filename.substr(0, filename.length - 1)
-            }
-            const buf = await zipEntry.async('arraybuffer')
-            const fname_lower = filename.toLocaleLowerCase()
-            let obj = by_name[fname_lower]
-            if (obj === undefined) {
-                obj = { name: filename}
-                by_name[fname_lower] = obj
-                survivors.push(obj)
-            }
-            if (obj[index] !== undefined) {
-                show_error("Zip error: two survivors with the same name " + filename)
-                return
-            }
-            obj[index] = buf
-        }
-        else if (lowname.startsWith("zombies/")) {
-            const filename = name.substr(8)
-            const fname_lower = filename.toLocaleLowerCase()
-            const buf = await zipEntry.async('arraybuffer')
-            if (by_name[fname_lower] !== undefined) {
-                show_error("Zip error: zombie with already used name " + filename)
-                return                
-            }
-            zombies.push( { name: filename, 1:buf })
-        }
-        else {
-            console.error("Don't know what to do with file ", name)
-            continue
-        }
-
+        const buf = await zipEntry.async('arraybuffer')
+        zipEntry.buf = buf
     }
+    return entries
+}
+
+async function load_zip_survivors(input_elem)
+{
+    const entries = await read_zip(input_elem)
+    if (entries === null)
+        return
+    const by_name = {}, survivors = []
+    for(let entry of entries) {
+        let index = 1
+        let name = entry.base_name
+        if (name.endsWith("1") || name.endsWith("2")) {
+            index = parseInt(name[name.length - 1])
+            name = name.substr(0, name.length - 1)
+        }
+        const fname_lower = name.toLocaleLowerCase()
+        let obj = by_name[fname_lower]
+        if (obj === undefined) {
+            obj = { name: name}
+            by_name[fname_lower] = obj
+            survivors.push(obj)
+        }
+        if (obj[index] !== undefined) {
+            show_error("Zip error: two survivors with the same name " + filename)
+            return
+        }
+        obj[index] = entry.buf
+    }
+
     removeAllPlayers()
     for(let obj of survivors) {
         //console.log(obj.name, obj[1], obj[2])
@@ -865,10 +870,21 @@ async function loadWarriorsZip(f)
             doLoadBinary(obj[2])   
         }
     }
-    for(let obj of zombies) {
-        const label = addZombieCode_as(obj.name)
+
+}
+
+
+async function load_zip_zombies(input_elem)
+{
+    const entries = await read_zip(input_elem)
+    if (entries === null)
+        return
+    removeAllZombies()
+
+    for(let entry of entries) {
+        const label = addZombieCode_as(entry.base_name)
         j_srcSelectionChanged(label, 1)
-        doLoadBinary(obj[1])
+        doLoadBinary(entry.buf)
     }
 }
 
@@ -878,11 +894,6 @@ function triggerUploadBinChanged()
         return
     var file = uploadBinInput.files[0]
     uploadBinInput.value = ""  // reset it so that next time we could upload the same filename again
-
-    if (file.name.toLocaleLowerCase().endsWith(".zip")) {
-        loadWarriorsZip(file)
-        return
-    }
 
     var reader = new FileReader();
     reader.onload = function(e) {
@@ -909,6 +920,81 @@ function triggerDownloadBin()
     var bin = new Uint8Array(j_getCurrentBin())
     saveFile(name, "octet/stream", bin)
 }
+
+function create_elem(elem_type, cls) {
+    let e = document.createElement(elem_type);
+    if (cls !== undefined) {
+        if (!Array.isArray(cls))
+            cls = [cls]
+        e.classList = cls.join(" ")
+    }
+    return e
+}
+function add_elem(parent, elem_type, cls) {
+    let e = create_elem(elem_type, cls)
+    parent.appendChild(e)
+    return e
+}
+function create_div(cls) {
+    return create_elem('div', cls)
+}
+
+function add_div(parent, cls) {
+    let e = create_div(cls)
+    parent.appendChild(e)
+    return e
+}
+
+function make_menu(parent, relto, opts) {
+    const menu = add_div(parent, "hmenu")
+    const rect = relto.getBoundingClientRect()
+    menu.style.top = rect.top + rect.height + "px"
+    menu.style.left = rect.left + "px"
+    const dismiss_func = function() {
+        parent.removeChild(menu)
+        document.removeEventListener("click", dismiss_func);
+    }
+    document.addEventListener("click", dismiss_func)
+    for(let opt of opts) {
+        const e = add_elem(menu, "label", "hmenu_elem")
+        e.innerText = opt.text
+        if (opt.for_elem_id !== undefined)
+            e.setAttribute("for", opt.for_elem_id)
+        if (opt.child !== undefined)
+            e.appendChild(opt.child)
+        if (opt.func !== undefined)
+            e.addEventListener("click", opt.func)
+    }
+    return menu
+}
+
+var added_file_inputs = false
+
+function triggerHamMenu(e)
+{
+    e.stopPropagation()
+    const surv_file_elem = add_elem(hamburgBtn, "input", "hidden")
+    surv_file_elem.type = "file"
+    surv_file_elem.addEventListener("change", function() { 
+        load_zip_survivors(surv_file_elem).catch(function(err) { console.error(err) })
+    })
+
+    const zomb_file_elem = add_elem(hamburgBtn, "input", "hidden")
+    zomb_file_elem.type = "file"
+    zomb_file_elem.addEventListener("change", function() { 
+        load_zip_zombies(zomb_file_elem).catch(function(err) { console.error(err) })
+    })
+
+
+    const menu = make_menu(body, hamburgBtn, [ {text:"Load Survivors Zip", child:surv_file_elem},
+                            {text:"Load Zombies Zip", child:zomb_file_elem },
+                          //  {text:"Reset to Demo Survivors", func:function() {}},
+                            {text:"About", func:function() { triggerAbout(true) }}
+                           ])
+
+
+}
+
 
 //-------------------------------- warCanvas wheel zoom -----------------
 // https://github.com/jackmoore/wheelzoom/blob/master/wheelzoom.js
@@ -1145,7 +1231,6 @@ function eventStopProp(e) {
     e.stopPropagation()
 }
 function triggerAbout(v, ev) {
-    aboutBtn.checked = v
     if (v) {
         aboutBack.style.display = "inline"
     }

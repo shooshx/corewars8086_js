@@ -372,7 +372,8 @@ input:disabled + .sc-btn:active,
     background: #ececec;
     width: 190px;
     border-right: 1px solid #bbbbbb;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #action_panel {
@@ -645,26 +646,27 @@ input:disabled + .sc-btn:active,
 }
 
 #debugBtn{
-    width: 130px;
-    text-align:left;
+    width: 158px;
+    text-align: left;
     margin-left: 20px;
+    margin: 3px 0 7px 10px;
 }
 #debugBtnIn {
     display: inline-block;
     width: 30px;
     height: 30px;
     vertical-align: -8px;
-    margin: 0 0px 0 9px;
+    margin: 0 0px 0 25px;
     background-image: url(green_play.png);
 }
 #debugBtnIn2 {
     margin: 0 0 0 3px;
 }
 #competeBtn{
-    width: 130px;
-    text-align:left;
-    margin-left: 20px;
-    margin-bottom: 0;
+    width: 109px;  /* need to keep space for the scroll bar on the right */
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
 }
 #competeBtnIn {
     display: inline-block;
@@ -674,7 +676,8 @@ input:disabled + .sc-btn:active,
     margin: 0 0px 0 9px;
 }
 #competeBtnIn2 {
-    margin: 0 0 0 12px;
+    margin: 0 0 0 6px;
+    font-size: 16px;
 }
 
 #competeRunBtn{
@@ -698,6 +701,40 @@ input:disabled + .sc-btn:active,
 }
 #competeRunBtnIn2 {
     margin: 0 0 0 3px;
+}
+
+#hamburgBtn {
+    display: inline-block;
+    background-image: url(hamburg.png);
+    background-repeat: no-repeat;
+    background-position: 5px 4px;    
+    width: 40px;
+    height: 40px;
+    margin: 7px 3px 7px 10px;
+}
+
+.hmenu {   
+    position: absolute;
+    background: #8d8d8d;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    top: 45px;
+    text-align: left;
+    font-size: initial;
+    line-height: 25px;
+    color: #fff;
+    white-space: nowrap;
+}
+.hmenu_elem {
+    display: block;
+    padding: 1px 5px 0 5px;
+}
+.hmenu_elem:hover {
+    background: #5a5a5a;
+}
+
+.hidden_none {
+    display: none;
 }
 
 /* --------------------- cpuPanel --------------------- */

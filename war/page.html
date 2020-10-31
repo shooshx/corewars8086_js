@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     
 </head>
-  <body onload="start()">
+  <body id="body" onload="start()">
 
     <div id="action_panel"><div id="action_rel">
       <div id="memory_panel">
@@ -35,8 +35,6 @@
         <input id="uploadBinInput" type="file" class="hidden" onchange="return triggerUploadBinChanged()">
         <label id="uploadBinBut" class="sc-btn" for="uploadBinInput" title="Upload binary file or zip file with survivors,zombies folder"></label>
         <label id="downloadBinBut" class="sc-btn" title="Download binary file" onclick="triggerDownloadBin()"></label><a id="downloadLink" style='display: none;'></a>
-        <label id="aboutBtn" class="sc-btn" title=About" onclick="triggerAbout(true)"></label>
-
 
         <br>
         <div id="editor_boxes">
@@ -191,6 +189,8 @@
 
     <div id="players_panel">
       <div id="players_rel">
+        <div id="hamburgBtn" class="sc-btn" onclick="triggerHamMenu(event)"></div>
+
         <input id="competeCheckbox" class="hidden sc-check" onchange="openCompete()" type="checkbox">
         <label id="competeBtn" class="sc-btn" for="competeCheckbox">
             <span id="competeBtnIn2">Competition</span>
