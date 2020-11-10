@@ -160,7 +160,8 @@ public class CompetitionWindow extends JFrame
     }-*/;
 
 
-    public native void exportMethods() /*-{
+    public native void exportMethods() 
+    /*-{
         var that = this
         $wnd.j_startDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startDebug()() });
         $wnd.j_stopDebug = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopDebug()() });
@@ -168,7 +169,7 @@ public class CompetitionWindow extends JFrame
         $wnd.j_triggerZeroSpeed = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_triggerZeroSpeed()() });
         $wnd.j_startCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startCompete()() });
         $wnd.j_stopCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopCompete()() });
-
+        $wnd.j_getResultTableText = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_getResultTableText()() });
     }-*/;
 
     public boolean j_startDebug()
@@ -205,6 +206,10 @@ public class CompetitionWindow extends JFrame
     public void j_triggerZeroSpeed() {
         competition.setSpeed(0);
         battleFrame.speedSlider.setValue(0);
+    }
+
+    public String j_getResultTableText() {
+        return columnGraph.getTableText();
     }
 
 

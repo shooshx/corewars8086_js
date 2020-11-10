@@ -1250,3 +1250,9 @@ function clear_error() {
     error_msg.innerHTML = ""
     error_box.style.display = ""
 }
+
+function triggerCopyTable() {
+    let text = j_getResultTableText();
+    console.log(text)
+    navigator.clipboard.writeText(text)
+}

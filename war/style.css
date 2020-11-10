@@ -1159,7 +1159,7 @@ h3 {
     position: absolute;
     top: 10px;
     left: 191px;
-    width: 710px;
+    width: 1030px;
     background: linear-gradient(to right, #c9c9c9 0%,#fdfdfd 20px); /* http://www.colorzilla.com/gradient-editor/ */
     border: 1px solid;
     border-left: none;
@@ -1174,6 +1174,45 @@ h3 {
 
 #graphs_canvas {
     margin: 10px 10px 10px 20px;
+}
+#results_table {
+    display: inline-block;
+    width: 300px;
+    vertical-align:top;
+}
+.res_table_line {
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+}
+.res_table_name {
+    width: 130px;
+    display: inline-block;
+    padding-top: 5px;
+}
+.res_table_value {
+    width: 50px;
+    display: inline-block;
+    text-align: right;
+    border-left: 1px solid #000;
+    padding-top: 5px;
+    padding-right: 4px;
+}
+.res_table_title_line {
+    border-top: 1px solid #000;
+    background-color: #eaeaea;
+}
+.res_table_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+#copyTableBtn {
+    position: absolute;
+    right: 10px;
+    width: 55px;
+    height: 30px;
+    margin-top: 10px;
+    line-height: 30px;
 }
 
 #graphs_title {
@@ -1202,17 +1241,15 @@ h3 {
     line-height: 30px;
 }
 #battlesRan {
-    display: inline-block;
     vertical-align: top;
-    margin: 12px 14px 0 0;
+    margin: 12px 14px 0 60px;
     line-height: 30px;
     position: absolute;
-    right: 0;
 }
 #graphs_control {
     overflow: hidden;
     position: relative;
-    width: 709px;
+    width: 1029px;
 }
 
 #error_box {
