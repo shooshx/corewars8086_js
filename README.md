@@ -32,6 +32,7 @@ Features include:
 - it is possible to inspect the state of warriors in the debugger after
   a war is over and even continue running the war with just the winner running.
 - implementes all features of the original Java GUI
+- Load a batch of survivors or zombies from a zip file
 
 tips and tricks
 - When debugging, you can always return to a warrior running point by clicking its name on the left pane
@@ -49,5 +50,6 @@ https://codeguru.co.il/Xtreme/
 https://github.com/codeguru-il/corewars8086  
 https://github.com/YoavKa/corewars8086    (disassembler)   
 https://github.com/kimwalisch/calculator  (watch language)   
-
+nice disassembler:
+https://onlinedisassembler.com/odaweb/
 

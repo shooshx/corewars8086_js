@@ -744,21 +744,21 @@ public abstract class Disassembler
                 switch (regIndex)
                 {
                     case 0: // ADD
-                        return "ADD " + getMem8() + ", " + toString(nextByte());
+                        return "ADD BYTE " + getMem8() + ", " + toString(nextByte());
                     case 1: // OR
-                    	return "OR " + getMem8() + ", " + toString(nextByte());
+                    	return "OR BYTE " + getMem8() + ", " + toString(nextByte());
                     case 2: // ADC
-                    	return "ADC " + getMem8() + ", " + toString(nextByte());
+                    	return "ADC BYTE " + getMem8() + ", " + toString(nextByte());
                     case 3: // SBB
-                    	return "SBB " + getMem8() + ", " + toString(nextByte());
+                    	return "SBB BYTE " + getMem8() + ", " + toString(nextByte());
                     case 4: // AND
-                    	return "AND " + getMem8() + ", " + toString(nextByte());
+                    	return "AND BYTE " + getMem8() + ", " + toString(nextByte());
                     case 5: // SUB
-                    	return "SUB " + getMem8() + ", " + toString(nextByte());
+                    	return "SUB BYTE " + getMem8() + ", " + toString(nextByte());
                     case 6: // XOR
-                    	return "XOR " + getMem8() + ", " + toString(nextByte());
+                    	return "XOR BYTE " + getMem8() + ", " + toString(nextByte());
                     case 7: // CMP
-                    	return "CMP " + getMem8() + ", " + toString(nextByte());
+                    	return "CMP BYTE " + getMem8() + ", " + toString(nextByte());
                     default:
                         throw new RuntimeException();
                 }
@@ -874,7 +874,9 @@ public abstract class Disassembler
             case (byte)0x99: // CWD
                 return "CWD";				
             case (byte)0x9A: // CALL far imm16:imm16
-                return "CALL FAR " + toString(nextWord()) + ":" + toString(nextWord());
+                String a = toString(nextWord());
+                String b = toString(nextWord());
+                return "CALL WORD " + b + ":" + a;
             case (byte)0x9B: // original: WAIT, modified: virtual opcode NRG
                 return "WAIT"; // need to output to compile with nasm
                 // The virtual NRG opcode is made up of 4 consecutive WAIT opcodes
@@ -1162,9 +1164,11 @@ public abstract class Disassembler
             case (byte)0xE8: // CALL near imm16
                 return "CALL NEAR " + toString(absFromRel16(nextWord()));
             case (byte)0xE9: // JMP near imm16
-            	return "JMP " + toString(absFromRel16(nextWord()));
+            	return "JMP " + toString(absFromRel16(nextWord())); 
             case (byte)0xEA: // JMP far imm16:imm16
-                return "JMP FAR " + toString(nextWord()) + ":" + toString(nextWord());				
+                String a = toString(nextWord());
+                String b = toString(nextWord());
+                return "JMP WORD " + b + ":" + a;				
             case (byte)0xEB: // JMP short rel8
 
             	return "JMP SHORT " + toString(absFromRel(nextByte()));
