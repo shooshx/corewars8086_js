@@ -1,0 +1,65 @@
+
+.sl_top_div {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden; /* prevent scrollbars due to 1 pixel errors */
+    white-space: nowrap;
+}
+
+.sl_child_div_v {
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sl_child_div_h {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sl_v_splitter {
+    display: inline-block;
+    cursor: col-resize;
+    width: 5px;
+    height: 100%;
+}
+.sl_h_splitter {
+    display: block;
+    cursor: row-resize;
+    height: 5px;
+    width: 100%;
+}
+
+.sl_splitter:hover {
+    background-color: #ccc;
+}
+.sl_splitter {
+    background-color: #ddd;
+}
+
+.sl_hidden {
+    display: none;
+}
+
+.test {
+    width: calc(100% - 22px);
+    height: calc(100% - 22px);
+    margin: 10px;
+    border: 1px solid #ff0000;
+    border-radius: 8px;
+}
+.test_control {
+    position: absolute;
+    border: 1px solid #444444;
+    border-radius: 4px;
+    background-color: rgba(150,150,150,0.8);
+    left:100px;
+    top: 100px;
+    width: 100px;
+    height: 100px;
+}

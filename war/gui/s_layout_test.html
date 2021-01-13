@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="s_layout.js"></script>
+    <link rel="stylesheet" type="text/css" href="s_layout_style.css">
+    <script>
+
+function div_resize(w, h) {
+    this.elem.innerText = "w: " + w + " h: " + h
+}
+
+var layout_ctx = null
+
+function start() {
+
+    const test_simple_v = {
+        split:"h",
+        ratio: 0.3,
+        child_a: { elem: div_a, resize:div_resize },
+        child_b: { 
+            split: "v",
+            ratio: 0.5,
+            child_a: { elem: div_b, resized:div_resize },
+            child_b: { elem: div_c, resized:div_resize, hidden:false} 
+        } 
+           // { elem:div_b, end_at:0.6 },
+    }
+
+    const test_complex = {
+        split:"h",
+        ratio: 0.3,
+        child_a: { elem: div_a, resized:div_resize  },
+        child_b: { 
+            split: "v",
+            ratio: 0.5,
+            child_a: { elem: div_b, resized:div_resize },
+            child_b: { 
+                split: "h",
+                ratio: 0.4,
+                child_a: { elem: div_c, resized:div_resize, hidden:true },
+                child_b: { elem: div_d, resized:div_resize }
+            } 
+        } 
+           // { elem:div_b, end_at:0.6 },
+    }    
+
+
+    layout_ctx = SLayout.setup(body, test_complex)
+
+    //div_b.style.display = "none"
+
+    //div_d.style.display = "none"
+    div_e.style.display = "none"
+    div_f.style.display = "none"
+
+    // make control clickable
+    control.parentElement.appendChild(control)
+
+}
+
+function flip_vis(elem) {
+    const tree = elem.sl_tree
+    tree.set_visible(tree.hidden)
+}
+
+    </script>
+</head>
+<body id="body" onload="start()">
+
+<div id="div_a" class="test">A</div>
+<div id="div_b" class="test">B</div>
+<div id="div_c" class="test">C</div>
+<div id="div_d" class="test">D</div>
+<div id="div_e" class="test">E</div>
+<div id="div_f" class="test">F</div>
+<div id="control" class="test_control">
+    <div onclick="flip_vis(div_a)">vis_a</div>
+    <div onclick="flip_vis(div_b)">vis_b</div>
+    <div onclick="flip_vis(div_c)">vis_c</div>
+    <div onclick="flip_vis(div_d)">vis_d</div>
+</div>
+
+
+</body>
+</html>

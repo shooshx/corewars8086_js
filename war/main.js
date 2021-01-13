@@ -25,6 +25,8 @@ function start()
     // asm_pre.addEventListener("mousewheel", asm_pre_mousewheel) not working
 
     populate_debug_area()
+    do_layout()
+
     did_start = true
 
     document.addEventListener("selectionchange", function() {
@@ -44,6 +46,22 @@ function start()
     speedSlider.addEventListener("input", function() {
         //speedSliderVal.innerText = speedSlider.value
     })
+}
+
+function do_layout()
+{
+    const layout = {
+        split:"v",  // players panel from the rest
+        ratio: 0.15,
+        child_a: { elem:players_panel },
+        child_b: {
+            split:"v",
+            ratio: 0.4,
+            child_a: { elem: edit_panel },
+            child_b: { elem: memory_panel }
+        }
+    }
+    SLayout.setup(body, layout)
 }
 
 
@@ -70,7 +88,7 @@ function setup_breakpoints_savers()
     asm_edit.addEventListener("mouseup", mouseHandler)
 }
 
-
+// make the long pages of the disassembly view
 function populate_debug_area()
 {
     console.log("start addr add")
