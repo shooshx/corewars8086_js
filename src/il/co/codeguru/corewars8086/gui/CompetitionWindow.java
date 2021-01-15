@@ -331,7 +331,7 @@ public class CompetitionWindow extends JFrame
         m_codeEditor.setDebugMode(v);
         m_playersPanel.setDebugMode(v);
 
-        battleFrame.cpuframe.setVisible(v);
+        CpuFrame.setVisible(v);
         if (!v)
             battleFrame.warCanvas.revokeWar();
     }
@@ -367,7 +367,7 @@ public class CompetitionWindow extends JFrame
 
     public void onWarStart() {
 
-        battleFrame.cpuframe.setVisible(true); // do this here since the messages need to scroll to the bottom and it needs to be visible
+        CpuFrame.setVisible(true); // do this here since the messages need to scroll to the bottom and it needs to be visible
     }
 
     private void showBattleFrameIfNeeded() {

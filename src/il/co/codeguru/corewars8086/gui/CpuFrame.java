@@ -49,17 +49,21 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 			flagSF, flagZF, flagAF, flagPF,
 			flagCF;
 
-	private HTMLElement cpuPanel;
+	//private HTMLElement cpuPanel;
 
 	public MemRegionView stackView;
 	public MemRegionView sharedMemView;
 
-	public void setVisible(boolean v) {
+	public static native void setVisible(boolean v) /*-{
+        $wnd.set_cpu_visible(v);
+    }-*/;
+	
+	/*public void setVisible(boolean v) {
 		if (v)
 			cpuPanel.style.display = "";
 		else
 			cpuPanel.style.display = "none";
-	}
+	}*/
 
 	public void setSelectedPlayer(String playerLabel, boolean isDebugMode) {
 		m_currentWarriorLabel = playerLabel;
@@ -242,7 +246,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 
 		this.competition = c;
 
-		cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
+		//cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
 
 
 		regAX = new RegisterField("AX", this);

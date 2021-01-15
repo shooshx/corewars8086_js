@@ -17,12 +17,27 @@ function add_elem(parent, elem_type, cls) {
     return e
 }
 
+
 class LayoutContext {
     constructor(base_tree) {
         this.base_tree = base_tree
         this.elem_map = new Map() // map the input elem: objects to the tree object they are in (from the input)
     }
 
+    do_visibility_cache()
+    {
+        const rec_is_hidden = (tree)=>{
+            if (tree.elem !== undefined)
+                return (tree.hidden === true)
+            const a_h = rec_is_hidden(tree.child_a)
+            const b_h = rec_is_hidden(tree.child_b)
+            tree._hidden_cache = a_h && b_h
+            return tree._hidden_cache
+        }
+        rec_is_hidden(this.base_tree)
+        this.base_tree.sl_resize() // also does hide
+        // we don't know how many levels we need to hide so start from the root
+    }
 }
 
 function setup_layout(parent, in_tree)
@@ -48,7 +63,7 @@ function populate_layout(tree, is_top, ctx)
     tree.sl_resize = make_resize_func(tree, is_top)
     tree.set_visible = function(v) {
         tree.hidden = !v
-        tree.parent.sl_resize() // also does hide
+        ctx.do_visibility_cache()
     }
     if (tree.split !== undefined)
     {
@@ -75,7 +90,7 @@ function populate_layout(tree, is_top, ctx)
 }
 
 function is_hidden(tree) {
-    return (tree.hidden === true)
+    return (tree.hidden === true || tree._hidden_cache === true)
 }
 
 function make_resize_func(tree, is_top) {

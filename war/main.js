@@ -57,11 +57,40 @@ function do_layout()
         child_b: {
             split:"v",
             ratio: 0.4,
-            child_a: { elem: edit_panel },
-            child_b: { elem: memory_panel }
+            child_a: { 
+                split: "h",
+                ratio: 0.7,
+                child_a: { elem: edit_panel },
+                child_b: { elem: cpuPanel }  // step, speed and registers
+            },
+            child_b: {
+                split: "v",
+                ratio: 0.25,
+                child_a: {  // middle view
+                    split: "h",
+                    ratio: 0.3,
+                    child_a: { elem: stackArea }, 
+                    child_b: { 
+                        split: "h",
+                        ratio: 0.5,
+                        child_a: { elem: sharedMemArea },
+                        child_b: { elem: watch_container }
+                    }                    
+                },
+                child_b: { elem: memory_panel }
+            }
         }
     }
     SLayout.setup(body, layout)
+    set_cpu_visible(false)
+}
+
+function set_cpu_visible(v)
+{
+    cpuPanel.sl_tree.set_visible(v)
+    stackArea.sl_tree.set_visible(v)
+    sharedMemArea.sl_tree.set_visible(v)
+    watch_container.sl_tree.set_visible(v)
 }
 
 
@@ -128,10 +157,12 @@ function populate_debug_area()
 }
 
 function cssRuleBySelector(selText) {
-    var rules = document.styleSheets[0].cssRules
-    for(var i = 0; i < rules.length; ++i)
-        if (rules[i].selectorText == selText)
-            return rules[i]
+    for(let sheet of document.styleSheets) {
+        let rules = sheet.cssRules
+        for(var i = 0; i < rules.length; ++i)
+            if (rules[i].selectorText == selText)
+                return rules[i]
+    }
     return null
 }
 

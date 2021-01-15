@@ -151,7 +151,7 @@ input:disabled + .sc-btn:active,
     display: inline-block;
     position:relative;
 
-    width:600px;
+    width: 100%;
     height: 518px;
     vertical-align: top; /* othewise the scroll bar hides the border */
     overflow: hidden;
@@ -161,10 +161,10 @@ input:disabled + .sc-btn:active,
     position: relative; /* for the absolute positiond gray address bar */
 }
 #debug_text {
-    display: inline-block;
+    display: block;
     position:relative;
 
-    width:600px;
+    width: calc( 100% - 4px );
     height: 518px;
     vertical-align: top; /* othewise the scroll bar hides the border */
     border: 1px solid black;
@@ -263,7 +263,7 @@ input:disabled + .sc-btn:active,
     position: absolute;
     top: 0;
     left: 200px;
-    width: 400px;
+    width: calc(100% - 200px);;
     height: 100%;
     border: 1px solid #000;
     border-radius: 6px;
@@ -290,7 +290,7 @@ input:disabled + .sc-btn:active,
     background-color: #fff8ab;
 }
 #asm_output {
-    width:600px;
+    width: 100%;
     height:100px;
     white-space: normal;
     padding: 9px 0 9px 0;
@@ -402,7 +402,7 @@ input:disabled + .sc-btn:active,
   position: relative;
   left: 0;
   top: 0;
-  width: 600px;
+  width: calc( 100% - 16px);;
   margin: 8px;
 }
 #memory_panel {
@@ -609,7 +609,7 @@ input:disabled + .sc-btn:active,
     transition: all 0.12s ease-in-out;
 }
 #seed_edit {
-    float:right;
+
 }
 #seed {
     margin-left: 3px;
@@ -738,9 +738,6 @@ input:disabled + .sc-btn:active,
 /* --------------------- cpuPanel --------------------- */
 
 #cpuPanel {
-    position: absolute;
-    left: 0;
-    top: 630px;
 }
 .reg_name {
     display: inline-block;
@@ -806,9 +803,13 @@ input:disabled + .sc-btn:active,
     background-color: #ff9999;
 }
 
+#registers_block {
+    position: relative; /* for hex_dec absolute */
+}
 
 #hex_dec {
-    float: right;
+    position: absolute;
+    left: 440px;
     width: 70px;
     height: 90px;
 }
@@ -907,24 +908,25 @@ input:disabled + .sc-btn:active,
     border: 1px solid #000000;
     height: 140px;
     display: inline-block;
-    width: 600px;
+    width: calc( 100% - 6px );
     border-radius: 4px;
     margin: 10px 0 0 0;
 }
 
 .submem_area {
-    border: 1px solid #000000;
+    border: 1px solid #313131;
     border-radius: 4px;
     display: inline-block;
-    height: 180px;
-    margin: 5px;
+    margin: 1px;
     position: relative;
+    width: calc( 100% - 4px);
+    height: calc( 100% - 4px);
 }
 #stackArea {
-    width: 160px;
+
 }
 #sharedMemArea {
-    width: 160px;
+
 }
 
 #stackView {
@@ -961,10 +963,12 @@ input:disabled + .sc-btn:active,
 }
 #watch_container {
     display: inline-block;
-    height: 180px;
-    width: 243px;
     border: 1px solid #000000;
     border-radius: 4px;
+
+    width: calc( 100% - 4px );
+    margin: 1px;
+    height: calc( 100% - 4px );
 }
 
 #watchArea {
