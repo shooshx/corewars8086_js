@@ -165,7 +165,7 @@ input:disabled + .sc-btn:active,
     position:relative;
 
     width: calc( 100% - 4px );
-    height: 518px;
+    height: calc( 100% - 31px );
     vertical-align: top; /* othewise the scroll bar hides the border */
     border: 1px solid black;
     border-radius: 6px;
@@ -300,8 +300,8 @@ input:disabled + .sc-btn:active,
     white-space: normal;
     padding: 9px 0 9px 0;
     border: 1px solid #000000;
-    border-radius: 4px;
-    margin: 8px 8px 0 8px;
+    border-radius: 6px;
+    margin: 5px 8px 0 8px;
 }
 #asm_options {
     margin: 8px 0 0 8px;
@@ -843,7 +843,7 @@ input:disabled + .sc-btn:active,
     margin: 0;
 }
 #dbgButtons {
-    margin: 0 0 6px 7px;
+    margin: 5px 0 6px 7px;
 }
 #btnPause {
 }

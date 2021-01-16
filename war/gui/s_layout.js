@@ -39,9 +39,18 @@ class LayoutContext {
         v.leaves_ver = this.leaves_ver
         return v
     }
+
+    is_ver_ok(in_tree) {
+        if (in_tree.leaves_ver_override)
+            return true
+        if (in_tree.leaves_ver === this.leaves_ver)
+            return true
+        return false
+    }
+
     // override_hidden hidden value in tree overrides the ones in the leaves
     load(in_tree, override_hidden=true) { // recreate the tree
-        if (!in_tree.leaves_ver_override && in_tree.leaves_ver !== this.leaves_ver)
+        if (!this.is_ver_ok(in_tree))
             return false // something from a different leaves version, don't load
         link_leaves(this.leaves, in_tree, override_hidden)
         if (this.base_tree !== null && this.base_tree.cont_elem !== undefined) // remove prev
@@ -135,9 +144,15 @@ function populate_layout(tree, is_top, ctx)
         populate_layout(tree.child_a, false, tree.ctx)
         populate_layout(tree.child_b, false, tree.ctx)
         tree.save = function() {
-            const v = { split: tree.split, ratio:tree.ratio, child_a: tree.child_a.save(), child_b: tree.child_b.save() }
+            const v = { split: tree.split, child_a: tree.child_a.save(), child_b: tree.child_b.save() }
             if (tree.hidden === true)
                 v.hidden = true
+            if (tree.ratio !== undefined)
+                v.ratio = tree.ratio
+            if (tree.fixed_a !== undefined)
+                v.fixed_a = tree.fixed_a
+            if (tree.fixed_b !== undefined)
+                v.fixed_b = tree.fixed_b                
             return v
         }
     }
@@ -176,7 +191,7 @@ function make_resize_func(tree, is_top) {
             tree.cont_elem.style.width = tw + "px"
             tree.cont_elem.style.height = th + "px"
         }
-        if (tree.resize)
+        if (tree.resized)
             tree.resized(tw, th)
 
         tree.last_set_w = w
@@ -200,18 +215,55 @@ function make_resize_func(tree, is_top) {
 
             // show both
             if (tree.split !== "h") { // will be undefined in the first iter
-                const pa_w = w * tree.ratio - GRIP_WIDTH
+                const [pa_w, pb_w] = calc_sizes(tree, w)
                 tree.child_a.rec_resize(pa_w, h)
-                tree.child_b.rec_resize(w - pa_w - GRIP_WIDTH, h)
+                tree.child_b.rec_resize(pb_w, h)
             }
             else {
-                const pa_h = h * tree.ratio - GRIP_WIDTH
+                const [pa_h, pb_h] = calc_sizes(tree, h)
                 tree.child_a.rec_resize(w, pa_h)
-                tree.child_b.rec_resize(w, h - pa_h - GRIP_WIDTH)
+                tree.child_b.rec_resize(w, pb_h)
             }
         }
     }
 }
+
+function calc_sizes(tree, c) {
+    if (tree.ratio !== undefined) {
+        const pa = c * tree.ratio - GRIP_WIDTH
+        const pb = c - pa - GRIP_WIDTH
+        return [pa, pb]
+    }
+    if (tree.fixed_a !== undefined) {
+        const pa = tree.fixed_a
+        const pb = c - pa - GRIP_WIDTH
+        return [pa, pb]
+    }
+    if (tree.fixed_b !== undefined) {
+        const pb = tree.fixed_b
+        const pa = c - pb - GRIP_WIDTH
+        return [pa, pb]
+    }
+    throw new Error("can't find sizing calc in tree")
+}
+
+function update_calcer(tree, pa, last_set_c)
+{
+    if (tree.ratio !== undefined) {
+        tree.ratio = (pa + GRIP_WIDTH) / last_set_c
+        return
+    }
+    if (tree.fixed_a !== undefined) {
+        tree.fixed_a = pa
+        return
+    }
+    if (tree.fixed_b !== undefined) {
+        tree.fixed_b = last_set_c - pa - GRIP_WIDTH
+        return
+    }
+    throw new Error("can't find sizing calc in tree")
+}
+
 
 const MIN_PANEL_SIZE = 10
 const GRIP_WIDTH = 5;
@@ -225,7 +277,8 @@ function setup_vert_splitter(tree)
         const rel_x = pageX - rect.left
         if (rel_x > MIN_PANEL_SIZE && rel_x < tree.last_set_w - MIN_PANEL_SIZE) {
             const p1sz = tree.child_a.last_set_w + dx
-            tree.ratio = (p1sz + GRIP_WIDTH) / tree.last_set_w
+            update_calcer(tree, p1sz, tree.last_set_w)
+            
             tree.sl_resize(tree.last_set_w, tree.last_set_h)
         }
     })
@@ -238,7 +291,7 @@ function setup_horz_splitter(tree)
         const rel_y = pageY - rect.top
         if (rel_y > MIN_PANEL_SIZE && rel_y < tree.last_set_h - MIN_PANEL_SIZE) {
             const p1sz = tree.child_a.last_set_h + dy
-            tree.ratio = (p1sz + GRIP_WIDTH) / tree.last_set_h
+            update_calcer(tree, p1sz, tree.last_set_h)
             tree.sl_resize(tree.last_set_w, tree.last_set_h)
         }
     })

@@ -48,13 +48,17 @@ function start()
     })
 }
 
+// allows disregarding the saved tree if there's code change
+const TREE_VER = 0.1
+
 function default_layout_tree(lname)
 {
     const is_edit = lname == "edit"
     const tree = {
         leaves_ver_override: true, // no need to do the leaves ver check since we know it's ok and it's the default
+        tree_ver: TREE_VER,
         split:"v",  // players panel from the rest
-        ratio: 0.15,
+        fixed_a: 180,
         child_a: "players",
         child_b: {
             split:"v",
@@ -115,7 +119,7 @@ function do_layout()
     for(let lname of g_layout_names) {
         const tree_json = localStorage.getItem("layout_" + lname)
         let base_tree = null
-        if (tree_json !== null)
+        if (tree_json !== null && tree_json.tree_ver === TREE_VER)
             base_tree = JSON.parse(tree_json)
         else
             base_tree = default_layout_tree(lname)
