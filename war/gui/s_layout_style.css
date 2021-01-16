@@ -46,20 +46,3 @@
     display: none;
 }
 
-.test {
-    width: calc(100% - 22px);
-    height: calc(100% - 22px);
-    margin: 10px;
-    border: 1px solid #ff0000;
-    border-radius: 8px;
-}
-.test_control {
-    position: absolute;
-    border: 1px solid #444444;
-    border-radius: 4px;
-    background-color: rgba(150,150,150,0.8);
-    left:100px;
-    top: 100px;
-    width: 100px;
-    height: 100px;
-}

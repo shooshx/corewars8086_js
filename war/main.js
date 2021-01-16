@@ -48,20 +48,27 @@ function start()
     })
 }
 
-function do_layout()
+function default_layout_tree(lname)
 {
-    const layout = {
+    const is_edit = lname == "edit"
+    const tree = {
+        leaves_ver_override: true, // no need to do the leaves ver check since we know it's ok and it's the default
         split:"v",  // players panel from the rest
         ratio: 0.15,
-        child_a: { elem:players_panel },
+        child_a: "players",
         child_b: {
             split:"v",
             ratio: 0.4,
             child_a: { 
                 split: "h",
                 ratio: 0.7,
-                child_a: { elem: edit_panel },
-                child_b: { elem: cpuPanel }  // step, speed and registers
+                child_a: "edit",
+                child_b: {
+                    split: "h",
+                    ratio: 0.8,
+                    child_a: {name:"edit_bottom", hidden: !is_edit},
+                    child_b: {name:"cpu", hidden:is_edit}
+                }
             },
             child_b: {
                 split: "v",
@@ -69,28 +76,84 @@ function do_layout()
                 child_a: {  // middle view
                     split: "h",
                     ratio: 0.3,
-                    child_a: { elem: stackArea }, 
+                    child_a: {name:"stack", hidden:is_edit}, 
                     child_b: { 
                         split: "h",
                         ratio: 0.5,
-                        child_a: { elem: sharedMemArea },
-                        child_b: { elem: watch_container }
+                        child_a: {name:"shared", hidden:is_edit},
+                        child_b: {name:"watch", hidden:is_edit}
                     }                    
                 },
-                child_b: { elem: memory_panel }
+                child_b: "mem"
             }
         }
     }
-    SLayout.setup(body, layout)
+    return tree
+}
+
+function reset_layout()
+{
+    for(let lname of g_layout_names) {
+        g_last_saved_layouts[lname] = default_layout_tree(lname)
+    }
+    g_layout_ctx.load(g_last_saved_layouts[g_current_layout_name])
+}
+
+function do_layout()
+{
+    const leaves = {
+        players: { elem:players_panel },
+        edit: { elem: edit_panel },
+        edit_bottom: { elem: editor_bottom },
+        cpu: { elem: cpuPanel }, // step, speed and registers
+        stack: { elem: stackArea },
+        shared: { elem: sharedMemArea },
+        watch: { elem: watch_container },
+        mem: { elem: memory_panel }
+    }
+
+    for(let lname of g_layout_names) {
+        const tree_json = localStorage.getItem("layout_" + lname)
+        let base_tree = null
+        if (tree_json !== null)
+            base_tree = JSON.parse(tree_json)
+        else
+            base_tree = default_layout_tree(lname)
+        g_last_saved_layouts[lname] = base_tree
+    }
+
+    const tree = g_last_saved_layouts["edit"]
+
+    g_layout_ctx = SLayout.setup(body, leaves, null)
+    if (!g_layout_ctx.load(tree)) {
+        // failed due to changed leaves?
+        g_last_saved_layouts["edit"] = default_layout_tree("edit")
+        g_layout_ctx.load(g_last_saved_layouts["edit"])
+    }
+
+    g_layout_ctx.set_save_callback((ctx)=>{
+        const obj = ctx.save()
+        g_last_saved_layouts[g_current_layout_name] = obj
+        const json = JSON.stringify(obj)
+        localStorage.setItem("layout_" + g_current_layout_name, json)        
+    })
     set_cpu_visible(false)
 }
 
+var g_current_layout_name = "edit"
+const g_last_saved_layouts = {} // edit: saved obj, debug: saved obj
+const g_layout_names = ["edit", "debug"]
+var g_layout_ctx = null
+
 function set_cpu_visible(v)
 {
-    cpuPanel.sl_tree.set_visible(v)
-    stackArea.sl_tree.set_visible(v)
-    sharedMemArea.sl_tree.set_visible(v)
-    watch_container.sl_tree.set_visible(v)
+    g_current_layout_name = v ? "debug" : "edit"
+
+    if (!g_layout_ctx.load(g_last_saved_layouts[g_current_layout_name])) {
+        // failed due to changed leaves?
+        g_last_saved_layouts[g_current_layout_name] = default_layout_tree(g_current_layout_name)
+        g_layout_ctx.load(g_last_saved_layouts[g_current_layout_name])        
+    }
 }
 
 
@@ -1038,7 +1101,8 @@ function triggerHamMenu(e)
     const menu = make_menu(body, hamburgBtn, [ {text:"Load Survivors Zip", child:surv_file_elem},
                             {text:"Load Zombies Zip", child:zomb_file_elem },
                           //  {text:"Reset to Demo Survivors", func:function() {}},
-                            {text:"About", func:function() { triggerAbout(true) }}
+                            {text:"About", func:function() { triggerAbout(true) }},
+                            {text:"Reset Layout", func: reset_layout }
                            ])
 
 

@@ -27,20 +27,28 @@ function start() {
     }
 
     const test_complex = {
-        split:"h",
-        ratio: 0.3,
-        child_a: { elem: div_a, resized:div_resize  },
-        child_b: { 
-            split: "v",
-            ratio: 0.5,
-            child_a: { elem: div_b, resized:div_resize },
+        leaves: {
+            a: { elem: div_a, resized:div_resize  },
+            b: { elem: div_b, resized:div_resize }, 
+            c: { elem: div_c, resized:div_resize, hidden:true },
+            d: { elem: div_d, resized:div_resize }
+        },
+        tree: {
+            split:"h",
+            ratio: 0.3,
+            child_a: "a",
             child_b: { 
-                split: "h",
-                ratio: 0.4,
-                child_a: { elem: div_c, resized:div_resize, hidden:true },
-                child_b: { elem: div_d, resized:div_resize }
+                split: "v",
+                ratio: 0.5,
+                child_a: "b",
+                child_b: { 
+                    split: "h",
+                    ratio: 0.4,
+                    child_a: "c",
+                    child_b: "d"
+                } 
             } 
-        } 
+        }
            // { elem:div_b, end_at:0.6 },
     }    
 
@@ -62,8 +70,34 @@ function flip_vis(elem) {
     const tree = elem.sl_tree
     tree.set_visible(tree.hidden)
 }
+function log_save() {
+    console.log(layout_ctx.save())
+}
 
     </script>
+
+<style>
+.test {
+    width: calc(100% - 22px);
+    height: calc(100% - 22px);
+    margin: 10px;
+    border: 1px solid #ff0000;
+    border-radius: 8px;
+}
+.test_control {
+    position: absolute;
+    border: 1px solid #444444;
+    border-radius: 4px;
+    background-color: rgba(150,150,150,0.8);
+    left:100px;
+    top: 100px;
+    width: 100px;
+    height: 100px;
+}
+.btn {
+    cursor:pointer;
+}    
+</style>    
 </head>
 <body id="body" onload="start()">
 
@@ -74,10 +108,11 @@ function flip_vis(elem) {
 <div id="div_e" class="test">E</div>
 <div id="div_f" class="test">F</div>
 <div id="control" class="test_control">
-    <div onclick="flip_vis(div_a)">vis_a</div>
-    <div onclick="flip_vis(div_b)">vis_b</div>
-    <div onclick="flip_vis(div_c)">vis_c</div>
-    <div onclick="flip_vis(div_d)">vis_d</div>
+    <div class="btn" onclick="flip_vis(div_a)">vis_a</div>
+    <div class="btn" onclick="flip_vis(div_b)">vis_b</div>
+    <div class="btn" onclick="flip_vis(div_c)">vis_c</div>
+    <div class="btn" onclick="flip_vis(div_d)">vis_d</div>
+    <div class="btn" onclick="log_save()">save</div>
 </div>
 
 
