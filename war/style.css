@@ -159,6 +159,7 @@ input:disabled + .sc-btn:active,
 
 #debug_area {
     position: relative; /* for the absolute positiond gray address bar */
+    height: 520px;
 }
 #debug_text {
     display: block;
