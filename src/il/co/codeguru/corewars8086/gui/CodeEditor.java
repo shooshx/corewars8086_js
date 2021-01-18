@@ -81,6 +81,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     @Override
     public void onEndRound() {
+        // move the debug marker to the next line
         updateDebugLine();
 
     }
@@ -1161,6 +1162,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         }
         if (m_lastDbgElement != null) // remove the last thing we put there
             m_lastDbgElement.classList.remove(m_lastIsAlive ? "current_dbg" : "current_dbg_dead");
+
+        if (ipInsideArena < 0 || ipInsideArena > War.ARENA_SIZE)
+            return; // IP outside what we can show
 
         // the first call to this is before debugMode is started to set the first debug
         // line.
