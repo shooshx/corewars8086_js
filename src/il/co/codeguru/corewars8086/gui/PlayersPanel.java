@@ -74,6 +74,9 @@ public class PlayersPanel
         public int activeCodes() {
             return (wtype == EWarriorType.SINGLE) ? 1:2;
         }
+        public boolean isZombie() {
+            return label.charAt(0) == 'z';
+        }
 
         public boolean isEnabled = true; // the checkbox next to the player
         public String label;  // 'A', 'B' etc, the string on the elements of the player
@@ -290,7 +293,7 @@ public class PlayersPanel
         PlayerInfo p = findPlayer(label);
         p.setWType(EWarriorType.valueOf(v));
 
-        reWriteButtonsLabels(p);
+        //reWriteButtonsLabels(p);
     }
 
     private native void updateLoadAddr(String value, boolean isRand) /*-{
@@ -379,7 +382,7 @@ public class PlayersPanel
         String pt = m_inEditor.player.label;
         ((HTMLElement)DomGlobal.document.getElementById("player_name_lbl_" + pt)).innerHTML = v;
 
-        reWriteButtonsLabels(m_inEditor.player);
+        //reWriteButtonsLabels(m_inEditor.player);
     }
 
     
@@ -387,9 +390,12 @@ public class PlayersPanel
         PlayerInfo p = findPlayer(label);
         p.title = v;
 
-        reWriteButtonsLabels(p);
+        //reWriteButtonsLabels(p);
     }
 
+    public static native boolean zombiesEnabled() /*-{
+        return $wnd.player_check_zombies.checked
+    }-*/;
 
 
     public void updateAsmResult(boolean compileOk, byte[] binbuffer, ArrayList<CodeEditor.LstLine> lines)
@@ -413,6 +419,8 @@ public class PlayersPanel
         for(int i = 0; i < m_players.size(); ++i) {
             PlayerInfo p = m_players.get(i);
             if (!p.isEnabled)
+                continue;
+            if (p.isZombie() && !zombiesEnabled())
                 continue;
             ++countEnabled;
 
@@ -444,8 +452,15 @@ public class PlayersPanel
 
 
     private void ensureSelectedPlayerActive() {
-        if (m_inEditor.player.isEnabled)
-            return;
+        if (!m_inEditor.player.isZombie()) {
+            if (m_inEditor.player.isEnabled)
+                return;
+        }
+        else {
+            if (zombiesEnabled())
+                return;
+        }
+
         // there must be an enabled player since we tested that
         for(int i = 0; i < m_players.size(); ++i) {
             PlayerInfo p = m_players.get(i);

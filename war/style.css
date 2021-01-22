@@ -159,7 +159,7 @@ input:disabled + .sc-btn:active,
 
 #debug_area {
     position: relative; /* for the absolute positiond gray address bar */
-    height: 520px;
+    height: 100%;
 }
 #debug_text {
     display: block;
@@ -425,6 +425,9 @@ input:disabled + .sc-btn:active,
     width: 100%;
     top: 10px;
     /*bottom: 20px;*/
+    white-space: nowrap;
+
+    top: 0; /* vvvv */
 }
 
 .hidden {
@@ -443,6 +446,11 @@ input:disabled + .sc-btn:active,
 }
 
 
+#players_contaier {
+    /*display: inline-block; /* vvvv */
+    vertical-align: top;
+}
+
 
 .toppic {
     margin: 10px 11px 5px 10px;
@@ -450,12 +458,23 @@ input:disabled + .sc-btn:active,
     font-family: Verdana;
     padding: 4px;
     border-radius: 5px;
-    height: 142px;
+    /*height: 98px;*/
     transition: height 0.1s ease-in-out;
     animation: fadeIn 200ms;
     line-height: 26px;
     overflow: hidden;
+
+     /* vvvv */
+    vertical-align: top;
+    white-space: nowrap;    
 }
+
+.toppic2 { /* vvvv */
+    /*width: 140px; */
+    /*margin: 10px 4px 5px 10px;*/
+    /*display: inline-block;*/
+}
+
 .removed_anim {
     animation: fadeOut 100ms;
 }
@@ -501,9 +520,11 @@ input:disabled + .sc-btn:active,
     width: 200px;
     text-indent: 20px;
     line-height: 14px;
-    margin: 0 0 0 20px;
+    margin: 5px 0 0 20px;
     font-size: 85%;
     background-size: 14px;
+
+    display: block !important; /* override the one in mycheck so that it won't go inline */
 }
 
 .opt_single {
@@ -516,6 +537,18 @@ input:disabled + .sc-btn:active,
     margin: 3px 0 0 15px;
     width: calc(100% - 20px);
     transition: opacity 0.1s ease-in-out, height 0.1s ease-in-out, margin-top 0.1s ease-in-out;
+
+    display: inline-block; /* vvvv */
+    white-space: nowrap;
+    width: 60px;   
+    margin: 3px 0 0 5px;
+}
+
+.src_sel_but2 { /* vvvv */
+
+}
+
+.src_sel_chk {
 }
 
 #addPlayerBtn {
@@ -563,11 +596,12 @@ input:disabled + .sc-btn:active,
 #pl_frame_zombies {
     height:initial;
     padding-bottom: 0px;
+    width: initial; /* override toppic */
 }
 #addZombieBtn {
     width: 28px;
     height: 28px;
-    margin: 4px 7px 7px 15px;
+    margin: 4px 7px 0px 15px;
 }
 #addZombieBtnIn {
     background: url(plus.png) 6px 5px no-repeat;
@@ -576,11 +610,29 @@ input:disabled + .sc-btn:active,
     height: 28px;
 }
 
+#player_name_lbl_zombies { /* override famtitle */
+    display: initial;
+    width: initial;
+}
+
+#zomb_title {
+    display: inline-block;
+    vertical-align: top;
+}
+
 .zomb_sel_but {
-    width: calc(100% - 40px);
+    /*width: calc(100% - 40px);*/
 }
 .za_close_icon {
     margin-top: 6px;
+}
+
+.zomb_line {
+    display: block;
+    margin: 0 7px 0 0;
+}
+
+#zombies_container {
 }
 
 /* ------------------------------------------------------*/
@@ -708,6 +760,15 @@ input:disabled + .sc-btn:active,
 }
 #competeRunBtnIn2 {
     margin: 0 0 0 3px;
+}
+
+#cornerBtns {
+    width: 173px;
+    height: 110px;
+    vertical-align: top;
+    display: inline-block; /* vvvv */
+    margin: 7px 0 0 0;
+    white-space: normal;
 }
 
 #hamburgBtn {
@@ -917,9 +978,9 @@ input:disabled + .sc-btn:active,
     border: 1px solid #000000;
     height: 140px;
     display: inline-block;
-    width: calc( 100% - 6px );
+    width: calc( 100% - 15px );
     border-radius: 4px;
-    margin: 10px 0 0 0;
+    margin: 5px 0 0 8px;
 }
 
 .submem_area {
@@ -1277,6 +1338,7 @@ position: absolute;
     border-radius: 10px;
     padding: 10px;
     border: solid 5px #ff0000;
+    z-index: 11;
 }
 #error_title {
     text-align: center;

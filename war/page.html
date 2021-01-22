@@ -50,7 +50,7 @@
               <div id="box_edit"></div>
           </div>
           <div id="debug_area" style="display:none;">
-              <input type="text" id="debug_goto" spellcheck="false" onkeyup="triggerGoToKey()">
+              <input type="text" id="debug_goto" autocomplete="chrome-off" spellcheck="false" onkeyup="triggerGoToKey()">
               <label id="btnGoTo" class="sc-btn" onclick="triggerGoTo()">go to</label>
               <span id="stepnum_cont">Step:<span id="stepnum">0</span></span>
               <div id="dbg_box_addr"></div>
@@ -180,8 +180,6 @@
                 <div id="watchArea">
                 </div>
             </div>
-
-          <br>
           <div id="messagesArea" class="codearea allow_select" wrap="off" ></div>
         </div>
       </div>
@@ -191,33 +189,35 @@
 
     <div id="players_panel">
       <div id="players_rel">
-        <div id="hamburgBtn" class="sc-btn" onclick="triggerHamMenu(event)"></div>
+        <div id="cornerBtns">
+          <div id="hamburgBtn" class="sc-btn" onclick="triggerHamMenu(event)"></div>
 
-        <input id="competeCheckbox" class="hidden sc-check" onchange="openCompete()" type="checkbox">
-        <label id="competeBtn" class="sc-btn" for="competeCheckbox">
-            <span id="competeBtnIn2">Competition</span>
-        </label>
-        <br>
-        <input id="debugCheckbox" class="hidden" onchange="triggerDebug()" type="checkbox">
-        <label id="debugBtn" class="sc-btn" for="debugCheckbox">
-          <span id="debugBtnIn" class="sc-span"></span>
-          <span id="debugBtnIn2">Debug</span>
-        </label>
+          <input id="competeCheckbox" class="hidden sc-check" onchange="openCompete()" type="checkbox">
+          <label id="competeBtn" class="sc-btn" for="competeCheckbox">
+              <span id="competeBtnIn2">Competition</span>
+          </label>
+          <input id="debugCheckbox" class="hidden" onchange="triggerDebug()" type="checkbox">
+          <label id="debugBtn" class="sc-btn" for="debugCheckbox">
+            <span id="debugBtnIn" class="sc-span"></span>
+            <span id="debugBtnIn2">Debug</span>
+          </label>
+        </div>  
+
         <div id="players_contaier">
 
         </div>
         <label id="addPlayerBtn" class="sc-btn" onclick="addPlayersPanel()" title="Add Player"><span id="addPlayerBtnIn"></span></label>
 
-        <div id="pl_frame_zombies" class="toppic">
-            <div class="famtitle">
+        <div id="pl_frame_zombies" class="toppic toppic2">
+            <div id="zomb_title" class="famtitle">
                 <input class="fam_check_box hidden mycheck" id="player_check_zombies" type="checkbox" checked onchange="" >
                 <label class="fam_check mycheck_label" for="player_check_zombies"></label>
                 <label id="player_name_lbl_zombies" class="fam_label">Zombies</label>
             </div>
+            <label id="addZombieBtn" class="sc-btn" onclick="addZombieCode()" title="Add Zombie"><span id="addZombieBtnIn"></span></label>
             <div id="zombies_container">
 
             </div>
-            <label id="addZombieBtn" class="sc-btn" onclick="addZombieCode()" title="Add Zombie"><span id="addZombieBtnIn"></span></label>
 
         </div>
 

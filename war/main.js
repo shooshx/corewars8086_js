@@ -95,13 +95,19 @@ function default_layout_tree(lname)
     return tree
 }
 
+
+function re_layout_current() {
+    g_layout_ctx.load(g_last_saved_layouts[g_current_layout_name])
+}
+
 function reset_layout()
 {
     for(let lname of g_layout_names) {
         g_last_saved_layouts[lname] = default_layout_tree(lname)
     }
-    g_layout_ctx.load(g_last_saved_layouts[g_current_layout_name])
+    re_layout_current()
 }
+
 
 function do_layout()
 {
@@ -142,6 +148,10 @@ function do_layout()
         localStorage.setItem("layout_" + g_current_layout_name, json)        
     })
     set_cpu_visible(false)
+
+    const pp_state = localStorage.getItem("players_panel_state")
+    if (pp_state !== null)
+        flip_players_panel(pp_state)
 }
 
 var g_current_layout_name = "edit"
@@ -159,6 +169,60 @@ function set_cpu_visible(v)
         g_layout_ctx.load(g_last_saved_layouts[g_current_layout_name])        
     }
 }
+
+var g_css_rules = null
+var g_players_panel_state = "v"
+
+function flip_players_panel(to_state=null)
+{
+    if (to_state !== null) {
+        if (to_state == g_players_panel_state)
+            return
+    }
+    else {
+        if (g_players_panel_state == "v")
+            to_state = "h"
+        else
+            to_state = "v"
+    }
+    g_players_panel_state = to_state
+    localStorage.setItem("players_panel_state", g_players_panel_state)
+
+
+    if (g_css_rules === null) {
+        g_css_rules = {
+            toppic2:  cssRuleBySelector(".toppic2"),
+            zomb_line: cssRuleBySelector(".zomb_line")
+        }
+    }
+    // to top
+    if (g_players_panel_state == "h") {
+        g_css_rules.toppic2.style.width = "140px"
+        g_css_rules.toppic2.style.margin = "10px 4px 5px 10px"
+        g_css_rules.toppic2.style.display = "inline-block"
+        players_contaier.style.display = "inline-block"
+        g_css_rules.zomb_line.style.display = "inline-block"
+    }
+    else {
+        g_css_rules.toppic2.style.width = ""
+        g_css_rules.toppic2.style.margin = ""
+        g_css_rules.toppic2.style.display = ""
+        players_contaier.style.display = ""
+        g_css_rules.zomb_line.style.display = "block"
+    }
+
+
+    for(let lname of g_layout_names) {
+        const tree = g_last_saved_layouts[lname]
+        // top level is divider between players and the rest of the layout
+        tree.split = g_players_panel_state
+        // reset to the preferred width for each state
+        tree.fixed_a = (g_players_panel_state == "v") ? 180 : 118
+    }
+    re_layout_current()
+}
+
+// -----------------------------------------------------------------------
 
 
 var saved_selectionStart = -1 // need to be int for java to read
@@ -391,7 +455,7 @@ function addPlayersPanel() {
 
 function addPlayerPanel_as(name, wtype)
 {
-    var text = '<div id="pl_frame_pLETTER" class="toppic">\
+    var text = '<div id="pl_frame_pLETTER" class="toppic toppic2">\
           <div class="famtitle">\
             <input class="fam_check_box hidden mycheck" id="player_check_pLETTER" type="checkbox" checked onchange="changedPlayerCheck(\'LETTER\', this.checked)" >\
             <label class="fam_check mycheck_label" for="player_check_pLETTER"></label>\
@@ -400,11 +464,10 @@ function addPlayerPanel_as(name, wtype)
           </div>\
           <input class="fam_check_box hidden mycheck" id="wtype_pLETTER" type="checkbox" onchange="changedWType(\'pLETTER\', this.checked)" >\
           <label class="fam_check mycheck_label wtype_label" for="wtype_pLETTER">Two Warriors</label>\
-          <input id="sel_code_w1_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'pLETTER\', 1)" type="radio" name="src_select">\
-          <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but" for="sel_code_w1_pLETTER" >Player_LETTER</label>\
-          <br>\
-          <input id="sel_code_w2_pLETTER" class="hidden sc-check" onclick="triggerSrc(\'pLETTER\', 2)" type="radio" name="src_select">\
-          <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but" for="sel_code_w2_pLETTER">Player_LETTER2</label>\
+          <input id="sel_code_w1_pLETTER" class="hidden sc-check src_sel_chk" onclick="triggerSrc(\'pLETTER\', 1)" type="radio" name="src_select">\
+          <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but src_sel_but2" for="sel_code_w1_pLETTER" >1</label>\
+          <input id="sel_code_w2_pLETTER" class="hidden sc-check src_sel_chk" onclick="triggerSrc(\'pLETTER\', 2)" type="radio" name="src_select">\
+          <label id="sel_code_lbl_w2_pLETTER" class="sc-btn src_sel_but src_sel_but2" for="sel_code_w2_pLETTER">2</label>\
         </div>'
 
     const letter = g_nextLetter
@@ -444,13 +507,13 @@ function changedWType(label, v, move_ui)
         elem2.style.visibility = 'hidden'
         elem2.style.opacity = 0.0
         elem1.style.marginTop = '7px'
-        frame.style.height = '98px'
+        //frame.style.height = '98px' // not needed since it's always the same height now
     }
     else if (v == 'TWO_DIFFERENT') {
         elem2.style.visibility = 'visible'
         elem2.style.opacity = 1
         elem1.style.marginTop = '7px'
-        frame.style.height = ''
+        //frame.style.height = ''
     }
 
     j_changedWType(label, v);
@@ -544,9 +607,9 @@ function addZombieCode() {
 }
 
 function addZombieCode_as(name) {
-    const text = '<div id="zomb_line_zNUM">\
+    const text = '<div id="zomb_line_zNUM" class="zomb_line">\
         <input id="sel_code_w1_zNUM" class="hidden sc-check" onclick="triggerSrc(\'zNUM\', 1)" type="radio" name="src_select">\
-        <label id="player_name_lbl_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >NAME</label>\
+        <label id="player_name_lbl_zNUM" class="sc-btn src_sel_but zomb_sel_but" for="sel_code_w1_zNUM" >NUM</label>\
         <label id="player_erase_zNUM" class="pl_close_icon za_close_icon" onclick="triggerEraseZombie(this, zomb_line_zNUM, \'NUM\')"></label>\
         </div>'
 
@@ -725,6 +788,8 @@ function triggerDebug() {
         for(var uzi in g_usedZnums) {
             var uz = g_usedZnums[uzi]
             document.getElementById("player_erase_z" + uz).setAttribute("disabled", true)
+            if (!player_check_zombies.checked)
+                document.getElementById("player_name_lbl_z" + uz).setAttribute("disabled", true)
         }
         clear_error()
     }
@@ -754,6 +819,7 @@ function triggerDebug() {
         for(var uzi in g_usedZnums) {
             var uz = g_usedZnums[uzi]
             document.getElementById("player_erase_z" + uz).removeAttribute("disabled")
+            document.getElementById("player_name_lbl_z" + uz).removeAttribute("disabled")
         }
         clear_code_buttons_colors()
     }
@@ -1106,7 +1172,8 @@ function triggerHamMenu(e)
                             {text:"Load Zombies Zip", child:zomb_file_elem },
                           //  {text:"Reset to Demo Survivors", func:function() {}},
                             {text:"About", func:function() { triggerAbout(true) }},
-                            {text:"Reset Layout", func: reset_layout }
+                            {text:"Reset Layout", func: reset_layout },
+                            {text:"Flip Players Panel", func: function() { flip_players_panel(null) } }
                            ])
 
 

@@ -232,11 +232,12 @@ public class WarriorRepository {
 				file.delete();
 		}
 	}
-	*/
+    */
+    
 
 	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles, LoadAddrChecker loadAddrChecker) {
         zombieGroup = null;
-        if (zombieFiles == null || zombieFiles.length == 0)
+        if (zombieFiles == null || zombieFiles.length == 0 || !PlayersPanel.zombiesEnabled())
             return true;
 
         zombieGroup = new WarriorGroup("ZoMbIeS", "");
