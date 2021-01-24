@@ -48,6 +48,29 @@ function start()
     })
 }
 
+
+// called when GWT finshed loading
+function gwtStart()
+{
+    start()
+    //do_layout()  // relies on j_resized
+    console.log("gwtStart()");
+   // start with two players
+    addPlayersPanel()
+    addPlayersPanel()
+
+    sel_code_w1_pA.checked = true
+    triggerSrc('pA', 1)
+
+    j_demoDebugPlayers();
+
+    addWatchLine();
+    //addWatchLine();
+    //addWatchLine();
+
+}
+
+
 // allows disregarding the saved tree if there's code change
 const TREE_VER = 0.1
 
@@ -108,6 +131,21 @@ function reset_layout()
     re_layout_current()
 }
 
+function mem_panel_resized(w, h)
+{
+    let resized = false;
+    if (w !== warCanvas.width) {
+        warCanvas.width = w
+        resized = true
+    }
+    if (h !== warCanvas.height) {
+        warCanvas.height = h
+        resized = true
+    }
+    if (resized)
+        j_canvasResized(w, h)
+    
+}
 
 function do_layout()
 {
@@ -119,14 +157,15 @@ function do_layout()
         stack: { elem: stackArea },
         shared: { elem: sharedMemArea },
         watch: { elem: watch_container },
-        mem: { elem: memory_panel }
+        mem: { elem: memory_panel }//, resized:mem_panel_resized }
     }
 
     for(let lname of g_layout_names) {
-        const tree_json = localStorage.getItem("layout_" + lname)
+        const in_txt = localStorage.getItem("layout_" + lname)
+        const tree_json = (in_txt !== null) ? JSON.parse(in_txt) : null
         let base_tree = null
         if (tree_json !== null && tree_json.tree_ver === TREE_VER)
-            base_tree = JSON.parse(tree_json)
+            base_tree = tree_json
         else
             base_tree = default_layout_tree(lname)
         g_last_saved_layouts[lname] = base_tree
@@ -400,25 +439,6 @@ function triggerGoToKey() {
 
 
 
-
-// called when GWT finshed loading
-function gwtStart()
-{
-    start();
-    console.log("gwtStart()");
-   // start with two players
-    addPlayersPanel()
-    addPlayersPanel()
-
-    sel_code_w1_pA.checked = true
-    triggerSrc('pA', 1)
-
-    j_demoDebugPlayers();
-
-    addWatchLine();
-    //addWatchLine();
-    //addWatchLine();
-}
 
 
 function addTextChild(elem, txt) {
@@ -1332,12 +1352,16 @@ function js_initZoom() {
 
     warCtx = warCanvas.getContext('2d');
 }
+
+var BOARD_WIDTH = 256;
+var BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+
 function js_resetZoom() {
     var initial = 1;
     //var computedStyle = window.getComputedStyle(warCanvas, null);
 
-    width = 256*3; //parseInt(computedStyle.width, 10);
-    height = 256*3; //parseInt(computedStyle.height, 10);
+    width = BOARD_WIDTH*3; //parseInt(computedStyle.width, 10);
+    height = BOARD_HEIGHT*3; //parseInt(computedStyle.height, 10);
     bgWidth = width * initial;
     bgHeight = height * initial;
     bgPosX = -(bgWidth - width)/2;

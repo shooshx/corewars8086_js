@@ -22,6 +22,7 @@ class LayoutContext {
     constructor(leaves, parent_elem) {
         this.leaves = leaves
         this.leaves_ver = Object.keys(this.leaves).sort().join("|")
+        this.in_tree_ver = null // maintained from loaded input to be saved to output
         this.base_tree = null
         this.save_callback = null
         this.parent_elem = parent_elem
@@ -37,6 +38,7 @@ class LayoutContext {
     save() {
         const v = this.base_tree.save()
         v.leaves_ver = this.leaves_ver
+        v.tree_ver = this.in_tree_ver
         return v
     }
 
@@ -57,6 +59,7 @@ class LayoutContext {
             this.parent_elem.removeChild(this.base_tree.cont_elem)
         in_tree.cont_elem = add_elem(this.parent_elem, "div", "sl_top_div")
         in_tree.parent = null
+        this.in_tree_ver = in_tree.tree_ver
         this.base_tree = in_tree
         populate_layout(this.base_tree, true, this)
         this.do_visibility_cache()
