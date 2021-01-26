@@ -18,29 +18,43 @@ import il.co.codeguru.corewars8086.war.War;
 
 public class Canvas extends JComponent<HTMLCanvasElement> {
 
-	public static final int BOARD_SIZE = 256;
-	public static final int DOT_SIZE = 3;
+    //public static final int BOARD_SIZE = 256;
+    // product of these must be 65536
+    private int BOARD_WIDTH = 128;
+    private int BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+
+	private static final int DOT_SIZE = 3;
 	//public static final int MARGIN_SIZE = 45; // in pixels
-    public static final int MARGIN_TOP = 20, MARGIN_RIGHT = 20, MARGIN_BOTTOM = 45, MARGIN_LEFT = 45;
-    public static final int BOARD_SIZE_PX = BOARD_SIZE * DOT_SIZE;
+    private static final int MARGIN_TOP = 20, MARGIN_RIGHT = 20, MARGIN_BOTTOM = 45, MARGIN_LEFT = 45;
+    //private static final int BOARD_SIZE_PX = BOARD_SIZE * DOT_SIZE;
+    private int BOARD_WIDTH_PX = BOARD_WIDTH * DOT_SIZE;
+    private int BOARD_HEIGHT_PX = BOARD_HEIGHT * DOT_SIZE;
 
-    public static final int CANVAS_HEIGHT = BOARD_SIZE*DOT_SIZE + MARGIN_TOP + MARGIN_BOTTOM;
-    public static final int CANVAS_WIDTH = BOARD_SIZE*DOT_SIZE + MARGIN_LEFT + MARGIN_RIGHT;
+    private int CANVAS_HEIGHT = BOARD_HEIGHT_PX + MARGIN_TOP + MARGIN_BOTTOM;
+    private int CANVAS_WIDTH = BOARD_WIDTH_PX + MARGIN_LEFT + MARGIN_RIGHT;
+    // TBD draw text only on visible canvas
 
-    public static final byte EMPTY = -1;
+    private int VIS_WIDTH_PX = CANVAS_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
+    private int VIS_HEIGHT_PX = CANVAS_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM;
+    // replacing BOARD_WIDTH, BOARD_HEIGHT for expanding memory - how many rows and cols are visible
+    private int VIS_WIDTH = VIS_WIDTH_PX/DOT_SIZE;
+    private int VIS_HEIGHT = VIS_HEIGHT_PX/DOT_SIZE;
+
+    private static final byte EMPTY = -1;
 
     private CanvasRenderingContext2D ctx;
 	private byte[][] data; // holds colors, not values
 
-	private byte[][] pointer;
-	private byte[][] values;
+	private byte[][] pointer; // where is IP
+	private byte[][] values; // memory values
 
 	//private EventMulticasterMouse eventCaster;
 	//private MouseAddressRequest eventHandler;
 
 	//private int MouseX, MouseY;
 
-	private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect
+    private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect (user zoom with wheel)
+    private float m_cvScale; // scale due to canvas size
     private boolean m_showContent = false;
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
 
@@ -61,8 +75,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         public void right(float v){ x += v; p.lineTo(x, y); }
     };
 
-    public static final int TEXT_EPS = 6; // how much to leave in the clipping for half the text
-    public static final int TICK_WIDTH = 7;
+    private static final int TEXT_EPS = 6; // how much to leave in the clipping for half the text
+    private static final int TICK_WIDTH = 7;
 
 	public Canvas(String id) {
 		super(id);
@@ -74,11 +88,26 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 		//this.MouseY = 0;
 		ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
 
-		Dimension d = getMinimumSize();
-		m_element.width = d.width;
-		m_element.height = d.height;
+		//Dimension d = getMinimumSize();
+		//m_element.width = d.width;
+		//m_element.height = d.height;
         //ctx.save(); // save state with full page clipping
 
+        makeClipAreas();
+
+        //ctx.clip(m_memclip);
+
+        m_dummyInput = (HTMLInputElement)DomGlobal.document.getElementById("warCanvasDummyInput");
+        m_hoverCellInfo = (HTMLElement)DomGlobal.document.getElementById("hoverCellInfo");
+
+		exportMethods();
+		initZoom(MARGIN_TOP, MARGIN_LEFT);
+		clear();
+		setupInputEvents();
+    }
+
+    private void makeClipAreas()
+    {
         m_memclip = new Path2D();
         m_memclip.moveTo(MARGIN_LEFT, MARGIN_TOP);
         m_memclip.lineTo(CANVAS_WIDTH - MARGIN_RIGHT, MARGIN_TOP);
@@ -92,7 +121,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         t.right(MARGIN_LEFT-TICK_WIDTH);
         t.down(TEXT_EPS);
         t.right(TICK_WIDTH);
-        t.down(BOARD_SIZE_PX);
+        t.down(BOARD_HEIGHT_PX);
         t.left(TICK_WIDTH);
         t.down(TEXT_EPS);
         t.left(MARGIN_LEFT-TICK_WIDTH);
@@ -103,23 +132,27 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         t.up(MARGIN_BOTTOM-TICK_WIDTH);
         t.right(TEXT_EPS);
         t.up(TICK_WIDTH);
-        t.right(BOARD_SIZE_PX);
+        t.right(CANVAS_WIDTH - MARGIN_LEFT - MARGIN_RIGHT);
         t.down(TICK_WIDTH);
         t.right(TEXT_EPS);
         t.down(MARGIN_BOTTOM-TICK_WIDTH);
+    }
+    
+    private void canvasSizeChanged(int w, int h)
+    {
+        CANVAS_HEIGHT = h;
+        CANVAS_WIDTH = w;
 
-        //ctx.clip(m_memclip);
+        VIS_WIDTH_PX = CANVAS_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
+        VIS_HEIGHT_PX = CANVAS_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM;
 
-        m_dummyInput = (HTMLInputElement)DomGlobal.document.getElementById("warCanvasDummyInput");
-        m_hoverCellInfo = (HTMLElement)DomGlobal.document.getElementById("hoverCellInfo");
+        VIS_WIDTH = VIS_WIDTH_PX/DOT_SIZE;
+        VIS_HEIGHT = VIS_HEIGHT_PX/DOT_SIZE;
 
-		exportMethods();
-		initZoom(MARGIN_TOP, MARGIN_LEFT);
-		clear();
-		setupInputEvents();
-	}
+        makeClipAreas();
+    }
 
-	@Override
+	/*@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT);
 	}
@@ -127,12 +160,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	@Override
 	public Dimension getPreferredSize() {
 		return getMinimumSize();
-	}
+	}*/
 
     // called from WarFrame
 	public void paintPixel(int number, byte color, byte value) {
         saveAndEnter();
-        paintPixel(number % BOARD_SIZE, number / BOARD_SIZE, color, value);
+	    paintPixel(number % BOARD_WIDTH, number / BOARD_WIDTH, color, value);
         ctx.restore();
 	}
 
@@ -164,8 +197,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	public void paintPointer(int number, byte colorByte) {
         saveAndEnter();
 
-	    int x = number % BOARD_SIZE;
-	    int y = number / BOARD_SIZE;
+	    int x = number % BOARD_WIDTH;
+	    int y = number / BOARD_WIDTH;
 	    Color color = ColorHolder.getInstance().getColor(colorByte, true);
 
         pointer[x][y] = colorByte;
@@ -202,9 +235,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         m_currentWar = war;
         m_indebug = true;
         int addr = 0x10000;
-        for (int y = 0; y < BOARD_SIZE; y++)
+        for (int y = 0; y < BOARD_HEIGHT; y++)
         {
-            for (int x = 0; x < BOARD_SIZE; x++)
+            for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 values[x][y] = m_mem.readByte(addr);
                 addr += 1;
@@ -214,16 +247,16 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	public void clear() {
 		if (data == null)
-			data = new byte[BOARD_SIZE][BOARD_SIZE];
+			data = new byte[BOARD_WIDTH][BOARD_HEIGHT];
 		if (pointer == null)
-			pointer = new byte[BOARD_SIZE][BOARD_SIZE];
+			pointer = new byte[BOARD_WIDTH][BOARD_HEIGHT];
 		if (values == null)
-            values = new byte[BOARD_SIZE][BOARD_SIZE];
+            values = new byte[BOARD_WIDTH][BOARD_HEIGHT];
 
-		for (int i = 0; i < BOARD_SIZE; i++)
-			for (int j = 0; j < BOARD_SIZE; j++) {
-				data[i][j] = EMPTY;
-				pointer[i][j] = EMPTY;
+		for (int x = 0; x < BOARD_WIDTH; x++)
+			for (int y = 0; y < BOARD_HEIGHT; y++) {
+				data[x][y] = EMPTY;
+				pointer[x][y] = EMPTY;
 			}
 
 		ctx.setTransform(1,0,0,1,0,0);
@@ -279,7 +312,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 		ctx.fillStyle = FillStyleUnionType.of(Color.WHITE);
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // TBD remove this
         ctx.fillStyle = FillStyleUnionType.of(Color.BLACK);
-		ctx.fillRect(0, 0, BOARD_SIZE * DOT_SIZE, BOARD_SIZE * DOT_SIZE);
+		ctx.fillRect(0, 0, BOARD_WIDTH_PX, BOARD_HEIGHT_PX);
 
         if (m_showContent) {
 		    //ctx.font = Integer.toString((int)(DOT_SIZE * m_zrHscale)) + "px monospace";
@@ -287,9 +320,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         }
 
 
-		for (int y = 0; y < BOARD_SIZE; y++)
+		for (int y = 0; y < BOARD_HEIGHT; y++)
 		{
-			for (int x = 0; x < BOARD_SIZE; x++)
+			for (int x = 0; x < BOARD_WIDTH; x++)
 			{
                 boolean textVisible = m_showContent && m_contentVisibleRect.isInside(x, y);
                 Color col = paintMemCellBack(x, y);
@@ -331,30 +364,33 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.fillStyle = FillStyleUnionType.of("#888888");
         ctx.clip(m_coordYclip);
 
-        for(int y = 0; y <= 256; y += step) {
-            int ry = Math.min(y, 255);
+        // y axis
+        for(int y = 0; y <= BOARD_HEIGHT; y += step) {
+            int ry = Math.min(y, BOARD_HEIGHT-1);
             float scaledDot = DOT_SIZE*m_zrVscale;
             float ycoord = MARGIN_TOP + m_zrY + ry * scaledDot;
             if (ycoord + scaledDot < MARGIN_TOP || ycoord > CANVAS_HEIGHT-MARGIN_BOTTOM)
                 continue;
-            ctx.fillText(Format.hex4(ry*256), 1, ycoord + scaledDot/2);
+            ctx.fillText(Format.hex4(ry*BOARD_WIDTH), 1, ycoord + scaledDot/2);
             ctx.fillRect(38, ycoord,  6, scaledDot);
         }
 
         ctx.restore(); // back to full clip
         ctx.save();    // save it
+
         ctx.clip(m_coordXclip);
 
         ctx.font = "14px monospace";
         ctx.fillStyle = FillStyleUnionType.of("#888888");
 
-        for(int x = 0; x <= 256; x += step) {
-            int rx = Math.min(x, 255);
+        // x axis
+        for(int x = 0; x <= BOARD_WIDTH; x += step) {
+            int rx = Math.min(x, BOARD_WIDTH-1);
 
             float scaledDot = DOT_SIZE*m_zrHscale;
             float xcoord = MARGIN_LEFT + m_zrX + rx * scaledDot;
 
-            if (xcoord + scaledDot < MARGIN_LEFT || xcoord > CANVAS_HEIGHT-MARGIN_RIGHT)
+            if (xcoord + scaledDot < MARGIN_LEFT || xcoord > CANVAS_WIDTH-MARGIN_RIGHT)
                 continue;
             ctx.fillText(Format.hex2(rx), xcoord-7+scaledDot/2, CANVAS_HEIGHT - 24);
             ctx.fillRect(xcoord, CANVAS_HEIGHT-44, scaledDot, 6);
@@ -365,6 +401,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         //ctx.stroke();
 
+        //ctx.fillStyle = FillStyleUnionType.of("#ff0000");
+        //ctx.fill(m_coordXclip);
 
         // restore the transformation and clip we had before for random access writes
         //ctx.clip(m_memclip);
@@ -389,11 +427,11 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	public void deletePointers() {
         saveAndEnter();
 
-		for (int i = 0; i < BOARD_SIZE; i++)
-			for (int j = 0; j < BOARD_SIZE; j++) {
-				if (pointer[i][j] != EMPTY) {
-					pointer[i][j] = EMPTY;
-					paintPixel(i, j, data[i][j], values[i][j]);
+		for (int x = 0; x < BOARD_WIDTH; x++)
+			for (int y = 0; y < BOARD_HEIGHT; y++) {
+				if (pointer[x][y] != EMPTY) {
+					pointer[x][y] = EMPTY;
+					paintPixel(x, y, data[x][y], values[x][y]);
 				}
             }
         ctx.restore();
@@ -406,6 +444,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         $wnd.j_warCanvas_setTransform = $entry(function(a,b,c,d) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_setTransform(FFFF)(a,b,c,d) });
         $wnd.j_warCanvas_click = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_click(FF)(a,b) });
         $wnd.j_warCanvas_showCurrent = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_showCurrent(FF)(a,b) });
+        $wnd.j_canvasResized = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_canvasResized(II)(a,b) });
     }-*/;
 
 
@@ -423,19 +462,29 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
     }
 
+    private void redoTransform() {
+        m_showContent = (m_zrHscale > 4.0);
+
+        m_contentVisibleRect.sx = -m_zrX / DOT_SIZE / m_zrHscale - 1;
+        m_contentVisibleRect.sy = -m_zrY / DOT_SIZE / m_zrVscale - 1;
+
+        m_contentVisibleRect.ex = m_contentVisibleRect.sx + (VIS_WIDTH / m_zrHscale) + 1;
+        m_contentVisibleRect.ey = m_contentVisibleRect.sy + (VIS_HEIGHT / m_zrVscale) + 1;
+    }
     public void j_warCanvas_setTransform(float hscale, float vscale, float x, float y) {
         //Console.log("scale= " + Float.toString(hscale) + "  y=" + Float.toString(y ));
         m_zrHscale = hscale;
         m_zrVscale = vscale;
         m_zrX = x;
         m_zrY = y;
-        //transformToCtx();
-        m_showContent = (m_zrHscale > 4.0);
+        redoTransform();
+    }
 
-        m_contentVisibleRect.sx = -m_zrX / DOT_SIZE / m_zrHscale - 1;
-        m_contentVisibleRect.sy = -m_zrY / DOT_SIZE / m_zrVscale - 1;
-        m_contentVisibleRect.ex = m_contentVisibleRect.sx + (256 / m_zrHscale) + 1;
-        m_contentVisibleRect.ey = m_contentVisibleRect.sy + (256 / m_zrVscale) + 1;
+    public void j_canvasResized(int w, int h) {
+        m_cvScale = (w - MARGIN_LEFT - MARGIN_RIGHT) / BOARD_WIDTH_PX;
+        //redoTransform();
+        canvasSizeChanged(w, h);
+        repaint();
     }
 
 
@@ -475,8 +524,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.restore();
     }
 
+    // coordinates in the mem area
     public void j_warCanvas_click(float x, float y) {
-        if (!m_showContent || x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE)
+        if (!m_showContent || x < 0 || y < 0 || x >= VIS_WIDTH_PX || y >= VIS_HEIGHT_PX)
             return;
         if (!m_indebug) // not debuggin
             return;
@@ -502,15 +552,16 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         }, 600);
     }
 
+    // show the value currently hovering over
     public void j_warCanvas_showCurrent(float x, float y) {
-        if (m_mem == null || x < 0 || y < 0 || x >= BOARD_SIZE*DOT_SIZE || y >= BOARD_SIZE*DOT_SIZE) {
+        if (m_mem == null || x < 0 || y < 0 || x >= VIS_WIDTH_PX || y >= VIS_HEIGHT_PX) {
             m_hoverCellInfo.style.display = "none";
             return;
         }
         int mx = (int)( (x - m_zrX)/ DOT_SIZE/m_zrHscale );
         int my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale );
 
-        int addr = (int)(mx+my*256) & 0xffff;
+        int addr = (int)(mx+my*BOARD_WIDTH) & 0xffff;
         int v = m_mem.readByte(addr + 0x10000) & 0xff;
 
         StringBuilder sb = new StringBuilder();
@@ -540,23 +591,32 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
     private void moveCursor(double dx, int dy) {
         paintCursor(false);
-        m_cursorX = Math.max(Math.min(m_cursorX + dx, 255.5), 0.);
-        m_cursorY = Math.max(Math.min(m_cursorY + dy, 255.), 0.);
+        //m_cursorX = Math.max(Math.min(m_cursorX + dx, BOARD_WIDTH - 0.5), 0.);
+        //m_cursorY = Math.max(Math.min(m_cursorY + dy, BOARD_HEIGHT), 0.);
+
+        m_cursorY += dy;
+        m_cursorX += dx;
+        if (m_cursorX > BOARD_WIDTH - 0.5) {
+            m_cursorX -= BOARD_WIDTH;
+            m_cursorY += 1;
+        }
+        m_cursorX = Math.max(Math.min(m_cursorX, BOARD_WIDTH - 0.5), 0.);
+        m_cursorY = Math.max(Math.min(m_cursorY, BOARD_HEIGHT - 1), 0.);
 
         // need while since it might be completely off screen and need several steps to get to
-        while (m_cursorY < m_contentVisibleRect.sy + 1 && m_cursorY > 0) {
+        while (m_cursorY < m_contentVisibleRect.sy + 1 && m_cursorY >= 0) {
             m_zrY = m_zrY+(5.1f*m_zrHscale*DOT_SIZE);
             js_updateFromKeyScroll(m_zrX, m_zrY);
         }
-        while (m_cursorY > m_contentVisibleRect.ey - 1 && m_cursorY <= 255) {
+        while (m_cursorY > m_contentVisibleRect.ey - 0.99 && m_cursorY <= BOARD_HEIGHT) {
             m_zrY = m_zrY-(5.1f*m_zrHscale*DOT_SIZE);
             js_updateFromKeyScroll(m_zrX, m_zrY);
         }
-        while (m_cursorX < m_contentVisibleRect.sx + 1 && m_cursorX > 0) {
+        while (m_cursorX < m_contentVisibleRect.sx + 1 && m_cursorX >= 0) {
             m_zrX = m_zrX+(5.1f*m_zrVscale*DOT_SIZE);
             js_updateFromKeyScroll(m_zrX, m_zrY);
         }
-        while (m_cursorX > m_contentVisibleRect.ex - 0.5 && m_cursorX <= 255.5) {
+        while (m_cursorX > m_contentVisibleRect.ex - 0.49 && m_cursorX <= BOARD_WIDTH - 0.51) {
             m_zrX = m_zrX-(5.1f*m_zrVscale*DOT_SIZE);
             js_updateFromKeyScroll(m_zrX, m_zrY);
         }
@@ -609,7 +669,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
                     else
                         ev = ev & 0xf0 | v;
                     values[ix][iy] = (byte)ev;
-                    m_mem.writeByte(new RealModeAddress((short)0x1000, (short)(ix+iy*256)), (byte)ev);
+                    m_mem.writeByte(new RealModeAddress((short)0x1000, (short)(ix+iy*BOARD_WIDTH)), (byte)ev);
                     moveCursor(0.5, 0);
 
                 }

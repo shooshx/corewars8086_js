@@ -25,7 +25,6 @@ function start()
     // asm_pre.addEventListener("mousewheel", asm_pre_mousewheel) not working
 
     populate_debug_area()
-    do_layout()
 
     did_start = true
 
@@ -65,6 +64,8 @@ function gwtStart()
     j_demoDebugPlayers();
 
     addWatchLine();
+    do_layout()
+
     //addWatchLine();
     //addWatchLine();
 
@@ -144,7 +145,7 @@ function mem_panel_resized(w, h)
     }
     if (resized)
         j_canvasResized(w, h)
-    
+    zoom_handle_resize(w, h)
 }
 
 function do_layout()
@@ -157,7 +158,7 @@ function do_layout()
         stack: { elem: stackArea },
         shared: { elem: sharedMemArea },
         watch: { elem: watch_container },
-        mem: { elem: memory_panel }//, resized:mem_panel_resized }
+        mem: { elem: memory_panel, resized:mem_panel_resized }
     }
 
     for(let lname of g_layout_names) {
@@ -1217,6 +1218,8 @@ var settings = {
     initialZoom: 1,
 };
 var warCtx = null;
+var cutHeight = 0  // part of the zoomed out canvas that is left out
+var cutWidth = 0
 
 function js_updateFromKeyScroll(nx, ny) {
     bgPosX = nx;
@@ -1225,22 +1228,33 @@ function js_updateFromKeyScroll(nx, ny) {
 }
 
 function updateBgVars() {
+
+    cutHeight =  Math.max(bgHeight - (warCanvas.height - MARGIN_TOP - MARGIN_BOTTOM), 0)
+    cutWidth =  Math.max(bgWidth - (warCanvas.width - MARGIN_LEFT - MARGIN_RIGHT), 0)
+
     if (bgPosX > 0) {
         bgPosX = 0;
-    } else if (bgPosX < width - bgWidth) {
-        bgPosX = width - bgWidth;
+    } else if (bgPosX < 0 - cutWidth) {
+        bgPosX = 0 - cutWidth;
     }
 
     if (bgPosY > 0) {
         bgPosY = 0;
-    } else if (bgPosY < height - bgHeight) {
-        bgPosY = height - bgHeight;
+    } else if (bgPosY < 0 - cutHeight) {
+        bgPosY = 0 - cutHeight;
     }
 
     var hscale = bgWidth / width;
     var vscale = bgHeight / height
     j_warCanvas_setTransform(hscale, vscale, bgPosX, bgPosY);
 }
+
+function zoom_handle_resize(w, h)
+{
+    //cutHeight = 0 //Math.max(BOARD_HEIGHT*DOT_SIZE - (warCanvas.height - MARGIN_TOP - MARGIN_BOTTOM), 0)
+    //cutWidth =  Math.max(bgWidth - (warCanvas.width - MARGIN_LEFT - MARGIN_RIGHT), 0)
+}
+
 
 function updateBgStyle() {
     updateBgVars();
@@ -1353,21 +1367,25 @@ function js_initZoom() {
     warCtx = warCanvas.getContext('2d');
 }
 
-var BOARD_WIDTH = 256;
+var BOARD_WIDTH = 128;
 var BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+const MARGIN_TOP = 20, MARGIN_BOTTOM = 45
+const MARGIN_LEFT = 20, MARGIN_RIGHT = 45
+const DOT_SIZE = 3
 
 function js_resetZoom() {
     var initial = 1;
     //var computedStyle = window.getComputedStyle(warCanvas, null);
 
-    width = BOARD_WIDTH*3; //parseInt(computedStyle.width, 10);
-    height = BOARD_HEIGHT*3; //parseInt(computedStyle.height, 10);
+    width = BOARD_WIDTH*DOT_SIZE; //parseInt(computedStyle.width, 10);
+    height = BOARD_HEIGHT*DOT_SIZE; //parseInt(computedStyle.height, 10);
     bgWidth = width * initial;
     bgHeight = height * initial;
     bgPosX = -(bgWidth - width)/2;
     bgPosY = -(bgHeight - height)/2;
     updateBgStyle();
 }
+
 
 // ------------------------------------------ Competition --------------------------------------------
 
