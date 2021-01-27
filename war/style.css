@@ -1224,6 +1224,8 @@ h3 {
 
 #hoverCellInfo {
     font: 14px monospace;
+    text-align: center;
+
 }
 
 /*----------------------- graphs panel ---------------------------*/

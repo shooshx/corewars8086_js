@@ -132,6 +132,8 @@ function reset_layout()
     re_layout_current()
 }
 
+const CURRNT_CELL_VALUE_DIV_HEIGHT = 20
+
 function mem_panel_resized(w, h)
 {
     let resized = false;
@@ -139,6 +141,7 @@ function mem_panel_resized(w, h)
         warCanvas.width = w
         resized = true
     }
+    h -= CURRNT_CELL_VALUE_DIV_HEIGHT
     if (h !== warCanvas.height) {
         warCanvas.height = h
         resized = true
@@ -1367,7 +1370,7 @@ function js_initZoom() {
     warCtx = warCanvas.getContext('2d');
 }
 
-var BOARD_WIDTH = 128;
+var BOARD_WIDTH = 256;
 var BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
 const MARGIN_TOP = 20, MARGIN_BOTTOM = 45
 const MARGIN_LEFT = 20, MARGIN_RIGHT = 45

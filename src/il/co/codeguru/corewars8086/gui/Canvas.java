@@ -20,7 +20,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
     //public static final int BOARD_SIZE = 256;
     // product of these must be 65536
-    private int BOARD_WIDTH = 128;
+    private int BOARD_WIDTH = 256;
     private int BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
 
 	private static final int DOT_SIZE = 3;
@@ -63,6 +63,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     RealModeMemoryImpl m_mem = null;
     boolean m_indebug = false;
     War m_currentWar = null;
+    Turtle m_turtle = new Turtle(null);
 
     class Turtle {
         float x, y;
@@ -116,19 +117,28 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         // make a D like shape that deletes the tick at the exact line of the canvas but leaves place for the text to not be clipped
         m_coordYclip = new Path2D();
-        Turtle t = new Turtle(m_coordYclip);
+        Turtle t = m_turtle;
+        t.p = m_coordYclip;
         t.moveTo(0, MARGIN_TOP-TEXT_EPS);
         t.right(MARGIN_LEFT-TICK_WIDTH);
         t.down(TEXT_EPS);
         t.right(TICK_WIDTH);
-        t.down(BOARD_HEIGHT_PX);
+        t.down(CANVAS_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM);
         t.left(TICK_WIDTH);
         t.down(TEXT_EPS);
         t.left(MARGIN_LEFT-TICK_WIDTH);
 
+        makeXAxisClip();
+    }
+
+    private void makeXAxisClip()
+    {
+        int barHeight = Math.min(CANVAS_HEIGHT-MARGIN_BOTTOM, (int)(BOARD_HEIGHT*DOT_SIZE*m_zrVscale) + MARGIN_TOP);
+        Turtle t = m_turtle;
+
         m_coordXclip = new Path2D();
         t.p = m_coordXclip;
-        t.moveTo(MARGIN_LEFT-TEXT_EPS, CANVAS_HEIGHT);
+        t.moveTo(MARGIN_LEFT-TEXT_EPS, barHeight+MARGIN_BOTTOM);
         t.up(MARGIN_BOTTOM-TICK_WIDTH);
         t.right(TEXT_EPS);
         t.up(TICK_WIDTH);
@@ -384,6 +394,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.fillStyle = FillStyleUnionType.of("#888888");
 
         // x axis
+        int barHeight = Math.min(CANVAS_HEIGHT-MARGIN_BOTTOM, (int)Math.ceil(BOARD_HEIGHT*DOT_SIZE*m_zrVscale) + MARGIN_TOP);
         for(int x = 0; x <= BOARD_WIDTH; x += step) {
             int rx = Math.min(x, BOARD_WIDTH-1);
 
@@ -392,8 +403,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
             if (xcoord + scaledDot < MARGIN_LEFT || xcoord > CANVAS_WIDTH-MARGIN_RIGHT)
                 continue;
-            ctx.fillText(Format.hex2(rx), xcoord-7+scaledDot/2, CANVAS_HEIGHT - 24);
-            ctx.fillRect(xcoord, CANVAS_HEIGHT-44, scaledDot, 6);
+            ctx.fillText(Format.hex2(rx), xcoord-7+scaledDot/2, barHeight + 20);
+            ctx.fillRect(xcoord, barHeight+1, scaledDot, 6);
         }
 
         ctx.restore(); // back to full clip
@@ -478,6 +489,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         m_zrX = x;
         m_zrY = y;
         redoTransform();
+        makeXAxisClip();
     }
 
     public void j_canvasResized(int w, int h) {
@@ -560,6 +572,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         }
         int mx = (int)( (x - m_zrX)/ DOT_SIZE/m_zrHscale );
         int my = (int)( (y - m_zrY)/ DOT_SIZE/m_zrVscale );
+
+        if (mx < 0 || mx >= BOARD_WIDTH || my < 0 || my >= BOARD_HEIGHT)  {
+            // in the canvas but outside the memory area
+            m_hoverCellInfo.style.display = "none";
+            return;
+        }
 
         int addr = (int)(mx+my*BOARD_WIDTH) & 0xffff;
         int v = m_mem.readByte(addr + 0x10000) & 0xff;
