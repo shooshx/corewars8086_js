@@ -1151,6 +1151,39 @@ function add_div(parent, cls) {
     return e
 }
 
+function add_option_select(parent, labelText, opts, onchange)
+{
+    const line = add_div(parent, "opt_line")
+    const label = add_div(line, "opt_label")
+    label.innerText = labelText
+    const sel = add_elem(line, "select", "opt_select")
+    for(let opt of opts) {
+        const optElem = add_elem(sel, "option")
+        optElem.setAttribute("value", opt)
+        optElem.innerText = opt
+    }
+    sel.addEventListener("input", ()=>{ onchange(opts[sel.selectedIndex]) })
+}
+
+var g_opt_dlg = null;
+
+function open_options_dlg()
+{
+    if (g_opt_dlg !== null) {
+        g_opt_dlg.style.display = ""
+        return
+    }
+    g_opt_dlg = add_div(body, "options_dlg")
+    const close_btn = add_div(g_opt_dlg, "opt_close_btn")
+    close_btn.addEventListener("click", ()=>{
+        g_opt_dlg.style.display = "none"
+    })
+
+    add_option_select(g_opt_dlg, "Memory Panel Width:", [256, 128, 64, 32, 16], change_board_width)
+
+}
+
+
 function make_menu(parent, relto, opts) {
     const menu = add_div(parent, "hmenu")
     const rect = relto.getBoundingClientRect()
@@ -1173,6 +1206,7 @@ function make_menu(parent, relto, opts) {
     }
     return menu
 }
+
 
 var added_file_inputs = false
 
@@ -1197,7 +1231,8 @@ function triggerHamMenu(e)
                           //  {text:"Reset to Demo Survivors", func:function() {}},
                             {text:"About", func:function() { triggerAbout(true) }},
                             {text:"Reset Layout", func: reset_layout },
-                            {text:"Flip Players Panel", func: function() { flip_players_panel(null) } }
+                            {text:"Flip Players Panel", func: function() { flip_players_panel(null) } },
+                            {text:"Options", func: open_options_dlg }
                            ])
 
 
@@ -1221,8 +1256,7 @@ var settings = {
     initialZoom: 1,
 };
 var warCtx = null;
-var cutHeight = 0  // part of the zoomed out canvas that is left out
-var cutWidth = 0
+
 
 function js_updateFromKeyScroll(nx, ny) {
     bgPosX = nx;
@@ -1231,9 +1265,10 @@ function js_updateFromKeyScroll(nx, ny) {
 }
 
 function updateBgVars() {
-
-    cutHeight =  Math.max(bgHeight - (warCanvas.height - MARGIN_TOP - MARGIN_BOTTOM), 0)
-    cutWidth =  Math.max(bgWidth - (warCanvas.width - MARGIN_LEFT - MARGIN_RIGHT), 0)
+    //console.log("~~", bgHeight, "  ", bgWidth)
+    // part of the zoomed out canvas that is left out
+    const cutHeight =  Math.max(bgHeight - (warCanvas.height - MARGIN_TOP - MARGIN_BOTTOM), 0)
+    const cutWidth =  Math.max(bgWidth - (warCanvas.width - MARGIN_LEFT - MARGIN_RIGHT), 0)
 
     if (bgPosX > 0) {
         bgPosX = 0;
@@ -1376,6 +1411,8 @@ const MARGIN_TOP = 20, MARGIN_BOTTOM = 45
 const MARGIN_LEFT = 20, MARGIN_RIGHT = 45
 const DOT_SIZE = 3
 
+// TBD zoom back makes a jump after enlarge
+
 function js_resetZoom() {
     var initial = 1;
     //var computedStyle = window.getComputedStyle(warCanvas, null);
@@ -1387,6 +1424,14 @@ function js_resetZoom() {
     bgPosX = -(bgWidth - width)/2;
     bgPosY = -(bgHeight - height)/2;
     updateBgStyle();
+}
+
+function change_board_width(bw)
+{
+    BOARD_WIDTH = bw
+    BOARD_HEIGHT = 65536 / BOARD_WIDTH
+    js_resetZoom()
+    j_change_board_width(bw)
 }
 
 

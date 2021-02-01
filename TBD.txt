@@ -1,5 +1,11 @@
+Yehuda UI
+- Fix zoom out that scrolls all the way to the top
+- resize of window should undo cut scroll
+
+
+------------
+
 important
-- checkbox disable zombies
 - "killed by"
 
 

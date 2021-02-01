@@ -1354,3 +1354,45 @@ position: absolute;
     font-size: 18px;
     margin: 6px 0 0 0;
 }
+
+/* ----------options -------- */
+
+.options_dlg {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    height: 200px;
+    width: 400px;
+    background-color: #e7e7e7;
+    border: 2px solid #444444;
+    border-radius: 6px;
+    box-shadow: 2px 2px 14px -1px rgba(255, 255, 255, 1), 4px 4px 14px -1px rgba(0, 0, 0, 1);
+    z-index: 12;
+}
+
+.opt_close_btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: url(gray_ex.png);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    padding: 5px;
+    background-repeat: no-repeat;
+    background-position: 5px;
+}
+
+.opt_line {
+    margin: 7px 7px 0 7px;
+}
+
+.opt_label {
+    display: inline-block;
+    margin: 0 15px 0 0;
+}
+
+.opt_select {
+    height: 23px;
+    width: 70px;
+}

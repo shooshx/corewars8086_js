@@ -23,7 +23,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private int BOARD_WIDTH = 256;
     private int BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
 
-	private static final int DOT_SIZE = 3;
+    private int DOT_SCALE = 1;
+	private int DOT_SIZE = 3;
 	//public static final int MARGIN_SIZE = 45; // in pixels
     private static final int MARGIN_TOP = 20, MARGIN_RIGHT = 20, MARGIN_BOTTOM = 45, MARGIN_LEFT = 45;
     //private static final int BOARD_SIZE_PX = BOARD_SIZE * DOT_SIZE;
@@ -32,7 +33,6 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
     private int CANVAS_HEIGHT = BOARD_HEIGHT_PX + MARGIN_TOP + MARGIN_BOTTOM;
     private int CANVAS_WIDTH = BOARD_WIDTH_PX + MARGIN_LEFT + MARGIN_RIGHT;
-    // TBD draw text only on visible canvas
 
     private int VIS_WIDTH_PX = CANVAS_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
     private int VIS_HEIGHT_PX = CANVAS_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM;
@@ -43,10 +43,28 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private static final byte EMPTY = -1;
 
     private CanvasRenderingContext2D ctx;
-	private byte[][] data; // holds colors, not values
-
-	private byte[][] pointer; // where is IP
-	private byte[][] values; // memory values
+	private byte[] _data; // holds colors, not values
+	private byte[] _pointer; // where is IP
+    private byte[] _values; // memory values
+    
+    byte data(int x, int y) {
+        return _data[x + y*BOARD_WIDTH];
+    }
+    void set_data(int x, int y, byte v) {
+        _data[x + y*BOARD_WIDTH] = v;
+    }
+    byte pointer(int x, int y) {
+        return _pointer[x + y*BOARD_WIDTH];
+    }
+    void set_pointer(int x, int y, byte v) {
+        _pointer[x + y*BOARD_WIDTH] = v;
+    }
+    byte values(int x, int y) {
+        return _values[x + y*BOARD_WIDTH];
+    }
+    void set_values(int x, int y, byte v) {
+        _values[x + y*BOARD_WIDTH] = v;
+    }        
 
 	//private EventMulticasterMouse eventCaster;
 	//private MouseAddressRequest eventHandler;
@@ -54,7 +72,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	//private int MouseX, MouseY;
 
     private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect (user zoom with wheel)
-    private float m_cvScale; // scale due to canvas size
+
     private boolean m_showContent = false;
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
 
@@ -63,7 +81,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     RealModeMemoryImpl m_mem = null;
     boolean m_indebug = false;
     War m_currentWar = null;
-    Turtle m_turtle = new Turtle(null);
+    Turtle m_turtle = new Turtle(null);    
 
     class Turtle {
         float x, y;
@@ -180,13 +198,13 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}
 
 	private void paintPixel(int x, int y, byte colorByte, byte value) {
-        values[x][y] = value;
+        set_values(x, y, value);
 
 		Color color = null;
 		if (colorByte != -1)
-            data[x][y] = colorByte;
+            set_data(x, y, colorByte);
         else
-            colorByte = data[x][y];
+            colorByte = data(x, y);
         if (colorByte != -1) {
             color = ColorHolder.getInstance().getColor(colorByte, false);
             ctx.fillStyle = FillStyleUnionType.of(color.toString());
@@ -211,7 +229,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	    int y = number / BOARD_WIDTH;
 	    Color color = ColorHolder.getInstance().getColor(colorByte, true);
 
-        pointer[x][y] = colorByte;
+        set_pointer(x, y, colorByte);
         ctx.fillStyle = FillStyleUnionType.of(color.toString());
         ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
         if (m_showContent)
@@ -231,7 +249,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         else
             textCol = "#666666";
         ctx.fillStyle = FillStyleUnionType.of(textCol);
-        ctx.fillText(  Format.hex2(values[x][y] & 0xff),  x * DOT_SIZE + 0.2, y * DOT_SIZE + 2.2);
+        ctx.fillText(  Format.hex2(values(x, y) & 0xff),  x * DOT_SIZE + 0.2*DOT_SCALE, y * DOT_SIZE + 2.2*DOT_SCALE);
     }
 
 
@@ -249,25 +267,26 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
-                values[x][y] = m_mem.readByte(addr);
+                set_values(x, y, m_mem.readByte(addr));
                 addr += 1;
             }
         }
     }
 
 	public void clear() {
-		if (data == null)
-			data = new byte[BOARD_WIDTH][BOARD_HEIGHT];
-		if (pointer == null)
-			pointer = new byte[BOARD_WIDTH][BOARD_HEIGHT];
-		if (values == null)
-            values = new byte[BOARD_WIDTH][BOARD_HEIGHT];
+        int len = BOARD_WIDTH * BOARD_HEIGHT;
+		if (_data == null)
+			_data = new byte[len];
+		if (_pointer == null)
+			_pointer = new byte[len];
+		if (_values == null)
+            _values = new byte[len];
 
-		for (int x = 0; x < BOARD_WIDTH; x++)
-			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				data[x][y] = EMPTY;
-				pointer[x][y] = EMPTY;
-			}
+        
+		for (int i = 0; i < len; i++) {
+            _data[i] = EMPTY;
+            _pointer[i] = EMPTY;
+        }
 
 		ctx.setTransform(1,0,0,1,0,0);
 
@@ -288,13 +307,13 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
 	private Color paintMemCellBack(int x, int y) {
-        int cellPtr = pointer[x][y];
+        int cellPtr = pointer(x, y);
         Color col = null;
         if (cellPtr != EMPTY) {
             col = ColorHolder.getInstance().getColor(cellPtr, true);
         }
         else {
-            int cellVal = data[x][y];
+            int cellVal = data(x, y);
             if (cellVal != EMPTY) {
                 col = ColorHolder.getInstance().getColor(cellVal, false);
             }
@@ -315,6 +334,10 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
     private Rect m_contentVisibleRect = new Rect(); // in memory coordinates
 
+    private void setMemFont() {
+        ctx.font = String.valueOf(2.3 * DOT_SCALE) + "px monospace";
+    }
+
 	@Override
 	public void paint() {
         saveAndEnter();
@@ -326,7 +349,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         if (m_showContent) {
 		    //ctx.font = Integer.toString((int)(DOT_SIZE * m_zrHscale)) + "px monospace";
-            ctx.font = "2.3px monospace";
+            //ctx.font = "2.3px monospace";
+            setMemFont();
         }
 
 
@@ -361,7 +385,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.textBaseline = "middle";
 
         int step = 32;
-        int rc = (int)m_zrVscale;
+        int rc = (int)m_zrVscale * DOT_SCALE;
         if (rc >= 2 && rc < 4)
             step /= 2;
         else if (rc >= 4 && rc <= 8)
@@ -418,7 +442,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         // restore the transformation and clip we had before for random access writes
         //ctx.clip(m_memclip);
         //transformToCtx();
-        ctx.font = "2.3px monospace";
+        //ctx.font = "2.3px monospace";
+        setMemFont();
 
 	}
 
@@ -440,9 +465,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 		for (int x = 0; x < BOARD_WIDTH; x++)
 			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				if (pointer[x][y] != EMPTY) {
-					pointer[x][y] = EMPTY;
-					paintPixel(x, y, data[x][y], values[x][y]);
+				if (pointer(x, y) != EMPTY) {
+					set_pointer(x, y, EMPTY);
+					paintPixel(x, y, data(x, y), values(x, y));
 				}
             }
         ctx.restore();
@@ -456,6 +481,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         $wnd.j_warCanvas_click = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_click(FF)(a,b) });
         $wnd.j_warCanvas_showCurrent = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_showCurrent(FF)(a,b) });
         $wnd.j_canvasResized = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_canvasResized(II)(a,b) });
+        $wnd.j_change_board_width = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_change_board_width(I)(a) });
     }-*/;
 
 
@@ -474,7 +500,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
     private void redoTransform() {
-        m_showContent = (m_zrHscale > 4.0);
+        m_showContent = (m_zrHscale * DOT_SCALE > 4.0);
 
         m_contentVisibleRect.sx = -m_zrX / DOT_SIZE / m_zrHscale - 1;
         m_contentVisibleRect.sy = -m_zrY / DOT_SIZE / m_zrVscale - 1;
@@ -493,12 +519,25 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
     public void j_canvasResized(int w, int h) {
-        m_cvScale = (w - MARGIN_LEFT - MARGIN_RIGHT) / BOARD_WIDTH_PX;
-        //redoTransform();
         canvasSizeChanged(w, h);
         repaint();
     }
 
+    public void j_change_board_width(int bw) {
+        BOARD_WIDTH = bw;
+        BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+    
+        DOT_SCALE = 256/BOARD_WIDTH;
+        DOT_SIZE = 3 * DOT_SCALE;
+
+        BOARD_WIDTH_PX = BOARD_WIDTH * DOT_SIZE;
+        BOARD_HEIGHT_PX = BOARD_HEIGHT * DOT_SIZE;
+        redoTransform();
+
+        ctx.setTransform(1,0,0,1,0,0);
+		resetZoom(); // already does the repaint
+
+    }
 
     private double m_cursorX, m_cursorY;  // in memory coordinates, x can have half cells for the first digit of a byte
     private Double m_intervalId; // id of the blinking interval. if this is null it means there is no cursor
@@ -519,7 +558,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
                 rx += 0.08; // account for the space between numbers not being the same as the space between digits
             paintMemCellBack((int)m_cursorX, (int)m_cursorY);
             ctx.fillStyle =  FillStyleUnionType.of("#eeeeee");
-            ctx.fillRect(rx * DOT_SIZE, m_cursorY * DOT_SIZE + 0.32, 1.25, 2.2);
+            ctx.fillRect(rx * DOT_SIZE, m_cursorY * DOT_SIZE + DOT_SCALE*0.32, DOT_SCALE*1.25, DOT_SCALE*2.2);
 
             paintTextValue(x, y, col);
 
@@ -593,7 +632,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         sb.append(")");
         for(int i = sb.length() - bef; i < 5; ++i)
             sb.append('\u00A0');
-        byte player = data[mx][my];
+        byte player = data(mx, my);
         if (player != -1) {
             sb.append("  Player: ");
             sb.append(m_currentWar.getWarrior(player).getName().substring(0,20));
@@ -681,12 +720,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
                     v = c - 'A' + 10;
                 if (v != -1) {
                     int ix = (int)m_cursorX, iy = (int)m_cursorY;
-                    int ev = values[ix][iy];
+                    int ev = values(ix, iy);
                     if (m_cursorX % 1 == 0)
                         ev = ev & 0xf | (v << 4);
                     else
                         ev = ev & 0xf0 | v;
-                    values[ix][iy] = (byte)ev;
+                    set_values(ix, iy, (byte)ev);
                     m_mem.writeByte(new RealModeAddress((short)0x1000, (short)(ix+iy*BOARD_WIDTH)), (byte)ev);
                     moveCursor(0.5, 0);
 
