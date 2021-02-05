@@ -4,6 +4,7 @@ import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 import elemental2.dom.*;
 import elemental2.dom.EventListener;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.gui.CompetitionWindow;
 import il.co.codeguru.corewars8086.gui.asm_parsers.IListParser;
 import il.co.codeguru.corewars8086.gui.asm_parsers.NasmListParser;
 import il.co.codeguru.corewars8086.gui.widgets.ActionEvent;
@@ -181,6 +182,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                                                   // 123)
     public static final int FLAG_HAS_COMMENT = 4; // This DbgLine has comment lines after the first code line so when
                                                   // highlighting this line, need to highlight dfXXXXX instead of dXXXXX
+    public static final int FLAG_ALT_COLOR = 8;                                                  
 
     public static final int FLAG_LSTLINE_MAX = 0x7ff;
     public static final int FLAG_LSTLINE_SHIFT = 16;
@@ -943,6 +945,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 }
             }
 
+            int count_for_alt_col = 0;
             for (int lsti = 0; lsti < code.lines.size(); ++lsti) {
                 LstLine lstline = code.lines.get(lsti);
                 if (lstline.address == -1) {
@@ -972,6 +975,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                                                    // just to be safe
                         dbgline.flags |= ((lsti + 1) << FLAG_LSTLINE_SHIFT);
                         dbgline.flags |= (i << FLAG_PLAYER_NUM_SHIFT);
+                        boolean isAlt = false;
+                        if ((count_for_alt_col % 2) == 1) {
+                            dbgline.flags |= FLAG_ALT_COLOR;
+                            isAlt = true;
+                        }
+                        // this sets the alt color for all initial warrior code
+                        CompetitionWindow.getInstance().battleFrame.warCanvas.setAltColor(loadAddr, lstline.opcodesCount, isAlt);
+
+                        ++count_for_alt_col;
                     }
                     m_dbglines[loadAddr] = dbgline;
 
@@ -1119,6 +1131,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private int m_lastDbgAddrEnd = -1; // end (one after last) of the debugged opcode (for edit handling)
     private HTMLElement m_lastDbgElement;
     private boolean m_lastIsAlive = false;
+    private DbgLine m_lastDbgLine = null;
 
     private Warrior getCurrentWarrior() {
         War war = m_competition.getCurrentWar();
@@ -1188,7 +1201,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             // after that
             disassembleAddr(ipInsideArena + CODE_ARENA_OFFSET, ipInsideArena);
         } else {
-            DbgLine ipline = m_dbglines[ipInsideArena];
+           // DbgLine ipline = m_dbglines[ipInsideArena];
             int flags = m_dbglines[ipInsideArena].flags;
             if ((flags & FLAG_UNPARSED) != 0 || (flags & FLAG_DEFINE_CODE) != 0) {
                 disassembleAddr(ipInsideArena + CODE_ARENA_OFFSET, ipInsideArena);
@@ -1206,6 +1219,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         m_lastDbgAddr = ipInsideArena;
         m_lastDbgAddrEnd = m_lastDbgAddr + 1;
         m_lastIsAlive = isAlive;
+        m_lastDbgLine = m_dbglines[ipInsideArena];
         while (m_lastDbgAddrEnd < 0x10000 && m_dbglines[m_lastDbgAddrEnd] == null)
             ++m_lastDbgAddrEnd;
 
@@ -1223,6 +1237,17 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         int len = dis.lastOpcodeSize();
 
         DbgLine opline = new DbgLine();
+
+        if (m_lastDbgLine != null) {
+            boolean prevWasAlt = (m_lastDbgLine.flags & FLAG_ALT_COLOR) != 0;
+            boolean isAlt = !prevWasAlt;
+            // this sets the alt color for the currently disassembled warrior (other worriors will not have alt opcode coloring since they are not disassembled)
+            CompetitionWindow.getInstance().battleFrame.warCanvas.setAltColor(absaddr - CODE_ARENA_OFFSET, len, isAlt);
+            if (isAlt)
+                opline.flags |= FLAG_ALT_COLOR;
+        }
+
+
         StringBuilder bs = new StringBuilder();
         for (int i = 0; i < len; ++i) {
             bs.append(Format.hex2(m_mem.readByte(absaddr + i) & 0xff));

@@ -68,8 +68,6 @@ public class War {
     private boolean m_inDebugger = false; // controls the end condition
     private boolean m_hasEnded = false; // this war has ended but the object remains alive for post-mortem examination
 
-    private int m_atLineNum = -1; // for opcode coloring
-
     public void setUiWarrior(Warrior warrior) {
         if (warrior != null)
             m_uiWarriorIndex = warrior.m_myIndex;
@@ -295,18 +293,12 @@ public class War {
             m_warriors[m_numWarriors++] = w;
 
             // load warrior to arena
-            m_atLineNum = 0;
             CodeEditor.LstLine atLine = codeLines.get(0);
             m_core.listener.onWriteState(MemoryEventListener.EWriteState.ADD_WARRIORS);
             for (int offset = 0; offset < warriorData.length; ++offset) {
-                while (offset >= atLine.address + atLine.opcodesCount || atLine.address == -1) {
-                    ++m_atLineNum;
-                    atLine = codeLines.get(m_atLineNum);
-                }
                 RealModeAddress tmp = new RealModeAddress(ARENA_SEGMENT, (short)(loadOffset + offset));
                 m_core.writeByte(tmp, warriorData[offset]);
             }
-            m_atLineNum = -1;
 
             if (CompetitionWindow.getInstance().isBattleShown()) {
                 String col = ColorHolder.getInstance().getColor(m_currentWarrior, false, false).toString();
@@ -322,11 +314,6 @@ public class War {
             m_warListener.onWarriorBirth(w);
         }
 
-    }
-
-    // for alternate opcode coloring, not -1 only when writing bytes of warriors code
-    public int getLineIndex() {
-        return m_atLineNum;
     }
 
     /**

@@ -225,18 +225,10 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         }
 
         boolean altColor = false;
-        int lineIdx = m_currentWar.getLineIndex();
-        if (lineIdx != -1 && (lineIdx % 2) == 1) {
-            if (m_alt_opcode_color) 
-                altColor = true;
-            set_flag(x, y, FLAG_ALT_OPCODE_COL);
-        }
-        else {
-            if (doResetAltOpcode)
-                reset_flag(x, y, FLAG_ALT_OPCODE_COL);
-            else
-                altColor = has_flag(x, y, FLAG_ALT_OPCODE_COL); // when deleting IP
-        }
+        if (doResetAltOpcode)
+            reset_flag(x, y, FLAG_ALT_OPCODE_COL);
+        else
+            altColor = has_flag(x, y, FLAG_ALT_OPCODE_COL); // when deleting IP
 
         if (colorByte != -1) {
             color = ColorHolder.getInstance().getColor(colorByte, false, altColor);
@@ -576,6 +568,15 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void j_set_alt_opcode_color(boolean v) {
         m_alt_opcode_color = v;
         repaint();
+    }
+
+    public void setAltColor(int addr, int len, boolean isSet) {
+        if (!isSet)
+            return;
+        for(int i = 0; i < len; ++i) {
+            int byteaddr = addr + i;
+            set_flag(byteaddr % BOARD_WIDTH, byteaddr / BOARD_WIDTH, FLAG_ALT_OPCODE_COL);
+        }
     }
 
     private double m_cursorX, m_cursorY;  // in memory coordinates, x can have half cells for the first digit of a byte
