@@ -4,6 +4,8 @@ import il.co.codeguru.corewars8086.cpu.CpuException;
 import il.co.codeguru.corewars8086.gui.ColorHolder;
 import il.co.codeguru.corewars8086.gui.CompetitionWindow;
 import il.co.codeguru.corewars8086.gui.IBreakpointCheck;
+import il.co.codeguru.corewars8086.gui.PlayersPanel;
+import il.co.codeguru.corewars8086.gui.CodeEditor;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.memory.MemoryEventListener;
 import il.co.codeguru.corewars8086.memory.MemoryException;
@@ -65,6 +67,8 @@ public class War {
     private int m_uiWarriorIndex = -1; // break in breakpoints only of this warrior (he's the one selected in the PlayersPanel)
     private boolean m_inDebugger = false; // controls the end condition
     private boolean m_hasEnded = false; // this war has ended but the object remains alive for post-mortem examination
+
+    private int m_atLineNum = -1; // for opcode coloring
 
     public void setUiWarrior(Warrior warrior) {
         if (warrior != null)
@@ -256,6 +260,7 @@ public class War {
         List<WarriorData> warriors = warriorGroup.getWarriors();
 
         RealModeAddress groupSharedMemory = allocateCoreMemory(GROUP_SHARED_MEMORY_SIZE);
+        PlayersPanel playersPanel = CompetitionWindow.getInstance().m_playersPanel;
 
         for (int i = 0; i < warriors.size(); ++i) {
 
@@ -263,6 +268,7 @@ public class War {
 
             String warriorName = warrior.getName();
             byte[] warriorData = warrior.getCode();
+            ArrayList<CodeEditor.LstLine> codeLines = playersPanel.findCode(warrior.getLabel()).lines;
 
             short loadOffset;
             if (warrior.m_debugFixedLoadAddress < 0)
@@ -289,15 +295,22 @@ public class War {
             m_warriors[m_numWarriors++] = w;
 
             // load warrior to arena
+            m_atLineNum = 0;
+            CodeEditor.LstLine atLine = codeLines.get(0);
             m_core.listener.onWriteState(MemoryEventListener.EWriteState.ADD_WARRIORS);
             for (int offset = 0; offset < warriorData.length; ++offset) {
+                while (offset >= atLine.address + atLine.opcodesCount || atLine.address == -1) {
+                    ++m_atLineNum;
+                    atLine = codeLines.get(m_atLineNum);
+                }
                 RealModeAddress tmp = new RealModeAddress(ARENA_SEGMENT, (short)(loadOffset + offset));
-                m_core.writeByte(tmp, warriorData[offset]);			
+                m_core.writeByte(tmp, warriorData[offset]);
             }
+            m_atLineNum = -1;
 
             if (CompetitionWindow.getInstance().isBattleShown()) {
-                String col = ColorHolder.getInstance().getColor(m_currentWarrior, false).toString();
-                CompetitionWindow.getInstance().m_playersPanel.setButtonColor(col, warrior.getLabel());
+                String col = ColorHolder.getInstance().getColor(m_currentWarrior, false, false).toString();
+                playersPanel.setButtonColor(col, warrior.getLabel());
             }
 
             m_core.listener.onWriteState(MemoryEventListener.EWriteState.RUN);
@@ -309,6 +322,11 @@ public class War {
             m_warListener.onWarriorBirth(w);
         }
 
+    }
+
+    // for alternate opcode coloring, not -1 only when writing bytes of warriors code
+    public int getLineIndex() {
+        return m_atLineNum;
     }
 
     /**

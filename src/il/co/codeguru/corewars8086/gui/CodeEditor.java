@@ -165,7 +165,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     public static class LstLine {
         public int lineNum = -1;
-        public int address = -1;
+        public int address = -1;  // first byte has 0
         public String addressStr = "";
         public String opcode = ""; // for display
         public String fullOpcode = ""; // for knowing the real length

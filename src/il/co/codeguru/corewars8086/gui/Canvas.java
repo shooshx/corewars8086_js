@@ -22,6 +22,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     // product of these must be 65536
     private int BOARD_WIDTH = 256;
     private int BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+    private int BOARD_WIDTH_BITS = mathlog2(BOARD_WIDTH);
 
     private int DOT_SCALE = 1;
 	private int DOT_SIZE = 3;
@@ -41,29 +42,43 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private int VIS_HEIGHT = VIS_HEIGHT_PX/DOT_SIZE;
 
     private static final byte EMPTY = -1;
+    private static final byte FLAG_IP_HERE = 1;
+    private static final byte FLAG_ALT_OPCODE_COL = 2;
 
     private CanvasRenderingContext2D ctx;
 	private byte[] _data; // holds colors, not values
-	private byte[] _pointer; // where is IP
+	private byte[] _flags; // where is IP
     private byte[] _values; // memory values
     
     byte data(int x, int y) {
-        return _data[x + y*BOARD_WIDTH];
+        return _data[x + (y<<BOARD_WIDTH_BITS)];
     }
     void set_data(int x, int y, byte v) {
-        _data[x + y*BOARD_WIDTH] = v;
+        _data[x + (y<<BOARD_WIDTH_BITS)] = v;
     }
-    byte pointer(int x, int y) {
-        return _pointer[x + y*BOARD_WIDTH];
+    byte flags(int x, int y) {
+        return _flags[x + (y<<BOARD_WIDTH_BITS)];
     }
-    void set_pointer(int x, int y, byte v) {
-        _pointer[x + y*BOARD_WIDTH] = v;
+    void set_flag(int x, int y, byte v) {
+        _flags[x + (y<<BOARD_WIDTH_BITS)] |= v;
+    }
+    void reset_flag(int x, int y, byte v) {
+        _flags[x + (y<<BOARD_WIDTH_BITS)] &= ~v;
+    }
+    void clear_flag(int x, int y) {
+        _flags[x + (y<<BOARD_WIDTH_BITS)] = 0;
+    }
+    boolean has_flag(int x, int y, byte v) {
+        return (_flags[x + (y<<BOARD_WIDTH_BITS)] & v) != 0;
+    }
+    byte get_flags(int x, int y) {
+        return _flags[x + (y<<BOARD_WIDTH_BITS)];
     }
     byte values(int x, int y) {
-        return _values[x + y*BOARD_WIDTH];
+        return _values[x + (y<<BOARD_WIDTH_BITS)];
     }
     void set_values(int x, int y, byte v) {
-        _values[x + y*BOARD_WIDTH] = v;
+        _values[x + (y<<BOARD_WIDTH_BITS)] = v;
     }        
 
 	//private EventMulticasterMouse eventCaster;
@@ -72,6 +87,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	//private int MouseX, MouseY;
 
     private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect (user zoom with wheel)
+    private boolean m_alt_opcode_color = false;
 
     private boolean m_showContent = false;
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
@@ -191,22 +207,39 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	}*/
 
     // called from WarFrame
-	public void paintPixel(int number, byte color, byte value) {
+	public void paintPixel(int number, byte color, byte value) { 
         saveAndEnter();
-	    paintPixel(number % BOARD_WIDTH, number / BOARD_WIDTH, color, value);
+	    paintPixel(number % BOARD_WIDTH, number / BOARD_WIDTH, color, value, true);
         ctx.restore();
 	}
 
-	private void paintPixel(int x, int y, byte colorByte, byte value) {
+	private void paintPixel(int x, int y, byte colorByte, byte value, boolean doResetAltOpcode) {
         set_values(x, y, value);
 
 		Color color = null;
 		if (colorByte != -1)
             set_data(x, y, colorByte);
-        else
+        else {
+            // never happens?
             colorByte = data(x, y);
+        }
+
+        boolean altColor = false;
+        int lineIdx = m_currentWar.getLineIndex();
+        if (lineIdx != -1 && (lineIdx % 2) == 1) {
+            if (m_alt_opcode_color) 
+                altColor = true;
+            set_flag(x, y, FLAG_ALT_OPCODE_COL);
+        }
+        else {
+            if (doResetAltOpcode)
+                reset_flag(x, y, FLAG_ALT_OPCODE_COL);
+            else
+                altColor = has_flag(x, y, FLAG_ALT_OPCODE_COL); // when deleting IP
+        }
+
         if (colorByte != -1) {
-            color = ColorHolder.getInstance().getColor(colorByte, false);
+            color = ColorHolder.getInstance().getColor(colorByte, false, altColor);
             ctx.fillStyle = FillStyleUnionType.of(color.toString());
         }
         else {
@@ -226,10 +259,13 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         saveAndEnter();
 
 	    int x = number % BOARD_WIDTH;
-	    int y = number / BOARD_WIDTH;
-	    Color color = ColorHolder.getInstance().getColor(colorByte, true);
+        int y = number / BOARD_WIDTH;
 
-        set_pointer(x, y, colorByte);
+        boolean altColor = m_alt_opcode_color && has_flag(x, y, FLAG_ALT_OPCODE_COL);
+
+	    Color color = ColorHolder.getInstance().getColor(colorByte, true, altColor);
+
+        set_flag(x, y, FLAG_IP_HERE);
         ctx.fillStyle = FillStyleUnionType.of(color.toString());
         ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
         if (m_showContent)
@@ -255,6 +291,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	private static native void resetZoom() /*-{
 		$wnd.js_resetZoom()
+    }-*/;
+    private static native int mathlog2(int v) /*-{
+		return Math.log2(v)
 	}-*/;
 
 
@@ -277,15 +316,15 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         int len = BOARD_WIDTH * BOARD_HEIGHT;
 		if (_data == null)
 			_data = new byte[len];
-		if (_pointer == null)
-			_pointer = new byte[len];
+		if (_flags == null)
+            _flags = new byte[len];
 		if (_values == null)
             _values = new byte[len];
 
         
 		for (int i = 0; i < len; i++) {
             _data[i] = EMPTY;
-            _pointer[i] = EMPTY;
+            _flags[i] = 0;
         }
 
 		ctx.setTransform(1,0,0,1,0,0);
@@ -307,17 +346,11 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
 	private Color paintMemCellBack(int x, int y) {
-        int cellPtr = pointer(x, y);
-        Color col = null;
-        if (cellPtr != EMPTY) {
-            col = ColorHolder.getInstance().getColor(cellPtr, true);
-        }
-        else {
-            int cellVal = data(x, y);
-            if (cellVal != EMPTY) {
-                col = ColorHolder.getInstance().getColor(cellVal, false);
-            }
-        }
+        byte flags = get_flags(x, y);
+        boolean ipHere = (flags & FLAG_IP_HERE) != 0;
+        boolean altColor = m_alt_opcode_color && ((flags & FLAG_ALT_OPCODE_COL) != 0);
+        int cellVal = data(x, y);
+        Color col = ColorHolder.getInstance().getColor(cellVal, ipHere, altColor);
 
         if (col != null) {
             ctx.fillStyle = FillStyleUnionType.of(col.toString());
@@ -462,12 +495,12 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     
 	public void deletePointers() {
         saveAndEnter();
-
+        // TBD do this better
 		for (int x = 0; x < BOARD_WIDTH; x++)
 			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				if (pointer(x, y) != EMPTY) {
-					set_pointer(x, y, EMPTY);
-					paintPixel(x, y, data(x, y), values(x, y));
+				if (has_flag(x, y, FLAG_IP_HERE)) {
+					reset_flag(x, y, FLAG_IP_HERE);
+					paintPixel(x, y, data(x, y), values(x, y), false);
 				}
             }
         ctx.restore();
@@ -482,6 +515,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         $wnd.j_warCanvas_showCurrent = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_warCanvas_showCurrent(FF)(a,b) });
         $wnd.j_canvasResized = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_canvasResized(II)(a,b) });
         $wnd.j_change_board_width = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_change_board_width(I)(a) });
+        $wnd.j_set_alt_opcode_color = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_set_alt_opcode_color(Z)(a) });
     }-*/;
 
 
@@ -526,6 +560,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void j_change_board_width(int bw) {
         BOARD_WIDTH = bw;
         BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+        BOARD_WIDTH_BITS = mathlog2(BOARD_WIDTH);
     
         DOT_SCALE = 256/BOARD_WIDTH;
         DOT_SIZE = 3 * DOT_SCALE;
@@ -536,7 +571,11 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         ctx.setTransform(1,0,0,1,0,0);
 		resetZoom(); // already does the repaint
+    }
 
+    public void j_set_alt_opcode_color(boolean v) {
+        m_alt_opcode_color = v;
+        repaint();
     }
 
     private double m_cursorX, m_cursorY;  // in memory coordinates, x can have half cells for the first digit of a byte

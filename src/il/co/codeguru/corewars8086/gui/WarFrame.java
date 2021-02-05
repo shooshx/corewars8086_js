@@ -404,7 +404,7 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
                 text = "<html><S>" + text + "</S></html>";
             }
             setText(text);
-            Color c = ColorHolder.getInstance().getColor(index, false);
+            Color c = ColorHolder.getInstance().getColor(index, false, false);
 
             setForeground(c);
             return this;

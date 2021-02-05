@@ -65,6 +65,7 @@ function gwtStart()
 
     addWatchLine();
     do_layout()
+    create_options_dlg()
 
     //addWatchLine();
     //addWatchLine();
@@ -1151,38 +1152,78 @@ function add_div(parent, cls) {
     return e
 }
 
-function add_option_select(parent, labelText, opts, onchange)
+function add_option_select(parent, label_text, name, opts, onchange)
 {
     const line = add_div(parent, "opt_line")
     const label = add_div(line, "opt_label")
-    label.innerText = labelText
+    label.innerText = label_text
     const sel = add_elem(line, "select", "opt_select")
     for(let opt of opts) {
         const optElem = add_elem(sel, "option")
         optElem.setAttribute("value", opt)
         optElem.innerText = opt
     }
-    sel.addEventListener("input", ()=>{ onchange(opts[sel.selectedIndex]) })
+    name = "opt_" + name
+    sel.addEventListener("input", ()=>{ 
+        localStorage[name] = sel.value
+        onchange(opts[sel.selectedIndex]) 
+    })
+    let loaded = localStorage[name]
+    if (loaded !== undefined) {
+        loaded = parseInt(loaded)
+        if (opts.includes(loaded)) {
+            sel.value = loaded
+            if (loaded !== opts[0])
+                onchange(opts[sel.selectedIndex])
+        }
+    }
+}
+
+var checkbox_id_gen = 1;
+
+function add_option_checkbox(parent, label_text, name, onchange)
+{
+    const line = add_div(parent, "opt_line")
+    const inp = add_elem(line, "input", "mycheck")
+    inp.setAttribute("type", "checkbox")
+    const id = "opt_checkbox_" + (checkbox_id_gen++)
+    inp.setAttribute("id", id)
+    const inp_label = add_elem(line, "label", ["mycheck_label", "opt_checkbox"])
+    inp_label.setAttribute("for", id)
+    const label = add_elem(line, "label", "opt_check_label")
+    label.setAttribute("for", id)
+    label.innerText = label_text
+    name = "opt_" + name
+    inp.addEventListener("change", ()=>{ 
+        localStorage[name] = inp.checked
+        onchange(inp.checked) 
+    })
+    const loaded = localStorage[name]
+    if (loaded !== undefined) {
+        inp.checked = loaded
+        if (inp.checked)
+            onchange(inp.checked)
+    }
 }
 
 var g_opt_dlg = null;
 
 function open_options_dlg()
 {
-    if (g_opt_dlg !== null) {
-        g_opt_dlg.style.display = ""
-        return
-    }
+    g_opt_dlg.style.display = "initial"
+}
+
+function create_options_dlg()
+{
     g_opt_dlg = add_div(body, "options_dlg")
     const close_btn = add_div(g_opt_dlg, "opt_close_btn")
     close_btn.addEventListener("click", ()=>{
         g_opt_dlg.style.display = "none"
     })
 
-    add_option_select(g_opt_dlg, "Memory Panel Width:", [256, 128, 64, 32, 16], change_board_width)
-
+    add_option_select(g_opt_dlg, "Memory Panel Width:", "mem_width", [256, 128, 64, 32, 16], change_board_width)
+    add_option_checkbox(g_opt_dlg, "Alternate opcode color", "opcode_alt_col", changed_alt_opcode_color)
 }
-
 
 function make_menu(parent, relto, opts) {
     const menu = add_div(parent, "hmenu")
@@ -1238,6 +1279,11 @@ function triggerHamMenu(e)
 
 }
 
+
+function changed_alt_opcode_color(v)
+{
+    j_set_alt_opcode_color(v)
+}
 
 //-------------------------------- warCanvas wheel zoom -----------------
 // https://github.com/jackmoore/wheelzoom/blob/master/wheelzoom.js

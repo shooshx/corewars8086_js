@@ -9,6 +9,7 @@ public class Color {
     int m_r, m_g, m_b; // 0-255
     float m_a; // 0-1
     public boolean m_isDark;
+    public String m_str;
 
     private static final double FACTOR = 0.7;
 
@@ -18,6 +19,7 @@ public class Color {
         m_b = b;
         m_a = 1;
         m_isDark = (0.3*r + 0.58*g + 0.12*b) < 128;
+        m_str = makeString();
         //Console.log("Color " + toString() + "  dark=" + Boolean.toString(m_isDark));
     }
     public Color(int r, int g, int b, float a) {
@@ -26,6 +28,7 @@ public class Color {
         m_b = b;
         m_a = a;
         m_isDark = (0.3*r + 0.58*g + 0.12*b) < 128;
+        m_str = makeString();
         //Console.log("Color2 " + toString() + "  dark=" + Boolean.toString(m_isDark));
     }
 
@@ -94,15 +97,22 @@ public class Color {
     }
 
     public Color darker() {
-        return new Color(Math.max((int)(getRed()  *FACTOR), 0),
-                         Math.max((int)(getGreen()*FACTOR), 0),
-                         Math.max((int)(getBlue() *FACTOR), 0),
-                         getAlpha());
+        return new Color(Math.max((int)(m_r *FACTOR), 0),
+                         Math.max((int)(m_g *FACTOR), 0),
+                         Math.max((int)(m_b *FACTOR), 0),
+                         m_a);
     }
 
-    public String toString() {
+    public String makeString() {
         if (m_a == 1.0)
             return "rgb(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + ")";
         return "rgba(" + Integer.toString(m_r) + "," + Integer.toString(m_g) + "," + Integer.toString(m_b) + "," + Float.toString(m_a) + ")";
+    }
+    public String toString() {
+        return m_str;
+    }
+
+    public Color opposite() {
+        return new Color(255-m_r, 255-m_g, 255-m_b, m_a);
     }
 }

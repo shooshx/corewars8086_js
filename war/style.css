@@ -485,6 +485,10 @@ input:disabled + .sc-btn:active,
     line-height: 26px;
 }
 
+.mycheck {
+    display: none;
+}
+
 .mycheck + .mycheck_label {
     background-image: url(check_none.png);
     background-repeat: no-repeat;
@@ -1358,6 +1362,7 @@ position: absolute;
 /* ----------options -------- */
 
 .options_dlg {
+    display: none;
     position: absolute;
     top: 50px;
     left: 100px;
@@ -1395,4 +1400,15 @@ position: absolute;
 .opt_select {
     height: 23px;
     width: 70px;
+}
+
+.opt_checkbox {
+    width: 17px;
+    height: 17px;
+    vertical-align: middle;
+    margin: 0 5px 0 0;
+}
+
+.opt_check_label {
+    vertical-align: middle;
 }

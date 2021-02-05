@@ -3,12 +3,12 @@ package il.co.codeguru.corewars8086.gui;
 //import java.awt.Color;
 import il.co.codeguru.corewars8086.gui.widgets.*;
 
-/**
- * @author BS
- */
+
 public class ColorHolder {
     private Color colors[];
-    private Color darkColors[];
+	private Color darkColors[];
+	private Color altColors[];
+	private Color altDarkColors[];
 	public static final int MAX_COLORS = 360;
 	private static ColorHolder ins = new ColorHolder(MAX_COLORS);
 
@@ -23,9 +23,13 @@ public class ColorHolder {
 			x += golden_ratio_conjugate;
 		}
 
-        darkColors = new Color[colors.length];
+		darkColors = new Color[colors.length];
+		altColors = new Color[colors.length];
+		altDarkColors = new Color[colors.length];
         for (int i = 0; i  < colors.length; i++) {
-            darkColors[i] = colors[i].darker();
+			darkColors[i] = colors[i].darker();
+			altColors[i] = colors[i].opposite();
+			altDarkColors[i] = altColors[i].darker();
         }
     }
 
@@ -33,12 +37,15 @@ public class ColorHolder {
 		return ins;
 	}
 
-    public Color getColor(int pos, boolean darker) {
-		if (darker) {
-			return darkColors[pos];
-		} else {
-			return colors[pos];
+    public Color getColor(int pos, boolean darker, boolean altColor) {
+		if (altColor) {
+			if (darker)
+				return altDarkColors[pos];
+			return altColors[pos];
 		}
+		if (darker)
+			return darkColors[pos];
+		return colors[pos];
 	}
 	
 }

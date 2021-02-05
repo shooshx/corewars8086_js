@@ -122,8 +122,8 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         ColorHolder colorHolder = ColorHolder.getInstance();
         columns = new PlayerColumn[groups.size()];
         for (int i = 0; i < groups.size(); ++i) {
-            Color c1 = colorHolder.getColor(i, false);
-            Color c2 = colorHolder.getColor(i, true);
+            Color c1 = colorHolder.getColor(i, false, false);
+            Color c2 = colorHolder.getColor(i, true, false);
             columns[i] = new PlayerColumn(groups.get(i).getName(), c1.toString(), c2.toString());
 
             PlayersPanel pp = CompetitionWindow.getInstance().m_playersPanel;
