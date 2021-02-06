@@ -451,13 +451,14 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
 		War currentWar = this.competition.getCurrentWar();
 		for (int i = 0; i < currentWar.getNumWarriors(); i++)
 			if (currentWar.getWarrior(i).isAlive()) {
-		        CpuState state = currentWar.getWarrior(i).getCpuState();
+                Warrior warrior = currentWar.getWarrior(i);
+		        CpuState state = warrior.getCpuState();
 				short ip = state.getIP();
 				short cs = state.getCS();
 				
 				int ipInsideArena = RealModeAddress.linearAddress(cs, ip) - 0x10000;
 				
-				this.warCanvas.paintPointer((char) ipInsideArena,(byte) i);
+				this.warCanvas.paintPointer((char) ipInsideArena,(byte) i, warrior.getLabel());
 			}
 	}
 

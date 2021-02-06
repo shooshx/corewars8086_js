@@ -1,11 +1,9 @@
 package il.co.codeguru.corewars8086.gui;
 
-
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import elemental2.dom.*;
 import elemental2.dom.CanvasRenderingContext2D.StrokeStyleUnionType;
 import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
-
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
@@ -14,14 +12,18 @@ import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
 import il.co.codeguru.corewars8086.war.War;
+import il.co.codeguru.corewars8086.war.Warrior;
+import il.co.codeguru.corewars8086.cpu.CpuState;
 
+import java.util.HashMap;
 
 public class Canvas extends JComponent<HTMLCanvasElement> {
 
     //public static final int BOARD_SIZE = 256;
-    // product of these must be 65536
+    private static final int BOARD_LEN = 65536; // equals to War.ARENA_SIZE
+    // product of these must be BOARD_LEN
     private int BOARD_WIDTH = 256;
-    private int BOARD_HEIGHT = 65536 / BOARD_WIDTH; 
+    private int BOARD_HEIGHT = BOARD_LEN / BOARD_WIDTH; 
     private int BOARD_WIDTH_BITS = mathlog2(BOARD_WIDTH);
 
     private int DOT_SCALE = 1;
@@ -89,6 +91,15 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect (user zoom with wheel)
     private boolean m_alt_opcode_color = false;
 
+    private boolean m_show_reg_ptrs = false;
+    class RegPtrInf {
+        public RegPtrInf(int _reg_idx, int _seg_idx) { reg_idx = _reg_idx; seg_idx = _seg_idx; }
+        int elem_x, elem_y; // in untransformed canvas coordinates
+        int reg_idx, seg_idx;
+    };
+    private HashMap<Integer, RegPtrInf> m_reg_ptrs = new HashMap<Integer, RegPtrInf>();
+    String m_selectedPlayerLabel;
+
     private boolean m_showContent = false;
     private Path2D m_memclip, m_coordXclip, m_coordYclip;
 
@@ -138,7 +149,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 		exportMethods();
 		initZoom(MARGIN_TOP, MARGIN_LEFT);
 		clear();
-		setupInputEvents();
+        setupInputEvents();
+        
     }
 
     private void makeClipAreas()
@@ -245,25 +257,56 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             paintTextValue(x, y, color);
 	}
 
+    public void setCanvasSelectedPlayer(String label) {
+        m_selectedPlayerLabel = label;
+        if (m_show_reg_ptrs)
+            repaint();
+    }
+
+    private int[] m_painterdPointers = new int[War.MAX_WARRIORS];
+    private int m_paintedPointerCount = 0;
 
     // called from WarFrame
-	public void paintPointer(int number, byte colorByte) {
-        saveAndEnter();
-
+    public void paintPointer(int number, byte colorByte, String label) 
+    {
 	    int x = number % BOARD_WIDTH;
         int y = number / BOARD_WIDTH;
+        set_flag(x, y, FLAG_IP_HERE);
+        m_painterdPointers[m_paintedPointerCount++] = number;
+
+        if (m_show_reg_ptrs) {
+            // if showing lines, need to erase the old lines so a full paint is needed
+            paint();
+            return;
+        }
+        saveAndEnter();
 
         boolean altColor = m_alt_opcode_color && has_flag(x, y, FLAG_ALT_OPCODE_COL);
-
 	    Color color = ColorHolder.getInstance().getColor(colorByte, true, altColor);
 
-        set_flag(x, y, FLAG_IP_HERE);
         ctx.fillStyle = FillStyleUnionType.of(color.toString());
         ctx.fillRect(x * DOT_SIZE, y * DOT_SIZE, DOT_SIZE, DOT_SIZE);
         if (m_showContent)
             paintTextValue(x, y, color);
 
+        ctx.restore();        
+    }
+    
+        
+	public void deletePointers() {
+        saveAndEnter();
+        
+        for(int i = 0; i < m_paintedPointerCount; ++i) {
+            int number = m_painterdPointers[i];
+            int x = number % BOARD_WIDTH;
+            int y = number / BOARD_WIDTH;            
+            reset_flag(x, y, FLAG_IP_HERE);
+            paintPixel(x, y, data(x, y), values(x, y), false);            
+        }
+
         ctx.restore();
+
+        m_paintedPointerCount = 0;
 	}
 
 	public void paintTextValue(int x, int y, Color backCol) {
@@ -365,10 +408,11 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	@Override
 	public void paint() {
-        saveAndEnter();
-
 		ctx.fillStyle = FillStyleUnionType.of(Color.WHITE);
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // TBD remove this
+
+        saveAndEnter();
+
         ctx.fillStyle = FillStyleUnionType.of(Color.BLACK);
 		ctx.fillRect(0, 0, BOARD_WIDTH_PX, BOARD_HEIGHT_PX);
 
@@ -457,21 +501,94 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         }
 
         ctx.restore(); // back to full clip
-        //ctx.save();
 
-        //ctx.stroke();
-
-        //ctx.fillStyle = FillStyleUnionType.of("#ff0000");
-        //ctx.fill(m_coordXclip);
-
-        // restore the transformation and clip we had before for random access writes
-        //ctx.clip(m_memclip);
-        //transformToCtx();
-        //ctx.font = "2.3px monospace";
+        paintRegPtrLines();
+        
         setMemFont();
 
 	}
 
+    static final int REG_PTR_LINE_RADIUS = 10;
+    static final int ARROW_W = 6;
+    static final int ARROW_H = 10;
+
+    void paintRegPtrLines()
+    {
+        if (!m_show_reg_ptrs)
+            return;
+        CompetitionWindow cw = CompetitionWindow.getInstance();
+        if (cw == null || cw.competition == null || cw.competition.getCurrentWar() == null)
+            return; // on startup?
+        Warrior warrior = cw.competition.getCurrentWar().getWarriorByLabel(m_selectedPlayerLabel);
+        if (warrior == null)
+            return; // happens in PreStartClear
+        CpuState state = warrior.getCpuState();
+
+        for (RegPtrInf rp : m_reg_ptrs.values()) {
+            if (rp == null)
+                continue;
+
+            short addr = state.getByIndex(rp.reg_idx);
+            short seg = state.getByIndex(rp.seg_idx);
+   
+            int addrInsideArena = RealModeAddress.linearAddress(seg, addr) - CodeEditor.CODE_ARENA_OFFSET;
+            if (addrInsideArena < 0 || addrInsideArena > BOARD_LEN)
+                continue;
+            double cell_x = addrInsideArena % BOARD_WIDTH + 0.5;
+            double cell_y = addrInsideArena / BOARD_WIDTH + 0.5;
+
+            double dot_width = DOT_SIZE*m_zrHscale;
+            double dot_height = DOT_SIZE*m_zrVscale;
+
+            int ptr_x = (int)(cell_x * dot_width + m_zrX + MARGIN_LEFT);
+            int ptr_y = (int)(cell_y * dot_height + m_zrY + MARGIN_TOP);
+
+            // ctx.setTransform(m_zrHscale, 0, 0, m_zrVscale, m_zrX+MARGIN_LEFT, m_zrY+MARGIN_TOP);
+
+
+            int x_sign = (rp.elem_x > ptr_x) ? 1 : -1;
+            int y_sign = (rp.elem_y > ptr_y) ? -1 : 1;
+            boolean roundCorner = false, yLine = true;
+            int ydiff = Math.abs(rp.elem_y - ptr_y);
+            if (ydiff > dot_height*0.5) {
+                ptr_y -= (int)((0.5*dot_height) * y_sign);
+                if (ydiff > dot_height*0.5 + REG_PTR_LINE_RADIUS)
+                    roundCorner = true;
+            }
+            else {
+                ptr_x += (int)((0.5*dot_width) * x_sign);
+                yLine = false;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(rp.elem_x, rp.elem_y);
+            if (roundCorner) {
+                ctx.lineTo(ptr_x + x_sign*REG_PTR_LINE_RADIUS, rp.elem_y);
+                ctx.arcTo(ptr_x, rp.elem_y, ptr_x, rp.elem_y + y_sign*REG_PTR_LINE_RADIUS, REG_PTR_LINE_RADIUS);
+            }
+            else
+                ctx.lineTo(ptr_x, rp.elem_y);
+            if (yLine) {
+                ctx.lineTo(ptr_x, ptr_y);
+
+                ctx.moveTo(ptr_x-ARROW_W, ptr_y-ARROW_H*y_sign);
+                ctx.lineTo(ptr_x, ptr_y);
+                ctx.lineTo(ptr_x+ARROW_W, ptr_y-ARROW_H*y_sign);
+            }
+            else { // line is horizontal
+                ctx.moveTo(ptr_x+ARROW_H*x_sign, rp.elem_y-ARROW_W);
+                ctx.lineTo(ptr_x, rp.elem_y);
+                ctx.lineTo(ptr_x+ARROW_H*x_sign, rp.elem_y+ARROW_W);
+            }
+            // arrow head
+            ctx.strokeStyle = StrokeStyleUnionType.of("#000000");
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = StrokeStyleUnionType.of("#ffffff");
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
 
 
 
@@ -484,19 +601,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         ctx.clip(m_memclip);
         transformToCtx();
     }
-    
-	public void deletePointers() {
-        saveAndEnter();
-        // TBD do this better
-		for (int x = 0; x < BOARD_WIDTH; x++)
-			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				if (has_flag(x, y, FLAG_IP_HERE)) {
-					reset_flag(x, y, FLAG_IP_HERE);
-					paintPixel(x, y, data(x, y), values(x, y), false);
-				}
-            }
-        ctx.restore();
-	}
+
 
 	// ------------------------------ zoom and pan ---------------------------
 	public native void exportMethods() /*-{
@@ -508,6 +613,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         $wnd.j_canvasResized = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_canvasResized(II)(a,b) });
         $wnd.j_change_board_width = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_change_board_width(I)(a) });
         $wnd.j_set_alt_opcode_color = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_set_alt_opcode_color(Z)(a) });
+        $wnd.j_changed_reg_in_mem = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_changed_reg_in_mem(Z)(a) });
+        $wnd.j_reg_ptr_elem_moved = $entry(function(a,b,c) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_reg_ptr_elem_moved(III)(a,b,c) });
+        $wnd.j_reg_ptr_enabled = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.Canvas::j_reg_ptr_enabled(ZI)(a,b) });
     }-*/;
 
 
@@ -568,6 +676,25 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void j_set_alt_opcode_color(boolean v) {
         m_alt_opcode_color = v;
         repaint();
+    }
+
+    public void j_changed_reg_in_mem(boolean v) {
+        m_show_reg_ptrs = v;
+        repaint();
+    }
+
+    public void j_reg_ptr_elem_moved(int index, int x, int y) {
+        RegPtrInf rp = m_reg_ptrs.get(index);
+        rp.elem_x = x;
+        rp.elem_y = y;
+        repaint();
+    }
+
+    public void j_reg_ptr_enabled(boolean v, int both_idx) {
+        if (v)
+            m_reg_ptrs.put(both_idx, new RegPtrInf(both_idx & 0xff, both_idx >> 8));
+        else
+            m_reg_ptrs.remove(both_idx);
     }
 
     public void setAltColor(int addr, int len, boolean isSet) {

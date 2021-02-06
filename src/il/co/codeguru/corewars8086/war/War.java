@@ -37,7 +37,7 @@ public class War {
     /** Arena is filled with this byte */
     public final static byte ARENA_BYTE = (byte)0xCC;
     /** Maximum number of warriors in a fight */
-    private final static int MAX_WARRIORS = 20;
+    public final static int MAX_WARRIORS = 20;
     /** Maximum attempts to load a warrior to the Arena */
     private final static int MAX_LOADING_TRIES = 100;
     /** Minimum initial space (in bytes) between loaded warriors */

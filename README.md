@@ -33,6 +33,14 @@ Features include:
   a war is over and even continue running the war with just the winner running.
 - implementes all features of the original Java GUI
 - Load a batch of survivors or zombies from a zip file
+- Change the size of panels layout using splitters
+- Options in menu:
+   - to reset the layout to its default state
+   - move the players panel to be on the left (for wide screens) or at the top (for 4:3 screens)
+   - Open options dialog
+- Options in options dialog
+  - change the width of the memory display for better visibility
+  - Alternate opcode colors for better visibility of where opcodes start and end in the memory view
 
 tips and tricks
 - When debugging, you can always return to a warrior running point by clicking its name on the left pane

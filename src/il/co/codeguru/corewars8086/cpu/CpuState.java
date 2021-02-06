@@ -53,6 +53,33 @@ public class CpuState {
         return m_flags;
     }	
 
+    static final int REG_AX = 1, REG_BX = 2, REG_CX = 3, REG_DX = 4;
+    static final int REG_SI = 5, REG_DI = 6, REG_BP = 7, REG_SP = 8;
+    static final int REG_CS = 9, REG_DS = 10, REG_SS = 11, REG_ES = 12;
+    static final int REG_IP = 13;
+
+    public short getByIndex(int i) {
+        switch(i) {
+            case REG_IP: return m_ip;
+            case REG_CS: return m_cs;
+
+            case REG_AX: return m_ax;
+            case REG_BX: return m_bx;
+            case REG_CX: return m_cx;
+            case REG_DX: return m_dx;
+
+            case REG_SI: return m_si;
+            case REG_DI: return m_di;
+            case REG_BP: return m_bp;
+            case REG_SP: return m_sp;   
+            
+            case REG_DS: return m_ds;
+            case REG_SS: return m_ss;
+            case REG_ES: return m_es;              
+        }
+        throw new RuntimeException();
+    }
+
     public void setAX(short value) {
         m_ax = value;
     }

@@ -20,7 +20,7 @@ import static il.co.codeguru.corewars8086.gui.CompetitionWindow.call_gwtStart;
 public class CompetitionWindow extends JFrame
     implements ScoreEventListener, CompetitionEventListener {
 	
-	private Competition competition;
+	public Competition competition;
     private ColumnGraph columnGraph;
 
     // widgets

@@ -1195,15 +1195,19 @@ function add_option_checkbox(parent, label_text, name, onchange)
     label.innerText = label_text
     name = "opt_" + name
     inp.addEventListener("change", ()=>{ 
-        localStorage[name] = inp.checked
+        localStorage[name] = inp.checked ? "1":"0"
         onchange(inp.checked) 
     })
     const loaded = localStorage[name]
     if (loaded !== undefined) {
-        inp.checked = loaded
+        inp.checked = (loaded === "true" || loaded === "1")
         if (inp.checked)
             onchange(inp.checked)
     }
+    else {
+        inp.checked = false
+    }
+    return {line:line, inp:inp }
 }
 
 var g_opt_dlg = null;
@@ -1211,6 +1215,26 @@ var g_opt_dlg = null;
 function open_options_dlg()
 {
     g_opt_dlg.style.display = "initial"
+}
+
+const REG_AX = 1, REG_BX = 2, REG_CX = 3, REG_DX = 4
+const REG_SI = 5, REG_DI = 6, REG_BP = 7, REG_SP = 8
+const REG_CS = 9, REG_DS = 10, REG_SS = 11, REG_ES = 12
+const REG_IP = 13
+
+const regs_possibilites = [[REG_CS,REG_IP, 0], 
+                           [REG_DS,REG_AX, 1], [REG_DS,REG_BX, 1], [REG_DS,REG_CX, 1], [REG_DS,REG_DX, 1],
+                           [REG_DS,REG_SI, 2], [REG_DS,REG_DI, 2], [REG_ES,REG_SI, 2], [REG_ES,REG_DI, 2],
+                           [REG_SS,REG_BP, 3], [REG_SS,REG_SP, 3]
+                        ]
+function reg_name(v) {
+    switch(v) {
+    case REG_AX: return "AX"; case REG_BX: return "BX"; case REG_CX: return "CX"; case REG_DX: return "DX";
+    case REG_SI: return "SI"; case REG_DI: return "DI"; case REG_BP: return "BP"; case REG_SP: return "SP";
+    case REG_CS: return "CS"; case REG_DS: return "DS"; case REG_SS: return "SS"; case REG_ES: return "ES";
+    case REG_IP: return "IP";
+    }
+    return "<unknown>"
 }
 
 function create_options_dlg()
@@ -1223,6 +1247,15 @@ function create_options_dlg()
 
     add_option_select(g_opt_dlg, "Memory Panel Width:", "mem_width", [256, 128, 64, 32, 16], change_board_width)
     add_option_checkbox(g_opt_dlg, "Alternate opcode color", "opcode_alt_col", changed_alt_opcode_color)
+    add_option_checkbox(g_opt_dlg, "Registers pointers in memory view", "reg_in_mem", changed_reg_in_mem)
+    const regs_area = []
+    for(let i = 0; i < 4; ++i)
+        regs_area.push(add_div(g_opt_dlg, "opt_regs_area"))
+    for(let pos of regs_possibilites) {
+        const addr_name = reg_name(pos[0]), seg_name = reg_name(pos[1])
+        const obj = add_option_checkbox(regs_area[pos[2]], addr_name + ":" + seg_name, "reg_" + seg_name + "_" + addr_name, (v)=>{ enable_reg_ptr(v, pos[0], pos[1]) })
+        obj.line.classList.add("opt_reg_line")
+    }
 }
 
 function make_menu(parent, relto, opts) {
@@ -1285,6 +1318,56 @@ function changed_alt_opcode_color(v)
     j_set_alt_opcode_color(v)
 }
 
+var reg_ptrs = {}
+
+function make_reg_ptr(both_name, both_idx)
+{
+    const obj = {}
+    obj.cont_elem = add_div(memory_panel, "reg_ptr_cont")
+    obj.text_elem = add_div(obj.cont_elem, "reg_ptr_text")
+    obj.text_elem.innerText = both_name
+    
+    SLayout.add_move_handlers(obj.cont_elem, (dx, dy, pageX, pageY)=>{
+        const rel_x = obj.cont_elem.offsetLeft + dx
+        const rel_y = obj.cont_elem.offsetTop + dy
+        obj.cont_elem.style.left = rel_x + "px"
+        obj.cont_elem.style.top = rel_y + "px"
+        const mid_x = rel_x + obj.cont_elem.offsetWidth/2
+        const mid_y = rel_y + obj.cont_elem.offsetHeight/2
+        j_reg_ptr_elem_moved(both_idx, mid_x, mid_y)
+    })
+
+    return obj
+}
+
+function changed_reg_in_mem(v)
+{
+    const disp = v ? "initial":"none"
+    for(let name in reg_ptrs)
+        reg_ptrs[name].cont_elem.style.display = disp
+
+    j_changed_reg_in_mem(v)
+}
+
+function enable_reg_ptr(v, seg, addr)
+{
+    const seg_name = reg_name(seg), addr_name = reg_name(addr)
+    const both_name = seg_name + ":" + addr_name
+    const both_idx = addr | (seg << 8)
+    if (v) {
+        if (reg_ptrs[both_name] === undefined)
+            reg_ptrs[both_name] = make_reg_ptr(both_name, both_idx)
+    }
+    else {
+        if (reg_ptrs[both_name] !== undefined) {
+            let obj = reg_ptrs[both_name]
+            obj.cont_elem.parentElement.removeChild(obj.cont_elem)
+            delete reg_ptrs[both_name]
+        }
+    }
+    j_reg_ptr_enabled(v, both_idx)
+}
+
 //-------------------------------- warCanvas wheel zoom -----------------
 // https://github.com/jackmoore/wheelzoom/blob/master/wheelzoom.js
 
@@ -1313,8 +1396,8 @@ function js_updateFromKeyScroll(nx, ny) {
 function updateBgVars() {
     //console.log("~~", bgHeight, "  ", bgWidth)
     // part of the zoomed out canvas that is left out
-    const cutHeight =  Math.max(bgHeight - (warCanvas.height - MARGIN_TOP - MARGIN_BOTTOM), 0)
-    const cutWidth =  Math.max(bgWidth - (warCanvas.width - MARGIN_LEFT - MARGIN_RIGHT), 0)
+    const cutHeight =  Math.max(bgHeight*DOT_SCALE - (warCanvas.height - MARGIN_TOP - MARGIN_BOTTOM), 0)
+    const cutWidth =  Math.max(bgWidth*DOT_SCALE - (warCanvas.width - MARGIN_LEFT - MARGIN_RIGHT), 0)
 
     if (bgPosX > 0) {
         bgPosX = 0;
@@ -1456,6 +1539,7 @@ var BOARD_HEIGHT = 65536 / BOARD_WIDTH;
 const MARGIN_TOP = 20, MARGIN_BOTTOM = 45
 const MARGIN_LEFT = 20, MARGIN_RIGHT = 45
 const DOT_SIZE = 3
+var DOT_SCALE = 1
 
 // TBD zoom back makes a jump after enlarge
 
@@ -1476,6 +1560,7 @@ function change_board_width(bw)
 {
     BOARD_WIDTH = bw
     BOARD_HEIGHT = 65536 / BOARD_WIDTH
+    DOT_SCALE = 256/BOARD_WIDTH
     js_resetZoom()
     j_change_board_width(bw)
 }

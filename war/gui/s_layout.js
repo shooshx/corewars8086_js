@@ -338,5 +338,5 @@ function add_move_handlers(grip, movefunc, downfunc=null)
     });
 }
 
-return { setup:setup_layout }
+return { setup:setup_layout, add_move_handlers:add_move_handlers }
 })();

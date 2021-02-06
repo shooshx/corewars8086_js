@@ -267,26 +267,26 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }
 
     public native void exportMethods() /*-{
-                                       var that = this
-                                       $wnd.j_renderIfDirty = $entry(function(i) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_renderIfDirty(I)(i) });
-                                       $wnd.j_setScrollAt = $entry(function(i,j) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_setScrollAt(II)(i,j) });
-                                       $wnd.j_asm_edit_changed = $entry(function() { that.@il.co.codeguru.corewars8086.gui.CodeEditor::asm_edit_changed()() });
-                                       }-*/;
+        var that = this
+        $wnd.j_renderIfDirty = $entry(function(i) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_renderIfDirty(I)(i) });
+        $wnd.j_setScrollAt = $entry(function(i,j) { that.@il.co.codeguru.corewars8086.gui.CodeEditor::j_setScrollAt(II)(i,j) });
+        $wnd.j_asm_edit_changed = $entry(function() { that.@il.co.codeguru.corewars8086.gui.CodeEditor::asm_edit_changed()() });
+    }-*/;
 
     private static native int run_nasm(String asmname, String text, String lstname) /*-{
-                                                                                    $wnd.FS.writeFile(asmname, text, { encoding:'utf8' })
-                                                                                    $wnd.g_outputText = ''
-                                                                                    var ret_code = $wnd.run_nasm(asmname, lstname)
-                                                                                    return ret_code
-                                                                                    }-*/;
+        $wnd.FS.writeFile(asmname, text, { encoding:'utf8' })
+        $wnd.g_outputText = ''
+        var ret_code = $wnd.run_nasm(asmname, lstname)
+        return ret_code
+    }-*/;
 
     private static native String read_file(String name) /*-{
-                                                        return $wnd.FS.readFile(name, { encoding: 'utf8' })
-                                                        }-*/;
+        return $wnd.FS.readFile(name, { encoding: 'utf8' })
+    }-*/;
 
     private static native Uint8ArrayNative read_file_bin(String name) /*-{
-                                                                      return $wnd.FS.readFile(name, { encoding: 'binary' })
-                                                                      }-*/;
+        return $wnd.FS.readFile(name, { encoding: 'binary' })
+    }-*/;
 
     private static byte[] read_file_bin_arr(String name) {
         Uint8ArrayNative arr = read_file_bin(name);

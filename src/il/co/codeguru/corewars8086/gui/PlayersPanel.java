@@ -282,6 +282,7 @@ public class PlayersPanel
         m_inEditor = p.code[num - 1];
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, null); // don't pass playerPanel since we don't want it to return update to us
         m_mainWnd.battleFrame.cpuframe.setSelectedPlayer(m_inEditor.getLabel(), m_isDebugMode);
+        m_mainWnd.battleFrame.warCanvas.setCanvasSelectedPlayer(m_inEditor.getLabel());
 
         // in editor view, update the botton load address gui
         updateLoadAddr(m_inEditor.startAddress, m_inEditor.startAddrRandom);
