@@ -78,7 +78,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 	}
 
 
-	public int regChanged_callback(String name, String value) {
+	public int regChanged_callback(int rindex, String value) {
 		War currentWar = competition.getCurrentWar();
 		if (currentWar == null)
 			return 1;
@@ -108,57 +108,57 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 
 		short sv = (short) v;
 
-		switch (name) {
-			case "AX":
+		switch (rindex) {
+			case CpuState.REG_AX:
 				state.setAX(sv);
 				break;
-			case "BX":
+			case CpuState.REG_BX:
 				state.setBX(sv);
 				break;
-			case "CX":
+			case CpuState.REG_CX:
 				state.setCX(sv);
 				break;
-			case "DX":
+			case CpuState.REG_DX:
 				state.setDX(sv);
 				break;
 
-			case "SI":
+			case CpuState.REG_SI:
 				state.setSI(sv);
 				break;
-			case "DI":
+			case CpuState.REG_DI:
 				state.setDI(sv);
 				break;
-			case "BP":
+			case CpuState.REG_BP:
 				state.setBP(sv);
 				break;
-			case "SP":
+			case CpuState.REG_SP:
 				state.setSP(sv);
 				stackView.moveToLine(RealModeAddress.linearAddress(state.getSS(), sv));
 				break;
 
-			case "IP":
+			case CpuState.REG_IP:
 				state.setIP(sv);
 				changedCSIP();
 				break;
-			case "CS":
+			case CpuState.REG_CS:
 				state.setCS(sv);
 				changedCSIP();
 				break;
-			case "DS":
+			case CpuState.REG_DS:
 				state.setDS(sv);
 				break;
-			case "SS":
+			case CpuState.REG_SS:
 				state.setSS(sv);
 				stackView.moveToLine(RealModeAddress.linearAddress(sv, state.getSP()));
 				break;
-			case "ES":
+			case CpuState.REG_ES:
 				state.setES(sv);
 				break;
 
-			case "Energy":
+			case CpuState.REG_ENERGY:
 				state.setEnergy(sv);
 				break;
-			case "Flags":
+			case CpuState.REG_FLAGS:
 				state.setFlags(sv);
 				updateFlagBoxes(state);
 				break;
@@ -169,6 +169,8 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		for (WatchEntry entry : m_watches.values()) {
 			entry.evalAndDisplay();
 		}
+
+		m_mainwnd.battleFrame.warCanvas.registerManullyChanged(rindex);
 
 		return v;
 	}
@@ -249,23 +251,23 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 		//cpuPanel = (HTMLElement) DomGlobal.document.getElementById("cpuPanel");
 
 
-		regAX = new RegisterField("AX", this);
-		regBX = new RegisterField("BX", this);
-		regCX = new RegisterField("CX", this);
-		regDX = new RegisterField("DX", this);
+		regAX = new RegisterField("AX", CpuState.REG_AX, this);
+		regBX = new RegisterField("BX", CpuState.REG_BX, this);
+		regCX = new RegisterField("CX", CpuState.REG_CX, this);
+		regDX = new RegisterField("DX", CpuState.REG_DX, this);
 
-		regSI = new RegisterField("SI", this);
-		regDI = new RegisterField("DI", this);
-		regBP = new RegisterField("BP", this);
-		regSP = new RegisterField("SP", this);
+		regSI = new RegisterField("SI", CpuState.REG_SI, this);
+		regDI = new RegisterField("DI", CpuState.REG_DI, this);
+		regBP = new RegisterField("BP", CpuState.REG_BP, this);
+		regSP = new RegisterField("SP", CpuState.REG_SP, this);
 
-		regIP = new RegisterField("IP", this);
-		regCS = new RegisterField("CS", this);
-		regDS = new RegisterField("DS", this);
-		regSS = new RegisterField("SS", this);
-		regES = new RegisterField("ES", this);
-		regE = new RegisterField("Energy", this);
-		regF = new RegisterField("Flags", this);
+		regIP = new RegisterField("IP", CpuState.REG_IP, this);
+		regCS = new RegisterField("CS", CpuState.REG_CS, this);
+		regDS = new RegisterField("DS", CpuState.REG_DS, this);
+		regSS = new RegisterField("SS", CpuState.REG_SS, this);
+		regES = new RegisterField("ES", CpuState.REG_ES, this);
+		regE = new RegisterField("Energy", CpuState.REG_ENERGY, this);
+		regF = new RegisterField("Flags", CpuState.REG_FLAGS, this);
 
 		//Flags
 

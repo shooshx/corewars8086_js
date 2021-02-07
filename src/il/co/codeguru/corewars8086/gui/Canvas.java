@@ -98,6 +98,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         int reg_idx, seg_idx;
     };
     private HashMap<Integer, RegPtrInf> m_reg_ptrs = new HashMap<Integer, RegPtrInf>();
+    // counts how many times we're using each register (for register editing)
+    private int[] m_reg_refcounts = new int[CpuState.REG_COUNT];
     String m_selectedPlayerLabel;
 
     private boolean m_showContent = false;
@@ -276,7 +278,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
         if (m_show_reg_ptrs) {
             // if showing lines, need to erase the old lines so a full paint is needed
-            paint();
+            paint();  // TBD this is done repeatedly for each player
             return;
         }
         saveAndEnter();
@@ -591,7 +593,6 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
 
-
 	/*public void addListener(MouseAddressRequest l) {
 		eventCaster.add(l);
 	}*/
@@ -691,10 +692,27 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     }
 
     public void j_reg_ptr_enabled(boolean v, int both_idx) {
-        if (v)
-            m_reg_ptrs.put(both_idx, new RegPtrInf(both_idx & 0xff, both_idx >> 8));
-        else
+        int addr_idx = both_idx & 0xff;
+        int seg_idx = both_idx >> 8;
+        if (v) {
+            ++m_reg_refcounts[addr_idx];
+            ++m_reg_refcounts[seg_idx];
+            m_reg_ptrs.put(both_idx, new RegPtrInf(addr_idx, seg_idx));
+        }
+        else {
+            --m_reg_refcounts[addr_idx];
+            --m_reg_refcounts[seg_idx];
             m_reg_ptrs.remove(both_idx);
+        }
+    }
+
+    public void registerManullyChanged(int rindex)
+    {
+        if (!m_show_reg_ptrs)
+            return;
+        // is this register shown?
+        if (m_reg_refcounts[rindex] > 0) 
+            repaint();
     }
 
     public void setAltColor(int addr, int len, boolean isSet) {

@@ -53,10 +53,11 @@ public class CpuState {
         return m_flags;
     }	
 
-    static final int REG_AX = 1, REG_BX = 2, REG_CX = 3, REG_DX = 4;
-    static final int REG_SI = 5, REG_DI = 6, REG_BP = 7, REG_SP = 8;
-    static final int REG_CS = 9, REG_DS = 10, REG_SS = 11, REG_ES = 12;
-    static final int REG_IP = 13;
+    public static final int REG_AX = 1, REG_BX = 2, REG_CX = 3, REG_DX = 4;
+    public static final int REG_SI = 5, REG_DI = 6, REG_BP = 7, REG_SP = 8;
+    public static final int REG_CS = 9, REG_DS = 10, REG_SS = 11, REG_ES = 12;
+    public static final int REG_IP = 13, REG_ENERGY = 14, REG_FLAGS = 15;
+    public static final int REG_COUNT = 16;
 
     public short getByIndex(int i) {
         switch(i) {
@@ -75,7 +76,10 @@ public class CpuState {
             
             case REG_DS: return m_ds;
             case REG_SS: return m_ss;
-            case REG_ES: return m_es;              
+            case REG_ES: return m_es;    
+            
+            case REG_FLAGS: return m_flags;
+            case REG_ENERGY: return m_energy;
         }
         throw new RuntimeException();
     }

@@ -20,10 +20,12 @@ public class RegisterField /*extends JPanel*/ {
 	private boolean m_lastInputOk = true;
 	private short m_lastValue;
 	private String m_name;
+	private int m_rindex; // REG_...
 
-	public RegisterField(String name, CpuFrame frame) {
+	public RegisterField(String name, int rindex, CpuFrame frame) {
 		m_frame = frame;
 		m_name = name;
+		m_rindex = rindex;
 	//	super.setLayout(new GridLayout(1, 2));
 	//	super.setSize(50, 20);
 	//	super.add(new JLabel(name + ":"), BorderLayout.LINE_START);
@@ -41,7 +43,7 @@ public class RegisterField /*extends JPanel*/ {
 	}
 
 	public void editChanged() {
-		int setok = m_frame.regChanged_callback(m_name, textField.value);
+		int setok = m_frame.regChanged_callback(m_rindex, textField.value);
 		if (setok < -999999) {
 			textField.classList.add("dbg_reg_err");
 			switch(setok) {
