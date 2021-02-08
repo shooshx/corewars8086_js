@@ -13,12 +13,17 @@ public class Format {
             s = "0" + s;
         return s;
     }
-    public static String hex2(int num) {
+    public static String hex2_old(int num) {
         String s = Integer.toHexString(num).toUpperCase();
         if(s.length() == 1)
             return "0" + s;
         return s;
     }
+
+    private static final String[] hex_chars = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
+    public static String hex2(int num) {
+        return hex_chars[(num & 0xf0)>>4] + hex_chars[num & 0xf];
+    }    
     public static String hex4(int num) {
         String s = Integer.toHexString(num).toUpperCase();;
         switch(s.length()) {

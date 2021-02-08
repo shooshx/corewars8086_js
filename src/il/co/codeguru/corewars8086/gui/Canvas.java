@@ -262,7 +262,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     public void setCanvasSelectedPlayer(String label) {
         m_selectedPlayerLabel = label;
         if (m_show_reg_ptrs)
-            repaint();
+            paint();
     }
 
     private int[] m_painterdPointers = new int[War.MAX_WARRIORS];
@@ -370,7 +370,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         //ctx.clip(m_memclip);
 
 		resetZoom(); // already does the repaint
-		//repaint();
+
 
         // default clipping is the memory area - for random access writes to not go overboard
         //Path2D
@@ -387,6 +387,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         boolean ipHere = (flags & FLAG_IP_HERE) != 0;
         boolean altColor = m_alt_opcode_color && ((flags & FLAG_ALT_OPCODE_COL) != 0);
         int cellVal = data(x, y);
+        if (cellVal == -1)
+            return null;
         Color col = ColorHolder.getInstance().getColor(cellVal, ipHere, altColor);
 
         if (col != null) {
@@ -526,6 +528,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             return; // happens in PreStartClear
         CpuState state = warrior.getCpuState();
 
+        ctx.beginPath();
+
         for (RegPtrInf rp : m_reg_ptrs.values()) {
             if (rp == null)
                 continue;
@@ -562,7 +566,6 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
                 yLine = false;
             }
 
-            ctx.beginPath();
             ctx.moveTo(rp.elem_x, rp.elem_y);
             if (roundCorner) {
                 ctx.lineTo(ptr_x + x_sign*REG_PTR_LINE_RADIUS, rp.elem_y);
@@ -570,6 +573,8 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             }
             else
                 ctx.lineTo(ptr_x, rp.elem_y);
+
+            // arrow head
             if (yLine) {
                 ctx.lineTo(ptr_x, ptr_y);
 
@@ -582,14 +587,15 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
                 ctx.lineTo(ptr_x, rp.elem_y);
                 ctx.lineTo(ptr_x+ARROW_H*x_sign, rp.elem_y+ARROW_W);
             }
-            // arrow head
-            ctx.strokeStyle = StrokeStyleUnionType.of("#000000");
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            ctx.strokeStyle = StrokeStyleUnionType.of("#ffffff");
-            ctx.lineWidth = 2;
-            ctx.stroke();
+
         }
+
+        ctx.strokeStyle = StrokeStyleUnionType.of("#000000");
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.strokeStyle = StrokeStyleUnionType.of("#ffffff");
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 
 
@@ -621,7 +627,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 
 	public void j_warCanvas_repaint() {
-		repaint();
+		paint();
 	}
 
 	private static native void initZoom(int marginTop, int marginLeft) /*-{
@@ -655,7 +661,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
     public void j_canvasResized(int w, int h) {
         canvasSizeChanged(w, h);
-        repaint();
+        paint();
     }
 
     public void j_change_board_width(int bw) {
@@ -671,24 +677,24 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         redoTransform();
 
         ctx.setTransform(1,0,0,1,0,0);
-		resetZoom(); // already does the repaint
+		resetZoom(); // already does the paint
     }
 
     public void j_set_alt_opcode_color(boolean v) {
         m_alt_opcode_color = v;
-        repaint();
+        paint();
     }
 
     public void j_changed_reg_in_mem(boolean v) {
         m_show_reg_ptrs = v;
-        repaint();
+        paint();
     }
 
     public void j_reg_ptr_elem_moved(int index, int x, int y) {
         RegPtrInf rp = m_reg_ptrs.get(index);
         rp.elem_x = x;
         rp.elem_y = y;
-        repaint();
+        paint();
     }
 
     public void j_reg_ptr_enabled(boolean v, int both_idx) {
@@ -698,11 +704,13 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             ++m_reg_refcounts[addr_idx];
             ++m_reg_refcounts[seg_idx];
             m_reg_ptrs.put(both_idx, new RegPtrInf(addr_idx, seg_idx));
+            // paint is called when it's moved to position
         }
         else {
             --m_reg_refcounts[addr_idx];
             --m_reg_refcounts[seg_idx];
             m_reg_ptrs.remove(both_idx);
+            paint();
         }
     }
 
@@ -712,7 +720,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
             return;
         // is this register shown?
         if (m_reg_refcounts[rindex] > 0) 
-            repaint();
+            paint();
     }
 
     public void setAltColor(int addr, int len, boolean isSet) {

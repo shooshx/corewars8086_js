@@ -1326,15 +1326,25 @@ function make_reg_ptr(both_name, both_idx)
     obj.cont_elem = add_div(memory_panel, "reg_ptr_cont")
     obj.text_elem = add_div(obj.cont_elem, "reg_ptr_text")
     obj.text_elem.innerText = both_name
-    
-    SLayout.add_move_handlers(obj.cont_elem, (dx, dy, pageX, pageY)=>{
-        const rel_x = obj.cont_elem.offsetLeft + dx
-        const rel_y = obj.cont_elem.offsetTop + dy
+
+    const count = Object.keys(reg_ptrs).length
+    const start_x = 50;
+    const start_y = 30 + count * 40
+
+    const set_pos = (rel_x, rel_y)=>{
         obj.cont_elem.style.left = rel_x + "px"
         obj.cont_elem.style.top = rel_y + "px"
         const mid_x = rel_x + obj.cont_elem.offsetWidth/2
         const mid_y = rel_y + obj.cont_elem.offsetHeight/2
         j_reg_ptr_elem_moved(both_idx, mid_x, mid_y)
+    }
+    
+    set_pos(start_x, start_y)
+    
+    SLayout.add_move_handlers(obj.cont_elem, (dx, dy, pageX, pageY)=>{
+        const rel_x = obj.cont_elem.offsetLeft + dx
+        const rel_y = obj.cont_elem.offsetTop + dy
+        set_pos(rel_x, rel_y)
     })
 
     return obj
@@ -1354,6 +1364,7 @@ function enable_reg_ptr(v, seg, addr)
     const seg_name = reg_name(seg), addr_name = reg_name(addr)
     const both_name = seg_name + ":" + addr_name
     const both_idx = addr | (seg << 8)
+    j_reg_ptr_enabled(v, both_idx)
     if (v) {
         if (reg_ptrs[both_name] === undefined)
             reg_ptrs[both_name] = make_reg_ptr(both_name, both_idx)
@@ -1365,7 +1376,6 @@ function enable_reg_ptr(v, seg, addr)
             delete reg_ptrs[both_name]
         }
     }
-    j_reg_ptr_enabled(v, both_idx)
 }
 
 //-------------------------------- warCanvas wheel zoom -----------------
