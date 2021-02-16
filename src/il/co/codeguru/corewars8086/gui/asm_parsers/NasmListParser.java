@@ -24,13 +24,24 @@ public class NasmListParser implements IListParser{
         PARSE_ERR
     };
 
+    // examples of edge cases:
+    // macro expansion line
+    //     13 00000000 B83412              <1> mov ax, 0x1234
+
+    // jmp short 0xfa 
+    //      1 00000000 EB(FA)                  JMP SHORT 0xFA
+
+    // mov ax,\
+    //     cx
+    // TBD 
+
 
     // runs a state machine that parses the .lst files
     public boolean parseLst(String lsttext, StringBuilder opcodesText, ArrayList<CodeEditor.LstLine> m_currentListing)
     {
         String[] lines = lsttext.split("\\n");
 
-        int lineIndex = 1; // does not increment in warning lines that appear in the listing file
+        int expectedLineIndex = 1; // does not increment in warning lines that appear in the listing file
         CodeEditor.LstLine prevLine = null;
         int totalOpcodeCount = 0;
         for(int i = 0; i < lines.length; ++i)
@@ -41,6 +52,7 @@ public class NasmListParser implements IListParser{
 
             int indexStart = 0, addressStart = 0, opcodeStart = 0;
             int charsBeforeCode = 0; // number of characters after the space after address and before the code. used fo not missing indentation
+            boolean hasMacroLevel = false; // a macro level field looks like <1> and indicates we don't want to connect several lines that appear in the same line number
             for(int j = 0; j < line.length(); ++j)
             {
                 char c = line.charAt(j);
@@ -93,14 +105,18 @@ public class NasmListParser implements IListParser{
                         break;
                     case OPCODE:
                         boolean islast = (j == line.length() - 1);
+                        if (c == '>' && charsBeforeCode == 21)
+                            hasMacroLevel = true;  // tri brackets any other place may be a pointer?
                         if (c == '*') {
                             state = Field.WARNING;
                         }
                         else if (!islast && charsBeforeCode < 22)
-                            ++charsBeforeCode; // take anything as long as its in the field size of the opcode. need this sinc resb adds spaces
+                            ++charsBeforeCode; // take anything as long as its in the field size of the opcode. need this since resb adds spaces
                         else if (c == ' ' || islast) { // continueation lines of a string definition end in the middle of the opcode field.
                             //spacedHex(, l);
                             l.fullOpcode = line.substring(opcodeStart, j);
+                            if (hasMacroLevel)
+                                l.fullOpcode = removeMacroLevel(l.fullOpcode);
                             l.opcode = TextUtils.spacedHex(l.fullOpcode);
                             l.opcodesCount = TextUtils.countDigits(l.fullOpcode) / 2;
                             totalOpcodeCount += l.opcodesCount;
@@ -134,42 +150,62 @@ public class NasmListParser implements IListParser{
             } // for j in line chars
             if (state == Field.WARNING)
                 continue; // skip this line
-            if (l.lineNum > lineIndex)
+                
+            if (l.lineNum > expectedLineIndex)
             {  // this can happen if there is a \ at the end of a line, extending it to the next line
-                // so the next line doesn't exist in the line count, we need to just skit it in the output
-                // this can happe for multiple consecutive lines
-                while (l.lineNum != lineIndex) {
+                // so the next line doesn't exist in the line count, we need to just skip it in the output
+                // this can happen for multiple consecutive lines
+                while (l.lineNum != expectedLineIndex) {
                     opcodesText.append("\n");
-                    ++lineIndex;
+                    ++expectedLineIndex;
                 }
             }
             else if (prevLine != null && l.lineNum == prevLine.lineNum) {
-                // it's a continuation line of the previous line. we need to concatenate to get the full opcode in order to know its size
-                // happens with string definition db "abcdefgh"
-                prevLine.fullOpcode += l.fullOpcode;
-                prevLine.opcodesCount = TextUtils.countDigits(prevLine.fullOpcode) / 2;
-                // no need to update the display opcode because its already too long
-                continue;
+                if (!hasMacroLevel) {
+                    // it's a continuation line of the previous line. we need to concatenate to get the full opcode in order to know its size
+                    // happens with string definition db "abcdefgh"
+                    prevLine.fullOpcode += l.fullOpcode;
+                    prevLine.opcodesCount = TextUtils.countDigits(prevLine.fullOpcode) / 2;
+                    // no need to update the display opcode because its already too long
+                    continue;
+                }
             }
-            else if (l.lineNum != lineIndex) {
-                Console.log("wrong line number " + Integer.toString(l.lineNum) + " at " + Integer.toString(lineIndex));
+            else if (l.lineNum != expectedLineIndex) {
+                Console.log("wrong line number " + Integer.toString(l.lineNum) + " at " + Integer.toString(expectedLineIndex));
                 return false;
             }
 
-            ++lineIndex;
+            if (!hasMacroLevel)
+                ++expectedLineIndex;
 
             m_currentListing.add(l);
-            opcodesText.append(l.opcode);
-            opcodesText.append("\n");
+            if (!hasMacroLevel) {
+                // don't want to add macro expansion to the text displayed when editing since that would cause the lines to misalign.
+                // the line that instantiates the macro is added as it doesn't have < in it
+                opcodesText.append(l.opcode);
+                opcodesText.append("\n");
+            }
 
             prevLine = l;
         }
+
 
         // if text doen't end with new line, delete the one added to opcodes
         //if (asmtext.charAt(asmtext.length() - 1) != '\n')
         //   opcodesText.deleteCharAt(opcodesText.length() - 1);
 
         return true;
+    }
+
+    // opcode line "B83412              <1>", remove the last bit
+    private static String removeMacroLevel(String s)
+    {
+        if (s.charAt(s.length()-1) != '>')
+            return s;
+        int i = s.length() - 2;
+        while (i > 0 && s.charAt(i) != '<')
+            --i;
+        return s.substring(0, i);
     }
 
 

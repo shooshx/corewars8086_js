@@ -803,10 +803,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                 }
 
             } catch (Disassembler.DisassemblerLengthException e) {
-                msg = Integer.toString(atLstLine + 1) + ": not enough bytes to parse"; // can happen if we db 09h for
+                msg = Integer.toString(lstline.lineNum) + ": not enough bytes to parse"; // can happen if we db 09h for
                                                                                        // example, or just 'rep'
             } catch (Disassembler.DisassemblerException e) {
-                msg = Integer.toString(atLstLine + 1)
+                msg = Integer.toString(lstline.lineNum)
                         + ": Although this is a legal x86 opcode, codewars8086 does not support it";
                 int eptr = dis.getPointer() - 1;
                 if (eptr >= 0 && eptr < binbuf.length)
@@ -816,10 +816,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                                                                          // missing cases
             }
 
+            
             if (msg != null) {
                 // Console.error(msg);
                 // if m_errLines is null it means there are no errors or warnings so we're good
-                if (m_errLines == null || atLstLine < m_errLines.length && m_errLines[atLstLine] == 0) // it exists and
+                if (m_errLines == null || lstline.lineNum < m_errLines.length && m_errLines[lstline.lineNum] == 0) // it exists and
                                                                                                        // there isn't an
                                                                                                        // something
                                                                                                        // already there
@@ -830,7 +831,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                         asm_show.appendChild(asmElem); // this is somewhat replicated code from above that there's no
                                                        // easy way to avoid it
                     }
-                    Element e = DomGlobal.document.getElementById("mline_" + Integer.toString(atLstLine + 1));
+                    Element e = DomGlobal.document.getElementById("mline_" + Integer.toString(lstline.lineNum));
                     if (e == null) {
                         Console.error("did not find line?");
                         return asmElem;
@@ -840,9 +841,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                     Element omsgdiv = DomGlobal.document.createElement("div");
                     omsgdiv.classList.add("stdout_line_w");
 
-                    if (atLstLine < m_lineOffsets.size()) {
+                    if (lstline.lineNum < m_lineOffsets.size()) {
                         omsgdiv.setAttribute("ondblclick",
-                                "asm_cursorToLine(" + Integer.toString(m_lineOffsets.get(atLstLine)) + ")");
+                                "asm_cursorToLine(" + Integer.toString(m_lineOffsets.get(lstline.lineNum)) + ")");
                     }
                     Text omsgtxt = DomGlobal.document.createTextNode(msg);
                     omsgdiv.appendChild(omsgtxt);

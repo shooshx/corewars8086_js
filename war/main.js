@@ -1327,7 +1327,7 @@ function make_reg_ptr(both_name, both_idx)
     obj.text_elem = add_div(obj.cont_elem, "reg_ptr_text")
     obj.text_elem.innerText = both_name
 
-    const count = Object.keys(reg_ptrs).length
+    const count = Object.keys(reg_ptrs).length // TBD this can cause them to be on top of each other
     const start_x = 50;
     const start_y = 30 + count * 40
 
@@ -1350,8 +1350,10 @@ function make_reg_ptr(both_name, both_idx)
     return obj
 }
 
+var g_reg_ptrs_enabled = false
 function changed_reg_in_mem(v)
 {
+    g_reg_ptrs_enabled = v
     const disp = v ? "initial":"none"
     for(let name in reg_ptrs)
         reg_ptrs[name].cont_elem.style.display = disp
@@ -1368,6 +1370,7 @@ function enable_reg_ptr(v, seg, addr)
     if (v) {
         if (reg_ptrs[both_name] === undefined)
             reg_ptrs[both_name] = make_reg_ptr(both_name, both_idx)
+        reg_ptrs[both_name].cont_elem.style.display = g_reg_ptrs_enabled ? "initial":"none"
     }
     else {
         if (reg_ptrs[both_name] !== undefined) {

@@ -2,6 +2,13 @@ Yehuda UI
 - Fix zoom out that scrolls all the way to the top
 - resize of window should undo cut scroll
 
+BUGS:
+- slowdown from guy in Firefox
+- going to debug successfully should reset error??
+- going to debug doesn't move the speed slider to the right place
+- Ctrl-A doesn't select the right thing
+
+- # causes list parse error
 
 ------------
 
