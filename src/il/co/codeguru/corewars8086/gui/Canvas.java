@@ -89,7 +89,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 	//private int MouseX, MouseY;
 
     private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect (user zoom with wheel)
-    private boolean m_alt_opcode_color = false;
+    private boolean m_alt_opcode_color = false; // from options
 
     private boolean m_show_reg_ptrs = false;
     class RegPtrInf {
@@ -242,7 +242,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         if (doResetAltOpcode)
             reset_flag(x, y, FLAG_ALT_OPCODE_COL);
         else
-            altColor = has_flag(x, y, FLAG_ALT_OPCODE_COL); // when deleting IP
+            altColor = m_alt_opcode_color && has_flag(x, y, FLAG_ALT_OPCODE_COL); // when deleting IP
 
         if (colorByte != -1) {
             color = ColorHolder.getInstance().getColor(colorByte, false, altColor);

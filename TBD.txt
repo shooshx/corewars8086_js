@@ -1,3 +1,14 @@
+Yehuda Meeting 26/11/2021
+- UI layout:
+	- allow minimizing the players list
+	- allow moving the split between code and opcodes
+	- horizontal stack and extra-segment, under the black board
+- competition - icon of team rising update
+- change the color of the killed player to the color of the killer
+- all the zombies same color	
+
+
+
 Yehuda UI
 - Fix zoom out that scrolls all the way to the top
 - resize of window should undo cut scroll

@@ -225,7 +225,7 @@
       </div>
     </div>
 
-    <div id="graphs_panel" style="width:0; opacity:0;" ontransitionend="graph_panel_anim_end()">
+    <div id="graphs_panel" style="width:0; opacity:0;" >
         <div id="graphs_title">Competition</div>
         <div id="graphs_control">
             <input id="competeRunCheckbox" class="hidden" onchange="triggerStartCompete()" type="checkbox">
@@ -240,7 +240,7 @@
             <canvas id="graphs_canvas" width="680" height="600"></canvas>
             <div id="results_table"></div>
         </div>
-
+        <div id="graphs_resizer"></div>
     </div>
 
     <div id="aboutBack" class="popupBack" onclick="triggerAbout(false)"><div id="aboutWin" class="popupWin">

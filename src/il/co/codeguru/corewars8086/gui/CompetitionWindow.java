@@ -170,6 +170,7 @@ public class CompetitionWindow extends JFrame
         $wnd.j_startCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_startCompete()() });
         $wnd.j_stopCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopCompete()() });
         $wnd.j_getResultTableText = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_getResultTableText()() });
+        $wnd.j_redrawGraphs = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_redrawGraphs()() });
     }-*/;
 
     public boolean j_startDebug()
@@ -210,6 +211,11 @@ public class CompetitionWindow extends JFrame
 
     public String j_getResultTableText() {
         return columnGraph.getTableText();
+    }
+
+    public void j_redrawGraphs()
+    {
+        columnGraph.paintGraphs();
     }
 
 

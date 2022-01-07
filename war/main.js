@@ -66,6 +66,7 @@ function gwtStart()
     addWatchLine();
     do_layout()
     create_options_dlg()
+    reg_graphs_panel_resize()
 
     //addWatchLine();
     //addWatchLine();
@@ -131,6 +132,8 @@ function reset_layout()
         g_last_saved_layouts[lname] = default_layout_tree(lname)
     }
     re_layout_current()
+
+    reset_graph_layout()
 }
 
 const CURRNT_CELL_VALUE_DIV_HEIGHT = 20
@@ -1581,15 +1584,6 @@ function change_board_width(bw)
 
 // ------------------------------------------ Competition --------------------------------------------
 
-function graph_panel_anim_end() {
-    if (competeCheckbox.checked) {
-        // setting the style in the normal way doesn't work here for some reason
-        graphs_panel.setAttribute("style", "opacity: 1; transition: width 0.3s cubic-bezier(0.36, 0.29, 0.79, 1.07), opacity 0.3s cubic-bezier(0.56, 0.02, 0.89, 0.26);");
-    }
-    else {
-        graphs_panel.style.transition = "";
-    }
-}
 
 function gray_out_anim_end() {
     if (competeCheckbox.checked) {
@@ -1600,9 +1594,12 @@ function gray_out_anim_end() {
     }
 }
 
+const DEFAULT_GRAPH_SZ = [1050, 700];
+var g_graphs_panel_sz = DEFAULT_GRAPH_SZ.slice()
+
 function openCompete() {
     if (competeCheckbox.checked) {
-        graphs_panel.style.width = "";
+        adjust_graph_panel_size()
         graphs_panel.style.opacity = 1;
         gray_out_debugger.style.visibility = "visible";
         gray_out_debugger.style.opacity = 1;
@@ -1673,4 +1670,55 @@ function triggerCopyTable() {
     let text = j_getResultTableText();
     console.log(text)
     navigator.clipboard.writeText(text)
+}
+
+function reg_graphs_panel_resize() {
+
+    const stored_w = parseInt(localStorage["graph_panel_width"])
+    if (!isNaN(stored_w))
+        g_graphs_panel_sz[0] = Math.max(stored_w, 100)
+    const stored_h = parseInt(localStorage["graph_panel_height"])
+    if (!isNaN(stored_h))
+        g_graphs_panel_sz[1] = Math.max(stored_h, 100)
+    j_redrawGraphs()
+
+    let moving = false
+    let startCoord = null
+    graphs_resizer.addEventListener("mousedown", (e)=>{
+        moving = true;
+        startCoord = [graphs_panel.offsetWidth - e.pageX, graphs_panel.offsetHeight - e.pageY]
+    })
+    document.addEventListener("mouseup", ()=>{
+        moving = false;
+        startCoord = null
+    })
+    document.addEventListener('mousemove', function(e) {
+        if (!moving)
+            return;
+        e.preventDefault(); // prevent selection action from messing it up
+
+        g_graphs_panel_sz = [startCoord[0] + e.pageX, startCoord[1] + e.pageY]
+
+        adjust_graph_panel_size()
+
+        localStorage["graph_panel_width"] = g_graphs_panel_sz[0]
+        localStorage["graph_panel_height"] = g_graphs_panel_sz[1]
+
+        j_redrawGraphs()        
+    })    
+}
+
+function adjust_graph_panel_size()
+{
+    graphs_panel.style.width = g_graphs_panel_sz[0] + "px"
+    graphs_panel.style.height = g_graphs_panel_sz[1] + "px"
+    graphs_canvas.width = g_graphs_panel_sz[0] - 340
+    graphs_canvas.height = g_graphs_panel_sz[1] - 105
+}
+
+function reset_graph_layout()
+{
+    g_graphs_panel_sz = DEFAULT_GRAPH_SZ.slice()
+    localStorage.removeItem("graph_panel_width")
+    localStorage.removeItem("graph_panel_height")
 }

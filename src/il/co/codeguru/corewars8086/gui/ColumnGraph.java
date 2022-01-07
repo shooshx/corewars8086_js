@@ -169,16 +169,12 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         }
         Console.log("Score add " + Integer.toString(pos) + " " + Integer.toString(subIndex) + " "
                 + Float.toString(value) + "  totals= " + sb.toString());
-        paintComponent();
+                paintGraphs();
         updateTable(pos);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-     */
-    protected void paintComponent() {
+
+    protected void paintGraphs() {
         int width = m_element.width, height = m_element.height;
         ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of("#fdfdfd");
         ctx.fillRect(0, 0, width, height);
