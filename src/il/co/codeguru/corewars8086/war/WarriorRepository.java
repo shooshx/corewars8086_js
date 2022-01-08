@@ -127,7 +127,7 @@ public class WarriorRepository {
             {
                 if (c.label.endsWith("0")) {
                     // start a new group!
-                    currentGroup = new WarriorGroup(name.substring(0, name.length()-1), c.player.label);
+                    currentGroup = new WarriorGroup(name.substring(0, name.length()-1), c.player.label, c.player.title);
                     currentGroup.addWarrior(data);
                     warriorNameToGroup.put(name, warriorGroups.size());
                 }
@@ -141,7 +141,7 @@ public class WarriorRepository {
                     Console.error("Unexpected suffix for warrior name. expected 1 or 2: " + name);
                 }
             } else {
-                currentGroup = new WarriorGroup(name, c.player.label);
+                currentGroup = new WarriorGroup(name, c.player.label, c.player.title);
                 currentGroup.addWarrior(data);
                 warriorNameToGroup.put(name, warriorGroups.size());
                 warriorGroups.add(currentGroup);
@@ -240,7 +240,7 @@ public class WarriorRepository {
         if (zombieFiles == null || zombieFiles.length == 0 || !PlayersPanel.zombiesEnabled())
             return true;
 
-        zombieGroup = new WarriorGroup("ZoMbIeS", "");
+        zombieGroup = new WarriorGroup("ZoMbIeS", "", "ZoMbIeS");
         for (PlayersPanel.Code c : zombieFiles) {
             String name = c.getName();
             if (name == null) {

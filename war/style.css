@@ -1329,7 +1329,7 @@ h3 {
     vertical-align: top;
     margin: 12px 14px 0 60px;
     line-height: 30px;
-    position: absolute;
+    display: inline-block;
 }
 #graphs_control {
     overflow: hidden;
@@ -1345,6 +1345,13 @@ h3 {
     height: 30px;
     /*background-color: blue;*/
     background: url(resize_handle.png);
+}
+#graphStyle {
+    height: 27px;
+    margin: 17px 0 10px 0;
+    vertical-align: top;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 #error_box {

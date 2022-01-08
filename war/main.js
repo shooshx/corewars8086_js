@@ -1681,6 +1681,11 @@ function reg_graphs_panel_resize() {
     if (!isNaN(stored_h))
         g_graphs_panel_sz[1] = Math.max(stored_h, 100)
     j_redrawGraphs()
+    const gstyle = localStorage["graph_style"]
+    if (gstyle !== undefined) {
+        graphStyle.value = gstyle
+        j_redrawGraphs(graphStyle.value)
+    }
 
     let moving = false
     let startCoord = null
@@ -1704,7 +1709,7 @@ function reg_graphs_panel_resize() {
         localStorage["graph_panel_width"] = g_graphs_panel_sz[0]
         localStorage["graph_panel_height"] = g_graphs_panel_sz[1]
 
-        j_redrawGraphs()        
+        j_redrawGraphs(graphStyle.value)        
     })    
 }
 
@@ -1721,4 +1726,10 @@ function reset_graph_layout()
     g_graphs_panel_sz = DEFAULT_GRAPH_SZ.slice()
     localStorage.removeItem("graph_panel_width")
     localStorage.removeItem("graph_panel_height")
+}
+
+function graphStyleChanged()
+{
+    j_redrawGraphs(graphStyle.value)
+    localStorage["graph_style"] = graphStyle.value
 }

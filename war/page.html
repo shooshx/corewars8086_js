@@ -236,6 +236,11 @@
             <label id="battlesLabel">Battles to run:</label>
             <input id="battlesPerGroupField" type="text" spellcheck="false">
             <label id="battlesRan"></label>
+            <select id="graphStyle" onchange="graphStyleChanged()">
+              <option value="vbar_bot">Vertical Bars 1</option>
+              <option value="vbar_top">Vertical Bars 2</option>
+              <option value="hbar">Horizontal Bars</option>
+            </select>
             <div id="copyTableBtn" class="sc-btn" onclick="triggerCopyTable()">Copy</div>
             <canvas id="graphs_canvas" width="680" height="600"></canvas>
             <div id="results_table"></div>

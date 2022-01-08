@@ -9,11 +9,6 @@ import il.co.codeguru.corewars8086.gui.PlayersPanel;
  */
 public class WarriorData {
 
-    /**
-     * Constructor.
-     * @param name   Warrior's name.
-     * @param code   Warrior's code.
-     */
     public WarriorData(String name, byte[] code, String label, int debugLoadAddr) {
         m_name = name;
         m_code = code;

@@ -6,13 +6,15 @@ import java.util.List;
 public class WarriorGroup {
     private String name;
     private String label;
+    private String title; // user given name
     private ArrayList<WarriorData> warriorData;
     private List<Float> scores;
     private float groupScore;
 
-    public WarriorGroup(String name, String label) {
+    public WarriorGroup(String name, String label, String title) {
         this.name = name;
         this.label = label;
+        this.title = title;
         warriorData = new ArrayList<WarriorData>();
         scores = new ArrayList<Float>();
     }
@@ -35,6 +37,9 @@ public class WarriorGroup {
     }
     public String getLabel() {
         return label;
+    }
+    public String getTitle() {
+        return title;
     }
 
     public float getGroupScore() {
