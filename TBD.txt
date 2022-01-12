@@ -7,6 +7,12 @@ Yehuda Meeting 26/11/2021
 - change the color of the killed player to the color of the killer
 - all the zombies same color	
 
+- vertical competition
+- state forget after 15 min
+- check state not saved during loads
+
+BUG:
+- messages window is never cleared (mem leak?)
 
 
 Yehuda UI

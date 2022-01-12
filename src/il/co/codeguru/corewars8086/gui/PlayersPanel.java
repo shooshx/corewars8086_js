@@ -3,13 +3,18 @@ package il.co.codeguru.corewars8086.gui;
 
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.google.gwt.typedarrays.shared.ArrayBuffer;
+import com.google.gwt.core.client.JavaScriptObject;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.war.*;
+import il.co.codeguru.corewars8086.jsadd.JsObj;
 import org.eclipse.jdt.internal.compiler.codegen.IntegerCache;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayersPanel
 {
@@ -79,7 +84,7 @@ public class PlayersPanel
         }
 
         public boolean isEnabled = true; // the checkbox next to the player
-        public String label;  // 'A', 'B' etc, the string on the elements of the player
+        public String label;  // 'pA', 'pB' etc, the string on the elements of the player
         public String title;  // 'Player A'
         public Code[] code = new Code[2];
         public EWarriorType wtype = EWarriorType.SINGLE;
@@ -107,13 +112,14 @@ public class PlayersPanel
         $wnd.j_addPlayer =    $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_addPlayer(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_removePlayer = $entry(function(s) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_removePlayer(Ljava/lang/String;)(s) });
         $wnd.j_changedWType = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_changedWType(Ljava/lang/String;Ljava/lang/String;)(a,b) });
-        $wnd.j_updateTitle = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_updateTitle(Ljava/lang/String;Ljava/lang/String;)(a,b) });
         $wnd.j_demoDebugPlayers = $entry(function() { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_demoDebugPlayers()() });
         $wnd.j_loadAddrChanged = $entry(function(s,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadAddrChanged(Ljava/lang/String;Z)(s,b) });
         $wnd.j_loadBinary      = $entry(function(b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadBinary(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(b) });
         $wnd.j_enablePlayer    = $entry(function(a,b) { that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_enablePlayer(Ljava/lang/String;Z)(a,b) });
         $wnd.j_getCurrentName  = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_getCurrentName()() });
-        $wnd.j_getCurrentBin  = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_getCurrentBin()() });
+        $wnd.j_getCurrentBin   = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_getCurrentBin()() });
+        $wnd.j_savePlayers =     $entry(function() { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_savePlayers()() });
+        $wnd.j_loadPlayers =     $entry(function(a) { return that.@il.co.codeguru.corewars8086.gui.PlayersPanel::j_loadPlayers(Lcom/google/gwt/core/client/JavaScriptObject;)(a) });
     }-*/;
 
     public PlayerInfo findPlayer(String label) {
@@ -123,6 +129,127 @@ public class PlayersPanel
                 return p;
         }
         return null;
+    }
+
+    private JavaScriptObject saveCode(Code code)
+    {
+        JavaScriptObject c = JsObj.makeDict();
+        JsObj.dictPut(c, "asm", code.asmText);
+        JsObj.dictPut(c, "addr_rand", code.startAddrRandom);
+        if (!code.startAddrRandom)
+            JsObj.dictPut(c, "addr", code.startAddress);
+        return c;
+    }
+
+    private void loadCode(JavaScriptObject c)
+    {
+        String c_asm = JsObj.dictGetStr(c, "asm");
+        m_inEditor.asmText = c_asm;
+        m_inEditor.startAddrRandom = JsObj.dictGetBool(c, "addr_rand", true);
+        if (!m_inEditor.startAddrRandom)
+            m_inEditor.startAddress = JsObj.dictGetStr(c, "addr");
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+    }
+
+    public JavaScriptObject j_savePlayers()
+    {
+        JavaScriptObject state = JsObj.makeDict();
+        JavaScriptObject parr = JsObj.makeArray();
+        JsObj.dictPut(state, "p", parr);
+        for(PlayerInfo p : m_players)
+        {
+            JavaScriptObject d = JsObj.makeDict();
+            JsObj.arrAdd(parr, d);
+            String ptype = p.label.substring(0, 1); // see also getFiles
+            JsObj.dictPut(d, "ptype", ptype); // "p" or "z"
+
+            if (ptype == "p")
+            {
+                JsObj.dictPut(d, "title", p.title);
+                //JsObj.dictPut(d, "label", p.label);
+                JsObj.dictPut(d, "isEnabled", p.isEnabled);
+                JsObj.dictPut(d, "wtype", p.wtype.ordinal());
+
+                JsObj.dictPut(d, "code0", saveCode(p.code[0]));
+
+                if (p.wtype == EWarriorType.TWO_DIFFERENT)
+                {
+                    JsObj.dictPut(d, "code1", saveCode(p.code[1]));
+                }
+            }
+            else if (ptype == "z")
+            {
+                JsObj.dictPut(d, "code0", saveCode(p.code[0]));
+            }
+        }
+        JavaScriptObject sel = JsObj.makeDict();
+        if (m_inEditor != null)
+        {
+            JsObj.dictPut(sel, "label", m_inEditor.player.label);
+            JsObj.dictPut(sel, "idx", m_inEditor.index);
+        }
+        JsObj.dictPut(state, "sel", sel);
+        JsObj.dictPut(state, "z_enabled", zombiesEnabled());
+        
+        return state;
+    }
+
+    public void j_loadPlayers(JavaScriptObject state) throws Exception
+    {
+        JavaScriptObject parr = JsObj.dictGetObj(state, "p");
+        removeAll();
+        int len = JsObj.arrLen(parr);
+        for(int i = 0; i < len; ++i)
+        {
+            JavaScriptObject d = JsObj.arrGetObj(parr, i);
+            String ptype = JsObj.dictGetStr(d, "ptype");
+            
+            if (ptype == "p")
+            {
+                int wtype_int = JsObj.dictGetInt(d, "wtype");
+                EWarriorType wtype;
+                if (wtype_int == 0)
+                    wtype = EWarriorType.SINGLE;
+                else if (wtype_int == 2)
+                    wtype = EWarriorType.TWO_DIFFERENT;
+                else
+                    throw new Exception("unexpected wtype");
+                String title = JsObj.dictGetStr(d, "title");
+                boolean isEnabled = JsObj.dictGetBool(d, "isEnabled");
+                
+                addPlayerPanel(); // this adds to m_players
+
+                m_inEditor = m_players.get(i).code[0];
+                loadCode(JsObj.dictGetObj(d, "code0"));
+                m_inEditor.player.isEnabled = isEnabled;
+                if (wtype == EWarriorType.TWO_DIFFERENT)
+                { 
+                    m_inEditor = m_players.get(i).code[1];
+                    loadCode(JsObj.dictGetObj(d, "code1"));
+                }
+                changedWType(m_inEditor.player.label, wtype.toString());
+                updateTitle(title);
+                playerCheckSetUI(m_inEditor.player.label, isEnabled);
+            }
+            else if (ptype == "z")
+            {
+                addZombieCode(); // this adds to m_players
+                m_inEditor = m_players.get(i).code[0];
+                loadCode(JsObj.dictGetObj(d, "code0"));
+
+            }
+        }
+
+        boolean z_en = JsObj.dictGetBool(state, "z_enabled", true);
+        setZombiesEnabled(z_en);
+       
+        if (len > 0)
+        {
+            JavaScriptObject sel = JsObj.dictGetObj(state, "sel");
+            String label = JsObj.dictGetStr(sel, "label");
+            int idx = JsObj.dictGetInt(sel, "idx");
+            setSelectedCode(label, idx + 1); // 0,1 to 1,2
+        }
     }
 
 
@@ -141,8 +268,22 @@ public class PlayersPanel
     public native void changedWType(String label, String v) /*-{
         $wnd.changedWType(label, v, true);
     }-*/;
+    public native void removeAll() /*-{
+        $wnd.removeAllPlayers()
+        $wnd.removeAllZombies()
+    }-*/;
+    public native void playerCheckSetUI(String label, boolean v) /*-{
+        $wnd.playerCheckSetUI(label, v);
+    }-*/;
+    public native void addZombieCode() /*-{
+        $wnd.addZombieCode(true);
+    }-*/;
+
 
     private void demo_simple() {
+        addPlayerPanel(); 
+        addPlayerPanel();
+
         m_inEditor = m_players.get(1).code[0];
         m_inEditor.asmText = "start:\ninc cx\njmp start";
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
@@ -154,8 +295,23 @@ public class PlayersPanel
     }
 
     private void demo_like_original() {
-        addPlayerPanel(); // this demo has 4 players. initialization of the page adds 2 panels
+        removeAll();
+        addPlayerPanel(); 
         addPlayerPanel();
+        addPlayerPanel(); 
+        addPlayerPanel();
+
+        String bimpCode = "PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n";
+        m_inEditor = m_players.get(0).code[0];
+        updateTitle("bimp");
+        m_inEditor.asmText = bimpCode;
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+        m_inEditor = m_players.get(0).code[1];
+        m_inEditor.asmText = bimpCode;
+        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
+        m_inEditor.player.wtype = EWarriorType.TWO_DIFFERENT;
+        changedWType(m_inEditor.player.label, "TWO_DIFFERENT");
+
 
         String shooterCode = " PUSH DS\n POP ES\n MOV DI, AX\n MOV AX, 0xCCCC\nagain:\n STOSW\n ADD WORD DI, 0xB\n JMP again\n";
 
@@ -182,18 +338,8 @@ public class PlayersPanel
         m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
 
 
-        // the one that is selected at the end
-        String bimpCode = "PUSH DS\nPOP ES\nXCHG DI, AX\nADD WORD DI, 0xC\nMOV SI, DI\nADD WORD SI, 0xA\nSTD\nDEC DI\nDEC DI\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nMOVSW\nINC DI\nINC DI\nJMP DI\n";
-        m_inEditor = m_players.get(0).code[0];
-        updateTitle("bimp");
-        m_inEditor.asmText = bimpCode;
-        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
-        m_inEditor = m_players.get(0).code[1];
-        m_inEditor.asmText = bimpCode;
-        m_mainWnd.m_codeEditor.playerSelectionChanged(m_inEditor, this);
-        m_inEditor.player.wtype = EWarriorType.TWO_DIFFERENT;
-        changedWType(m_inEditor.player.label, "TWO_DIFFERENT");
-        m_inEditor = m_players.get(0).code[0];
+        setSelectedCode(m_players.get(0).label, 1);
+        setZombiesEnabled(true);
     }
 
     public void j_demoDebugPlayers() {
@@ -235,8 +381,10 @@ public class PlayersPanel
 
     public native void setPressedCodeBut(String label, int num) /*-{
         var idd = "sel_code_w" + num + "_" + label
-        //console.log("~~" + idd)
-        $wnd.document.getElementById(idd).checked = true;
+        var btn = $wnd.document.getElementById(idd)
+        if (btn === null)
+            throw new Error("element not found " + idd)
+        btn.checked = true;  // it's a radio
     }-*/;
 
     public void setSelectedCode(String label, int code_num) {
@@ -251,8 +399,14 @@ public class PlayersPanel
             if (label.equals(p.label)) {
                 m_players.remove(p);
                 Console.log("Removed " + label + " " + Integer.toString(m_players.size()));
-                if (m_inEditor.player == p && m_players.size() > 0) { // removing currently selected player
-                    setSelectedCode(m_players.get(0).label, 1);
+                if (m_inEditor != null && m_inEditor.player == p) {
+                    if (m_players.size() > 0) { // removing currently selected player
+                        setSelectedCode(m_players.get(0).label, 1);
+                    }
+                    else {
+                        m_inEditor = null;
+                        m_mainWnd.m_codeEditor.playerSelectionChanged(null, null);
+                    }
                 }
                 return;
             }
@@ -372,6 +526,17 @@ public class PlayersPanel
         if (m_inEditor == null)
             return;
         m_inEditor.asmText = text;
+
+    }
+
+    public static native void save_state()  /*-{
+        return $wnd.js_save_state()
+    }-*/;
+
+    public void triggerUpdateTitle(String v)
+    {
+        updateTitle(v);
+        save_state();
     }
 
     public void updateTitle(String v) {
@@ -386,16 +551,13 @@ public class PlayersPanel
         //reWriteButtonsLabels(m_inEditor.player);
     }
 
-    
-    public void j_updateTitle(String label, String v) {
-        PlayerInfo p = findPlayer(label);
-        p.title = v;
-
-        //reWriteButtonsLabels(p);
-    }
 
     public static native boolean zombiesEnabled() /*-{
         return $wnd.player_check_zombies.checked
+    }-*/;
+
+    public static native void setZombiesEnabled(boolean v) /*-{
+        $wnd.player_check_zombies.checked = v
     }-*/;
 
 

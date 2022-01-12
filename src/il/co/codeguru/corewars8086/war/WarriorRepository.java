@@ -74,6 +74,8 @@ public class WarriorRepository {
     }
 
     // it's an ugly singletop but that's the only reasonable way War and WarriorRepository can communicate about fixed addresses
+    // having it in the competition window is an ugly hack but is the only way for it to get to the random
+    // loading where it will be needed later
     static public LoadAddrChecker m_loadAddrChecker;
 
 
@@ -83,7 +85,7 @@ public class WarriorRepository {
         warriorGroups.clear();
 
         Console.log("Found " + Integer.toString(files.length) + " survivors, " + Integer.toString(zombies.length) + " zombies");
-        m_loadAddrChecker = null; // reset it before potentially being used again
+        m_loadAddrChecker = new LoadAddrChecker(files.length + zombies.length); // reset it before potentially being used again
 
         Arrays.sort(files, new Comparator<PlayersPanel.Code>() {
             public int compare(PlayersPanel.Code o1, PlayersPanel.Code o2) {
@@ -112,11 +114,6 @@ public class WarriorRepository {
 
             int startAddr = -1;
             if (!c.startAddrRandom && isInDebug) {
-                if (m_loadAddrChecker == null) {
-                    // having it in the competition window is an ugly hack but is the only way for it to get to the random
-                    // loading where it will be needed later
-                    m_loadAddrChecker = new LoadAddrChecker(files.length + zombies.length);
-                }
                 startAddr = m_loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
                 if (startAddr == -2)
                     return false;
@@ -154,7 +151,7 @@ public class WarriorRepository {
             return false;
         }
 
-        if (!readZombiesFromUI(zombies, m_loadAddrChecker))
+        if (!readZombiesFromUI(zombies))
             return false;
 
         return true;
@@ -235,7 +232,7 @@ public class WarriorRepository {
     */
     
 
-	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles, LoadAddrChecker loadAddrChecker) {
+	private boolean readZombiesFromUI(PlayersPanel.Code[] zombieFiles) {
         zombieGroup = null;
         if (zombieFiles == null || zombieFiles.length == 0 || !PlayersPanel.zombiesEnabled())
             return true;
@@ -259,8 +256,8 @@ public class WarriorRepository {
             }
 
             int startAddr = -1;
-            if (!c.startAddrRandom) {
-                startAddr = loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
+            if (!c.startAddrRandom) {               
+                startAddr = m_loadAddrChecker.addCheck(c.startAddress, c.bin.length, name);
                 if (startAddr == -2)
                     return false;
             }

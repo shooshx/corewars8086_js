@@ -55,18 +55,15 @@ function gwtStart()
     //do_layout()  // relies on j_resized
     console.log("gwtStart()");
    // start with two players
-    addPlayersPanel()
-    addPlayersPanel()
-
-    sel_code_w1_pA.checked = true
-    triggerSrc('pA', 1)
-
-    j_demoDebugPlayers();
 
     addWatchLine();
     do_layout()
     create_options_dlg()
     reg_graphs_panel_resize()
+    if (!load_autosave())
+    {
+        j_demoDebugPlayers();
+    }
 
     //addWatchLine();
     //addWatchLine();
@@ -490,7 +487,7 @@ function addPlayerPanel_as(name, wtype)
             <label id="player_name_lbl_pLETTER" class="fam_label">NAME</label>\
             <label id="player_erase_pLETTER" class="pl_close_icon" onclick="triggerErasePlayer(this, pl_frame_pLETTER, \'LETTER\')"></label>\
           </div>\
-          <input class="fam_check_box hidden mycheck" id="wtype_pLETTER" type="checkbox" onchange="changedWType(\'pLETTER\', this.checked)" >\
+          <input class="fam_check_box hidden mycheck" id="wtype_pLETTER" type="checkbox" onchange="triggerWType(\'pLETTER\', this.checked)" >\
           <label class="fam_check mycheck_label wtype_label" for="wtype_pLETTER">Two Warriors</label>\
           <input id="sel_code_w1_pLETTER" class="hidden sc-check src_sel_chk" onclick="triggerSrc(\'pLETTER\', 1)" type="radio" name="src_select">\
           <label id="sel_code_lbl_w1_pLETTER" class="sc-btn src_sel_but src_sel_but2" for="sel_code_w1_pLETTER" >1</label>\
@@ -515,7 +512,13 @@ function addPlayerPanel_as(name, wtype)
     return label
 }
 
-function changedWType(label, v, move_ui)
+function triggerWType(label, v)
+{
+    changedWType(label, v)
+    js_save_state()
+}
+
+function changedWType(label, v, move_ui=false)
 {
     if (v === true)
         v = 'TWO_DIFFERENT'
@@ -523,15 +526,15 @@ function changedWType(label, v, move_ui)
         v = 'SINGLE'
 
     if (move_ui) {
-        var checked = (v == 'TWO_DIFFERENT')
+        const checked = (v == 'TWO_DIFFERENT')
         document.getElementById('wtype_' + label).checked = checked
     }
 
-    var elem1 = document.getElementById('sel_code_lbl_w1_' + label)
-    var elem2 = document.getElementById('sel_code_lbl_w2_' + label)
-    var frame = document.getElementById('pl_frame_' + label)
+    const elem1 = document.getElementById('sel_code_lbl_w1_' + label)
+    const elem2 = document.getElementById('sel_code_lbl_w2_' + label)
+    //const frame = document.getElementById('pl_frame_' + label)
 
-    if (v == 'SINGLE' || v == 'TWO_IDENTICAL') {
+    if (v == 'SINGLE') {
         elem2.style.visibility = 'hidden'
         elem2.style.opacity = 0.0
         elem1.style.marginTop = '7px'
@@ -552,9 +555,16 @@ function changedWType(label, v, move_ui)
 function triggerSrc(label, index)
 {
     j_srcSelectionChanged(label, index)
+    js_save_state()
 }
 
-function triggerErasePlayer(buttonElem, elem, letter, immediate=false)
+function triggerErasePlayer(buttonElem, elem, letter)
+{
+    erasePlayer(buttonElem, elem, letter, false)
+    js_save_state()
+}
+
+function erasePlayer(buttonElem, elem, letter, immediate=false)
 {
     if (buttonElem !== null && buttonElem.getAttribute("disabled") == "true")
         return;
@@ -608,7 +618,7 @@ function removeAllPlayers()
     const used_letters_copy = g_usedLetters.slice(0)
     for(let letter of used_letters_copy) {
         // remove without animation since we don't want to have more than one element with the same "pA" ID
-        triggerErasePlayer(null, document.getElementById("pl_frame_p" + letter), letter, true)
+        erasePlayer(null, document.getElementById("pl_frame_p" + letter), letter, true)
     }
 }
 
@@ -621,15 +631,25 @@ function removeAllZombies()
     g_nextZombNum = 1
 }
 
+function triggerZombEnable()
+{
+    js_save_state()
+}
+
 function changedPlayerCheck(letter, v)
 {
     j_enablePlayer('p'+letter, v)
+    js_save_state()
+}
+function playerCheckSetUI(label, v)
+{
+    document.getElementById("player_check_" + label).checked = v
 }
 
 var g_nextZombNum = 1
 
-function addZombieCode() {
-    if (addZombieBtn.getAttribute("disabled") == "true")
+function addZombieCode(force=false) {
+    if (!force && addZombieBtn.getAttribute("disabled") == "true")
         return;
     addZombieCode_as("Zombie " + g_nextZombNum)
 }
@@ -765,7 +785,8 @@ var debug_area_shown = false
 var deferredEditorToAddress = -1 // set by code in CodeEditor.java
 
 var prevDebug = false;
-function triggerDebug() {
+function triggerDebug() 
+{
     console.log("triggerDebug " + debugCheckbox.checked)
     if (prevDebug == debugCheckbox.checked) // not sure how this is possible
         return;
@@ -885,11 +906,12 @@ function loadAddrUpdateUI() {
 }
 function changedLoadAddrType() {
     loadAddrUpdateUI()
-    j_loadAddrChanged(fixed_load_addr.value, asm_load_addr_type.value == "rand");
-
+    j_loadAddrChanged(fixed_load_addr.value, asm_load_addr_type.value == "rand")
+    js_save_state()
 }
 function changedFixedAddr() {
-    j_loadAddrChanged(fixed_load_addr.value, asm_load_addr_type.value == "rand");
+    j_loadAddrChanged(fixed_load_addr.value, asm_load_addr_type.value == "rand")
+    js_save_state()
 }
 // from java, when changing warrior
 function updateLoadAddr(strValue, isRand) {
@@ -1043,6 +1065,11 @@ async function read_zip(input_elem) {
 
 async function load_zip_survivors(input_elem)
 {
+    if (isRunning()) {
+        console.error("ignoring load_zip_survivors due to run state")
+        return
+    }
+
     const entries = await read_zip(input_elem)
     if (entries === null)
         return
@@ -1086,6 +1113,11 @@ async function load_zip_survivors(input_elem)
 
 async function load_zip_zombies(input_elem)
 {
+    if (isRunning()) {
+        console.error("ignoring load_zip_survivors due to run state")
+        return
+    }
+
     const entries = await read_zip(input_elem)
     if (entries === null)
         return
@@ -1169,17 +1201,26 @@ function add_option_select(parent, label_text, name, opts, onchange)
     name = "opt_" + name
     sel.addEventListener("input", ()=>{ 
         localStorage[name] = sel.value
-        onchange(opts[sel.selectedIndex]) 
+        onchange(opts[sel.selectedIndex], sel.selectedIndex) 
     })
     let loaded = localStorage[name]
     if (loaded !== undefined) {
-        loaded = parseInt(loaded)
         if (opts.includes(loaded)) {
             sel.value = loaded
             if (loaded !== opts[0])
-                onchange(opts[sel.selectedIndex])
+                onchange(opts[sel.selectedIndex], sel.selectedIndex)
+        }
+        else
+        {
+            loaded = parseInt(loaded)
+            if (opts.includes(loaded)) {
+                sel.value = loaded
+                if (loaded !== opts[0])
+                    onchange(opts[sel.selectedIndex], sel.selectedIndex)
+            }
         }
     }
+    return {line:line, sel:sel}
 }
 
 var checkbox_id_gen = 1;
@@ -1249,6 +1290,8 @@ function create_options_dlg()
     })
 
     add_option_select(g_opt_dlg, "Memory Panel Width:", "mem_width", [256, 128, 64, 32, 16], change_board_width)
+    const autoSave = add_option_select(g_opt_dlg, "Auto-save", "auto_save", ["Never auto-save", "Always auto-save", "Forget after 15 min"], changed_auto_save)
+    autoSave.sel.classList.add('opt_auto_save_sel')
     add_option_checkbox(g_opt_dlg, "Alternate opcode color", "opcode_alt_col", changed_alt_opcode_color)
     add_option_checkbox(g_opt_dlg, "Registers pointers in memory view", "reg_in_mem", changed_reg_in_mem)
     const regs_area = []
@@ -1308,6 +1351,8 @@ function triggerHamMenu(e)
                           //  {text:"Reset to Demo Survivors", func:function() {}},
                             {text:"About", func:function() { triggerAbout(true) }},
                             {text:"Reset Layout", func: reset_layout },
+                            {text:"Reset Players", func: reset_players },
+                            {text:"Clear Players", func: clear_players },
                             {text:"Flip Players Panel", func: function() { flip_players_panel(null) } },
                             {text:"Options", func: open_options_dlg }
                            ])
@@ -1382,6 +1427,78 @@ function enable_reg_ptr(v, seg, addr)
             delete reg_ptrs[both_name]
         }
     }
+}
+
+
+const AUTO_SAVE_NEVER = 0
+const AUTO_SAVE_ALWAYS = 1
+const AUTO_SAVE_FORGET = 2
+let g_autosave_opt = AUTO_SAVE_NEVER
+function changed_auto_save(text, selIdx)
+{
+    g_autosave_opt = selIdx
+    if (g_autosave_opt == AUTO_SAVE_NEVER)
+        localStorage.removeItem("autosave")
+}
+
+function js_save_state()
+{
+    if (g_autosave_opt == AUTO_SAVE_NEVER)
+        return;
+    const obj = j_savePlayers()
+    if (obj === undefined)
+    {
+        show_error("Failed saving state");
+        localStorage.removeItem("autosave")
+        return;
+    }
+    const s = JSON.stringify(obj)
+    localStorage["autosave"] = s
+}
+
+function load_autosave()
+{
+    if (g_autosave_opt == AUTO_SAVE_NEVER) {
+        localStorage.removeItem("autosave")
+        return false
+    }
+    const saved_str = localStorage["autosave"]
+    if (saved_str === undefined)
+        return false
+    
+    let obj = null
+    try {
+        obj = JSON.parse(saved_str)
+        j_loadPlayers(obj);
+    }
+    catch(ex) {
+        show_error("Failed loading saved state");
+        return false;
+    }
+    return true;
+}
+
+function reset_players()
+{
+    if (isRunning()) {
+        console.error("ignoring reset_players due to run state")
+        return
+    }
+
+    localStorage.removeItem("autosave")
+    j_demoDebugPlayers()
+}
+
+function clear_players()
+{
+    if (isRunning()) {
+        console.error("ignoring clear_players due to run state")
+        return
+    }
+
+    localStorage.removeItem("autosave")
+    removeAllPlayers()
+    removeAllZombies()
 }
 
 //-------------------------------- warCanvas wheel zoom -----------------
@@ -1640,6 +1757,11 @@ function competeFinished()
     competeRunBtnIn.style.backgroundImage = ""
     competeRunBtnIn2.innerText = "Start!"
     competeRunCheckbox.checked = false
+}
+
+function isRunning()
+{
+    return competeRunCheckbox.checked || debugCheckbox.checked
 }
 
 function eventStopProp(e) {

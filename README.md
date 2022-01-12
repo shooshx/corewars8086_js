@@ -8,7 +8,7 @@ https://shooshx.github.io/corewars8086_js/war/page.html
 Features include:
 
 - assembler, runner and debugger compiled to javascript
-- integrated nasm assembler that runs as you type
+- integrated nasm assembler that runs as you type code
 - easy management of players
 - step by step debugger
   - allows editing of registers on the fly
@@ -35,12 +35,18 @@ Features include:
 - Load a batch of survivors or zombies from a zip file
 - Change the size of panels layout using splitters
 - Options in menu:
-   - to reset the layout to its default state
+   - reset the layout to its default state
    - move the players panel to be on the left (for wide screens) or at the top (for 4:3 screens)
    - Open options dialog
+   - clear all current players, reset to initial test players
 - Options in options dialog
   - change the width of the memory display for better visibility
   - Alternate opcode colors for better visibility of where opcodes start and end in the memory view
+  - enable register pointers pointing to the memory canvas
+  - enable Auto-save state. when enabled the editor state is saved to localStorage and loaded on page reload
+- Competition: run many games one after the other with the same set of warriors
+  - copy the textual table of result
+  - different kinds of visualizations of the bar graph
 
 tips and tricks
 - When debugging, you can always return to a warrior running point by clicking its name on the left pane

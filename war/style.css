@@ -1458,3 +1458,6 @@ position: absolute;
     display: inline-block;
     width: 90px;
 }
+.opt_auto_save_sel {
+    width: 150px;
+}

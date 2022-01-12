@@ -181,6 +181,8 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
 
     protected void paintGraphs(String style) {
         lastStyle = style;
+        if (columns == null)  // js side just wants to set the style on startup
+            return;
         int width = m_element.width, height = m_element.height;
         ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of("#fdfdfd");
         ctx.fillRect(0, 0, width, height);

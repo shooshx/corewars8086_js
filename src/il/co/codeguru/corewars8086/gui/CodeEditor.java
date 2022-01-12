@@ -246,7 +246,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         });
 
         editor_title.addEventListener("input", (event) -> {
-            m_playersPanel.updateTitle(editor_title.value);
+            m_playersPanel.triggerUpdateTitle(editor_title.value);
         });
 
         m_dbglines = new DbgLine[War.ARENA_SIZE];
@@ -394,12 +394,15 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return lndf;
     }
 
+    public static native void save_state()  /*-{
+        return $wnd.js_save_state()
+    }-*/;
+
     private boolean entered = false;
     private String m_prevInText = null; // used for breakpoint move analysis
 
     private void asm_edit_changed() {
-        if (entered) // edit recursion should not happen because we're not making changes to
-                     // asm_edit.value;
+        if (entered) // edit recursion should not happen because we're not making changes to asm_edit.value;
             return; // so this probably does nothing but just to be safe...
         entered = true;
 
@@ -413,6 +416,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         updateBreakpoints(prevLiveOffsets, prevLineCount, m_prevInText);
         m_playersPanel.updateText(intext); // tell the players database that this player has a new text
         m_prevInText = intext;
+
+        save_state();
 
         entered = false;
     }
@@ -438,6 +443,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public void playerSelectionChanged(PlayersPanel.Code incode, PlayersPanel callback) {
         // remove the prev code breakpoints before it's lines will be erased by setText
         removeCurrentBreakpoints();
+        if (incode == null)
+        {
+            setText("", null);
+            return;
+        }
 
         asm_edit.value = incode.asmText;
         editor_title.value = incode.player.title;
