@@ -59,7 +59,7 @@ function gwtStart()
     addWatchLine();
     do_layout()
     create_options_dlg()
-    reg_graphs_panel_resize()
+    init_graphs_panel()
     if (!load_autosave())
     {
         j_demoDebugPlayers();
@@ -1852,7 +1852,11 @@ function triggerCopyTable() {
     navigator.clipboard.writeText(text)
 }
 
-function reg_graphs_panel_resize() {
+function battles_count_changed() {
+    localStorage["graph_battles_count"] = battlesPerGroupField.value
+}
+
+function init_graphs_panel() {
 
     const stored_w = parseInt(localStorage["graph_panel_width"])
     if (!isNaN(stored_w))
@@ -1865,6 +1869,10 @@ function reg_graphs_panel_resize() {
     if (gstyle !== undefined) {
         graphStyle.value = gstyle
         j_redrawGraphs(graphStyle.value)
+    }
+    const bcount = parseInt(localStorage["graph_battles_count"])
+    if (!isNaN(bcount)) {
+        battlesPerGroupField.value = bcount
     }
 
     let moving = false

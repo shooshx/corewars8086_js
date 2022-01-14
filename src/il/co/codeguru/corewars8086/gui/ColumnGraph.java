@@ -14,6 +14,7 @@ import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.war.WarriorGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,14 +26,17 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         public String name;
         public String nameStart;
         public float[] values;
-        public String col1, col2;
+        public CanvasRenderingContext2D.FillStyleUnionType col1, col2;
+        public String color1, color2;
         public HTMLElement[] valueElems;
 
         PlayerColumn(String nm, String c1, String c2) {
             name = nm;
             nameStart = name.substring(0, 3);
-            col1 = c1; // colors
-            col2 = c2;
+            col1 = CanvasRenderingContext2D.FillStyleUnionType.of(c1); // colors
+            color1 = c1;
+            col2 = CanvasRenderingContext2D.FillStyleUnionType.of(c2);
+            color2 = c2;
             // the first element holds the sum of all the other values
             values = new float[3];
             valueElems = new HTMLElement[3];
@@ -40,14 +44,16 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
     }
 
     private PlayerColumn[] columns;
+    private PlayerColumn[] col_order;
     private float maxValue;
-    private double reduceFactor;
+    private double reduceFactorY, reduceFactorX;
     private String lastStyle;
 
     private static final int NAME_HEIGHT = 17;
     private static final int BOTTOM_MARGIN = 30;
 
     private static final CanvasRenderingContext2D.FillStyleUnionType BLACK = CanvasRenderingContext2D.FillStyleUnionType.of("black");
+    private static final CanvasRenderingContext2D.FillStyleUnionType BACKGROUND = CanvasRenderingContext2D.FillStyleUnionType.of("#fdfdfd");
 
     private CanvasRenderingContext2D ctx;
 
@@ -93,7 +99,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         for (int i = 0; i < columns.length; ++i) {
             HTMLElement line = addElem(table, "div", "res_table_line");
             HTMLElement name = addElem(line, "span", "res_table_name");
-            name.style.color = columns[i].col2;
+            name.style.color = columns[i].color2;
             Format.setInnerText(name, columns[i].name + " ");
             for (int j = 0; j < 3; ++j) {
                 HTMLElement e = addElem(line, "span", "res_table_value");
@@ -120,12 +126,14 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
 
     void clear(ArrayList<WarriorGroup> groups) {
         maxValue = 0;
-        reduceFactor = 5;
+        reduceFactorX = 10;
+        reduceFactorY = 5;
         if (groups == null)
             return;
         js_clear_code_buttons_colors();
         ColorHolder colorHolder = ColorHolder.getInstance();
         columns = new PlayerColumn[groups.size()];
+        col_order = new PlayerColumn[groups.size()];
         for (int i = 0; i < groups.size(); ++i) {
             Color c1 = colorHolder.getColor(i, false, false);
             Color c2 = colorHolder.getColor(i, true, false);
@@ -134,6 +142,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
             PlayersPanel pp = CompetitionWindow.getInstance().m_playersPanel;
             pp.setButtonColor(c1.toString(), groups.get(i).getLabel() + "0");
             pp.setButtonColor(c2.toString(), groups.get(i).getLabel() + "1");
+            col_order[i] = columns[i];
         }
         remakeTable();
     }
@@ -161,8 +170,11 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         if (columns[pos].values[0] > maxValue) {
             // reset graph factor by half to make more room
             maxValue = columns[pos].values[0];
-            if (maxValue * reduceFactor > m_element.height - 15 - BOTTOM_MARGIN) {
-                reduceFactor *= 0.5;
+            if (maxValue * reduceFactorY > m_element.height - 15 - BOTTOM_MARGIN) {
+                reduceFactorY *= 0.5;
+            }
+            if (maxValue * reduceFactorX > m_element.width - 40) {
+                reduceFactorX *= 0.5;
             }
         }
         repaint();
@@ -178,15 +190,16 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         updateTable(pos);
     }
 
+    private static final int HBAR_HEIGHT = 40;
 
     protected void paintGraphs(String style) {
         lastStyle = style;
         if (columns == null)  // js side just wants to set the style on startup
             return;
         int width = m_element.width, height = m_element.height;
-        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of("#fdfdfd");
+        ctx.fillStyle = BACKGROUND;
         ctx.fillRect(0, 0, width, height);
-        ctx.font = "18px monospace";
+        ctx.font = "18px monospace,sans-serif";
 
         boolean hbar_top = style == "vbar_top";
         boolean hbar_bot = style == "vbar_bot";
@@ -196,28 +209,57 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
             int bottom_margin = hbar_bot ? BOTTOM_MARGIN : 0;
             final int numPlayers = columns.length;
             int columnWidth = width / numPlayers;
+            ctx.textBaseline = "alphabetic";
+
             for (int i = 0; i < numPlayers; i++) {
                 paintColumn(i, columnWidth, height - bottom_margin, hbar_bot);
                 if (hbar_bot)
                 {
-                    ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(columns[i].col2);
+                    ctx.fillStyle = columns[i].col2;
                     ctx.fillText(columns[i].name, i * columnWidth + 5, height - bottom_margin + NAME_HEIGHT - 2);
                 }
+            }
+        }
+        else if (style == "hbar")
+        {
+            Arrays.sort(col_order, (a, b) -> {
+                return -Float.compare(a.values[0], b.values[0]);
+            });
+            final int numPlayers = col_order.length;
+            ctx.textBaseline = "top";
+
+            for (int i = 0; i < numPlayers; i++) 
+            {
+                PlayerColumn col = col_order[i];
+                ctx.fillStyle = col.col1;
+                double width1 = reduceFactorX * col.values[1];
+                double width2 = reduceFactorX * col.values[2];
+                int y =  i*(HBAR_HEIGHT + 5);
+                ctx.fillRect(0, y, width1, HBAR_HEIGHT);
+                ctx.fillStyle = col.col2;
+                ctx.fillRect(width1, y, width2, HBAR_HEIGHT);
+                
+                ctx.textAlign = "start";
+                ctx.fillText(col.nameStart, width1 + width2 + 5, y + 10);
+
+                ctx.fillStyle = BLACK;
+                ctx.textAlign = "right";
+                ctx.fillText(col.name,  width1 + width2 - 5, y + 10);
             }
         }
     }
 
     private void paintColumn(int colIdx, int width, int startHeight, boolean hbar_bot) {
         PlayerColumn col = columns[colIdx];
-        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(col.col1);
-        int height1 = (int) (reduceFactor * col.values[1]);
-        int height2 = (int) (reduceFactor * col.values[2]);
+        ctx.fillStyle = col.col1;
+        int height1 = (int) (reduceFactorY * col.values[1]);
+        int height2 = (int) (reduceFactorY * col.values[2]);
 
         int px_col = colIdx * width;
         int col_top = startHeight - height1 - height2;
 
         ctx.fillRect(px_col, startHeight - height1, width - 5, height1);
-        ctx.fillStyle = CanvasRenderingContext2D.FillStyleUnionType.of(col.col2);
+        ctx.fillStyle = col.col2;
         ctx.fillRect(px_col, col_top, width - 5, height2);
 
         if (hbar_bot)

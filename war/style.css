@@ -6,7 +6,7 @@ body {
     -ms-user-select: none;
      user-select: none;
     background: #ffffff;
-    font-family: Verdana;
+    font-family: Verdana,sans-serif;
     overflow: hidden; /* competition window can overflow if window is small */
 }
 
@@ -456,7 +456,6 @@ input:disabled + .sc-btn:active,
 .toppic {
     margin: 10px 11px 5px 10px;
     background: #cfcfcf;
-    font-family: Verdana;
     padding: 4px;
     border-radius: 5px;
     /*height: 98px;*/
