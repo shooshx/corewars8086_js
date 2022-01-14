@@ -1436,6 +1436,20 @@ position: absolute;
     vertical-align: middle;
 }
 
+.opt_auto_save_warn {
+    display: inline-block;
+    border: 2px solid #e85151;
+    background-color: #fbc540;
+    height: 40px;
+    width: 480px;
+    margin: 0 5px 0 5px;
+    font-size: 14px;
+    padding: 2px 3px;
+    position: absolute;
+    left: 270px;
+    top: 40px;
+}
+
 .reg_ptr_cont {
     position: absolute;
     background: #4b4b4b;

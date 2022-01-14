@@ -1187,7 +1187,7 @@ function add_div(parent, cls) {
     return e
 }
 
-function add_option_select(parent, label_text, name, opts, onchange)
+function add_option_select(parent, label_text, name, opts, onchange, def_idx=0)
 {
     const line = add_div(parent, "opt_line")
     const label = add_div(line, "opt_label")
@@ -1218,6 +1218,14 @@ function add_option_select(parent, label_text, name, opts, onchange)
                 if (loaded !== opts[0])
                     onchange(opts[sel.selectedIndex], sel.selectedIndex)
             }
+        }
+    }
+    else {
+        if (def_idx != 0)
+        {
+            loaded = opts[def_idx]
+            sel.value = loaded
+            onchange(opts[sel.selectedIndex], sel.selectedIndex)
         }
     }
     return {line:line, sel:sel}
@@ -1290,8 +1298,9 @@ function create_options_dlg()
     })
 
     add_option_select(g_opt_dlg, "Memory Panel Width:", "mem_width", [256, 128, 64, 32, 16], change_board_width)
-    const autoSave = add_option_select(g_opt_dlg, "Auto-save", "auto_save", ["Never auto-save", "Always auto-save", "Forget after 15 min"], changed_auto_save)
+    const autoSave = add_option_select(g_opt_dlg, "Auto-save:", "auto_save", ["Never auto-save", "Always auto-save", "Forget after 15 min"], changed_auto_save, 2)
     autoSave.sel.classList.add('opt_auto_save_sel')
+    add_auto_save_warning(g_opt_dlg, autoSave.sel)
     add_option_checkbox(g_opt_dlg, "Alternate opcode color", "opcode_alt_col", changed_alt_opcode_color)
     add_option_checkbox(g_opt_dlg, "Registers pointers in memory view", "reg_in_mem", changed_reg_in_mem)
     const regs_area = []
@@ -1433,12 +1442,48 @@ function enable_reg_ptr(v, seg, addr)
 const AUTO_SAVE_NEVER = 0
 const AUTO_SAVE_ALWAYS = 1
 const AUTO_SAVE_FORGET = 2
+//const AUTO_SAVE_FORGET_AFTER_MS = 10 * 1000
+const AUTO_SAVE_FORGET_AFTER_MS = 15 * 60 * 1000
+
 let g_autosave_opt = AUTO_SAVE_NEVER
-function changed_auto_save(text, selIdx)
-{
+let g_warn_box = null
+
+function changed_auto_save(text, selIdx) {
     g_autosave_opt = selIdx
     if (g_autosave_opt == AUTO_SAVE_NEVER)
         localStorage.removeItem("autosave")
+    warn_vis()
+}
+
+function warn_vis() {
+    if (g_warn_box)
+        g_warn_box.style.display = (g_autosave_opt == AUTO_SAVE_ALWAYS) ? "" : "none"
+}
+
+function add_auto_save_warning(parent, sel_elem) {
+    g_warn_box = add_div(parent, "opt_auto_save_warn")
+    g_warn_box.innerText = "Warning: The code of the warriors is going to be kept here forever\nIf this is a public place, that may not be a good idea."
+    warn_vis()
+}
+
+function save_still_active()
+{
+    localStorage["autosave_ts"] = Date.now()
+}
+
+function reg_still_active()
+{
+    let last_set = 0
+    document.addEventListener("mousemove", ()=>{
+        if (g_autosave_opt != AUTO_SAVE_FORGET)
+            return
+        const now = Date.now()
+        // don't span the localStorage every mouse move, do it only once a second
+        if (now - last_set < 1000)
+            return
+        save_still_active()
+        last_set = now
+    })
 }
 
 function js_save_state()
@@ -1454,14 +1499,26 @@ function js_save_state()
     }
     const s = JSON.stringify(obj)
     localStorage["autosave"] = s
+    save_still_active()
 }
 
 function load_autosave()
 {
+    reg_still_active()
+
     if (g_autosave_opt == AUTO_SAVE_NEVER) {
         localStorage.removeItem("autosave")
         return false
     }
+    if (g_autosave_opt == AUTO_SAVE_FORGET) {
+        const inactive_time = Date.now() - localStorage["autosave_ts"]
+        console.log("inactive: ", inactive_time)
+        if (inactive_time > AUTO_SAVE_FORGET_AFTER_MS) {
+            localStorage.removeItem("autosave")
+            return false   
+        }
+    }
+
     const saved_str = localStorage["autosave"]
     if (saved_str === undefined)
         return false
@@ -1475,6 +1532,7 @@ function load_autosave()
         show_error("Failed loading saved state");
         return false;
     }
+    save_still_active()
     return true;
 }
 
