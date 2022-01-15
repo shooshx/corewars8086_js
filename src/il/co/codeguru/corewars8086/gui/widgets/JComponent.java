@@ -54,8 +54,7 @@ public class JComponent<T>
         m_enabled = v;
         ((Element)m_element).setAttribute("disabled", v?"false":"true");
     }
-    public void setVisible(boolean v) {
-    }
+
     public boolean isVisible() {
         return true;
     }
@@ -71,16 +70,6 @@ public class JComponent<T>
         return ((Element)m_element).innerHTML;
     }
 
-    public void setBorder(Object obj) {
-    }
-
-    public void setFont(Object f) {
-
-    }
-
-    public void setOpaque(boolean v) {
-
-    }
 
     public void repaint() {
         paint();
@@ -89,8 +78,6 @@ public class JComponent<T>
     public void paint() {
     }
 
-    public void setPreferredSize(Object obj) {
-    }
 
     public Dimension getMinimumSize() {
         return new Dimension(50,50);
@@ -100,32 +87,8 @@ public class JComponent<T>
         return getMinimumSize();
     }
 
-    public void setMinimumSize(Dimension d) {
-    }
-
-    public void dispose() {
-    }
-    public void pack() {
-    }
-
-    public void addMouseMotionListener(MouseInputListener m) {
-
-    }
-    public void addMouseListener(MouseInputListener m) {
-
-    }
-
     public Dimension getSize() {
         return new Dimension(0,0);
     }
-    public void setSize(Dimension d) {
 
-    }
-    public void setSize(int w, int h) {
-
-    }
-
-    public void setAlwaysOnTop(boolean v) {
-    }
-    
 }

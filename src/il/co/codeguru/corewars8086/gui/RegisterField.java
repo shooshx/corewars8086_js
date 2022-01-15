@@ -1,18 +1,12 @@
 package il.co.codeguru.corewars8086.gui;
 
-//import java.awt.BorderLayout;
-//import java.awt.GridLayout;
-
-//import javax.swing.JLabel;
-//import javax.swing.JPanel;
-//import javax.swing.JTextField;
 
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLInputElement;
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.jsadd.Format;
 
-public class RegisterField /*extends JPanel*/ {
+public class RegisterField {
 
 	private HTMLInputElement textField;
 	private int m_base = 16;
@@ -26,16 +20,13 @@ public class RegisterField /*extends JPanel*/ {
 		m_frame = frame;
 		m_name = name;
 		m_rindex = rindex;
-	//	super.setLayout(new GridLayout(1, 2));
-	//	super.setSize(50, 20);
-	//	super.add(new JLabel(name + ":"), BorderLayout.LINE_START);
+
 		String ename = "reg_" + name;
 		textField = (HTMLInputElement) DomGlobal.document.getElementById(ename);
 		if (textField == null) {
 			Console.error("Not found register " + name);
 		}
 
-		//super.add(textField, BorderLayout.LINE_START);
 
 		textField.addEventListener("input", (event) -> {
 			editChanged();

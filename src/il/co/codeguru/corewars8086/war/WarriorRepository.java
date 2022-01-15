@@ -5,7 +5,6 @@ package il.co.codeguru.corewars8086.war;
 import java.io.*;
 import java.util.*;
 
-//import javax.swing.JOptionPane;
 import il.co.codeguru.corewars8086.gui.CompetitionWindow;
 import il.co.codeguru.corewars8086.gui.LoadAddrChecker;
 import il.co.codeguru.corewars8086.gui.PlayersPanel;

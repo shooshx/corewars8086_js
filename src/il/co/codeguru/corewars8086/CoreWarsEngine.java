@@ -11,13 +11,7 @@ public class CoreWarsEngine
 	{
         CompetitionWindow c = new CompetitionWindow();
         c.s_instance = c;
-        c.setVisible(true);
-        c.pack();
-        
-       // JButton.press("runWarButton");
-        
-       // long x = 0x00010002f000e000L;
-        
+
         
     }
 }

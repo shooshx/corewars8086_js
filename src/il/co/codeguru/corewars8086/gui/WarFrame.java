@@ -34,7 +34,7 @@ import il.co.codeguru.corewars8086.jsadd.Format;
  * 
  * @author BS
  */
-public class WarFrame extends JFrame implements MemoryEventListener,  CompetitionEventListener
+public class WarFrame extends JComponent implements MemoryEventListener,  CompetitionEventListener
 {
 
 	/** the canvas which show the core war memory area */
@@ -43,22 +43,10 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
     /** the message area show misc. information about the current fight */
     private JTextArea messagesArea;
 
-    /** list of warrior names */
-    private JList nameList;
-
-    /** Model for the name list */
-    private DefaultListModel nameListModel;
-
     /** Holds the current round number */
     private int nRoundNumber;
 
-    /** A text field showing the current round number */
-    //private JLabel roundNumber;
-    
-	// Debugger
-	private JLabel addressFiled;
-	//private JButton btnCpuState;
-	public CpuFrame cpuframe;
+    public CpuFrame cpuframe;
 	public JButton btnPause;
     public JButton btnSingleRound;
     
@@ -76,53 +64,15 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
     {
         super("CodeGuru Extreme - Session Viewer");
 
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.competition = competition;
         this.mainWnd = mainWnd;
-        getContentPane().setLayout(new BorderLayout());
 
-        // build widgets
-        JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // build war zone (canvas + title)
-        JPanel warZone = new JPanel(new BorderLayout());
-        warZone.setBackground(Color.BLACK);
 
-        JPanel canvasPanel = new JPanel();
-        canvasPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(169,154,133),3), 
-            BorderFactory.createEmptyBorder(10,10,20,10)));
-        canvasPanel.setBackground(Color.BLACK);
         warCanvas = new Canvas("warCanvas");
-        canvasPanel.add(warCanvas);
-        warZone.add(canvasPanel, BorderLayout.CENTER);
-
-        //warZone.add(new JLabel(new ImageIcon("images/warzone.jpg")), BorderLayout.NORTH);
-        mainPanel.add(warZone, BorderLayout.CENTER);
 
         // build info zone (message area + buttons)
-        JPanel infoZone = new JPanel(new BorderLayout());
         messagesArea = new JTextArea("messagesArea", 5, 60);
-        messagesArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
-
-        infoZone.add(new JScrollPane(messagesArea), BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel();
-
-        //buttonPanel.add(new JLabel("Round:"));
-        //roundNumber = new JLabel("roundNumber", "");
-       // roundNumber.setEditable(false);
-        //buttonPanel.add(roundNumber);
-        //buttonPanel.add(Box.createHorizontalStrut(20));
-       /* JButton closeButton = new JButton("closeButton", "Close"); 
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-     //           dispose(); // TBD-SHY
-            }
-        });
-        buttonPanel.add(closeButton);*/
-        //buttonPanel.add(Box.createHorizontalStrut(20));
-        buttonPanel.add(new JLabel("Speed:"));
 
         HTMLElement speedSliderVal = (HTMLElement)DomGlobal.document.getElementById("speedSliderVal");
         speedSlider = new JSlider("speedSlider", "speedSliderVal");
@@ -135,25 +85,12 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
                 WarFrame.this.competition.setSpeed(s ); //exponential speed slider
             }
         });
-        buttonPanel.add(speedSlider);
         nRoundNumber = 0;
-        infoZone.add(buttonPanel, BorderLayout.SOUTH);
-        infoZone.setBackground(Color.black);
         
 		// Debugger
-		addressFiled = new JLabel("Click on the arena to see the memory");
-		//warCanvas.addListener(this);
+        cpuframe = new CpuFrame(competition, this.mainWnd);
+        competition.addCompetitionEventListener(cpuframe);
 
-		//btnCpuState = new JButton("btnCpuState", "View CPU");
-		//btnCpuState.setEnabled(false);
-		//btnCpuState.addActionListener(new ActionListener() {
-		//	@Override
-		//	public void actionPerformed(ActionEvent arg0) {
-				cpuframe = new CpuFrame(competition, this.mainWnd);
-				competition.addCompetitionEventListener(cpuframe);
-
-		//	}
-		//});
 
 		competition.addCompetitionEventListener(this);
 		
@@ -209,34 +146,11 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
                 mainWnd.requestFrame(); // request frame but still paused so it'll be just one frame
 			}
 		});
-        
-		//buttonPanel.add(btnCpuState);
-		buttonPanel.add(btnPause);
-		buttonPanel.add(btnSingleRound);
-		buttonPanel.add(addressFiled);
 
         // build warrior zone (warrior list + title) 
-        JPanel warriorZone = new JPanel(new BorderLayout());
-        warriorZone.setBackground(Color.BLACK);
-        nameListModel = new DefaultListModel();
-        nameList = new JList(nameListModel);
-        nameList.setPreferredSize(new Dimension(200,0));
-        nameList.setCellRenderer(new NameCellRenderer());
-        nameList.setOpaque(false);
-        nameList.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(169,154,133),3), 
-            BorderFactory.createEmptyBorder(10,10,20,10)));
-        nameList.repaint();
-        warriorZone.add(nameList, BorderLayout.CENTER);
-        //warriorZone.add(new JLabel(new ImageIcon("images/warriors.jpg")), BorderLayout.NORTH);
-        warriorZone.add(Box.createHorizontalStrut(20), BorderLayout.WEST);
-        mainPanel.add(warriorZone, BorderLayout.EAST);
+ 
+        //nameList.repaint();
 
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        getContentPane().setBackground(Color.BLACK);
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
-        //getContentPane().add(new JLabel(new ImageIcon("images/title2.png")), BorderLayout.EAST);
-        getContentPane().add(infoZone, BorderLayout.SOUTH);		
     }
 
 
@@ -281,7 +195,6 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
 
     @Override
     public void onWarPreStartClear() {
-        nameListModel.clear();
         warCanvas.clear();
         warCanvas.initStartWar(competition.getCurrentWar());
     }
@@ -351,7 +264,7 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
     /** @see CompetitionEventListener#onWarriorBirth(Warrior) */
     public void onWarriorBirth(Warrior w) {
         addMessage(nRoundNumber, w.getName() + " enters the arena at " + Format.hex4(w.getLoadOffset() & 0xffff));
-        nameListModel.addElement(new WarriorInfo(w.getName()));
+        //nameListModel.addElement(new WarriorInfo(w.getName()));
     }
 
     /* @see CompetitionEventListener#onWarriorDeath(String) */
@@ -370,46 +283,6 @@ public class WarFrame extends JFrame implements MemoryEventListener,  Competitio
         nameList.repaint();*/
     }
 
-    /**
-     * A renderer for the names on the warrior list. 
-     * Paints each warrior with its color and uses <S>strikeout</S> to show
-     * dead warriors.
-     */
-    class NameCellRenderer extends JLabel { //implements ListCellRenderer {
-		private static final long serialVersionUID = 1L;
-		
-		private static final int FONT_SIZE = 20;
-
-        /**
-         * Construct a name cell renderer
-         * Set font size to FONT_SIZE.
-         */
-        public NameCellRenderer() {
-           setFont(new Font("Tahoma", Font.PLAIN, FONT_SIZE));
-        }
-
-        /**
-         * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-         */
-        public Object getListCellRendererComponent(JList list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus) {
-            WarriorInfo info = (WarriorInfo)value;
-            /*
-            float warriorScore = m_warSession.m_scoreBoard.getScore(warriorName);
-            warriorScore = (float)((int)(warriorScore * 100)) / 100;
-            */
-            String text = info.name;// + " (" + warriorScore + ")";
-            if (!info.alive) {
-                // strike out dead warriors
-                text = "<html><S>" + text + "</S></html>";
-            }
-            setText(text);
-            Color c = ColorHolder.getInstance().getColor(index, false, false);
-
-            setForeground(c);
-            return this;
-        }
-    }
 
     public void onCompetitionStart() {
     	//btnCpuState.setEnabled(true);

@@ -7,7 +7,6 @@ import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
 
 import il.co.codeguru.corewars8086.gui.widgets.*;
 import il.co.codeguru.corewars8086.gui.widgets.Console;
-import il.co.codeguru.corewars8086.gui.widgets.MouseEvent;
 import il.co.codeguru.corewars8086.jsadd.Format;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
@@ -128,12 +127,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
 	public Canvas(String id) {
 		super(id);
-		//eventCaster = new EventMulticasterMouse();
-		//eventHandler = (MouseAddressRequest) eventCaster.getProxy();
-		//this.addMouseMotionListener(this);
-		//this.addMouseListener(this);
-		//this.MouseX = 0;
-		//this.MouseY = 0;
+
 		ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
 
 		//Dimension d = getMinimumSize();
@@ -675,6 +669,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         BOARD_WIDTH_PX = BOARD_WIDTH * DOT_SIZE;
         BOARD_HEIGHT_PX = BOARD_HEIGHT * DOT_SIZE;
         redoTransform();
+        canvasSizeChanged(CANVAS_WIDTH, CANVAS_HEIGHT);
 
         ctx.setTransform(1,0,0,1,0,0);
 		resetZoom(); // already does the paint

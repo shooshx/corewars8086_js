@@ -16,17 +16,6 @@ import il.co.codeguru.corewars8086.war.Warrior;
 
 import java.util.Dictionary;
 import java.util.HashMap;
-//import java.awt.Font;
-//import java.awt.GridLayout;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-
-//import javax.swing.JButton;
-//import javax.swing.JComboBox;
-//import javax.swing.JFrame;
-//import javax.swing.JOptionPane;
-//import javax.swing.JPanel;
-//import javax.swing.JTextArea;
 
 
 public class CpuFrame  implements CompetitionEventListener, MemoryEventListener {
@@ -58,12 +47,7 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
         $wnd.set_cpu_visible(v);
     }-*/;
 	
-	/*public void setVisible(boolean v) {
-		if (v)
-			cpuPanel.style.display = "";
-		else
-			cpuPanel.style.display = "none";
-	}*/
+
 
 	public void setSelectedPlayer(String playerLabel, boolean isDebugMode) {
 		m_currentWarriorLabel = playerLabel;
