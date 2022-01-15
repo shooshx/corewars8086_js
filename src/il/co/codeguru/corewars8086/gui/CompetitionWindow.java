@@ -353,7 +353,7 @@ public class CompetitionWindow extends JFrame
                 setDebugMode(true);
 
             stepnum.innerHTML = "0";
-            battleFrame.speedSlider.setValue(0);
+            //battleFrame.speedSlider.setValue(0);  // don't do this since the value in Competition is still the same from before
             return true;
         }
         return false;
