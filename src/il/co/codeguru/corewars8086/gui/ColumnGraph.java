@@ -16,6 +16,7 @@ import il.co.codeguru.corewars8086.war.WarriorGroup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.lang.System;
 
 /**
  * @author BS
@@ -29,6 +30,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         public CanvasRenderingContext2D.FillStyleUnionType col1, col2;
         public String color1, color2;
         public HTMLElement[] valueElems;
+        public int rank = -1;
 
         PlayerColumn(String nm, String c1, String c2) {
             name = nm;
@@ -54,6 +56,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
 
     private static final CanvasRenderingContext2D.FillStyleUnionType BLACK = CanvasRenderingContext2D.FillStyleUnionType.of("black");
     private static final CanvasRenderingContext2D.FillStyleUnionType BACKGROUND = CanvasRenderingContext2D.FillStyleUnionType.of("#fdfdfd");
+    private static final CanvasRenderingContext2D.StrokeStyleUnionType BLACK_STROKE = CanvasRenderingContext2D.StrokeStyleUnionType.of("#000000");
 
     private CanvasRenderingContext2D ctx;
 
@@ -190,97 +193,245 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
         updateTable(pos);
     }
 
-    private static final int HBAR_HEIGHT = 40;
+    
+	private static native boolean gopt_vertial() /*-{
+		return $wnd.g_graph_opt.vertical
+    }-*/;
+    private static native String gopt_sort() /*-{
+		return $wnd.g_graph_opt.sort
+    }-*/;
+    private static native int gopt_max_bars() /*-{
+		return $wnd.g_graph_opt.max_bars
+    }-*/;    
+    private static native boolean gopt_bar_names() /*-{
+		return $wnd.g_graph_opt.bar_names
+    }-*/;   
+    private static native int gopt_bar_name_size() /*-{
+		return $wnd.g_graph_opt.bar_name_size
+    }-*/;  
+    private static native boolean gopt_rank_label() /*-{
+		return $wnd.g_graph_opt.rank_label
+    }-*/; 
 
-    protected void paintGraphs(String style) {
+    public static void reverse(PlayerColumn[] data, int endIdx) {
+        for (int left = 0, right = endIdx - 1; left < right; left++, right--) {
+            // swap the values at the left and right indices
+            PlayerColumn temp = data[left];
+            data[left]  = data[right];
+            data[right] = temp;
+        }
+    }
+
+    private PlayerColumn[] getSortedCols()
+    {
+        String sortType = gopt_sort();
+        int maxBars = gopt_max_bars();
+
+        if (sortType == "Start" || sortType == "Middle") 
+        {
+            PlayerColumn[] use_arr;
+            Arrays.sort(col_order, (a, b) -> {
+                return -Float.compare(a.values[0], b.values[0]);
+            });
+            if (maxBars > 0 && maxBars < col_order.length)
+            {
+                PlayerColumn[] trunc_col_order = new PlayerColumn[maxBars];
+                // copy first ones
+                System.arraycopy(col_order, 0, trunc_col_order, 0, maxBars);
+                use_arr = trunc_col_order;
+            }
+            else
+                use_arr = col_order;
+
+            if (sortType == "Middle")
+            {
+                PlayerColumn[] mid_order = new PlayerColumn[use_arr.length];
+                int addIdx = 0;
+                for(int i = 1; i < use_arr.length; i += 2, ++addIdx)
+                    mid_order[addIdx] = use_arr[i];
+                reverse(mid_order, addIdx);
+                for(int i = 0; i < use_arr.length; i += 2, ++addIdx)
+                    mid_order[addIdx] = use_arr[i];
+                return mid_order;
+            }
+            return use_arr;
+        }
+        else if (sortType == "End") {
+            Arrays.sort(col_order, (a, b) -> {
+                return Float.compare(a.values[0], b.values[0]);
+            });
+            if (maxBars > 0 && maxBars < col_order.length)
+            {
+                PlayerColumn[] trunc_col_order = new PlayerColumn[maxBars];
+                // copy first ones
+                System.arraycopy(col_order, 0 + col_order.length - maxBars, trunc_col_order, 0, maxBars);
+                return trunc_col_order;
+            }            
+            else
+                return col_order;
+        }
+        else
+            return columns;
+    }
+
+    private void fillRank()
+    {
+        float height1 = -1, height2 = -1, height3 = -1;
+        PlayerColumn col1 = null, col2 = null, col3 = null;
+        for (int i = 0; i < columns.length; i++) 
+        {
+            PlayerColumn col = columns[i];
+            col.rank = -1;
+            float v = col.values[0];
+            if (v > height1) {
+                col3 = col2;
+                col2 = col1;
+                col1 = col;
+                height1 = v;
+            }
+            else if (v > height2) {
+                col3 = col2;
+                col2 = col;
+                height2 = v;
+            }
+            else if (v > height3) {
+                col3 = col;
+                height3 = v;
+            }
+        }
+
+        if (col1 != null)
+            col1.rank = 1;
+        if (col2 != null)
+            col2.rank = 2;
+        if (col3 != null)
+            col3.rank = 3;
+    }
+
+    private void paintRank(int r, int x, int y)
+    {
+        ctx.save();
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.font = "36px monospace,sans-serif";
+        ctx.fillText(Integer.toString(r), x, y+2);
+
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, 2*Math.PI);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+
+    protected void paintGraphs(String style) 
+    {
         lastStyle = style;
         if (columns == null)  // js side just wants to set the style on startup
             return;
         int width = m_element.width, height = m_element.height;
+
         ctx.fillStyle = BACKGROUND;
         ctx.fillRect(0, 0, width, height);
         ctx.font = "18px monospace,sans-serif";
+        ctx.strokeStyle = BLACK_STROKE;
+        ctx.lineWidth = 2;
 
-        boolean hbar_top = style == "vbar_top";
-        boolean hbar_bot = style == "vbar_bot";
+        PlayerColumn[] use_arr = getSortedCols();
 
-        if (hbar_top || hbar_bot)
+        String name_font = Integer.toString(gopt_bar_name_size()) + "px monospace,sans-serif";
+        boolean show_rank = gopt_rank_label();
+
+        if (show_rank)
+            fillRank();
+
+        if (gopt_vertial())
         {
-            int bottom_margin = hbar_bot ? BOTTOM_MARGIN : 0;
-            final int numPlayers = columns.length;
+            boolean bot_names = !gopt_bar_names();
+            int bottom_margin = bot_names ? BOTTOM_MARGIN : 0;
+            final int numPlayers = use_arr.length;
             int columnWidth = width / numPlayers;
             ctx.textBaseline = "alphabetic";
 
             for (int i = 0; i < numPlayers; i++) {
-                paintColumn(i, columnWidth, height - bottom_margin, hbar_bot);
-                if (hbar_bot)
+                PlayerColumn col = use_arr[i];
+                int startHeight = height - bottom_margin;
+                
+                ctx.fillStyle = col.col1;
+                int height1 = (int) (reduceFactorY * col.values[1]);
+                int height2 = (int) (reduceFactorY * col.values[2]);
+        
+                int px_col = i * columnWidth;
+                int px_col_mid = px_col + (columnWidth-5)/2;
+                int col_top = startHeight - height1 - height2;
+        
+                ctx.fillRect(px_col, startHeight - height1, columnWidth - 5, height1);
+                ctx.fillStyle = col.col2;
+                ctx.fillRect(px_col, col_top, columnWidth - 5, height2);
+        
+                if (bot_names)
                 {
-                    ctx.fillStyle = columns[i].col2;
-                    ctx.fillText(columns[i].name, i * columnWidth + 5, height - bottom_margin + NAME_HEIGHT - 2);
+                    ctx.fillText("" + col.values[0], i * columnWidth + 5, startHeight - height1 - height2 - 5);
+
+                    ctx.fillStyle = use_arr[i].col2;
+                    ctx.fillText(use_arr[i].name, i * columnWidth + 5, height - bottom_margin + NAME_HEIGHT - 2);
                 }
+                else
+                {
+                    ctx.fillStyle = BLACK;
+        
+                    // print the nameStart at the top
+                    ctx.textAlign = "start";
+                    ctx.fillText(col.nameStart, px_col + 5, col_top - 5);
+        
+                    // print the nameRest over the column
+                    ctx.save();
+                    ctx.translate(px_col_mid, col_top + 5);
+                    ctx.rotate(-Math.PI/2);
+                    ctx.textAlign = "right";
+                    ctx.textBaseline = "middle";
+                    ctx.font = name_font;
+                    ctx.fillText(col.name, 0, 0);
+                    ctx.restore();
+                }
+                if (show_rank && col.rank != -1)
+                    paintRank(col.rank, px_col_mid, col_top - 45);
             }
         }
-        else if (style == "hbar")
+        else 
         {
-            Arrays.sort(col_order, (a, b) -> {
-                return -Float.compare(a.values[0], b.values[0]);
-            });
-            final int numPlayers = col_order.length;
-            ctx.textBaseline = "top";
+
+            final int numPlayers = use_arr.length;
+            ctx.textBaseline = "middle";
+            int columnHeight = height / numPlayers;
+            int col_half = (columnHeight-5)/2;
 
             for (int i = 0; i < numPlayers; i++) 
             {
-                PlayerColumn col = col_order[i];
+                PlayerColumn col = use_arr[i];
                 ctx.fillStyle = col.col1;
                 double width1 = reduceFactorX * col.values[1];
                 double width2 = reduceFactorX * col.values[2];
-                int y =  i*(HBAR_HEIGHT + 5);
-                ctx.fillRect(0, y, width1, HBAR_HEIGHT);
+                int y =  i*(columnHeight);
+                ctx.fillRect(0, y, width1, columnHeight-5);
                 ctx.fillStyle = col.col2;
-                ctx.fillRect(width1, y, width2, HBAR_HEIGHT);
+                ctx.fillRect(width1, y, width2, columnHeight-5);
                 
-                ctx.textAlign = "start";
-                ctx.fillText(col.nameStart, width1 + width2 + 5, y + 10);
-
                 ctx.fillStyle = BLACK;
+                ctx.textAlign = "start";
+                ctx.fillText(col.nameStart, width1 + width2 + 5, y + col_half);
+
+                ctx.save();
                 ctx.textAlign = "right";
-                ctx.fillText(col.name,  width1 + width2 - 5, y + 10);
+                ctx.font = name_font;
+                ctx.fillText(col.name,  width1 + width2 - 5, y + col_half);
+                ctx.restore();
+
+                if (show_rank && col.rank != -1)
+                    paintRank(col.rank, (int)(width1 + width2 + 65), y + col_half);
             }
         }
     }
 
-    private void paintColumn(int colIdx, int width, int startHeight, boolean hbar_bot) {
-        PlayerColumn col = columns[colIdx];
-        ctx.fillStyle = col.col1;
-        int height1 = (int) (reduceFactorY * col.values[1]);
-        int height2 = (int) (reduceFactorY * col.values[2]);
 
-        int px_col = colIdx * width;
-        int col_top = startHeight - height1 - height2;
-
-        ctx.fillRect(px_col, startHeight - height1, width - 5, height1);
-        ctx.fillStyle = col.col2;
-        ctx.fillRect(px_col, col_top, width - 5, height2);
-
-        if (hbar_bot)
-        {
-            ctx.fillText("" + col.values[0], colIdx * width + 5, startHeight - height1 - height2 - 5);
-	    }
-        else
-        {
-            ctx.fillStyle = BLACK;
-
-            // print the nameStart at the top
-            ctx.fillText(col.nameStart, px_col + 5, col_top - 5);
-
-            // print the nameRest over the column
-            ctx.save();
-            ctx.translate(px_col + 15, col_top + 5);
-            ctx.rotate(-Math.PI/2);
-            ctx.textAlign = "right";
-            ctx.fillText(col.name, 0, 0);
-            ctx.restore();        
-        }
-
-    }
 }

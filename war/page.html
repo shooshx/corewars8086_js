@@ -35,7 +35,7 @@
       <div id="edit_panel">
         <input type="text" id="editor_title" spellcheck="false">
         <input id="uploadBinInput" type="file" class="hidden" onchange="return triggerUploadBinChanged()">
-        <label id="uploadBinBut" class="sc-btn" for="uploadBinInput" title="Upload binary file or zip file with survivors,zombies folder"></label>
+        <label id="uploadBinBut" class="sc-btn" for="uploadBinInput" title="Upload binary file for this warrior"></label>
         <label id="downloadBinBut" class="sc-btn" title="Download binary file" onclick="triggerDownloadBin()"></label><a id="downloadLink" style='display: none;'></a>
 
         <br>
@@ -48,6 +48,7 @@
                    onscroll="handle_asm_edit_scroll()"></textarea>
               <div id="box_opcodes"></div> <!-- want these in front of the text but it ignores pointer events -->
               <div id="box_edit"></div>
+              <div id="edit_sep"></div>
           </div>
           <div id="debug_area" style="display:none;">
               <input type="text" id="debug_goto" autocomplete="chrome-off" spellcheck="false" onkeyup="triggerGoToKey()">
@@ -236,11 +237,7 @@
             <label id="battlesLabel">Battles to run:</label>
             <input id="battlesPerGroupField" type="text" spellcheck="false" onchange="battles_count_changed()">
             <label id="battlesRan"></label>
-            <select id="graphStyle" onchange="graphStyleChanged()">
-              <option value="vbar_bot">Vertical Bars 1</option>
-              <option value="vbar_top">Vertical Bars 2</option>
-              <option value="hbar">Horizontal Bars</option>
-            </select>
+            <div id="graphOptBtn" class="sc-btn" onclick="triggerGraphOpt()">Style</div>
             <div id="copyTableBtn" class="sc-btn" onclick="triggerCopyTable()">Copy</div>
             <canvas id="graphs_canvas" width="680" height="600"></canvas>
             <div id="results_table"></div>

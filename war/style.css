@@ -112,9 +112,10 @@ input:disabled + .sc-btn:active,
     position: absolute;
     left: 0;
 
-    width:200px;
+    width:192px;
     overflow: hidden; /* remove scroll bar */
     background: white;
+    padding-right: 0;
 }
 #asm_linenums {
     position: absolute;
@@ -282,8 +283,15 @@ input:disabled + .sc-btn:active,
     border-right: 1px solid #cccccc;
 
 }
-
-
+#edit_sep {
+    width: 5px;
+    height: 100%;
+    background-color: #ddd;
+    position: absolute;
+    top: 0;
+    left: 193px;
+    cursor: col-resize;
+}
 
 .edit_error {
     background-color: #ffd7d7;
@@ -1345,13 +1353,6 @@ h3 {
     /*background-color: blue;*/
     background: url(resize_handle.png);
 }
-#graphStyle {
-    height: 27px;
-    margin: 17px 0 10px 0;
-    vertical-align: top;
-    border-radius: 4px;
-    font-size: 16px;
-}
 
 #error_box {
 position: absolute;
@@ -1473,4 +1474,15 @@ position: absolute;
 }
 .opt_auto_save_sel {
     width: 150px;
+}
+
+#graphOptBtn {
+    height: 35px;
+    line-height: 35px;
+    margin: 0;
+}
+.gopt_dlg {
+    width: 250px;
+    height: 210px;
+    left: 800px;
 }

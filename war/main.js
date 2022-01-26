@@ -56,9 +56,11 @@ function gwtStart()
     console.log("gwtStart()");
    // start with two players
 
-    addWatchLine();
+    addWatchLine()
+    regEditSepDrag()
     do_layout()
     create_options_dlg()
+    create_graph_opt_dlg()
     init_graphs_panel()
     if (!load_autosave())
     {
@@ -444,8 +446,6 @@ function triggerGoToKey() {
 
 
 
-
-
 function addTextChild(elem, txt) {
     var dummy = document.createElement("DIV")
     dummy.innerHTML = txt
@@ -781,6 +781,26 @@ function fixIndent(e) {
     }
 }
 
+function regEditSepDrag()
+{
+    SLayout.add_move_handlers(edit_sep, (dx, dy, pageX, pageY)=>{
+        const op_box_w = parseInt(window.getComputedStyle(box_opcodes).width)
+        if (dx < 0)
+            dx = Math.max(dx, -op_box_w+10)
+
+        edit_sep.style.left = edit_sep.offsetLeft + dx + "px"
+
+        opcodes_edit.style.width = opcodes_edit.offsetWidth + dx + "px"
+        //const before = box_opcodes.offsetWidth;
+        box_opcodes.style.width = op_box_w + dx + "px"
+        //console.log(dx, " -- ", before, " -- ", box_opcodes.style.width)
+
+
+    })
+
+}
+
+
 var debug_area_shown = false
 var deferredEditorToAddress = -1 // set by code in CodeEditor.java
 
@@ -1005,6 +1025,8 @@ function addWatchLine() {
     var moving = false;
     var startOffset;
 
+
+    // TDB: SLayout.add_move_handlers
     grip.addEventListener('mousedown', function(e) {
         moving = true;
         startOffset = watch_expr_list[0].offsetWidth - e.pageX;
@@ -1031,7 +1053,6 @@ function addWatchLine() {
         moving = false;
         //console.log("-release")
     });
-
 }
 
 function doLoadBinary(arrbuf) {
@@ -1233,7 +1254,7 @@ function add_option_select(parent, label_text, name, opts, onchange, def_idx=0)
 
 var checkbox_id_gen = 1;
 
-function add_option_checkbox(parent, label_text, name, onchange)
+function add_option_checkbox(parent, label_text, name, onchange, defval=false)
 {
     const line = add_div(parent, "opt_line")
     const inp = add_elem(line, "input", "mycheck")
@@ -1253,11 +1274,11 @@ function add_option_checkbox(parent, label_text, name, onchange)
     const loaded = localStorage[name]
     if (loaded !== undefined) {
         inp.checked = (loaded === "true" || loaded === "1")
-        if (inp.checked)
+        if (inp.checked != defval)
             onchange(inp.checked)
     }
     else {
-        inp.checked = false
+        inp.checked = defval
     }
     return {line:line, inp:inp }
 }
@@ -1865,11 +1886,7 @@ function init_graphs_panel() {
     if (!isNaN(stored_h))
         g_graphs_panel_sz[1] = Math.max(stored_h, 100)
     j_redrawGraphs()
-    const gstyle = localStorage["graph_style"]
-    if (gstyle !== undefined) {
-        graphStyle.value = gstyle
-        j_redrawGraphs(graphStyle.value)
-    }
+
     const bcount = parseInt(localStorage["graph_battles_count"])
     if (!isNaN(bcount)) {
         battlesPerGroupField.value = bcount
@@ -1897,7 +1914,7 @@ function init_graphs_panel() {
         localStorage["graph_panel_width"] = g_graphs_panel_sz[0]
         localStorage["graph_panel_height"] = g_graphs_panel_sz[1]
 
-        j_redrawGraphs(graphStyle.value)        
+        j_redrawGraphs("")        
     })    
 }
 
@@ -1916,8 +1933,50 @@ function reset_graph_layout()
     localStorage.removeItem("graph_panel_height")
 }
 
-function graphStyleChanged()
+
+var g_graph_opt = {
+    vertical: true,  // vertical means going from bottom to top
+    sort: "Middle",  // 0:none, 1:mid, 2:start, 3:end
+    bar_names: true,  // if false names are at the bottom (old style)
+    bar_name_size: 18,
+    max_bars: 10,    // -1 for no limit, only when sorting
+    rank_label: true,   // 1,2,3 labels on first, second, third place
+}
+
+function gopt_checkbox(text, name)
 {
-    j_redrawGraphs(graphStyle.value)
-    localStorage["graph_style"] = graphStyle.value
+    add_option_checkbox(g_graph_opt_dlg, text, "gopt_" + name, (v)=>{
+        g_graph_opt[name] = v
+        j_redrawGraphs("")
+    }, g_graph_opt[name])
+}
+function gopt_select(text, name, opts, def_idx)
+{
+    add_option_select(g_graph_opt_dlg, text, "gopt_" + name, opts, (opt, idx)=>{
+        g_graph_opt[name] = opt
+        j_redrawGraphs("")
+    }, def_idx)
+}
+
+let g_graph_opt_dlg = null
+function create_graph_opt_dlg()
+{
+    g_graph_opt_dlg = add_div(body, ["options_dlg", "gopt_dlg"])
+    const close_btn = add_div(g_graph_opt_dlg, "opt_close_btn")
+    close_btn.addEventListener("click", ()=>{
+        g_graph_opt_dlg.style.display = "none"
+    })
+
+    gopt_checkbox("Vertical", "vertical")
+    gopt_select("Sort:", "sort", ["None", "Middle", "Start", "End"], 1)
+    gopt_checkbox("Names on Bar", "bar_names")
+    gopt_select("Bar Names Size", "bar_name_size", [18, 20, 22, 24, 26, 28, 30, 32, 48, 60, 72, 84, 96], 0)
+    gopt_select("Max Bars", "max_bars", [-1, 5, 7, 9, 11, 13, 15, 17, 19], 0)
+    gopt_checkbox("Rank Label", "rank_label")
+
+}
+
+function triggerGraphOpt()
+{
+    g_graph_opt_dlg.style.display = "initial"
 }
