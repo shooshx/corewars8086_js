@@ -13,6 +13,7 @@ import il.co.codeguru.corewars8086.memory.RealModeMemoryImpl;
 import il.co.codeguru.corewars8086.war.War;
 import il.co.codeguru.corewars8086.war.Warrior;
 import il.co.codeguru.corewars8086.cpu.CpuState;
+import il.co.codeguru.corewars8086.war.Competition;
 
 import java.util.HashMap;
 
@@ -125,10 +126,15 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private static final int TEXT_EPS = 6; // how much to leave in the clipping for half the text
     private static final int TICK_WIDTH = 7;
 
+    private Competition competition = null;
+
 	public Canvas(String id) {
 		super(id);
 
 		ctx = (CanvasRenderingContext2D)(Object)m_element.getContext("2d");
+
+        CompetitionWindow cw = CompetitionWindow.getInstance();
+        competition = cw.competition;
 
 		//Dimension d = getMinimumSize();
 		//m_element.width = d.width;
@@ -216,9 +222,16 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
 
     // called from WarFrame
 	public void paintPixel(int number, byte color, byte value) { 
-        saveAndEnter();
+        boolean needClip = competition.getSpeed() != Competition.MAX_SPEED;
+        if (needClip) {
+            saveAndEnter();
+        }
+        transformToCtx();
 	    paintPixel(number % BOARD_WIDTH, number / BOARD_WIDTH, color, value, true);
-        ctx.restore();
+        if (needClip)
+            ctx.restore();
+        else
+            ctx.setTransform(1,0,0,1,0,0);
 	}
 
 	private void paintPixel(int x, int y, byte colorByte, byte value, boolean doResetAltOpcode) {
@@ -514,10 +527,9 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     {
         if (!m_show_reg_ptrs)
             return;
-        CompetitionWindow cw = CompetitionWindow.getInstance();
-        if (cw == null || cw.competition == null || cw.competition.getCurrentWar() == null)
+        if (competition.getCurrentWar() == null)
             return; // on startup?
-        Warrior warrior = cw.competition.getCurrentWar().getWarriorByLabel(m_selectedPlayerLabel);
+        Warrior warrior = competition.getCurrentWar().getWarriorByLabel(m_selectedPlayerLabel);
         if (warrior == null)
             return; // happens in PreStartClear
         CpuState state = warrior.getCpuState();

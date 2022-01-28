@@ -79,6 +79,11 @@ public class WarFrame extends JComponent implements MemoryEventListener,  Compet
         speedSlider.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int s = speedSlider.getValue();
+                if (s == 400) {
+                    speedSliderVal.innerHTML = "MAX";
+                    WarFrame.this.competition.setSpeed(Competition.MAX_SPEED); //exponential speed slider
+                    return;
+                }
                 if (s > 100)
                     s = (int)Math.pow((double)(s - 80.0), 1.5);
                 speedSliderVal.innerHTML = Integer.toString(s);

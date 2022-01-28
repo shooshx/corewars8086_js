@@ -25,6 +25,9 @@ public class Competition {
     private War currentWar;
 
     private int warsPerCombination= 20;
+    public boolean check_max_round = true;
+
+    public static final int MAX_SPEED = 50000;
 
 
     private int speed;  // while debugging. 0 means 1 step each frame, >0 means how many steps to make each frame, <0 means how many frames to skip between steps
@@ -131,7 +134,8 @@ public class Competition {
                         needMore = runRound();
                         --stepsCount;
                     }
-                    switchToDebug();
+                    if (speed != MAX_SPEED || currentWar.isSingleRound())  // on max-speed, don't update debugger at all
+                        switchToDebug();
                     if (needMore == 1)
                         needMore = runRound();
                 }
@@ -248,7 +252,7 @@ public class Competition {
         if (currentWar.isPaused()) {
             return 0;
         }
-        if (compState.round >= MAX_ROUND) {
+        if (check_max_round && compState.round >= MAX_ROUND) {
             currentWar.pause();
             return -1;
         }

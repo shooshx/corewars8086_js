@@ -1332,6 +1332,8 @@ function create_options_dlg()
         const obj = add_option_checkbox(regs_area[pos[2]], addr_name + ":" + seg_name, "reg_" + seg_name + "_" + addr_name, (v)=>{ enable_reg_ptr(v, pos[0], pos[1]) })
         obj.line.classList.add("opt_reg_line")
     }
+    add_option_checkbox(g_opt_dlg, "Continue Forever (no max-round)", "no_max_round", changed_no_max_round)
+
 }
 
 function make_menu(parent, relto, opts) {
@@ -1437,6 +1439,11 @@ function changed_reg_in_mem(v)
         reg_ptrs[name].cont_elem.style.display = disp
 
     j_changed_reg_in_mem(v)
+}
+
+function changed_no_max_round(v)
+{
+    j_changed_no_max_round(v);
 }
 
 function enable_reg_ptr(v, seg, addr)

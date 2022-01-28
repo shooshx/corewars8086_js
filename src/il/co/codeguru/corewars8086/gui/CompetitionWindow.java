@@ -51,6 +51,7 @@ public class CompetitionWindow extends JComponent
     public CompetitionWindow() throws IOException
     {
         super("CodeGuru Extreme - Competition Viewer");
+        s_instance = this;
 
         competition = new Competition();
         competition.addCompetitionEventListener(this);
@@ -99,7 +100,13 @@ public class CompetitionWindow extends JComponent
         $wnd.j_stopCompete = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_stopCompete()() });
         $wnd.j_getResultTableText = $entry(function() { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_getResultTableText()() });
         $wnd.j_redrawGraphs = $entry(function(s) { return that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_redrawGraphs(Ljava/lang/String;)(s) });
+        $wnd.j_changed_no_max_round = $entry(function(a) { that.@il.co.codeguru.corewars8086.gui.CompetitionWindow::j_changed_no_max_round(Z)(a) });
     }-*/;
+
+    public void j_changed_no_max_round(boolean v)
+    {
+        competition.check_max_round = !v;
+    }
 
     public boolean j_startDebug()
     {
