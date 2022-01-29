@@ -669,9 +669,9 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
             return;
         }
 
-        intext = intext.replace('\u00A0', ' ') // no-break-space coming from html
-                .replace("&", "&amp;") // other stuff coming from textarea we don't want to pass to html
-                .replace("<", "&lt;").replace(">", "&gt;");
+        intext = intext.replace('\u00A0', ' '); // no-break-space coming from html
+      //          .replace("&", "&amp;") // other stuff coming from textarea we don't want to pass to html
+      //          .replace("<", "&lt;").replace(">", "&gt;");
         // we want the markes to appear in the html for debugging but not in the nasm
         // input
         String nasm_intext = intext;
@@ -696,7 +696,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
             asm_output.innerHTML = stdoutShorten.toString();
         } else {
-            asm_show.innerHTML = intext; // clear all line marking
+            asm_show.innerHTML = ""; 
+            Text t = DomGlobal.document.createTextNode(intext);
+            asm_show.appendChild(t);  // with this we don't need to replace < with &gt; etc'
+
+            //asm_show.innerHTML = intext; // clear all line marking
             asm_output.innerHTML = "";
 
             m_errLines = null;

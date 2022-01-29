@@ -327,7 +327,8 @@ public class WarFrame extends JComponent implements MemoryEventListener,  Compet
         
 		this.warCanvas.deletePointers();
 		War currentWar = this.competition.getCurrentWar();
-		for (int i = 0; i < currentWar.getNumWarriors(); i++)
+		for (int i = 0; i < currentWar.getNumWarriors(); i++) 
+        {
 			if (currentWar.getWarrior(i).isAlive()) {
                 Warrior warrior = currentWar.getWarrior(i);
 		        CpuState state = warrior.getCpuState();
@@ -338,6 +339,14 @@ public class WarFrame extends JComponent implements MemoryEventListener,  Compet
 				
 				this.warCanvas.paintPointer((char) ipInsideArena,(byte) i, warrior.getLabel());
 			}
+
+        }
+
+        if (this.warCanvas.m_show_reg_ptrs) {
+            // if showing lines, need to erase the old lines so a full paint is needed
+            this.warCanvas.paint(); 
+            return;
+        }            
 	}
 
 

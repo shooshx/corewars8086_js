@@ -91,7 +91,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
     private float m_zrHscale, m_zrVscale, m_zrX, m_zrY; // zoom rect (user zoom with wheel)
     private boolean m_alt_opcode_color = false; // from options
 
-    private boolean m_show_reg_ptrs = false;
+    public boolean m_show_reg_ptrs = false;
     class RegPtrInf {
         public RegPtrInf(int _reg_idx, int _seg_idx) { reg_idx = _reg_idx; seg_idx = _seg_idx; }
         int elem_x, elem_y; // in untransformed canvas coordinates
@@ -283,11 +283,7 @@ public class Canvas extends JComponent<HTMLCanvasElement> {
         set_flag(x, y, FLAG_IP_HERE);
         m_painterdPointers[m_paintedPointerCount++] = number;
 
-        if (m_show_reg_ptrs) {
-            // if showing lines, need to erase the old lines so a full paint is needed
-            paint();  // TBD this is done repeatedly for each player
-            return;
-        }
+
         saveAndEnter();
 
         boolean altColor = m_alt_opcode_color && has_flag(x, y, FLAG_ALT_OPCODE_COL);

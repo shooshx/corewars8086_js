@@ -15,8 +15,7 @@ BUG:
 - editor goes out of sync with invisible editor when returning from debug and there's a scroll bar
 - mem edit doesn't work on 0x202 zoomed
 - resume to breakpoint when speed is very high doesn't show line when stopped
-- writing > prints &gt;
-- significant slowdown when using pointers
+- writing > prints &gt;  when there are errors
 
 - messages window is never cleared (mem leak?)
 
