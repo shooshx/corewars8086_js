@@ -17,8 +17,8 @@ import static il.co.codeguru.corewars8086.gui.CompetitionWindow.call_gwtStart;
 /**
  * @author BS
  */
-public class CompetitionWindow extends JComponent
-    implements ScoreEventListener, CompetitionEventListener {
+public class CompetitionWindow implements ScoreEventListener, CompetitionEventListener 
+{
 	
 	public Competition competition;
     private ColumnGraph columnGraph;
@@ -50,7 +50,6 @@ public class CompetitionWindow extends JComponent
 
     public CompetitionWindow() throws IOException
     {
-        super("CodeGuru Extreme - Competition Viewer");
         s_instance = this;
 
         competition = new Competition();

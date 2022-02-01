@@ -377,6 +377,8 @@ public class PlayersPanel
         p.code[1].name = tu + "2";
         m_players.add(p);
         Console.log("Added " + label + " " + Integer.toString(m_players.size()));
+        if (m_inEditor == null)
+            setSelectedCode(m_players.get(0).label, 1);
     }
 
     public native void setPressedCodeBut(String label, int num) /*-{

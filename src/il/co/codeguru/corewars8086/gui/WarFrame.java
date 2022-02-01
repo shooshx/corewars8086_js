@@ -34,7 +34,7 @@ import il.co.codeguru.corewars8086.jsadd.Format;
  * 
  * @author BS
  */
-public class WarFrame extends JComponent implements MemoryEventListener,  CompetitionEventListener
+public class WarFrame implements MemoryEventListener,  CompetitionEventListener
 {
 
 	/** the canvas which show the core war memory area */
@@ -62,7 +62,6 @@ public class WarFrame extends JComponent implements MemoryEventListener,  Compet
 
     public WarFrame(final Competition competition, final CompetitionWindow mainWnd)
     {
-        super("CodeGuru Extreme - Session Viewer");
 
         this.competition = competition;
         this.mainWnd = mainWnd;

@@ -14,8 +14,8 @@ function start()
         return;
     console.log("start()");
     run_nasm = Module.cwrap('run_nasm', null, ['string', 'string'])
-    Module['print'] = printConsole
-    Module['printErr'] = printConsole
+    //Module['print'] = printConsole
+    //Module['printErr'] = printConsole
 
     asm_edit.addEventListener("keydown", fixhscroll)
     asm_edit.addEventListener("keydown", fixTabKey) // want to capture the press since we want to prevent the default action
@@ -686,14 +686,14 @@ function triggerEraseZombie(buttonElem, elem, num) {
     j_removePlayer('z'+num)
 }
 
-
+/*
 // Java code comes to get and clear this variable to get the stdout of the nasm run
 var g_outputText = null
 function printConsole(line) {
     //console.log("*** " + line)
     g_outputText += line + '\n'
 }
-
+*/
 
 // in case there is a long line, when returning to a new line, the text will be still scrolled to the left, fix that
 function fixhscroll(e) {
@@ -1061,11 +1061,7 @@ function doLoadBinary(arrbuf) {
     j_loadBinary(arrbuf)
 }
 
-async function read_zip(input_elem) {
-    if (input_elem.files.length == 0)
-        return null
-    const file = input_elem.files[0]
-    input_elem.value = ""  // reset it so that next time we could upload the same filename again
+async function read_zip(file) {
 
     const zip = await JSZip.loadAsync(file)
     const entries = []
@@ -1084,14 +1080,14 @@ async function read_zip(input_elem) {
     return entries
 }
 
-async function load_zip_survivors(input_elem)
+async function load_zip_survivors(file)
 {
     if (isRunning()) {
         console.error("ignoring load_zip_survivors due to run state")
         return
     }
 
-    const entries = await read_zip(input_elem)
+    const entries = await read_zip(file)
     if (entries === null)
         return
     const by_name = {}, survivors = []
@@ -1132,14 +1128,14 @@ async function load_zip_survivors(input_elem)
 }
 
 
-async function load_zip_zombies(input_elem)
+async function load_zip_zombies(file)
 {
     if (isRunning()) {
         console.error("ignoring load_zip_survivors due to run state")
         return
     }
 
-    const entries = await read_zip(input_elem)
+    const entries = await read_zip(file)
     if (entries === null)
         return
     removeAllZombies()
@@ -1171,7 +1167,7 @@ function triggerUploadBinChanged()
 
 
 function saveFile(name, type, data) {
-    var url = window.URL.createObjectURL(new Blob([data], {type: type}));
+    const url = window.URL.createObjectURL(new Blob([data], {type: type}));
     downloadLink.setAttribute("href", url);
     downloadLink.setAttribute("download", name);
     downloadLink.click();
@@ -1179,10 +1175,37 @@ function saveFile(name, type, data) {
 }
 function triggerDownloadBin()
 {
-    var name = j_getCurrentName()
-    var bin = new Uint8Array(j_getCurrentBin())
+    const name = j_getCurrentName()
+    const bin = new Uint8Array(j_getCurrentBin())
     saveFile(name, "octet/stream", bin)
 }
+
+function trigger_save_state()
+{
+    const obj = j_savePlayers()
+    if (obj === undefined)
+    {
+        show_error("Failed saving state");
+        return;
+    }
+    const s = JSON.stringify(obj, null, 2)
+    saveFile("all.json", "plain/text", s)
+}
+
+function load_state(file)
+{
+    const reader = new FileReader()
+    reader.onload = function(e) {
+        const obj = JSON.parse(e.target.result)
+        j_loadPlayers(obj);
+    }
+    reader.onerror = function(e) {
+        console.error(e)
+    }
+    reader.readAsText(file)
+}
+
+
 
 function create_elem(elem_type, cls) {
     let e = document.createElement(elem_type);
@@ -1365,22 +1388,29 @@ var added_file_inputs = false
 function triggerHamMenu(e)
 {
     e.stopPropagation()
-    const surv_file_elem = add_elem(hamburgBtn, "input", "hidden")
-    surv_file_elem.type = "file"
-    surv_file_elem.addEventListener("change", function() { 
-        load_zip_survivors(surv_file_elem).catch(function(err) { console.error(err) })
-    })
 
-    const zomb_file_elem = add_elem(hamburgBtn, "input", "hidden")
-    zomb_file_elem.type = "file"
-    zomb_file_elem.addEventListener("change", function() { 
-        load_zip_zombies(zomb_file_elem).catch(function(err) { console.error(err) })
-    })
+    let make_file_trigger = (filename_func, doAsync) => {
+        const input_elem = add_elem(hamburgBtn, "input", "hidden")
+        input_elem.type = "file"
+        input_elem.addEventListener("change", function() { 
+            if (input_elem.files.length == 0)
+                return null
+            const file = input_elem.files[0]
+            input_elem.value = ""  // reset it so that next time we could upload the same filename again
+            
+            if (doAsync)
+                filename_func(file).catch(function(err) { console.error(err) })
+            else
+                filename_func(file)
+        })
+        return input_elem
+    }
 
 
-    const menu = make_menu(body, hamburgBtn, [ {text:"Load Survivors Zip", child:surv_file_elem},
-                            {text:"Load Zombies Zip", child:zomb_file_elem },
-                          //  {text:"Reset to Demo Survivors", func:function() {}},
+    const menu = make_menu(body, hamburgBtn, [ {text:"Load Survivors Zip", child:make_file_trigger(load_zip_survivors, true) },
+                            {text:"Load Zombies Zip", child:make_file_trigger(load_zip_zombies, true) },
+                            {text:"Save All to JSON", func: trigger_save_state },
+                            {text:"Load All from JSON", child: make_file_trigger(load_state, false) },
                             {text:"About", func:function() { triggerAbout(true) }},
                             {text:"Reset Layout", func: reset_layout },
                             {text:"Reset Players", func: reset_players },

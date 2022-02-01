@@ -301,8 +301,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     }
 
     private static native String get_stdout() /*-{
-                                              return $wnd.g_outputText
-                                              }-*/;
+        return $wnd.g_outputText
+    }-*/;
 
     // given a line number (starting 0), give the offset in the input text the line
     // ends
