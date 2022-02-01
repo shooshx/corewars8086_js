@@ -11,11 +11,11 @@ Yehuda Meeting 26/11/2021
 
 
 BUG:
-- assembler mem leak
 - editor goes out of sync with invisible editor when returning from debug and there's a scroll bar
 - mem edit doesn't work on 0x202 zoomed
 - resume to breakpoint when speed is very high doesn't show line when stopped
-- writing > prints &gt;  when there are errors
+
+- when there are many players, the scroll looks bad
 
 - messages window is never cleared (mem leak?)
 

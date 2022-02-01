@@ -82,6 +82,10 @@
  * for a 16-bit DOS assembler with no extraneous formats.
  */
 
+#define OF_ONLY
+#define OF_OBJ
+#define OF_BIN
+
 /* ------------ END USER MODIFIABLE PART -------------- */
 
 /* ====configurable info begins here==== */

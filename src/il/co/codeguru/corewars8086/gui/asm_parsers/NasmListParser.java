@@ -255,6 +255,7 @@ public class NasmListParser implements IListParser{
             }
             if (lineNum == -1) {
                 Console.log("Failed parsing error stdout");
+                Console.log(stdoutText);
                 return m_errLines;
             }
 

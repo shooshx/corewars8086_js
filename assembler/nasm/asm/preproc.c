@@ -5329,6 +5329,7 @@ static void pp_cleanup(int pass)
                 nasm_free(i->path);
             nasm_free(i);
         }
+        hash_free(&FileHash); // SHY added
     }
 }
 

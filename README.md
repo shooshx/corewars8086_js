@@ -32,7 +32,8 @@ Features include:
 - it is possible to inspect the state of warriors in the debugger after
   a war is over and even continue running the war with just the winner running.
 - implementes all features of the original Java GUI
-- Load a batch of survivors or zombies from a zip file
+- Load a batch of survivors or zombies binaries from a zip file
+- load and save all players code from and to a json file
 - Change the size of panels layout using splitters
 - Options in menu:
    - reset the layout to its default state
@@ -45,8 +46,9 @@ Features include:
   - enable register pointers pointing to the memory canvas
   - enable Auto-save state. when enabled the editor state is saved to localStorage and loaded on page reload
 - Competition: run many games one after the other with the same set of warriors
-  - copy the textual table of result
-  - different kinds of visualizations of the bar graph
+  - Copy the textual table of result
+  - Detailed control over the visualization of competition graph
+     - change orientation, sorting, name apperance, rank numbers
 
 tips and tricks
 - When debugging, you can always return to a warrior running point by clicking its name on the left pane

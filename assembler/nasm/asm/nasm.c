@@ -527,9 +527,10 @@ int nasm_main(int argc, char **argv)
 
         assemble_file(inname, depend_ptr);
 
+        ofmt->cleanup();  // SHY moved these two here
+        cleanup_labels();
         if (!terminate_after_phase) {
-            ofmt->cleanup();
-            cleanup_labels();
+
             fflush(ofile);
             if (ferror(ofile)) {
                 nasm_error(ERR_NONFATAL|ERR_NOFILE,
@@ -1909,9 +1910,13 @@ void init_globals() {
 
 
 #ifdef EMSCRIPTEN
+
+int g_runInstances = 0;
+
 int run_nasm(const char* inname, const char* outname)
 {
     const char* args[] = {"nasm.exe", inname, "-l", outname, 0};
+	++g_runInstances;
 
     /*for(int i = 0; i < 100; ++i) {
         init_globals();

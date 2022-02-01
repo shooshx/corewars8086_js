@@ -72,6 +72,29 @@ extern unsigned char nasm_tolower_tab[256];
  * passed a NULL pointer; nasm_free will do nothing if it is passed
  * a NULL pointer.
  */
+ 
+//#define LEAK_DETECT 
+
+#ifdef LEAK_DETECT
+
+void * safe_malloc(1) r_nasm_malloc(size_t, const char* filename, int line);
+void * safe_malloc(1) r_nasm_zalloc(size_t, const char* filename, int line);
+void * safe_malloc2(1,2) r_nasm_calloc(size_t, size_t, const char* filename, int line);
+void * safe_realloc(2) r_nasm_realloc(void *, size_t, const char* filename, int line);
+void nasm_free(void *);
+char * safe_alloc r_nasm_strdup(const char *, const char* filename, int line);
+char * safe_alloc r_nasm_strndup(const char *, size_t, const char* filename, int line);
+
+#define nasm_malloc(sz) r_nasm_malloc(sz, __FILE__, __LINE__)
+#define nasm_zalloc(sz) r_nasm_zalloc(sz, __FILE__, __LINE__)
+#define nasm_calloc(a, b) r_nasm_calloc(a, b, __FILE__, __LINE__)
+#define nasm_realloc(p, sz) r_nasm_realloc(p, sz, __FILE__, __LINE__)
+#define nasm_strdup(p) r_nasm_strdup(p, __FILE__, __LINE__)
+#define nasm_strndup(p, sz) r_nasm_strndup(p, sz, __FILE__, __LINE__)
+
+
+#else
+ 
 void * safe_malloc(1) nasm_malloc(size_t);
 void * safe_malloc(1) nasm_zalloc(size_t);
 void * safe_malloc2(1,2) nasm_calloc(size_t, size_t);
@@ -79,6 +102,8 @@ void * safe_realloc(2) nasm_realloc(void *, size_t);
 void nasm_free(void *);
 char * safe_alloc nasm_strdup(const char *);
 char * safe_alloc nasm_strndup(const char *, size_t);
+
+#endif
 
 /* Assert the argument is a pointer without evaluating it */
 #define nasm_assert_pointer(p) ((void)sizeof(*(p)))
@@ -381,7 +406,12 @@ void src_set(int32_t line, const char *filename);
  */
 int32_t src_get(int32_t *xline, const char **xname);
 
+#ifdef LEAK_DETECT
+char *r_nasm_strcat(const char *one, const char *two, const char* filename, int len);
+#define nasm_strcat(one, two) r_nasm_strcat(one, two, __FILE__, __LINE__)
+#else
 char *nasm_strcat(const char *one, const char *two);
+#endif
 
 char *nasm_skip_spaces(const char *p);
 char *nasm_skip_word(const char *p);
