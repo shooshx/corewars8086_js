@@ -11,6 +11,8 @@ Yehuda Meeting 26/11/2021
 
 
 BUG:
+- disas of all opcodeEX is wrong
+
 - editor goes out of sync with invisible editor when returning from debug and there's a scroll bar
 - mem edit doesn't work on 0x202 zoomed
 - resume to breakpoint when speed is very high doesn't show line when stopped

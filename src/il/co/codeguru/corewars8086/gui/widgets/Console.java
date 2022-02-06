@@ -68,7 +68,7 @@ public class Console  {
 
     public static native void error(String text)
     /*-{
-        //console.error(text);
+        console.error(text);
     }-*/;
 
     public static native void err_box(String text) /*-{

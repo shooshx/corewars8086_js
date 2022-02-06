@@ -5,6 +5,7 @@ import il.co.codeguru.corewars8086.gui.widgets.Console;
 import il.co.codeguru.corewars8086.memory.RealModeAddress;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A fast disassembler, similar to Cpu.java
@@ -20,6 +21,7 @@ public abstract class Disassembler
 	}
 
 	// I hate Java.
+    // for use when parsing binary upload
 	public static class ArrDisassembler extends Disassembler
 	{
 		private byte[] bytes;
@@ -42,8 +44,14 @@ public abstract class Disassembler
 			pointer++;
 			return bytes[pointer -1];
 		}
+
+        public byte[] lastOpcode()
+        {
+            return Arrays.copyOfRange(bytes, startOffset, pointer);
+        }        
 	}
 
+    // used when parsing unknown content in memory
 	public static class NArrDisassembler extends Disassembler
 	{
 		private Int8ArrayNative bytes;
@@ -66,6 +74,12 @@ public abstract class Disassembler
 			pointer++;
 			return bytes.get(pointer -1);
 		}
+
+        public byte[] lastOpcode()
+        {
+            // not supported
+            return null;
+        }     
 	}
 
 
@@ -99,11 +113,15 @@ public abstract class Disassembler
 		this.endOffset = endOffset;
 	}
 
+    public abstract byte[] lastOpcode();
+
+
 	public int lastOpcodeSize() {
-		int ret = pointer - startOffset;
-		startOffset = pointer;
-		return ret;
+		return pointer - startOffset;
 	}
+    public void skipToNextOpcode() {
+		startOffset = pointer;
+    }
 
 	public void skipBytes(int len) {
 	    pointer += len;

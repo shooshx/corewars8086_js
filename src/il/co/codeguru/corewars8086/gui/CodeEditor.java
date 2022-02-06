@@ -473,6 +473,28 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return 0;
     }
 
+    private byte[] nasmLine(String line)
+    {
+        int retcode = run_nasm("dline.asm", line, "dline.lst");
+        if (retcode != 0)
+            return null;
+        byte[] buf = read_file_bin_arr("dline");
+        return buf;
+    }
+
+    private String asBytesText(byte[] bin)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("db ");
+        for (int i = 0; i < bin.length; ++i) {
+            sb.append("0x");
+            sb.append(Format.hex2(bin[i] & 0xff));
+            if (i < bin.length - 1)
+                sb.append(", ");
+        }
+        return sb.toString();
+    }
+
     // when the user uploads a new binary file
     public void loadedNewBinary(PlayersPanel.Code incode, PlayersPanel callback) {
         if (m_isDebugMode)
@@ -486,13 +508,28 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         try {
             while (offset < incode.bin.length) {
                 String text = dis.nextOpcode();
+                // check that we get the same bin when assembling this line
+                byte[] backToBin = nasmLine(text);
+                byte[] lastOp = dis.lastOpcode();
+                int len = dis.lastOpcodeSize();
+                if (len == 0) {
+                    Console.error("Disassembler error: did not advance"); // something seriously wrong
+                    return;
+                }
+
+                int lneq = bin_equal(backToBin, lastOp);
+                if (lneq != 0) {  // this happens when reading back "add si, endLabel" with small offset since the encoding is different due to the label
+                    text = asBytesText(lastOp);
+                }
+
                 sb.append(text);
                 sb.append("\n");
-                int len = dis.lastOpcodeSize();
+                dis.skipToNextOpcode();
                 offset += len;
             }
         } catch (Disassembler.DisassemblerException e) {
-            // do nothing
+            // this is expected if opcodes don't align
+            //Console.error("Disassembler error: " + e.toString());
         }
 
         // if there's anything left at the end that we didn't eat above
