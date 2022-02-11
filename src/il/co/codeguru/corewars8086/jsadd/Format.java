@@ -66,4 +66,11 @@ public class Format {
         elem.innerText = text
     }-*/;
 
+    public static native void setInnerFloat(HTMLElement elem, float v)/*-{
+        if (Number.isInteger(v))
+            elem.innerText = v + " "
+        else
+            elem.innerText = v.toFixed(2) + " "
+    }-*/;    
+
 }

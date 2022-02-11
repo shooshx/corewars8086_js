@@ -11,6 +11,8 @@ Yehuda Meeting 26/11/2021
 
 
 BUG:
+- load v1_all json shows blank editor?
+- pressing enter and getting an indentation scrolls to the top???
 - disas of all opcodeEX is wrong
 
 - editor goes out of sync with invisible editor when returning from debug and there's a scroll bar

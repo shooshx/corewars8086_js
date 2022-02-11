@@ -162,7 +162,7 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
 
     public void updateTable(int pos) {
         for (int i = 0; i < 3; ++i) {
-            Format.setInnerText(columns[pos].valueElems[i], Float.toString(columns[pos].values[i]) + " ");
+            Format.setInnerFloat(columns[pos].valueElems[i], columns[pos].values[i]) ;
         }
     }
 
@@ -287,11 +287,14 @@ public class ColumnGraph extends JComponent<HTMLCanvasElement> {
                 col3 = col2;
                 col2 = col1;
                 col1 = col;
+                height3 = height2;
+                height2 = height1;
                 height1 = v;
             }
             else if (v > height2) {
                 col3 = col2;
                 col2 = col;
+                height3 = height2;
                 height2 = v;
             }
             else if (v > height3) {
