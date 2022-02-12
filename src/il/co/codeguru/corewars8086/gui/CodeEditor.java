@@ -825,7 +825,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         return false;
     }
 
-    // check opcodes that are emitten are supported by codewars8086 and issue
+    // check opcodes that are emitten are supported by corewars8086 and issue
     // warnings if not
     private DocumentFragment checkDisasmLines(byte[] binbuf, ArrayList<LstLine> listing, DocumentFragment asmElem,
             String intext) {
@@ -858,7 +858,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                                                                                        // example, or just 'rep'
             } catch (Disassembler.DisassemblerException e) {
                 msg = Integer.toString(lstline.lineNum)
-                        + ": Although this is a legal x86 opcode, codewars8086 does not support it";
+                        + ": Although this is a legal x86 opcode, corewars8086 does not support it";
                 int eptr = dis.getPointer() - 1;
                 if (eptr >= 0 && eptr < binbuf.length)
                     msg += ", opcode = 0x" + Format.hex2(binbuf[eptr] & 0xff);
