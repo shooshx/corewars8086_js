@@ -58,8 +58,10 @@ public class MemRegionView implements MemoryEventListener
         m_lastMovedToElem = null;
     }
 
-    public void onMemoryWrite(RealModeAddress address, byte value)
+    public void onMemoryWrite(RealModeAddress address, byte value, boolean fullDebug)
     {
+        if (!fullDebug)
+            return;
         int addr = address.getLinearAddress();
         if (addr < m_currentRegion.m_start || addr > m_currentRegion.m_end)
             return;

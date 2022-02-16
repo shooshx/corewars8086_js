@@ -166,7 +166,9 @@ public class CpuFrame  implements CompetitionEventListener, MemoryEventListener 
 
 	}
 
-	public void onMemoryWrite(RealModeAddress address, byte value) {
+	public void onMemoryWrite(RealModeAddress address, byte value, boolean fullDebug) {
+		if (!fullDebug)
+			return;
 		for (WatchEntry entry : m_watches.values()) {
 			entry.evalAndDisplay();
 		}

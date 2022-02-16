@@ -8,11 +8,13 @@ package il.co.codeguru.corewars8086.memory;
  * @author BS
  */
 public interface MemoryEventListener {
+
+    
     /**
      * Called when a byte is written to memory
      * @param address
      */
-    void onMemoryWrite(RealModeAddress address, byte value);
+    void onMemoryWrite(RealModeAddress address, byte value, boolean fullDebug);
 
     enum EWriteState {
         INIT,

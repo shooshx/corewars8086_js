@@ -18,7 +18,7 @@ public class Competition {
     public EventMulticasterCompetition competitionEventCaster;
     public EventMulticasterMemory memoryEventCaster;
     public CompetitionEventListener competitionEventListener;
-    private MemoryEventListener memoryEventListener;
+    private EventMulticasterMemory.CondDebugHandler memoryEventListener;
 
     private WarriorRepository warriorRepository;
 
@@ -61,17 +61,17 @@ public class Competition {
         competitionEventCaster = new EventMulticasterCompetition();
         competitionEventListener = competitionEventCaster.debugProxy;
         memoryEventCaster = new EventMulticasterMemory();
-        memoryEventListener = memoryEventCaster.debugProxy;
+        memoryEventListener = memoryEventCaster.proxy;
         speed = 0;
     }
 
     private void switchToCompete() {
         competitionEventListener = competitionEventCaster.competeProxy;
-        memoryEventListener = memoryEventCaster.competeProxy;
+        memoryEventListener.setDebug(false);
     }
     private void switchToDebug() {
         competitionEventListener = competitionEventCaster.debugProxy;
-        memoryEventListener = memoryEventCaster.debugProxy;
+        memoryEventListener.setDebug(true);
     }
 
     private void doneCompetition() {
@@ -252,7 +252,9 @@ public class Competition {
         if (currentWar.isPaused()) {
             return 0;
         }
-        if (check_max_round && compState.round >= MAX_ROUND) {
+        // never run forever during competition even if the checkbox is on, that would be just confusiong.
+        boolean inComp = compState != null && !compState.isInDebugger;
+        if ((check_max_round || inComp) && compState.round >= MAX_ROUND) {
             currentWar.pause();
             return -1;
         }

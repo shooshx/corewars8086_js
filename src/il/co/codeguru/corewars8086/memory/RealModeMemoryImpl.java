@@ -53,7 +53,7 @@ public class RealModeMemoryImpl extends AbstractRealModeMemory {
     public void writeByte(RealModeAddress address, byte value) {
         m_data.set(address.getLinearAddress(), value);
         if (listener != null) {
-            listener.onMemoryWrite(address, value);
+            listener.onMemoryWrite(address, value, false); // don't care about the debug arg
         }
     }
 

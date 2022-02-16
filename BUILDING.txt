@@ -12,5 +12,5 @@ C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant build
 
 C:\Projects\corewars8086_js\apache-ant-1.10.5\bin\ant build -f build_rel.xml
 cd war
-python -m http.server 8888
+python -m http.server --bind 127.0.0.1 8888
 http://localhost:8888/page.html

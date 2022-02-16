@@ -181,7 +181,8 @@ public class WarFrame implements MemoryEventListener,  CompetitionEventListener
     }	
 
     @Override
-    public void onMemoryWrite(RealModeAddress address, byte value) {
+    public void onMemoryWrite(RealModeAddress address, byte value, boolean fullDebug) {
+        // fullDebug - still show canvas when in MAX speed mode
         if (!mainWnd.isBattleShown())
             return; // canvas not shown, no reason to update it
 

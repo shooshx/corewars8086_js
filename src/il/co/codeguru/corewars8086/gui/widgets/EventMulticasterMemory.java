@@ -10,34 +10,31 @@ import java.util.*;
  */
 public class EventMulticasterMemory extends EventMulticasterBase<MemoryEventListener> {
 
-    public MemoryEventListener debugProxy, competeProxy;
+    public CondDebugHandler proxy;
 
     public EventMulticasterMemory() {
-        debugProxy = new DebugHandler();
-        competeProxy = new CompeteHandler();
+        proxy = new CondDebugHandler();
+        //competeProxy = new CompeteHandler();
     }
 
-    private class CompeteHandler implements MemoryEventListener {
-        @Override
-        public void onMemoryWrite(RealModeAddress address, byte value) {
+
+    public class CondDebugHandler implements MemoryEventListener {
+        private boolean debug = true;
+
+        public void setDebug(boolean v)
+        {
+            debug = v;
         }
 
-        @Override
-        public void onWriteState(EWriteState state) {
-        }
-
-    }
-
-    private class DebugHandler implements MemoryEventListener {
 		@Override
-		public void onMemoryWrite(RealModeAddress address, byte value) {
+		public void onMemoryWrite(RealModeAddress address, byte value, boolean dontCare) {
 			for (Object mListener : mListenersArr) {
-                ((MemoryEventListener)mListener).onMemoryWrite(address, value);
+                ((MemoryEventListener)mListener).onMemoryWrite(address, value, debug);
 			}
 		}
 
         @Override
-        public void onWriteState(EWriteState state) {
+        public void onWriteState(EWriteState state) {        
             for (Object mListener : mListenersArr) {
                 ((MemoryEventListener)mListener).onWriteState(state);
             }

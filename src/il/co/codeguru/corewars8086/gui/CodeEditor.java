@@ -117,7 +117,11 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     // MemoryEventListener
     @Override
-    public void onMemoryWrite(RealModeAddress address, byte value) {
+    public void onMemoryWrite(RealModeAddress address, byte value, boolean fullDebug) 
+    {
+        // in case we're in MAX speed debugger, don't scroll and update the text
+        if (!fullDebug)
+            return;
         // don't rewrite lines if we're in the stage of putting warriors in memory
         if (m_memWriteState != EWriteState.RUN)
             return;
@@ -909,16 +913,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
 
     // defer if we're inside setDebugMode
     private static native void scrollToAddr(int addr, boolean defer) /*-{
-                                                                     if (defer)
-                                                                     $wnd.deferredEditorToAddress = addr
-                                                                     else {
-                                                                     $wnd.scrollToAddr(addr)
-                                                                     }
-                                                                     }-*/;
+        if (defer)
+            $wnd.deferredEditorToAddress = addr
+        else {
+            $wnd.scrollToAddr(addr)
+        }
+    }-*/;
 
     private static native double getTime() /*-{
-                                           return Date.now()
-                                           }-*/;
+        return Date.now()
+    }-*/;
 
     public void setTitle(String s) {
         editor_title.value = s;

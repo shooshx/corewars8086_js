@@ -1198,6 +1198,7 @@ function load_state(file)
     reader.onload = function(e) {
         const obj = JSON.parse(e.target.result)
         j_loadPlayers(obj);
+        js_save_state() // save to local storage, otherwise it's not saved if we don't do any edit
     }
     reader.onerror = function(e) {
         console.error(e)
@@ -1355,7 +1356,7 @@ function create_options_dlg()
         const obj = add_option_checkbox(regs_area[pos[2]], addr_name + ":" + seg_name, "reg_" + seg_name + "_" + addr_name, (v)=>{ enable_reg_ptr(v, pos[0], pos[1]) })
         obj.line.classList.add("opt_reg_line")
     }
-    add_option_checkbox(g_opt_dlg, "Continue Forever (no max-round)", "no_max_round", changed_no_max_round)
+    add_option_checkbox(g_opt_dlg, "Continue Forever (no max-round, only in debugger)", "no_max_round", changed_no_max_round)
 
 }
 
