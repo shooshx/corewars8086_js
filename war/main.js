@@ -805,7 +805,8 @@ var debug_area_shown = false
 var deferredEditorToAddress = -1 // set by code in CodeEditor.java
 
 var prevDebug = false;
-function triggerDebug() 
+var saved_edit_scroll = 0 // textarea scroll before hiding the editor, hiding resets it
+function triggerDebug()
 {
     console.log("triggerDebug " + debugCheckbox.checked)
     if (prevDebug == debugCheckbox.checked) // not sure how this is possible
@@ -814,6 +815,7 @@ function triggerDebug()
 
     if (debugCheckbox.checked)
     {
+        saved_edit_scroll = asm_edit.scrollTop // must be read before j_startDebug hides the textarea
         if (!j_startDebug()) {
             console.error("cannot start debug")
             debugCheckbox.checked = false;
@@ -871,6 +873,8 @@ function triggerDebug()
 
         edit_area.style.display=""
         debug_area.style.display="none"
+        asm_edit.scrollTop = saved_edit_scroll // showing the editor again does not restore the scroll position
+        handle_asm_edit_scroll() // keep the highlighted text under the textarea in sync with it
 
 
         addPlayerBtn.removeAttribute("disabled")

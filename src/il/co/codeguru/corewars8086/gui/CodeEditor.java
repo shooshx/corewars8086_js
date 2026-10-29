@@ -28,6 +28,7 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     private HTMLTextAreaElement asm_edit;
 
     private boolean m_isDebugMode = false;
+    private PlayersPanel.Code m_shownCode = null; // the code currently loaded in the editor
     private MemoryEventListener.EWriteState m_memWriteState = MemoryEventListener.EWriteState.INIT;
     private ArrayList<PlayersPanel.Breakpoint> m_breakpoints = null;
 
@@ -327,6 +328,16 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
                                               return $wnd.asm_edit.selectionEnd
                                               }-*/;
 
+    static native int asm_edit_scrollTop() /*-{
+                                           return Math.floor($wnd.asm_edit.scrollTop)
+                                           }-*/;
+
+    // the highlighted text under the textarea is positioned from its scroll, so update it as well
+    static native void asm_edit_setScrollTop(int v) /*-{
+                                                    $wnd.asm_edit.scrollTop = v
+                                                    $wnd.handle_asm_edit_scroll()
+                                                    }-*/;
+
     static native int asm_edit_setSelection(int start, int end) /*-{
                                                                 $wnd.asm_edit.selectionStart = start
                                                                 $wnd.asm_edit.selectionEnd = end
@@ -447,6 +458,10 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
     public void playerSelectionChanged(PlayersPanel.Code incode, PlayersPanel callback) {
         // remove the prev code breakpoints before it's lines will be erased by setText
         removeCurrentBreakpoints();
+        // the textarea is hidden in debug mode and its scroll is meaningless then, so keep the last editing position
+        if (!m_isDebugMode && m_shownCode != null)
+            m_shownCode.scrollTop = asm_edit_scrollTop();
+        m_shownCode = incode;
         if (incode == null)
         {
             setText("", null);
@@ -456,6 +471,8 @@ public class CodeEditor implements CompetitionEventListener, MemoryEventListener
         asm_edit.value = incode.asmText;
         editor_title.value = incode.player.title;
         setText(incode.asmText, callback);
+        if (!m_isDebugMode)
+            asm_edit_setScrollTop(incode.scrollTop);
 
         // add breakpoints of current one
         // set them in the editor even if we're in debug mode

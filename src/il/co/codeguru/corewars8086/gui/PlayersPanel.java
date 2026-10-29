@@ -53,6 +53,7 @@ public class PlayersPanel
         public String name; // name of this code snippet (name on the button)
         public String label; // the label of the player + the index of the warrior (0,1), for instance A0, A1
         public String asmText = "";
+        public int scrollTop = 0; // editor scroll position when this code was last left, kept while the page is open
         public byte[] bin = null;  // can be null if last output was empty
         public boolean lastCompileOk = true;
         public ArrayList<CodeEditor.LstLine> lines; //managed by the editor
